@@ -16,16 +16,17 @@ Hurlbert_o = read.csv('Master_RO_Correlates_20110610.csv', header = T)
 # subset species whose range occupancies were between 0.3 and 0.7 over a 10 year period
 subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
 
-# read in BBS abundance data - from Hurlbert Lab
-bbs = read.csv('dataset_1.csv', header = T)
+# read in BBS abundance data - from Hurlbert Lab 
+# bbs = read.csv('dataset_1.csv', header = T)
+bbs = read.csv('bbs_abun.csv', header = T)
 
 # subset bbs abundance columns
 bbs = bbs[, (names(bbs) %in% c("stateroute", "Aou", "Year","SpeciesTotal",  'routeID', 'Lati', 'Longi'))]
 
-# read in expected presence data based on BBS for 372 landbird species
+# read in expected presence data based on BBS for 372 landbird species----- 1996-2010 FIX
 expect_pres = read.csv('expected_presence_on_BBS_routes.csv', header = T)
 
-# read in BBS temporal occupancy data (just for 372 landbird species)
+# read in BBS temporal occupancy data (just for 372 landbird species) ---2001-2015
 temp_occ = read.csv("bbs_sub1.csv", header=TRUE) %>%
   filter(Aou %in% subsetocc$AOU)
 
@@ -152,7 +153,7 @@ new_occ2 = new_occ[new_occ$stateroute %in% routes, ]
 focalspecies = unique(new_spec_weights$focalAOU)
 # need to change winter wren AOU to 7222 from 7220 in bbs_pool
 bbs$Aou[bbs$Aou == 7220] <- 7222
-# filter BBS mean abundance by AOU/stateroute by year
+# filter BBS mean abundance by AOU/stateroute by year --------1996-2010 FIX
 bbs_pool = bbs %>% 
   group_by(stateroute, Aou) %>% 
   dplyr::summarize(abundance = mean(SpeciesTotal)) %>%

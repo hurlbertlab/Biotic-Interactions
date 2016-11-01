@@ -13,10 +13,11 @@ library(gtools)
 # setwd("C:/git/Biotic-Interactions")
 # read in temporal occupancy data from BI occ script
 temp_occ = read.csv("bbs_sub1.csv", header=TRUE)
-# read in BBS abundance data - from Hurlbert Lab
-bbs = read.csv('dataset_1.csv', header = T)
 # read in bird range shps
 all_spp_list = list.files('Z:/GIS/birds/All/All')
+# read in lat long data
+bbs_routes = read.csv("latlong_rtes.csv",header =TRUE)
+
 
 # read in new_spec_weights file created in data cleaning code
 new_spec_weights=read.csv("new_spec_weights.csv", header=TRUE)
@@ -32,7 +33,6 @@ sp_proj = CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km")
 if(FALSE) {  #Blocking out the for loop below. Need to change to TRUE if you want the loop to run.
   
   for (sp in focal_spp) {
-    #sp = 'Pyrocephalus_rubinus'
     print(sp)
     t1 = all_spp_list[grep(sp, all_spp_list)]
     t2 = t1[grep('.shp', t1)]
@@ -54,8 +54,6 @@ if(FALSE) {  #Blocking out the for loop below. Need to change to TRUE if you wan
     # match competitor sp to focal spp, intersect its range with the focal range,
     # and calcualte the area of overlap between the two species.
     for(co in comp_spp) {          
-      #co = 'Cistothorus_palustris' 
-      #print(co)
       c1 = all_spp_list[grep(co, all_spp_list)]
       c2 = c1[grep('.shp', c1)]
       c3 = strsplit(c2, ".shp")
@@ -69,7 +67,6 @@ if(FALSE) {  #Blocking out the for loop below. Need to change to TRUE if you wan
       corigin = gBuffer(corigin, byid=TRUE, width=0)
       
       pi = intersect(sporigin, corigin)
-      #plot(pi)
       spArea = gArea(sporigin) # in m
       coArea = gArea(corigin)
       area_overlap = gArea(pi)
@@ -114,12 +111,19 @@ centroid$Long = as.numeric(paste(centroid$Long))
 write.csv(centroid,"centroid.csv",row.names=FALSE)
 
 ######## Calculating expected presences for each species using whole range #####
-routes = unique(temp_occ$stateroute)
-bbs_latlong = merge(temp_occ, bbs[c("stateroute", "Lati", "Longi")], by = "stateroute", all.x=TRUE)
+spp_latlongs = merge(temp_occ, bbs_routes, by = "stateroute")
+spp_latlongs$latitude = abs(spp_latlongs$latitude)
+routes = unique(bbs_routes$stateroute)
 
 expect_pres = c()
 for (sp in focal_spp){
   print(sp)
+  
+  focalAOU = subset(new_spec_weights, focalcat == sp)
+  spAOU = unique(focalAOU$focalAOU)
+  
+  spsub = subset(spp_latlongs, Aou == spAOU)
+  
   t1 = all_spp_list[grep(sp, all_spp_list)]
   t2 = t1[grep('.shp', t1)]
   t3 = strsplit(t2, ".shp")
@@ -128,8 +132,14 @@ for (sp in focal_spp){
   proj4string(test.poly) <- intl_proj
   colors = c("blue", "yellow", "green", "red", "purple")
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
-  sporigin = spTransform(sporigin, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
+
+  plot(sporigin)
   
+  sp_pts = points(spsub$longitude, spsub$latitude)
+  
+  over(SpatialPoints(sp_pts), sporigin)
+  
+  expect_pres=rbind()
 }
 expect_pres = data.frame(expect_pres)
 #names(centroid) = c("Species", "FocalAOU", "Long", "Lat")
