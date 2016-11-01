@@ -1,4 +1,4 @@
-### This script derives occupancy data using ecoretriever to subset raw BBS data
+### This script derives avian temporal occupancy data using ecoretriever to subset raw BBS data
 
 
 
@@ -29,3 +29,11 @@ bbs_sub1 = bbs_eco$counts %>%
 
 bbs_sub1$occ = bbs_sub1$n/15 # new occupancy values calculated
 write.csv(bbs_sub1, "bbs_sub1.csv", row.names=FALSE)
+
+
+latlong_rtes = bbs_eco$routes %>% 
+  dplyr::select(statenum, route, latitude, longitude) %>%
+  unique() %>%    
+  group_by(statenum, route) 
+latlong_rtes$stateroute = latlong_rtes$statenum*1000 + latlong_rtes$route 
+write.csv(latlong_rtes, "latlong_rtes.csv", row.names=FALSE)

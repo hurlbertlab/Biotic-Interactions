@@ -1,4 +1,6 @@
-#### BI analysis - Use GIS to get species with overlapping ranges and calculate centroids of range
+#### BI analysis - Use GIS to get species with overlapping ranges, calculate centroids of range, 
+#    and generate expected presence of landbird species for pairwise occupancy comparison
+
 #### Subset of BI Data Cleaning Code
 library(maps)
 library(rgdal)
@@ -8,6 +10,11 @@ library(raster)
 library(rgeos)
 library(gtools)
 
+# setwd("C:/git/Biotic-Interactions")
+# read in temporal occupancy data from BI occ script
+temp_occ = read.csv("bbs_sub1.csv", header=TRUE)
+# read in BBS abundance data - from Hurlbert Lab
+bbs = read.csv('dataset_1.csv', header = T)
 # read in bird range shps
 all_spp_list = list.files('Z:/GIS/birds/All/All')
 
@@ -106,6 +113,29 @@ centroid$Lat = as.numeric(paste(centroid$Lat))
 centroid$Long = as.numeric(paste(centroid$Long))
 write.csv(centroid,"centroid.csv",row.names=FALSE)
 
+######## Calculating expected presences for each species using whole range #####
+routes = unique(temp_occ$stateroute)
+bbs_latlong = merge(temp_occ, bbs[c("stateroute", "Lati", "Longi")], by = "stateroute", all.x=TRUE)
+
+expect_pres = c()
+for (sp in focal_spp){
+  print(sp)
+  t1 = all_spp_list[grep(sp, all_spp_list)]
+  t2 = t1[grep('.shp', t1)]
+  t3 = strsplit(t2, ".shp")
+  
+  test.poly <- readShapePoly(paste("z:/GIS/birds/All/All/", t3, sep = "")) # reads in species-specific shapefile
+  proj4string(test.poly) <- intl_proj
+  colors = c("blue", "yellow", "green", "red", "purple")
+  sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
+  sporigin = spTransform(sporigin, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
+  
+}
+expect_pres = data.frame(expect_pres)
+#names(centroid) = c("Species", "FocalAOU", "Long", "Lat")
+#centroid$Lat = as.numeric(paste(centroid$Lat))
+#centroid$Long = as.numeric(paste(centroid$Long))
+write.csv(expect_pres,"expect_pres.csv",row.names=FALSE)
 
 ######## PDF of each species BBS occurrences ########
 focalcompsub = read.csv("focalcompsub.csv", header=TRUE)
