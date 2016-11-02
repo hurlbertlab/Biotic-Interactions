@@ -9,6 +9,8 @@ library(maptools)
 library(raster)
 library(rgeos)
 library(gtools)
+library(sp)
+library(tidyr)
 
 # setwd("C:/git/Biotic-Interactions")
 # read in temporal occupancy data from BI occ script
@@ -116,6 +118,10 @@ spp_latlongs$latitude = abs(spp_latlongs$latitude)
 routes = unique(bbs_routes$stateroute)
 
 expect_pres = c()
+sp_overlap = c()
+
+focal_spp = subset(focal_spp, focal_spp != "Amphispiza_belli")
+
 for (sp in focal_spp){
   print(sp)
   
@@ -133,15 +139,25 @@ for (sp in focal_spp){
   colors = c("blue", "yellow", "green", "red", "purple")
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
 
-  plot(sporigin)
+ # plot(sporigin)
   
-  sp_pts = points(spsub$longitude, spsub$latitude)
+ # points(spsub$longitude, spsub$latitude)
+  coordinates(spsub) <- c("longitude", "latitude")
+  proj4string(spsub) <- proj4string(sporigin)
   
-  over(SpatialPoints(sp_pts), sporigin)
+  routes_inside <- over(spsub, as(sporigin, "SpatialPolygons"))
+  spsub$in_range <- over(spsub, sporigin)
   
-  expect_pres=rbind()
+  # now plot bear points with separate colors inside and outside of parks
+  #points(spsub[!inside.park, ], pch=1, col="blue")
+  #points(spsub[inside.park, ], pch=16, col="red")
+  
+  expect_pres=rbind(expect_pres, c(spsub$Aou, routes_inside))
+  #sp_overlap = rbind(sp_overlap, spsub$in_range)
 }
 expect_pres = data.frame(expect_pres)
+#expect_pres1 = gather(expect_pres, AOU,stateroute, V1:V100)
+  
 #names(centroid) = c("Species", "FocalAOU", "Long", "Lat")
 #centroid$Lat = as.numeric(paste(centroid$Lat))
 #centroid$Long = as.numeric(paste(centroid$Long))
