@@ -118,9 +118,10 @@ spp_latlongs$latitude = abs(spp_latlongs$latitude)
 routes = unique(bbs_routes$stateroute)
 
 expect_pres = c()
-sp_overlap = c()
 
 focal_spp = subset(focal_spp, focal_spp != "Amphispiza_belli") # no matches between points and polygons
+file_names = dir('sp_routes/')
+setwd("sp_routes/")
 
 for (sp in focal_spp){
   print(sp)
@@ -136,34 +137,26 @@ for (sp in focal_spp){
   
   test.poly <- readShapePoly(paste("z:/GIS/birds/All/All/", t3, sep = "")) # reads in species-specific shapefile
   proj4string(test.poly) <- intl_proj
-  colors = c("blue", "yellow", "green", "red", "purple")
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
 
- # plot(sporigin)
-  
- # points(spsub$longitude, spsub$latitude)
   coordinates(spsub) <- c("longitude", "latitude")
   proj4string(spsub) <- proj4string(sporigin)
   
   routes_inside <- over(spsub, as(sporigin, "SpatialPolygons"))
-  routes_sub = routes_inside[routes_inside != 'NA']
-  routes_sub = routes_sub[!is.na(routes_sub)]
+  routes_sub = routes_inside[!is.na(routes_inside)]
+  routes_sub = data.frame(routes_sub)
 
-  #spsub$in_range <- over(spsub, sporigin)
-  
-  # now plot bear points with separate colors inside and outside of parks
-  #points(spsub[!inside.park, ], pch=1, col="blue")
-  #points(spsub[inside.park, ], pch=16, col="red")
-  #print(spsub$Aou)
-  #print(routes_inside)
-  
-  #expect_pres=rbind(expect_pres, c(sp, routes_sub))
-  write.csv(routes_sub, paste('sp_routes/routes', unique(spsub$Aou), 'csv', sep = '.'))
-  #sp_overlap = rbind(sp_overlap, spsub$in_range)
+  #write.csv(routes_sub, paste('sp_routes/routes', unique(spsub$Aou), 'csv', sep = '.'))
+  sp_routes = read.csv(paste('routes', unique(spsub$Aou), 'csv', sep = '.'), header = TRUE)
+  names(sp_routes) = c("stateroute", "count")
+  routes_list = c(sp_routes$stateroute)
+  routes_list = data.frame(sp, routes_list)
+  print(length(routes_list))
+  #temp_sub = subset(temp_occ, Aou == spAOU)
+  #stroutes = merge(temp_sub[,c("Aou", "stateroute")], routes_list, by.x = "stateroute", by.y="routes_list")
+  # expect_pres=rbind(expect_pres, sp,routes_list)
 }
-file_names = dir('sp_routes/')
-setwd("sp_routes/")
-expect_pres <- do.call(rbind,lapply(file_names,read.csv))
+
 setwd("C:/git/Biotic_Interations_Snell")
 expect_pres = data.frame(expect_pres)
 #expect_pres1 = gather(expect_pres, AOU,stateroute, V1:V100)
