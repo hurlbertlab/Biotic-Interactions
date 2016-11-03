@@ -120,7 +120,7 @@ routes = unique(bbs_routes$stateroute)
 expect_pres = c()
 sp_overlap = c()
 
-focal_spp = subset(focal_spp, focal_spp != "Amphispiza_belli")
+focal_spp = subset(focal_spp, focal_spp != "Amphispiza_belli") # no matches between points and polygons
 
 for (sp in focal_spp){
   print(sp)
@@ -146,15 +146,25 @@ for (sp in focal_spp){
   proj4string(spsub) <- proj4string(sporigin)
   
   routes_inside <- over(spsub, as(sporigin, "SpatialPolygons"))
-  spsub$in_range <- over(spsub, sporigin)
+  routes_sub = routes_inside[routes_inside != 'NA']
+  routes_sub = routes_sub[!is.na(routes_sub)]
+
+  #spsub$in_range <- over(spsub, sporigin)
   
   # now plot bear points with separate colors inside and outside of parks
   #points(spsub[!inside.park, ], pch=1, col="blue")
   #points(spsub[inside.park, ], pch=16, col="red")
+  #print(spsub$Aou)
+  #print(routes_inside)
   
-  expect_pres=rbind(expect_pres, c(spsub$Aou, routes_inside))
+  #expect_pres=rbind(expect_pres, c(sp, routes_sub))
+  write.csv(routes_sub, paste('sp_routes/routes', unique(spsub$Aou), 'csv', sep = '.'))
   #sp_overlap = rbind(sp_overlap, spsub$in_range)
 }
+file_names = dir('sp_routes/')
+setwd("sp_routes/")
+expect_pres <- do.call(rbind,lapply(file_names,read.csv))
+setwd("C:/git/Biotic_Interations_Snell")
 expect_pres = data.frame(expect_pres)
 #expect_pres1 = gather(expect_pres, AOU,stateroute, V1:V100)
   
