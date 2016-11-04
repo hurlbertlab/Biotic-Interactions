@@ -58,7 +58,7 @@ plot(circs.sp)
 
 setwd('Z:/GIS/MODIS NDVI')
 
-env.data = raster('EVI-NDVI_MOD13A3_resampled.rar')
+env.data = raster('Vegetation_Indices_may-aug_2000-2010')
 
 
 # Define the projection of the raster layer (this may be different for different data)
