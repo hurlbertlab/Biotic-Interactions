@@ -70,9 +70,9 @@ projection(env.data) = CRS("+proj=longlat +ellps=WGS84")
 #   Adds the first column atPoint by extracting values found exactly at the route coordinates
 
 # Extract Data
-env.point = extract(env.data, routes)
-env.mean = extract(env.data, circs.sp, fun = mean, na.rm=T)
-env.var = extract(env.data, circs.sp, fun = mean, na.rm=T)
+env.point = raster::extract(env.data, routes)
+env.mean = raster::extract(env.data, circs.sp, fun = mean, na.rm=T)
+env.var = raster::extract(env.data, circs.sp, fun = mean, na.rm=T)
 
 # Put into dataframe
 env = data.frame(stateroute = names(circs.sp), env.point = env.point, env.mean = env.mean, env.var = env.var)
