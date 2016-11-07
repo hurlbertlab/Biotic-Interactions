@@ -3,7 +3,7 @@
 ######################################
 
 ### Set working directory to the folder where all of your data and code are stored
-setwd('C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell')
+setwd('C:/Git/Biotic-Interactions')
 
 #-------------for this project only used "All Env Data.csv" START ON LINE 49---------------------------------------#
 ###Temperature, precip, elevation data from WorldClim: http://www.worldclim.org/current
@@ -15,9 +15,9 @@ library(MODISTools)
 # Read in stack of layers from all 12 months 
 tmean <- getData("worldclim", var = "tmean", res = 10)
 files<-paste('tmean',1:12,'.bil',sep='')
+setwd('C:/Git/Biotic-Interactions/ENV DATA')
 tmeans<-stack(files)
 mat = calc(tmeans, mean)
-#plot(mat)
 
 #### ----Precip ----#####
 #read in precip data from world clim, stack data to get 1 MAP value
@@ -32,76 +32,36 @@ map = calc(pmeans, mean)
 elev <- getData("worldclim", var = "alt", res = 10)
 alt_files<-paste('alt_10m_bil', sep='')
 
-#### ----NDVI ----#####
-#read in EVI data from Coyle et al 2013, provided by Dr. Hurlbert
-#data table with all environmental variable means (use for this project only bc EVI wasn't working)
+setwd('C:/Git/Biotic-Interactions')
+#### ----EVI ----#####
+#see MODIS_script for data
 multyears <- 2001:2015
 
-if (0) {
-  
-  for (year in 1:length(multyears)) {
-    
-    # Format MODIS data
-    modis = data.frame(lat = c(35.898645, 35.809674, 43.942407), long = c(-79.031469, -78.716546, -71.710066))
-    modis$start.date = rep(multyears[[year]], nrow(modis)) #not sure if these dates are formatted correctly
-    modis$end.date = rep(multyears[[year]], nrow(modis))
-    modis$ID = c(1,2,3)
-    
-    # Set working directory to year file the data will be downloaded in
-    #setwd(file.path('C:','git','core-transient','data','modis',multyears[[year]], sep = '/'))
-
-    # Download MODIS data
-    MODISSubsets(LoadDat = modis, Products = 'MOD13Q1', 
-                 Bands = c('250m_16_days_EVI', '250m_16_days_pixel_reliability'), 
-                 Size = c(100,100))
-  } # end of for loop for downloading/formatting data
-  
-} # end if (0)
-
-### Simplify data (subset to the columns and/or rows of interest) START HERE
-
-#--------------------------------------------START HERE------------------------------------------------------------#
+Env = read.csv('2001_2015_bbs_routes_Env.csv', header =TRUE)
 
 ####----Creating an environmental matrix ----####
-library(raster)
-occumatrix <- read.table("site_sp_occupancy_matrix_Coyle.csv", sep=",", header = T)
-names(occumatrix)[names(occumatrix)=="X"] <- "stateroute"
-route.locs = read.csv('routes.csv')
-route.locs$stateroute = 1000*route.locs$statenum + route.locs$Route
+occumatrix <- read.csv("bbs_sub1.csv", header = T)
+route.locs = read.csv('latlong_rtes.csv')
 
-latlongs = subset(route.locs, select = c('stateroute', 'Lati', 'Longi'))
+latlongs = subset(route.locs, select = c('stateroute', 'latitude', 'longitude'))
+latlongs$latitude = abs(latlongs$latitude)
 route.sp = coordinates(latlongs[,3:2])
-plot(route.sp)
-
-#Read in ENV data set
-envtable <- read.csv("All Env Data.csv", header = T)
 
 #mean data for all variables
-finalenv <- subset(envtable, select = c('stateroute', 'sum.EVI', 'elev.mean', 'mat', 'ap.mean')) 
+envtable <- subset(Env, select = c('stateroute', 'mat.mean', 'map.mean', 'elev.mean', 'evi.mean')) 
 
 ##### ---- BIRDS data ----#####
-#Making BBS data frame from wide to long using tidyr
-library(tidyr)
-tidyBirds <- gather(data = occumatrix, 
-                    key = Species,
-                    value = Occupancy, 
-                    na.rm = TRUE,
-                    X2881:X22860)
-
-tidyBirds$Species = as.numeric(substr(tidyBirds$Species, 2, 
-                                      nchar(as.character(tidyBirds$Species)))) #changed from X-sp to #sp
-head(tidyBirds)
 
 ### Calculate metrics of interest
 ####---- Creating final data frame----####
 #For loop to calculate mean & standard dev environmental variables for each unique species
-uniq.spp = unique(tidyBirds$Species, header = "Species")
+uniq.spp = unique(occumatrix$Aou, header = "Species")
 birdsoutputm = c()
 for (species in uniq.spp) {
-  spec.routes <- tidyBirds[(tidyBirds$Species) == species, "stateroute"] #subset routes for each species (i) in tidybirds
+  spec.routes <- occumatrix[(occumatrix$Aou) == species, "stateroute"] #subset routes for each species (i) in tidybirds
   env.sub <- envtable[envtable$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
-  envmeans = as.vector(apply(env.sub[, c("mat", "ap","elev","sum.EVI")], 2, mean))
-  envsd = as.vector(apply(env.sub[, c("mat", "ap","elev","sum.EVI")], 2, sd))
+  envmeans = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'evi.mean')], 2, mean))
+  envsd = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'evi.mean')], 2, sd))
   
   birdsoutputm = rbind(birdsoutputm, c(species, envmeans, envsd))
   
@@ -109,18 +69,15 @@ for (species in uniq.spp) {
 birdsoutput = data.frame(birdsoutputm)
 names(birdsoutput) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean.EVI", "SD.Temp", "SD.Precip", "SD.Elev", "SD.EVI")
 
-### Combine relevant information from each of your two or more datasets using merge()
-#(species/occupancy/expected env variables/observed env variables)
-occubirds <- merge(birdsoutput, tidyBirds, by = "Species", all = FALSE, na.rm = T)
-occuenv <- merge(envtable, occubirds, by = "stateroute", all = F, na.rm = T)
-occuenv <- na.omit(occuenv)
-
 ### Conduct analyses
 #Calculating z scores for each environmnetal variable (observed mean - predicted mean/predicted SD)
 occuenv$zTemp = (occuenv$mat - occuenv$Mean.Temp) / occuenv$SD.Temp
 occuenv$zPrecip = (occuenv$ap.mean - occuenv$Mean.Precip) / occuenv$SD.Precip
 occuenv$zElev = (occuenv$elev.mean - occuenv$Mean.Elev) / occuenv$SD.Elev
 occuenv$zEVI = (occuenv$sum.EVI - occuenv$Mean.EVI) / occuenv$SD.EVI
+
+######## ONLY NEED TO HERE FOR BI
+
 
 #### ---- Euc dist ---- #####
 #euclidean distance for each environmental variable (euc.dist <- function(x1, x2) sqrt(sum((x1 - x2) ^ 2)))

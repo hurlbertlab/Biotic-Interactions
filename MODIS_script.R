@@ -58,7 +58,33 @@ plot(circs.sp)
 
 setwd('Z:/GIS/MODIS NDVI')
 
-env.data = raster('Vegetation_Indices_may-aug_2000-2010')
+evi.data = raster('Vegetation_Indices_may-aug_2000-2010')
+
+setwd('C:/Git/Biotic-Interactions/ENV DATA')
+# Read in stack of layers from all 12 months 
+tmean <- getData("worldclim", var = "tmean", res = 10)
+files<-paste('tmean',1:12,'.bil',sep='')
+tmeans<-stack(files)
+mat = calc(tmeans, mean)
+
+#### ----Precip ----#####
+#read in precip data from world clim, stack data to get 1 MAP value
+# Read in stack of layers from all 12 months
+prec <- getData("worldclim", var = "prec", res = 10)
+pfiles<-paste('prec',1:12,'.bil',sep='')
+pmeans<-stack(pfiles)
+map = calc(pmeans, mean)
+
+#### ----Elev ----#####
+#read in elevation data from world clim
+elev <- getData("worldclim", var = "alt", res = 10)
+alt_files<-paste('alt_10m_bil', sep='')
+
+
+setwd('C:/Git/Biotic-Interactions')
+#### ----EVI ----#####
+#see MODIS_script for data
+multyears <- 2001:2015
 
 
 # Define the projection of the raster layer (this may be different for different data)
@@ -68,18 +94,44 @@ projection(env.data) = CRS("+proj=longlat +ellps=WGS84")
 
 # Make a dataframe to store environmental data
 #   Adds the first column atPoint by extracting values found exactly at the route coordinates
+env.data = c()
+
+env = c(mat, map, elev)
+  
+#for(env.i in env){
+# Extract Data
+mat.point = raster::extract(mat, routes)
+mat.mean = raster::extract(mat, circs.sp, fun = mean, na.rm=T)
+mat.var = raster::extract(mat, circs.sp, fun = mean, na.rm=T)
+#env.data = rbind(env.data, c(env.i,env.point, env.mean,env.var))
+#}
+env_mat = data.frame(stateroute = names(circs.sp), mat.point = mat.point, mat.mean = mat.mean, mat.var = mat.var)
 
 # Extract Data
-env.point = raster::extract(env.data, routes)
-env.mean = raster::extract(env.data, circs.sp, fun = mean, na.rm=T)
-env.var = raster::extract(env.data, circs.sp, fun = mean, na.rm=T)
+elev.point = raster::extract(elev, routes)
+elev.mean = raster::extract(elev, circs.sp, fun = mean, na.rm=T)
+elev.var = raster::extract(elev, circs.sp, fun = mean, na.rm=T)
+
+env_elev = data.frame(stateroute = names(circs.sp), elev.point = elev.point, elev.mean = elev.mean, elev.var = elev.var)
+
+# Extract Data
+map.point = raster::extract(map, routes)
+map.mean = raster::extract(map, circs.sp, fun = mean, na.rm=T)
+map.var = raster::extract(map, circs.sp, fun = mean, na.rm=T)
+
+env_map = data.frame(stateroute = names(circs.sp), map.point = map.point, map.mean = map.mean, map.var = map.var)
+# Extract EVI Data
+evi.point = raster::extract(evi.data, routes)
+evi.mean = raster::extract(evi.data, circs.sp, fun = mean, na.rm=T)
+evi.var = raster::extract(evi.data, circs.sp, fun = mean, na.rm=T)
 
 # Put into dataframe
-env = data.frame(stateroute = names(circs.sp), env.point = env.point, env.mean = env.mean, env.var = env.var)
+env_evi = data.frame(stateroute = names(circs.sp), env.point = evi.point, env.mean = evi.mean, env.var = evi.var)
 
+# merge together
+all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, env_elev, env_map, env_evi))
 
-
-write.csv(env,'your_new_data_file.csv',row.names=F)
+write.csv(all_env,'C:/git/Biotic-Interactions/2001_2015_bbs_routes_Env.csv',row.names=F)
 
 
 

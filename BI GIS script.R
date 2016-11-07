@@ -150,20 +150,17 @@ for (sp in focal_spp){
   sp_routes = read.csv(paste('routes', unique(spsub$Aou), 'csv', sep = '.'), header = TRUE)
   names(sp_routes) = c("stateroute", "count")
   routes_list = c(sp_routes$stateroute)
-  routes_list = data.frame(sp, routes_list)
-  print(length(routes_list))
-  #temp_sub = subset(temp_occ, Aou == spAOU)
-  #stroutes = merge(temp_sub[,c("Aou", "stateroute")], routes_list, by.x = "stateroute", by.y="routes_list")
-  # expect_pres=rbind(expect_pres, sp,routes_list)
+  temp_sub = subset(temp_occ, Aou == spAOU)
+  routes_list = data.frame(sp, unique(temp_sub$Aou) ,routes_list)
+
+  expect_pres=rbind(expect_pres, routes_list)
 }
 
-setwd("C:/git/Biotic_Interations_Snell")
+setwd("C:/Git/Biotic-Interactions")
 expect_pres = data.frame(expect_pres)
-#expect_pres1 = gather(expect_pres, AOU,stateroute, V1:V100)
   
-#names(centroid) = c("Species", "FocalAOU", "Long", "Lat")
-#centroid$Lat = as.numeric(paste(centroid$Lat))
-#centroid$Long = as.numeric(paste(centroid$Long))
+names(expect_pres) = c("Species", "FocalAOU", "stateroute")
+
 write.csv(expect_pres,"expect_pres.csv",row.names=FALSE)
 
 ######## PDF of each species BBS occurrences ########

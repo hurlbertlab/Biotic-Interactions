@@ -23,12 +23,12 @@ bbs = read.csv('bbs_abun.csv', header = T)
 # subset bbs abundance columns
 bbs = bbs[, (names(bbs) %in% c("stateroute", "Aou", "Year","SpeciesTotal",  'routeID', 'Lati', 'Longi'))]
 
-# read in expected presence data based on BBS for 372 landbird species----- 1996-2010 FIX
-expect_pres = read.csv('expected_presence_on_BBS_routes.csv', header = T)
+# read in expected presence data based on BBS for 372 landbird species --- 2001-2015
+expect_pres = read.csv('expect_pres.csv', header = T)
 
-# read in BBS temporal occupancy data (just for 372 landbird species) ---2001-2015
-temp_occ = read.csv("bbs_sub1.csv", header=TRUE) %>%
-  filter(Aou %in% subsetocc$AOU)
+# read in BBS temporal occupancy data (just for 372 landbird species) --- 2001-2015
+temp_occ = read.csv("bbs_sub1.csv", header=TRUE) 
+temp_occ = subset(temp_occ, Aou %in% subsetocc$AOU)
 
 
 ############# ---- Set up pairwise comparison table ---- #############
@@ -139,10 +139,10 @@ write.csv(new_spec_weights, "new_spec_weights.csv", row.names=FALSE)
 # pull out stateroutes that have been continuously sampled 1996-2010
 routes = unique(temp_occ$stateroute)
 # merge expected presence data with species name information
-expect_pres$AOU[expect_pres$AOU == 7220] <- 7222
-sub_ep = merge(expect_pres[,c('stateroute', 'AOU')], focal_AOU, by.x = 'AOU',by.y="focalAOU", all.x=TRUE) # want all = TRUE for exp pres
+expect_pres$FocalAOU[expect_pres$FocalAOU == 7220] <- 7222
+sub_ep = merge(expect_pres[,c('stateroute', 'FocalAOU')], focal_AOU, by.x = 'FocalAOU',by.y="focalAOU", all.x=TRUE) # want all = TRUE for exp pres
 # merge expected presence with occupancy data
-new_occ = merge(sub_ep, temp_occ, by.x = c('stateroute', 'AOU'), by.y = c('stateroute', 'Aou'), all=TRUE) 
+new_occ = merge(sub_ep, temp_occ, by.x = c('stateroute', 'FocalAOU'), by.y = c('stateroute', 'Aou'), all=TRUE) 
 new_occ$n[is.na(new_occ$n)] <- 0
 new_occ$occ[is.na(new_occ$occ)] <- 0
 
@@ -161,7 +161,7 @@ bbs_pool = bbs %>%
 names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
 
 # merge in occupancies of focal
-occ_abun = merge(bbs_pool, new_occ2, by = c("AOU", "stateroute"))
+occ_abun = merge(bbs_pool, new_occ2, by.x = c("AOU", "stateroute"),by.y = c("FocalAOU", "stateroute"))
 names(occ_abun)[names(occ_abun)=="abundance"] <- "FocalAbun"
 
 # Take range overlap area to assign "main competitor" for each focal species
@@ -191,7 +191,7 @@ main_comp_abun = left_join(occ_abun, bbs_pool, by = c('CompAOU' = 'AOU', 'stater
   left_join(shapefile_areas[, c('focalAOU', 'compAOU', 'mainCompetitor')], 
             by = c('AOU' = 'focalAOU', 'CompAOU' = 'compAOU')) %>%
   group_by(AOU, stateroute, Focal, Family, occ) %>%
-  filter(mainCompetitor == 1) %>%
+  dplyr::filter(mainCompetitor == 1) %>%
   dplyr::summarize(mainCompN = abundance)
 
 focalcompoutput = left_join(main_comp_abun, all_comp_abun)
@@ -202,7 +202,7 @@ colnames(focalcompoutput) = c("FocalAOU","stateroute","FocalCommonName","Family"
 # Filter number to spp present in at least 20 routes for better model results
 # Subset to get the count of routes for each spp
 numroutes = c()
-for (sp in unique(focalcompoutput$FocalAOU)){
+for (sp in focalcompoutput$FocalAOU){
   print(sp)
   tmp = filter(focalcompoutput, FocalAOU == sp) 
   nroutes = tmp %>%

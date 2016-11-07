@@ -10,7 +10,7 @@ Years = (bbs_eco$counts$Year)
 bbs_eco$counts$Year = as.numeric(bbs_eco$counts$Year)
 bbs_eco$counts$stateroute = bbs_eco$counts$statenum*1000 + bbs_eco$counts$Route
 
-# Get subset of stateroutes that have been surveyed every year from 1996-2010
+# Get subset of stateroutes that have been surveyed every year from 2001-2015
 good_rtes = bbs_eco$counts %>% 
   filter(Year >= 2001, Year <= 2015) %>% 
   dplyr::select(Year, stateroute) %>%
