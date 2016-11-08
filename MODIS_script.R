@@ -133,5 +133,41 @@ all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, en
 
 write.csv(all_env,'C:/git/Biotic-Interactions/2001_2015_bbs_routes_Env.csv',row.names=F)
 
+####----Creating an environmental matrix ----####
+occumatrix <- read.csv("bbs_sub1.csv", header = T)
+route.locs = read.csv('latlong_rtes.csv')
+
+latlongs = subset(route.locs, select = c('stateroute', 'latitude', 'longitude'))
+latlongs$latitude = abs(latlongs$latitude)
+route.sp = coordinates(latlongs[,3:2])
+
+#mean data for all variables
+envtable <- subset(Env, select = c('stateroute', 'mat.mean', 'map.mean', 'elev.mean', 'evi.mean')) 
+
+##### ---- BIRDS data ----#####
+
+### Calculate metrics of interest
+####---- Creating final data frame----####
+#For loop to calculate mean & standard dev environmental variables for each unique species
+uniq.spp = unique(occumatrix$Aou, header = "Species")
+birdsoutputm = c()
+for (species in uniq.spp) {
+  spec.routes <- occumatrix[(occumatrix$Aou) == species, "stateroute"] #subset routes for each species (i) in tidybirds
+  env.sub <- envtable[envtable$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
+  envmeans = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'evi.mean')], 2, mean))
+  envsd = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'evi.mean')], 2, sd))
+  
+  birdsoutputm = rbind(birdsoutputm, c(species, envmeans, envsd))
+  
+}
+birdsoutput = data.frame(birdsoutputm)
+names(birdsoutput) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean.EVI", "SD.Temp", "SD.Precip", "SD.Elev", "SD.EVI")
+
+### Conduct analyses
+#Calculating z scores for each environmnetal variable (observed mean - predicted mean/predicted SD)
+occuenv$zTemp = (occuenv$mat - occuenv$Mean.Temp) / occuenv$SD.Temp
+occuenv$zPrecip = (occuenv$ap.mean - occuenv$Mean.Precip) / occuenv$SD.Precip
+occuenv$zElev = (occuenv$elev.mean - occuenv$Mean.Elev) / occuenv$SD.Elev
+occuenv$zEVI = (occuenv$sum.EVI - occuenv$Mean.EVI) / occuenv$SD.EVI
 
 
