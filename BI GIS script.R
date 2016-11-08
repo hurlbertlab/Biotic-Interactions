@@ -116,7 +116,11 @@ write.csv(centroid,"centroid.csv",row.names=FALSE)
 
 ######## Calculating expected presences for each species using whole range #####
 bbs_routes$latitude = abs(bbs_routes$latitude)
+bbs_routes = dplyr::select(bbs_routes, -c(statenum, route))
 routes = unique(bbs_routes$stateroute)
+
+coordinates(bbs_routes) <- c("longitude", "latitude")
+proj4string(bbs_routes) <- proj4string(sporigin)
 
 expect_pres = c()
 
@@ -137,20 +141,11 @@ for (sp in focal_spp){
   proj4string(test.poly) <- intl_proj
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
 
- # coordinates(bbs_routes) <- c("longitude", "latitude")
- # proj4string(bbs_routes) <- proj4string(sporigin)
-  
-  routes_inside <- over(bbs_routes, as(sporigin, "SpatialPolygons"))
-  routes_sub = routes_inside[!is.na(routes_inside)]
-  routes_sub = data.frame(routes_sub)
-
-  write.csv(routes_sub, paste('routes', spAOU, 'csv', sep = '.'))
-  sp_routes = read.csv(paste('routes', spAOU, 'csv', sep = '.'), header = TRUE)
-  names(sp_routes) = c("stateroute", "count")
-  routes_list = c(sp_routes$stateroute)
-  routes_list = data.frame(sp, spAOU, routes_list)
-  
-  expect_pres=rbind(expect_pres, routes_list)
+  # source: http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat
+  routes_inside <- bbs_routes[!is.na(over(bbs_routes,as(sporigin,"SpatialPolygons"))),]
+  routes_inside = data.frame(routes_inside)
+  routes_inside = cbind(routes_inside, spAOU)
+  expect_pres=rbind(expect_pres, routes_inside)
 }
 
 setwd("C:/Git/Biotic-Interactions")
