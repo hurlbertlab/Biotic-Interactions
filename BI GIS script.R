@@ -16,7 +16,9 @@ library(tidyr)
 # read in temporal occupancy data from BI occ script
 temp_occ = read.csv("bbs_sub1.csv", header=TRUE)
 # read in bird range shps
-all_spp_list = list.files('Z:/GIS/birds/All/All')
+shapefile_path = 'Z:/GIS/birds/All/All/'
+
+all_spp_list = list.files(shapefile_path)
 # read in lat long data
 bbs_routes = read.csv("latlong_rtes.csv",header =TRUE)
 
@@ -40,7 +42,7 @@ if(FALSE) {  #Blocking out the for loop below. Need to change to TRUE if you wan
     t2 = t1[grep('.shp', t1)]
     t3 = strsplit(t2, ".shp")
     
-    test.poly <- readShapePoly(paste("z:/GIS/birds/All/All/", t3, sep = "")) # reads in species-specific shapefile
+    test.poly <- readShapePoly(paste(shapefile_path, t3, sep = "")) # reads in species-specific shapefile
     proj4string(test.poly) <- intl_proj
     colors = c("blue", "yellow", "green", "red", "purple")
     # subset to just permanent or breeding residents
@@ -59,7 +61,7 @@ if(FALSE) {  #Blocking out the for loop below. Need to change to TRUE if you wan
       c1 = all_spp_list[grep(co, all_spp_list)]
       c2 = c1[grep('.shp', c1)]
       c3 = strsplit(c2, ".shp")
-      comp.poly <- readShapePoly(paste("Z:/GIS/birds/All/All/", c3, sep = "")) # reads in species-specific shapefile
+      comp.poly <- readShapePoly(paste(shapefile_path, c3, sep = "")) # reads in species-specific shapefile
       proj4string(comp.poly) <- intl_proj
       corigin = comp.poly[comp.poly@data$SEASONAL == 1|comp.poly@data$SEASONAL == 2|comp.poly@data$SEASONAL ==5,]
       corigin = spTransform(corigin, sp_proj)
@@ -94,7 +96,7 @@ for (sp in focal_spp){
   t2 = t1[grep('.shp', t1)]
   t3 = strsplit(t2, ".shp")
   
-  test.poly <- readShapePoly(paste("z:/GIS/birds/All/All/", t3, sep = "")) # reads in species-specific shapefile
+  test.poly <- readShapePoly(paste(shapefile_path, t3, sep = "")) # reads in species-specific shapefile
   proj4string(test.poly) <- intl_proj
   colors = c("blue", "yellow", "green", "red", "purple")
   # subset to just permanent or breeding residents
@@ -135,7 +137,7 @@ for (sp in focal_spp){
   t2 = t1[grep('.shp', t1)]
   t3 = strsplit(t2, ".shp")
   
-  test.poly <- readShapePoly(paste("z:/GIS/birds/All/All/", t3, sep = "")) # reads in species-specific shapefile
+  test.poly <- readShapePoly(paste(shapefile_path, t3, sep = "")) # reads in species-specific shapefile
   proj4string(test.poly) <- intl_proj
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
 
