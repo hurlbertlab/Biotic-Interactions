@@ -226,8 +226,8 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompSum/(focalcompsub$FocalAbunda
 subfocalspecies = unique(focalcompsub$FocalAOU)
 
 #### ---- Processing Environmental Data - Re-done from Snell_code.R ---- ####
-# read in raw env data (from Coyle et al)
-all_env = read.csv('All Env Data.csv', header = T)
+# read in raw env data UPDATED from MODIS script
+all_env = read.csv('occuenv.csv', header = T)
 # merge in ENV
 all_expected_pres = merge(all_env[,c("stateroute", "Longi", "Lati",  'sum.EVI', 'elev.mean', 'mat', 'ap.mean')], 
                           focalcompsub, by = "stateroute")

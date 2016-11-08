@@ -150,7 +150,7 @@ for (sp in focal_spp){
   routes_list = c(sp_routes$stateroute)
   routes_list = data.frame(sp, spAOU, routes_list)
   
-  expect_pres=rbind(expect_pres, sp,spAOU, routes_list)
+  expect_pres=rbind(expect_pres, routes_list)
 }
 
 setwd("C:/Git/Biotic-Interactions")
