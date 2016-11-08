@@ -115,13 +115,11 @@ centroid$Long = as.numeric(paste(centroid$Long))
 write.csv(centroid,"centroid.csv",row.names=FALSE)
 
 ######## Calculating expected presences for each species using whole range #####
-spp_latlongs = merge(temp_occ, bbs_routes, by = "stateroute")
-spp_latlongs$latitude = abs(spp_latlongs$latitude)
+bbs_routes$latitude = abs(bbs_routes$latitude)
 routes = unique(bbs_routes$stateroute)
 
 expect_pres = c()
 
-focal_spp = subset(focal_spp, focal_spp != "Amphispiza_belli") # no matches between points and polygons
 file_names = dir('sp_routes/')
 setwd("sp_routes/")
 
@@ -131,8 +129,6 @@ for (sp in focal_spp){
   focalAOU = subset(new_spec_weights, focalcat == sp)
   spAOU = unique(focalAOU$focalAOU)
   
-  spsub = subset(spp_latlongs, Aou == spAOU)
-  
   t1 = all_spp_list[grep(sp, all_spp_list)]
   t2 = t1[grep('.shp', t1)]
   t3 = strsplit(t2, ".shp")
@@ -141,21 +137,20 @@ for (sp in focal_spp){
   proj4string(test.poly) <- intl_proj
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
 
-  coordinates(spsub) <- c("longitude", "latitude")
-  proj4string(spsub) <- proj4string(sporigin)
+ # coordinates(bbs_routes) <- c("longitude", "latitude")
+ # proj4string(bbs_routes) <- proj4string(sporigin)
   
-  routes_inside <- over(spsub, as(sporigin, "SpatialPolygons"))
+  routes_inside <- over(bbs_routes, as(sporigin, "SpatialPolygons"))
   routes_sub = routes_inside[!is.na(routes_inside)]
   routes_sub = data.frame(routes_sub)
 
-  #write.csv(routes_sub, paste('sp_routes/routes', unique(spsub$Aou), 'csv', sep = '.'))
-  sp_routes = read.csv(paste('routes', unique(spsub$Aou), 'csv', sep = '.'), header = TRUE)
+  write.csv(routes_sub, paste('routes', spAOU, 'csv', sep = '.'))
+  sp_routes = read.csv(paste('routes', spAOU, 'csv', sep = '.'), header = TRUE)
   names(sp_routes) = c("stateroute", "count")
   routes_list = c(sp_routes$stateroute)
-  temp_sub = subset(temp_occ, Aou == spAOU)
-  routes_list = data.frame(sp, unique(temp_sub$Aou) ,routes_list)
-
-  expect_pres=rbind(expect_pres, routes_list)
+  routes_list = data.frame(sp, spAOU, routes_list)
+  
+  expect_pres=rbind(expect_pres, sp,spAOU, routes_list)
 }
 
 setwd("C:/Git/Biotic-Interactions")

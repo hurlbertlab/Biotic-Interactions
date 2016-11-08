@@ -102,7 +102,7 @@ env = c(mat, map, elev)
 # Extract Data
 mat.point = raster::extract(mat, routes)
 mat.mean = raster::extract(mat, circs.sp, fun = mean, na.rm=T)
-mat.var = raster::extract(mat, circs.sp, fun = mean, na.rm=T)
+mat.var = raster::extract(mat, circs.sp, fun = var, na.rm=T)
 #env.data = rbind(env.data, c(env.i,env.point, env.mean,env.var))
 #}
 env_mat = data.frame(stateroute = names(circs.sp), mat.point = mat.point, mat.mean = mat.mean, mat.var = mat.var)
@@ -110,20 +110,20 @@ env_mat = data.frame(stateroute = names(circs.sp), mat.point = mat.point, mat.me
 # Extract Data
 elev.point = raster::extract(elev, routes)
 elev.mean = raster::extract(elev, circs.sp, fun = mean, na.rm=T)
-elev.var = raster::extract(elev, circs.sp, fun = mean, na.rm=T)
+elev.var = raster::extract(elev, circs.sp, fun = var, na.rm=T)
 
 env_elev = data.frame(stateroute = names(circs.sp), elev.point = elev.point, elev.mean = elev.mean, elev.var = elev.var)
 
 # Extract Data
 map.point = raster::extract(map, routes)
 map.mean = raster::extract(map, circs.sp, fun = mean, na.rm=T)
-map.var = raster::extract(map, circs.sp, fun = mean, na.rm=T)
+map.var = raster::extract(map, circs.sp, fun = var, na.rm=T)
 
 env_map = data.frame(stateroute = names(circs.sp), map.point = map.point, map.mean = map.mean, map.var = map.var)
 # Extract EVI Data
 evi.point = raster::extract(evi.data, routes)
 evi.mean = raster::extract(evi.data, circs.sp, fun = mean, na.rm=T)
-evi.var = raster::extract(evi.data, circs.sp, fun = mean, na.rm=T)
+evi.var = raster::extract(evi.data, circs.sp, fun = var, na.rm=T)
 
 # Put into dataframe
 env_evi = data.frame(stateroute = names(circs.sp), env.point = evi.point, env.mean = evi.mean, env.var = evi.var)
