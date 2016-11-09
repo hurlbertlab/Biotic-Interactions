@@ -151,7 +151,7 @@ for (sp in focal_spp){
 setwd("C:/Git/Biotic-Interactions")
 expect_pres = data.frame(expect_pres)
   
-names(expect_pres) = c("Species", "FocalAOU", "stateroute")
+expect_pres = dplyr::select(expect_pres, -optional)
 
 write.csv(expect_pres,"expect_pres.csv",row.names=FALSE)
 

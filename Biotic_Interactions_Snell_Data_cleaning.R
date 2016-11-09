@@ -32,11 +32,6 @@ temp_occ = subset(temp_occ, Aou %in% subsetocc$AOU)
 
 
 ############# ---- Set up pairwise comparison table ---- #############
-# read in species trophic assignment table
-ttable = read.csv("trophic_table.csv", header = TRUE)
-# merge trophic table with range occupancy data
-ttable2 = merge(ttable, Hurlbert_o, by = "AOU")
-
 # read in table with pairwise comparison of each focal species to several potential competitors - created by hand
 focal_competitor_table = read.csv("focal spp.csv", header = TRUE)
 focal_competitor_table = dplyr::select(focal_competitor_table, AOU, CommonName, Competitor)
