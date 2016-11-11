@@ -140,9 +140,10 @@ for (sp in focal_spp){
   test.poly <- readShapePoly(paste(shapefile_path, t3, sep = "")) # reads in species-specific shapefile
   proj4string(test.poly) <- intl_proj
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
-
+  plot(sporigin)
   # source: http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat
   routes_inside <- bbs_routes[!is.na(over(bbs_routes,as(sporigin,"SpatialPolygons"))),]
+  plot(routes_inside, add = T)
   routes_inside = data.frame(routes_inside)
   routes_inside = cbind(routes_inside, spAOU)
   expect_pres=rbind(expect_pres, routes_inside)

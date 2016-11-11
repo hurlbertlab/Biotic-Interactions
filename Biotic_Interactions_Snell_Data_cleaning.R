@@ -3,7 +3,7 @@
 # 63 focal species and their competitors using occupancy, abundance, and environmental data.
 # Env data was formatted in Snell_code.R from BIOL 465 project. Occupancy data from BBS ecoretriever.
 
-#setwd("C:/git/core-transient/scripts/R-scripts/Biotic Interactions Snell")
+#setwd("C:/git/Biotic-Interactions")
 #### ---- Inital Formatting ---- ####
 library(plyr)
 library(dplyr)
@@ -134,10 +134,10 @@ write.csv(new_spec_weights, "new_spec_weights.csv", row.names=FALSE)
 # pull out stateroutes that have been continuously sampled 1996-2010
 routes = unique(temp_occ$stateroute)
 # merge expected presence data with species name information
-expect_pres$FocalAOU[expect_pres$FocalAOU == 7220] <- 7222
-sub_ep = merge(expect_pres[,c('stateroute', 'FocalAOU')], focal_AOU, by.x = 'FocalAOU', by.y="focalAOU", all.x=TRUE) # want all = TRUE for exp pres
+# expect_pres$FocalAOU[expect_pres$FocalAOU == 7220] <- 7222
+sub_ep = merge(expect_pres[,c('stateroute', 'spAOU')], focal_AOU, by.x = 'spAOU', by.y="focalAOU", all.x=TRUE) # want all = TRUE for exp pres
 # merge expected presence with occupancy data
-new_occ = merge(sub_ep, temp_occ, by.x = c('stateroute', 'FocalAOU'), by.y = c('stateroute', 'Aou'), all=TRUE) 
+new_occ = merge(sub_ep, temp_occ, by.x = c('stateroute', 'spAOU'), by.y = c('stateroute', 'Aou'), all=TRUE) 
 new_occ$n[is.na(new_occ$n)] <- 0
 new_occ$occ[is.na(new_occ$occ)] <- 0
 
@@ -156,7 +156,7 @@ bbs_pool = bbs %>%
 names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
 
 # merge in occupancies of focal
-occ_abun = merge(bbs_pool, new_occ, by.x = c("AOU", "stateroute"),by.y = c("FocalAOU", "stateroute"), all=TRUE)
+occ_abun = merge(bbs_pool, new_occ, by.x = c("AOU", "stateroute"),by.y = c("spAOU", "stateroute"), all=TRUE)
 names(occ_abun)[names(occ_abun)=="abundance"] <- "FocalAbun"
 
 # Take range overlap area to assign "main competitor" for each focal species
