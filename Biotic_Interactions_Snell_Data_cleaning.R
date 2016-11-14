@@ -208,23 +208,22 @@ for (sp in unique(focalcompoutput$FocalAOU)){
 numroutes = data.frame(numroutes)
 colnames(numroutes) = c("V1","FocalAOU","nroutes")
 
-# Filter count to greater than or equal to 20
+# Filter count to greater than or equal to 20 - nroutes much higher with updated routes
 numroutes20 = filter(numroutes, nroutes >= 20)
 numroutes20$nroutes = as.numeric(numroutes20$nroutes)
-# Merge with focalcompoutput data table, new # of focal spp is 63 with filters applied
-focalcompsub = merge(focalcompoutput, numroutes20, by = "FocalAOU")
+
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR MAIN
-focalcompsub$comp_scaled = focalcompsub$MainCompSum/(focalcompsub$FocalAbundance + focalcompsub$MainCompSum)
+focalcompoutput$comp_scaled = focalcompoutput$MainCompSum/(focalcompoutput$FocalAbundance + focalcompoutput$MainCompSum)
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR ALL
-focalcompsub$all_comp_scaled = focalcompsub$AllCompSum/(focalcompsub$FocalAbundance + focalcompsub$AllCompSum)
+focalcompoutput$all_comp_scaled = focalcompoutput$AllCompSum/(focalcompoutput$FocalAbundance + focalcompoutput$AllCompSum)
 # Creating new focalspecies index
-subfocalspecies = unique(focalcompsub$FocalAOU)
+subfocalspecies = unique(focalcompoutput$FocalAOU)
 
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
 # read in raw env data UPDATED from MODIS script
 all_env = read.csv('occuenv.csv', header = T)
 # merge in ENV
-all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"))
+all_expected_pres = merge(all_env, focalcompoutput, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"))
 all_expected_pres$V1 = NULL
 write.csv(all_expected_pres,"all_expected_pres.csv", row.names= F)
 

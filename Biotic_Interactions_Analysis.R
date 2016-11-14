@@ -9,9 +9,10 @@ library(lmtest)
 tax_code = read.csv("Tax_AOU_Alpha.csv", header = TRUE)
 temp_occ = read.csv("bbs_sub1.csv", header=TRUE)
 centroid=read.csv("centroid.csv", header=TRUE)
-occuenv=read.csv("occuenv.csv", header=TRUE)
+occuenv= read.csv("all_expected_pres.csv", header = TRUE)
+Hurlbert_o = read.csv('Master_RO_Correlates_20110610.csv', header = T)
 subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
-subfocalspecies = unique(occuenv$Species)
+
 # rescaling all occupancy values  - odds ratio
 # need to get rid of ones in order to not have infinity values 
 edge_adjust = .005 
@@ -22,19 +23,44 @@ occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale))
 
 ##### LIN REG #######
 # create beta output data frame
-beta_lm = matrix(NA, nrow = 67, ncol = 10)
-beta_abun = matrix(NA, nrow = 67, ncol = 10)
+beta_lm = matrix(NA, nrow = 115, ncol = 10)
+beta_abun = matrix(NA, nrow = 115, ncol = 10)
+beta_lm[sp,1] = sp
+beta_lm[sp,2] = summary(competition)$coef[1,"Estimate"]
+beta_lm[sp,3] = summary(competition)$coef[1,"Pr(>|t|)"]
+beta_lm[sp,4] = summary(competition)$r.squared #using multiple rsquared
+beta_lm[sp,5] = summary(env_z)$coef[2,"Estimate"]
+beta_lm[sp,6] = summary(env_z)$coef[2,"Pr(>|t|)"]
+beta_lm[sp,7] = summary(env_z)$r.squared 
+beta_lm[sp,8] = summary(both_z)$coef[2,"Estimate"]
+beta_lm[sp,9] = summary(both_z)$coef[2,"Pr(>|t|)"]
+beta_lm[sp,10] = summary(both_z)$r.squared 
+
+beta_abun[sp,1] = subfocalspecies[sp]
+beta_abun[sp,2] = summary(competition_abun)$coef[2,"Estimate"]
+beta_abun[sp,3] = summary(competition_abun)$coef[2,"Pr(>|t|)"]
+beta_abun[sp,4] = summary(competition_abun)$r.squared #using multiple rsquared
+beta_abun[sp,5] = summary(env_abun)$coef[2,"Estimate"]
+beta_abun[sp,6] = summary(env_abun)$coef[2,"Pr(>|t|)"]
+beta_abun[sp,7] = summary(env_abun)$r.squared 
+beta_abun[sp,8] = summary(both_abun)$coef[2,"Estimate"]
+beta_abun[sp,9] = summary(both_abun)$coef[2,"Pr(>|t|)"]
+beta_abun[sp,10] = summary(both_abun)$r.squared
 
 # for loop subsetting env data to expected occurrence for focal species
 envoutput = c()
 envoutputa = c()
+
+occuenv = na.omit(occuenv)
+subfocalspecies = unique(occuenv$Species)
+
 for (sp in 1:length(subfocalspecies)){
   print(sp)
   temp = subset(occuenv,occuenv$Species == subfocalspecies[sp])
   
   competition <- lm(temp$occ_logit ~  temp$comp_scaled) 
   # z scores separated out for env effects (as opposed to multivariate variable)
-  env_z = lm(occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI), data = temp)
+  env_z = lm(temp$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI), data = temp)
   # z scores separated out for env effects
   both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zEVI), data = temp)
   
@@ -45,27 +71,6 @@ for (sp in 1:length(subfocalspecies)){
   # z scores separated out for env effects - abundance
   both_abun = lm(temp$FocalAbundance ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI), data = temp)
   
-  beta_lm[sp,1] = sp
-  beta_lm[sp,2] = summary(competition)$coef[1,"Estimate"]
-  beta_lm[sp,3] = summary(competition)$coef[1,"Pr(>|t|)"]
-  beta_lm[sp,4] = summary(competition)$r.squared #using multiple rsquared
-  beta_lm[sp,5] = summary(env_z)$coef[2,"Estimate"]
-  beta_lm[sp,6] = summary(env_z)$coef[2,"Pr(>|t|)"]
-  beta_lm[sp,7] = summary(env_z)$r.squared 
-  beta_lm[sp,8] = summary(both_z)$coef[2,"Estimate"]
-  beta_lm[sp,9] = summary(both_z)$coef[2,"Pr(>|t|)"]
-  beta_lm[sp,10] = summary(both_z)$r.squared 
-  
-  beta_abun[sp,1] = subfocalspecies[sp]
-  beta_abun[sp,2] = summary(competition_abun)$coef[2,"Estimate"]
-  beta_abun[sp,3] = summary(competition_abun)$coef[2,"Pr(>|t|)"]
-  beta_abun[sp,4] = summary(competition_abun)$r.squared #using multiple rsquared
-  beta_abun[sp,5] = summary(env_abun)$coef[2,"Estimate"]
-  beta_abun[sp,6] = summary(env_abun)$coef[2,"Pr(>|t|)"]
-  beta_abun[sp,7] = summary(env_abun)$r.squared 
-  beta_abun[sp,8] = summary(both_abun)$coef[2,"Estimate"]
-  beta_abun[sp,9] = summary(both_abun)$coef[2,"Pr(>|t|)"]
-  beta_abun[sp,10] = summary(both_abun)$r.squared
   
   #variance_partitioning 
   ENV = summary(both_z)$r.squared - summary(competition)$r.squared
@@ -107,7 +112,7 @@ envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'Foc
 
 envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")], by.x='FocalAOU', by.y='AOU')
 
-envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU', all = TRUE)
+envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU')
 #write.csv(envoutput, "envoutput.csv", row.names = FALSE)
 #write.csv(envoutputa, "envoutputa.csv", row.names = FALSE)
 beta_lm = data.frame(beta_lm)
@@ -125,7 +130,7 @@ occumatrix$abTemp=abs(occumatrix$zTemp)
 occumatrix$abElev=abs(occumatrix$zElev)
 occumatrix$abPrecip=abs(occumatrix$zPrecip)
 occumatrix$abEVI=abs(occumatrix$zEVI)
-names(occumatrix)[1] = 'Species'
+
 
 # using equation species sum*Focal occ to get success and failure for binomial anlaysis
 occumatrix$nyears = occumatrix$FocalOcc*15
@@ -283,7 +288,9 @@ envloc$EW <- 0
 envloc$EW[envloc$Long > -98.583333] <- 1 ## from https://tools.wmflabs.org/geohack/geohack.php?pagename=Geographic_center_of_the_contiguous_United_States&params=39_50_N_98_35_W_region:US-KS_type:landmark&title=Geographic+Center+of+the+Contiguous+United+States
 # 1 = East
 
-envloc1 = merge(envloc, occuenv[,c("Species", "Family")], by.x = "FocalAOU", by.y = "Species")
+envloc1 = merge(envloc, occumatrix[,c("Species", "Family")], by.x = "FocalAOU", by.y="Species", all.y = FALSE)
+# cutting down to unique subset
+envloc1 = unique(envloc1)
 
 nrank = envloc1 %>% 
   mutate(rank = row_number(-ENV))# change here for comp
@@ -298,82 +305,62 @@ envrank = envflip %>%
   mutate(rank = row_number(-value)) # need to get just the envs to rank, then plot
 envrank <- envrank[order(envrank$rank),]
 
-
-# Stacked bar plot for each focal aou
-ggplot(data=envflip, aes(x=factor(FocalAOU), y=value, fill=Type)) + geom_bar(stat = "identity") + xlab("Focal AOU") + ylab("Percent Variance Explained") + theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + theme_classic()
-
 ### CREATE LABEL DF FAMilY ########
 lab1 = filter(envflip, Type == "ENV") # change here for comp
 lab1$Fam_abbrev = lab1$Family
 lab1$Fam_abbrev = gsub('Emberizidae','E', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Turdidae','Tu', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Fringillidae','F', lab1$Fam_abbrev)
-lab1$Fam_abbrev = gsub('Parulidae','P', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Tyrannidae','Ty', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Mimidae','M', lab1$Fam_abbrev)
-lab1$Fam_abbrev = gsub('Hirundinidae','H', lab1$Fam_abbrev)
-lab1$Fam_abbrev = gsub('Regulidae','R', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Vireonidae','V', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Aegithalidae','A', lab1$Fam_abbrev)                        
 lab1$Fam_abbrev = gsub('Corvidae','Co', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Troglodytidae','T', lab1$Fam_abbrev)
-lab1$Fam_abbrev = gsub('Certhiidae','C', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Cuculidae','Cu', lab1$Fam_abbrev)
-lab1$Fam_abbrev = gsub('Sittidae','S', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Icteridae','I', lab1$Fam_abbrev)
 lab1$Fam_abbrev = gsub('Picidae','Pi', lab1$Fam_abbrev)
+lab1$Fam_abbrev = gsub('Phasianidae','Ph', lab1$Fam_abbrev)
+lab1$Fam_abbrev = gsub('Odontophoridae','O', lab1$Fam_abbrev)
+lab1$Fam_abbrev = gsub('Columbidae','Cl', lab1$Fam_abbrev)
+lab1$Fam_abbrev = gsub('Trochilidae','Tr', lab1$Fam_abbrev)
+lab1$Fam_abbrev = gsub('Cardinalidae','Ca', lab1$Fam_abbrev)
+lab1$Fam_abbrev = gsub('Paridae','Pa', lab1$Fam_abbrev)
+lab1$Fam_abbrev = gsub('Sylviidae','S', lab1$Fam_abbrev)
+lab1$Fam_abbrev = gsub('Parulidae','P', lab1$Fam_abbrev)
 
 lab1$Fam_abbrevf = as.factor(as.character(lab1$Fam_abbrev))
-lab1$Fam_abbrevf = as.factor(as.numeric(lab1$Fam_abbrevf))
-lab1$Fam_abbrevf = gsub('1','hello', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('2','its', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('3','meee', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('4','was', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('5','wondering', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('6','iffffff', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('7','after', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('8','all', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('9','these', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('hello0','years', lab1$Fam_abbrevf)                        
-lab1$Fam_abbrevf = gsub('hellohello','youd', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('helloits','like', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('hellomeee','tooooo', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('hellowas','meet', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('hellowondering','gooooo', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('helloiffffff','over', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('helloafter','everything', lab1$Fam_abbrevf)
-
-lab1$Fam_abbrevf = gsub('hello','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('its','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('meee','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('was','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('wondering','#9ecae1', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('iffffff','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('after','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('all','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('these','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('years','#0080ff', lab1$Fam_abbrevf)                       
-lab1$Fam_abbrevf = gsub('youd','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('like','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('tooooo','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('meet','#000000', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('gooooo','#7f7fff', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('over','#0000ff', lab1$Fam_abbrevf)
-lab1$Fam_abbrevf = gsub('everything','#048691', lab1$Fam_abbrevf)
-famlabel = lab1$Fam_abbrev
+lab1$Fam_abbrevf = gsub('E','#000000', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('Tu','#a6bddb', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('F','#67a9cf', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('Tr','#048691', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('Ty','#9ecae1', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('M','#02818a', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('V','#016c59', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('A','#014636', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('Co','#081d58', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('T','#0080ff', lab1$Fam_abbrevf)                       
+lab1$Fam_abbrevf = gsub('Cu','#253494', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('I','#225ea8', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('Pi','#1d91c0', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('Ph','#41b6c4', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('O','#7f7fff', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('Cl','#0000ff', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('Ca','#016c59', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('Pa','#02818a', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('S','#014636', lab1$Fam_abbrevf)
+lab1$Fam_abbrevf = gsub('P','#3690c0', lab1$Fam_abbrevf)
+famlabel= lab1$Fam_abbrev
 ####### OTHER LABEL ######
 lab1$mig_abbrev = lab1$migclass
 lab1$mig_abbrev = gsub("neotrop", 'L', lab1$mig_abbrev)
 lab1$mig_abbrev = gsub("resid", 'R', lab1$mig_abbrev)
 lab1$mig_abbrev = gsub("short", 'S', lab1$mig_abbrev)
 lab1$mig_abbrevf = as.factor(as.character(lab1$mig_abbrev))
-lab1$mig_abbrevf = as.factor(as.numeric(lab1$mig_abbrevf))
-lab1$mig_abbrevf = gsub('1','hello', lab1$mig_abbrevf)
-lab1$mig_abbrevf = gsub('2','its', lab1$mig_abbrevf)
-lab1$mig_abbrevf = gsub('3','meee', lab1$mig_abbrevf)
-lab1$mig_abbrevf = gsub('hello','#bae4b3', lab1$mig_abbrevf)
-lab1$mig_abbrevf = gsub('its','#31a354', lab1$mig_abbrevf)
-lab1$mig_abbrevf = gsub('meee','#006d2c', lab1$mig_abbrevf)
+
+lab1$mig_abbrevf = gsub('L','#bae4b3', lab1$mig_abbrevf)
+lab1$mig_abbrevf = gsub('R','#31a354', lab1$mig_abbrevf)
+lab1$mig_abbrevf = gsub('S','#006d2c', lab1$mig_abbrevf)
 miglabel= lab1$mig_abbrev
 
 lab1$trophlabel = lab1$Trophic.Group
@@ -385,29 +372,28 @@ lab1$trophlabel = gsub("insectivore", 'I', lab1$trophlabel)
 lab1$trophlabel = gsub("nectarivore", 'N', lab1$trophlabel)
 lab1$trophlabel = gsub("omnivore", 'O', lab1$trophlabel)
 lab1$trophlabelf = as.factor(as.character(lab1$trophlabel))
-lab1$trophlabelf = as.factor(as.numeric(lab1$trophlabelf))
-lab1$trophlabelf = gsub('1','hello', lab1$trophlabelf)
-lab1$trophlabelf = gsub('2','its', lab1$trophlabelf)
-lab1$trophlabelf = gsub('3','meee', lab1$trophlabelf)
-lab1$trophlabelf = gsub('4','ive', lab1$trophlabelf)
-lab1$trophlabelf = gsub('hello','#fbb4b9', lab1$trophlabelf)
-lab1$trophlabelf = gsub('its','#f768a1', lab1$trophlabelf)
-lab1$trophlabelf = gsub('meee','#c51b8a', lab1$trophlabelf)
-lab1$trophlabelf = gsub('ive','#7a0177', lab1$trophlabelf)
 
-lab1$EW[lab1$EW == 1] <- "E"
-lab1$EW[lab1$EW == 0] <- "W" 
+lab1$trophlabelf = gsub('F','#fbb4b9', lab1$trophlabelf)
+lab1$trophlabelf = gsub('G','#f768a1', lab1$trophlabelf)
+lab1$trophlabelf = gsub('H','#c51b8a', lab1$trophlabelf)
+lab1$trophlabelf = gsub('X','#7a0177', lab1$trophlabelf)
+lab1$trophlabelf = gsub('I','#dd1c77', lab1$trophlabelf)
+lab1$trophlabelf = gsub('N','#ce1256', lab1$trophlabelf)
+lab1$trophlabelf = gsub('O','#67001f', lab1$trophlabelf)
+
+lab1$EW[lab1$EW.x == 1] <- "E"
+lab1$EW[lab1$EW.x == 0] <- "W" 
 ###### PLOTTING #####
 # Plot with ENV ranked in decreasing order
 t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("ENV","COMP","SHARED","NONE")))) + 
   geom_bar(stat = "identity")  + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("#2ca25f","#dd1c77","#43a2ca","white"), labels=c("Environment", "Competition","Shared Variance", "")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=12)) + guides(fill=guide_legend(title=""))+ theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
+  scale_fill_manual(values=c("#2ca25f","#dd1c77","#43a2ca","white"), labels=c("Environment", "Competition","Shared Variance", "")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=12)) + guides(fill=guide_legend(title=""))
 
-tt = t + annotate("text", x = 1:63, y = -.03, label = unique(envflip$ALPHA.CODE), angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:63, y = -.06, label = lab1$Fam_abbrev, size=6,vjust=0.5, color = lab1$Fam_abbrevf, fontface =2) + annotate("text", x = 1:63, y = -.08, label = lab1$mig_abbrev, size=6,vjust=0.5, color = lab1$mig_abbrevf, fontface =2) + annotate("text", x = 1:63, y = -.1, label = lab1$trophlabel, size=6,vjust=0.5, color = lab1$trophlabelf, fontface =2) + annotate("text", x = 1:63, y = -.12, label = lab1$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
+tt = t + annotate("text", x = 1:88, y = -.03, label = unique(envflip$FocalAOU), angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:88, y = -.08, label = lab1$mig_abbrev, size=6,vjust=0.5, color = lab1$mig_abbrevf, fontface =2) + annotate("text", x = 1:88, y = -.1, label = lab1$trophlabel, size=6,vjust=0.5, color = lab1$trophlabelf, fontface =2) + annotate("text", x = 1:88, y = -.12, label = lab1$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:88, y = -.06, label = lab1$Fam_abbrev, size=6,vjust=0.5, color = lab1$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
 plot(tt)
 
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/barplot.pdf", height = 26, width = 34)
+ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 26, width = 34)
 
 #Violin plots w location, trophic group, mig
 ggplot(envflip, aes(x = Type, y = value, color = Type)) + geom_violin() 
