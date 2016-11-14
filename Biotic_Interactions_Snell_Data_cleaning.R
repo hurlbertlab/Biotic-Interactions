@@ -197,7 +197,7 @@ colnames(focalcompoutput) = c("FocalAOU","stateroute","FocalCommonName","Family"
 # Filter number to spp present in at least 20 routes for better model results
 # Subset to get the count of routes for each spp
 numroutes = c()
-for (sp in focalcompoutput$FocalAOU){
+for (sp in unique(focalcompoutput$FocalAOU)){ 
   print(sp)
   tmp = filter(focalcompoutput, FocalAOU == sp) 
   nroutes = tmp %>%
@@ -206,7 +206,7 @@ for (sp in focalcompoutput$FocalAOU){
   numroutes = rbind(numroutes, c(sp,nroutes))
 }
 numroutes = data.frame(numroutes)
-colnames(numroutes) = c("FocalAOU","nroutes")
+colnames(numroutes) = c("V1","FocalAOU","nroutes")
 
 # Filter count to greater than or equal to 20
 numroutes20 = filter(numroutes, nroutes >= 20)
@@ -220,38 +220,12 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompSum/(focalcompsub$FocalAbunda
 # Creating new focalspecies index
 subfocalspecies = unique(focalcompsub$FocalAOU)
 
-#### ---- Processing Environmental Data - Re-done from Snell_code.R ---- ####
+#### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
 # read in raw env data UPDATED from MODIS script
 all_env = read.csv('occuenv.csv', header = T)
 # merge in ENV
-all_expected_pres = merge(all_env[,c("stateroute", "Longi", "Lati",  'sum.EVI', 'elev.mean', 'mat', 'ap.mean')], 
-                          focalcompsub, by = "stateroute")
+all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"))
+all_expected_pres$V1 = NULL
+write.csv(all_expected_pres,"all_expected_pres.csv", row.names= F)
 
-write.csv(all_expected_pres,"all_expected_pres.csv", row.names= FALSE)
-
-#For loop to calculate mean & standard dev environmental variables for each unique species (from BIOL 465)
-birdsoutputm = c()
-for (sp in subfocalspecies) {
-  print(sp)
-  spec.routes <- all_expected_pres[(all_expected_pres$FocalAOU) == sp, "stateroute"] #subset routes for each species (i) in tidybirds
-  env.sub <- all_expected_pres[all_expected_pres$stateroute %in% spec.routes,] #subset routes for each env in tidybirds
-  envmeans = as.vector(apply(env.sub[, c("mat", "ap.mean","elev.mean","sum.EVI")], 2, mean))
-  envsd = as.vector(apply(env.sub[, c("mat", "ap.mean","elev.mean","sum.EVI")], 2, sd))
-  
-  birdsoutputm = rbind(birdsoutputm, c(sp, envmeans, envsd))
-  
-}
-birdsoutputm = data.frame(birdsoutputm)
-names(birdsoutputm) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean.EVI", "SD.Temp", "SD.Precip", "SD.Elev", "SD.EVI")
-
-# merge in global mean env data with species-specific env data & occ data
-occuenv = merge(birdsoutputm, all_expected_pres, by.x = "Species", by.y = "FocalAOU")
-
-#Calculating z scores for each environmental variable (observed mean - predicted mean/predicted SD)
-occuenv$zTemp = (occuenv$mat - occuenv$Mean.Temp) / occuenv$SD.Temp
-occuenv$zPrecip = (occuenv$ap.mean - occuenv$Mean.Precip) / occuenv$SD.Precip
-occuenv$zElev = (occuenv$elev.mean - occuenv$Mean.Elev) / occuenv$SD.Elev
-occuenv$zEVI = (occuenv$sum.EVI - occuenv$Mean.EVI) / occuenv$SD.EVI
-
-write.csv(occuenv, "occuenv.csv", row.names=FALSE)
 ####### END DATA CLEANING, see analysis script ##########

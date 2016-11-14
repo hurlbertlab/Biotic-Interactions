@@ -42,3 +42,10 @@ latlong_rtes = bbs_eco$routes %>%
   group_by(statenum, route) 
 latlong_rtes$stateroute = latlong_rtes$statenum*1000 + latlong_rtes$route 
 write.csv(latlong_rtes, "latlong_rtes.csv", row.names=FALSE)
+
+
+# get occupancy by stop
+read.csv("Z:/Gartland/BBS scaled/output.csv", header= TRUE)
+bbs_abun = merge(bbs_eco, output, by = c("stateroute", "scale", "Aou"))
+
+
