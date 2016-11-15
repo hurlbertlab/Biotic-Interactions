@@ -5,11 +5,8 @@
 
 #setwd("C:/git/Biotic-Interactions")
 #### ---- Inital Formatting ---- ####
-library(plyr)
 library(dplyr)
 library(tidyr)
-library(ggplot2)
-library(ecoretriever)
 
 # read in range occupancy dataset 
 Hurlbert_o = read.csv('Master_RO_Correlates_20110610.csv', header = T)
@@ -145,18 +142,18 @@ new_occ$occ[is.na(new_occ$occ)] <- 0
 new_occ2 = new_occ[new_occ$stateroute %in% routes, ]
 
 #### ---- Gathering Occupancy and Abundance Data for Biotic Comparisons ---- ####
-focalspecies = unique(new_spec_weights$focalAOU)
+focal_and_comp_species = unique(c(new_spec_weights$focalAOU, new_spec_weights$CompAOU))
 # need to change winter wren AOU to 7222 from 7220 in bbs_pool
 bbs$Aou[bbs$Aou == 7220] <- 7222
 # filter BBS mean abundance by AOU/stateroute by year -------- 
 bbs_pool = bbs %>% 
   group_by(stateroute, Aou) %>% 
   dplyr::summarize(abundance = mean(SpeciesTotal)) %>%
-  filter(Aou %in% focalspecies) 
+  filter(Aou %in% focal_and_comp_species) 
 names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
 
 # merge in occupancies of focal
-occ_abun = merge(bbs_pool, new_occ, by.x = c("AOU", "stateroute"),by.y = c("spAOU", "stateroute"), all=TRUE)
+occ_abun = merge(bbs_pool, new_occ2, by.x = c("AOU", "stateroute"),by.y = c("spAOU", "stateroute"), all=TRUE)
 names(occ_abun)[names(occ_abun)=="abundance"] <- "FocalAbun"
 
 # Take range overlap area to assign "main competitor" for each focal species
