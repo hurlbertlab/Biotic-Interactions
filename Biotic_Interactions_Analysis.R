@@ -278,9 +278,13 @@ dev.off()
 #numspp = merge(numspp_route, latlongs, by = "stateroute" )
 #map("state") 
 #points(numspp$Longi, numspp$Lati, col = "dark green",  pch = 20, cex = numspp$numspp/5)
-envoutput = read.csv("envoutput.csv", header = TRUE)
-envoutput$X <- NULL
-envloc = read.csv("envloc.csv", header = TRUE)
+
+
+#envoutput = read.csv("envoutput.csv", header = TRUE)
+#envoutput$X <- NULL
+#envloc = read.csv("envloc.csv", header = TRUE)
+
+
 #####PLOTTING variance partitioning
 ## Creating env data table to plot ranked data
 
@@ -390,15 +394,10 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("#2ca25f","#dd1c77","#43a2ca","white"), labels=c("Environment", "Competition","Shared Variance", "")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=20), legend.position="top", legend.justification=c(0, 1), legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:88, y = -.03, label = unique(envflip$FocalAOU), angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:88, y = -.08, label = lab1$mig_abbrev, size=6,vjust=0.5, color = lab1$mig_abbrevf, fontface =2) + annotate("text", x = 1:88, y = -.1, label = lab1$trophlabel, size=6,vjust=0.5, color = lab1$trophlabelf, fontface =2) + annotate("text", x = 1:88, y = -.12, label = lab1$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:88, y = -.06, label = lab1$Fam_abbrev, size=6,vjust=0.5, color = lab1$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
+tt = t + annotate("text", x = 1:84, y = -.03, label = unique(envflip$FocalAOU), angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:84, y = -.08, label = lab1$mig_abbrev, size=6,vjust=0.5, color = lab1$mig_abbrevf, fontface =2) + annotate("text", x = 1:84, y = -.1, label = lab1$trophlabel, size=6,vjust=0.5, color = lab1$trophlabelf, fontface =2) + annotate("text", x = 1:84, y = -.12, label = lab1$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:84, y = -.06, label = lab1$Fam_abbrev, size=6,vjust=0.5, color = lab1$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
 plot(tt)
 
 ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 26, width = 34)
-
-#Violin plots w location, trophic group, mig
-ggplot(envflip, aes(x = Type, y = value, color = Type)) + geom_violin() 
-
-ggplot(envloc, aes(x = FocalAOU, y = factor(EW))) + geom_violin() + scale_x_discrete(labels=c("West", "East")) 
 
 ##################### TRAITS Model ####################################
 inverselogit <- function(p) {exp(p)/(1+exp(p))} 
@@ -443,6 +442,7 @@ R2plot2 = merge(R2plot, tomerge, by = "FocalAOU")
 ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=35),axis.title.y=element_text(size=35, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24) + geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1) + geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "#43a2ca", cex =5, stroke = 1) +geom_abline(intercept = 0, slope = 1, col = "red", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=2))
 ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/occvabun.png")
 
+# need to change the slopes
 ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24) + geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1) + geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "#43a2ca", cex =5, stroke = 1) +geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept= 0.03536,slope=0.43437, col = "#2ca25f", lwd = 1,linetype="dotdash")+ geom_smooth(method="lm", se= F, size = 1, aes(linetype = "dotdash", group = ENV.y))+geom_abline(intercept=0.1424,slope=0.4193, col = "#43a2ca", lwd = 1,linetype="dotdash")
 
 

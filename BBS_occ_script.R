@@ -15,7 +15,6 @@ good_rtes = bbs_eco$counts %>%
   filter(Year > 2000, Year < 2016) %>% 
   dplyr::select(Year, stateroute) %>%
   unique() %>%    
-  group_by(Year) %>% 
   dplyr::count(stateroute) %>% 
   filter(n == 15) # have to stay at 15 to keep # of years consistent
 
@@ -23,7 +22,6 @@ good_rtes = bbs_eco$counts %>%
 bbs_sub1 = bbs_eco$counts %>% 
   filter(Year > 2000, Year < 2016, stateroute %in% good_rtes$stateroute) %>% 
   dplyr::select(Year, stateroute, Aou) %>%
-  unique() %>%
   dplyr::count(Aou, stateroute) 
 
 bbs_sub1$occ = bbs_sub1$n/15 # new occupancy values calculated

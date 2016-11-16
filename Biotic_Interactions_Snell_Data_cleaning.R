@@ -128,13 +128,15 @@ new_spec_weights$compcat = gsub(" ", "_", new_spec_weights$CompSciName)
 #write this data frame for GIS script
 write.csv(new_spec_weights, "new_spec_weights.csv", row.names=FALSE) 
 ############# ---- Generate total species occupancies ---- #############
-# pull out stateroutes that have been continuously sampled 1996-2010
+# pull out stateroutes that have been continuously sampled 2001-2015
 routes = unique(temp_occ$stateroute)
 # merge expected presence data with species name information
-# expect_pres$FocalAOU[expect_pres$FocalAOU == 7220] <- 7222
 sub_ep = merge(expect_pres[,c('stateroute', 'spAOU')], focal_AOU, by.x = 'spAOU', by.y="focalAOU", all.x=TRUE) # want all = TRUE for exp pres
 # merge expected presence with occupancy data
-new_occ = merge(sub_ep, temp_occ, by.x = c('stateroute', 'spAOU'), by.y = c('stateroute', 'Aou'), all=TRUE) 
+# only want spp that fulfill body size requirements
+temp_sub = subset(temp_occ, Aou %in% c(new_spec_weights$focalAOU, new_spec_weights$CompAOU))
+
+new_occ = merge(sub_ep, temp_sub, by.x = c('stateroute', 'spAOU'), by.y = c('stateroute', 'Aou'), all=TRUE) 
 new_occ$n[is.na(new_occ$n)] <- 0
 new_occ$occ[is.na(new_occ$occ)] <- 0
 
@@ -151,9 +153,9 @@ bbs_pool = bbs %>%
   dplyr::summarize(abundance = mean(SpeciesTotal)) %>%
   filter(Aou %in% focal_and_comp_species) 
 names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
-
+bbs_pool = data.frame(bbs_pool)
 # merge in occupancies of focal
-occ_abun = merge(bbs_pool, new_occ2, by.x = c("AOU", "stateroute"),by.y = c("spAOU", "stateroute"), all=TRUE)
+occ_abun = merge(new_occ2, bbs_pool, by.y = c("AOU", "stateroute"),by.x = c("spAOU", "stateroute"), all.x=TRUE)
 names(occ_abun)[names(occ_abun)=="abundance"] <- "FocalAbun"
 
 # Take range overlap area to assign "main competitor" for each focal species
@@ -167,7 +169,7 @@ shapefile_areas$PropOverlap = shapefile_areas$area_overlap/shapefile_areas$Focal
 
 # Which competitor has greatest area of overlap? -- main competitor
 shapefile_areas$mainCompetitor = 0 # set up main competitor column, 0 = not the primary competitor
-for (s in focalspecies) {
+for (s in unique(shapefile_areas$focalAOU)) {
   maxOverlap = max(shapefile_areas$PropOverlap[shapefile_areas$focalAOU == s], na.rm = TRUE) #largest area of proportion overlap
   shapefile_areas$mainCompetitor[shapefile_areas$focalAOU == s & shapefile_areas$PropOverlap == maxOverlap] = 1 # 1 assigns main competitor
 }
@@ -175,14 +177,14 @@ for (s in focalspecies) {
 #######----Joining focal competitor tables with abundance tables ----#######
 all_comp_abun = left_join(occ_abun, bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
   left_join(shapefile_areas[, c('focalAOU', 'compAOU', 'mainCompetitor')], 
-  by = c('AOU' = 'focalAOU', 'CompAOU' = 'compAOU')) %>%
-  group_by(AOU, stateroute, Focal, Family, occ, FocalAbun) %>%
+  by = c('spAOU' = 'focalAOU', 'CompAOU' = 'compAOU')) %>%
+  group_by(spAOU, stateroute, Focal, Family, occ, FocalAbun) %>%
   dplyr::summarize(allCompN = sum(abundance, na.rm = T))
 
 main_comp_abun = left_join(occ_abun, bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
   left_join(shapefile_areas[, c('focalAOU', 'compAOU', 'mainCompetitor')], 
-            by = c('AOU' = 'focalAOU', 'CompAOU' = 'compAOU')) %>%
-  group_by(AOU, stateroute, Focal, Family, occ) %>%
+            by = c('spAOU' = 'focalAOU', 'CompAOU' = 'compAOU')) %>%
+  group_by(spAOU, stateroute, Focal, Family, occ) %>%
   dplyr::filter(mainCompetitor == 1) %>%
   dplyr::summarize(mainCompN = abundance)
 
@@ -209,18 +211,21 @@ colnames(numroutes) = c("V1","FocalAOU","nroutes")
 numroutes20 = filter(numroutes, nroutes >= 20)
 numroutes20$nroutes = as.numeric(numroutes20$nroutes)
 
+# Merge with focalcompoutput data table, new # of focal spp is 113 with filters applied
+focalcompsub = merge(focalcompoutput, numroutes20, by = "FocalAOU")
+
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR MAIN
-focalcompoutput$comp_scaled = focalcompoutput$MainCompSum/(focalcompoutput$FocalAbundance + focalcompoutput$MainCompSum)
+focalcompsub$comp_scaled = focalcompsub$MainCompSum/(focalcompsub$FocalAbundance + focalcompsub$MainCompSum)
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR ALL
-focalcompoutput$all_comp_scaled = focalcompoutput$AllCompSum/(focalcompoutput$FocalAbundance + focalcompoutput$AllCompSum)
+focalcompsub$all_comp_scaled = focalcompsub$AllCompSum/(focalcompsub$FocalAbundance + focalcompsub$AllCompSum)
 # Creating new focalspecies index
-subfocalspecies = unique(focalcompoutput$FocalAOU)
+subfocalspecies = unique(focalcompsub$FocalAOU)
 
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
 # read in raw env data UPDATED from MODIS script
 all_env = read.csv('occuenv.csv', header = T)
 # merge in ENV
-all_expected_pres = merge(all_env, focalcompoutput, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"))
+all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"))
 all_expected_pres$V1 = NULL
 write.csv(all_expected_pres,"all_expected_pres.csv", row.names= F)
 
