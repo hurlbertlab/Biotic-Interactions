@@ -130,8 +130,10 @@ write.csv(new_spec_weights, "new_spec_weights.csv", row.names=FALSE)
 ############# ---- Generate total species occupancies ---- #############
 # pull out stateroutes that have been continuously sampled 2001-2015
 routes = unique(temp_occ$stateroute)
+
 # merge expected presence data with species name information
 sub_ep = merge(expect_pres[,c('stateroute', 'spAOU')], focal_AOU, by.x = 'spAOU', by.y="focalAOU", all.x=TRUE) # want all = TRUE for exp pres
+
 # merge expected presence with occupancy data
 # only want spp that fulfill body size requirements
 temp_sub = subset(temp_occ, Aou %in% c(new_spec_weights$focalAOU, new_spec_weights$CompAOU))
@@ -155,8 +157,48 @@ bbs_pool = bbs %>%
 names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
 bbs_pool = data.frame(bbs_pool)
 # merge in occupancies of focal
-occ_abun = merge(new_occ2, bbs_pool, by.y = c("AOU", "stateroute"),by.x = c("spAOU", "stateroute"), all.x=TRUE)
+occ_abun = merge(new_occ2, bbs_pool, by.y = c("AOU", "stateroute"),
+                 by.x = c("spAOU", "stateroute"), all=TRUE)
 names(occ_abun)[names(occ_abun)=="abundance"] <- "FocalAbun"
+
+
+
+bbs_ep = full_join(expect_pres, bbs_pool, by = c('stateroute' = 'stateroute', 'spAOU' = 'AOU')) %>%
+  filter(stateroute %in% routes)
+bbs_ep$abundance[is.na(bbs_ep$abundance)] = 0
+
+prefull_data = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>% 
+  left_join(temp_occ[temp_occ$Aou %in% focal_and_comp_species, ], 
+            by = c('spAOU' = 'Aou', 'stateroute' = 'stateroute')) %>%
+  left_join(bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
+  group_by(spAOU, Focal, Family, stateroute, occ, abundance.x) %>%
+  summarize(allCompN = sum(abundance.y, na.rm = T))
+  
+full_data = bbs_ep %>%    
+        select(stateroute, spAOU) %>%
+        left_join(subset(shapefile_areas, mainCompetitor == 1, 
+                   select = c('focalAOU', 'compAOU', 'mainCompetitor')), 
+            by = c('spAOU' = 'focalAOU')) %>%
+        left_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
+        left_join(prefull_data, by = c('spAOU' = 'spAOU', 'stateroute' = 'stateroute')) %>%
+        select(Focal, spAOU, Family, abundance.x, occ, abundance, allCompN) %>%
+        rename(abundance.x = FocalAbundance, abundance = MainCompN, allCompN = AllCompN)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Take range overlap area to assign "main competitor" for each focal species
 # "area.df" with cols: FocalAOU, CompAOU, focalArea, compArea, intArea, intProp
