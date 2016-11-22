@@ -257,37 +257,7 @@ for(sp in subfocalspecies){
 }
 dev.off()
 
-###### plots for poster ######
-#all_expected_pres = read.csv("all_expected_pres.csv", header = TRUE)
-#plotsub = all_expected_pres[all_expected_pres$AOU == 7280,] # red-breasted nuthatch
-#proutes = plotsub$stateroute
-#comp1 = all_expected_pres[all_expected_pres$AOU == 7260|all_expected_pres$AOU == 7270,] # Brown Creeper
-#comp1plot = comp1[comp1$stateroute %in% proutes,]
-#comp2 = plotdata[plotdata$AOU == 7270,] # White-breasted Nuthatch
-#comp2plot = comp2[comp2$stateroute %in% proutes,]
-
-#map("state") 
-#Red_breasted_Nuthatch = points(plotsub$Longi, plotsub$Lati, col = "black",  pch = 16, cex = plotsub$FocalOcc*6)
-#Brown_Creeper = points(comp1plot$Longi, comp1plot$Lati, col = alpha("darkorchid1", 0.5),  pch = 16, cex = comp1$comp_scaled*6)
-#legend("bottomleft", legend = c("Red-breasted Nuthatch", "Competitors"), col = c("black","darkorchid1"), pch = 19, cex = 1)
-
-# showing the number of species present at each route
-#numspp_route = focalcompoutput %>%
-# group_by(stateroute) %>%
-# summarise(numspp = n_distinct(FocalAOU))
-#numspp = merge(numspp_route, latlongs, by = "stateroute" )
-#map("state") 
-#points(numspp$Longi, numspp$Lati, col = "dark green",  pch = 20, cex = numspp$numspp/5)
-
-
-#envoutput = read.csv("envoutput.csv", header = TRUE)
-#envoutput$X <- NULL
-#envloc = read.csv("envloc.csv", header = TRUE)
-
-
-#####PLOTTING variance partitioning
-## Creating env data table to plot ranked data
-
+##### Variance Partitioning Plot #####
 envloc$EW <- 0
 envloc$EW[envloc$Long > -98.583333] <- 1 ## from https://tools.wmflabs.org/geohack/geohack.php?pagename=Geographic_center_of_the_contiguous_United_States&params=39_50_N_98_35_W_region:US-KS_type:landmark&title=Geographic+Center+of+the+Contiguous+United+States
 # 1 = East
@@ -395,7 +365,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("#2ca25f","#dd1c77","#43a2ca","white"), labels=c("Environment", "Competition","Shared Variance", "")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=20), legend.position="top", legend.justification=c(0, 1), legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:84, y = -.03, label = unique(envrank$FocalAOU), angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:84, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:84, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:84, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:84, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
+tt = t + annotate("text", x = 1:86, y = -.03, label = unique(envrank$FocalAOU), angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:86, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:86, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:86, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:86, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
 plot(tt)
 
 ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 26, width = 34)

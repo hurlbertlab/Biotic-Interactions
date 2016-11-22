@@ -128,78 +128,6 @@ new_spec_weights$compcat = gsub(" ", "_", new_spec_weights$CompSciName)
 #write this data frame for GIS script
 write.csv(new_spec_weights, "new_spec_weights.csv", row.names=FALSE) 
 ############# ---- Generate total species occupancies ---- #############
-# pull out stateroutes that have been continuously sampled 2001-2015
-routes = unique(temp_occ$stateroute)
-
-# merge expected presence data with species name information
-sub_ep = merge(expect_pres[,c('stateroute', 'spAOU')], focal_AOU, by.x = 'spAOU', by.y="focalAOU", all.x=TRUE) # want all = TRUE for exp pres
-
-# merge expected presence with occupancy data
-# only want spp that fulfill body size requirements
-temp_sub = subset(temp_occ, Aou %in% c(new_spec_weights$focalAOU, new_spec_weights$CompAOU))
-
-new_occ = merge(sub_ep, temp_sub, by.x = c('stateroute', 'spAOU'), by.y = c('stateroute', 'Aou'), all=TRUE) 
-new_occ$n[is.na(new_occ$n)] <- 0
-new_occ$occ[is.na(new_occ$occ)] <- 0
-
-# subset to routes in the well sampled list of 'routes'
-new_occ2 = new_occ[new_occ$stateroute %in% routes, ]
-
-#### ---- Gathering Occupancy and Abundance Data for Biotic Comparisons ---- ####
-focal_and_comp_species = unique(c(new_spec_weights$focalAOU, new_spec_weights$CompAOU))
-# need to change winter wren AOU to 7222 from 7220 in bbs_pool
-bbs$Aou[bbs$Aou == 7220] <- 7222
-# filter BBS mean abundance by AOU/stateroute by year -------- 
-bbs_pool = bbs %>% 
-  group_by(stateroute, Aou) %>% 
-  dplyr::summarize(abundance = mean(SpeciesTotal)) %>%
-  filter(Aou %in% focal_and_comp_species) 
-names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
-bbs_pool = data.frame(bbs_pool)
-# merge in occupancies of focal
-occ_abun = merge(new_occ2, bbs_pool, by.y = c("AOU", "stateroute"),
-                 by.x = c("spAOU", "stateroute"), all=TRUE)
-names(occ_abun)[names(occ_abun)=="abundance"] <- "FocalAbun"
-
-
-
-bbs_ep = full_join(expect_pres, bbs_pool, by = c('stateroute' = 'stateroute', 'spAOU' = 'AOU')) %>%
-  filter(stateroute %in% routes)
-bbs_ep$abundance[is.na(bbs_ep$abundance)] = 0
-
-prefull_data = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>% 
-  left_join(temp_occ[temp_occ$Aou %in% focal_and_comp_species, ], 
-            by = c('spAOU' = 'Aou', 'stateroute' = 'stateroute')) %>%
-  left_join(bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
-  group_by(spAOU, Focal, Family, stateroute, occ, abundance.x) %>%
-  summarize(allCompN = sum(abundance.y, na.rm = T))
-  
-full_data = bbs_ep %>%    
-        select(stateroute, spAOU) %>%
-        left_join(subset(shapefile_areas, mainCompetitor == 1, 
-                   select = c('focalAOU', 'compAOU', 'mainCompetitor')), 
-            by = c('spAOU' = 'focalAOU')) %>%
-        left_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
-        left_join(prefull_data, by = c('spAOU' = 'spAOU', 'stateroute' = 'stateroute')) %>%
-        select(Focal, spAOU, Family, abundance.x, occ, abundance, allCompN) %>%
-        rename(abundance.x = FocalAbundance, abundance = MainCompN, allCompN = AllCompN)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Take range overlap area to assign "main competitor" for each focal species
 # "area.df" with cols: FocalAOU, CompAOU, focalArea, compArea, intArea, intProp
 # read in area shapefile if not running GIS code 
@@ -216,24 +144,46 @@ for (s in unique(shapefile_areas$focalAOU)) {
   shapefile_areas$mainCompetitor[shapefile_areas$focalAOU == s & shapefile_areas$PropOverlap == maxOverlap] = 1 # 1 assigns main competitor
 }
 
-#######----Joining focal competitor tables with abundance tables ----#######
-all_comp_abun = left_join(occ_abun, bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
-  left_join(shapefile_areas[, c('focalAOU', 'compAOU', 'mainCompetitor')], 
-  by = c('spAOU' = 'focalAOU', 'CompAOU' = 'compAOU')) %>%
-  group_by(spAOU, stateroute, Focal, Family, occ, FocalAbun) %>%
-  dplyr::summarize(allCompN = sum(abundance, na.rm = T))
+# pull out stateroutes that have been continuously sampled 2001-2015
+routes = unique(temp_occ$stateroute)
 
-main_comp_abun = left_join(occ_abun, bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
-  left_join(shapefile_areas[, c('focalAOU', 'compAOU', 'mainCompetitor')], 
-            by = c('spAOU' = 'focalAOU', 'CompAOU' = 'compAOU')) %>%
-  group_by(spAOU, stateroute, Focal, Family, occ) %>%
-  dplyr::filter(mainCompetitor == 1) %>%
-  dplyr::summarize(mainCompN = abundance)
+#### ---- Gathering Occupancy and Abundance Data for Biotic Comparisons ---- ####
+focal_and_comp_species = unique(c(new_spec_weights$focalAOU, new_spec_weights$CompAOU))
 
-focalcompoutput = left_join(main_comp_abun, all_comp_abun)
-focalcompoutput$mainCompN[is.na(focalcompoutput$mainCompN)] <- 0
-focalcompoutput = data.frame(focalcompoutput)
-colnames(focalcompoutput) = c("FocalAOU","stateroute","FocalCommonName","Family","FocalOcc","MainCompSum","FocalAbundance","AllCompSum")
+# need to change winter wren AOU to 7222 from 7220 in bbs_pool
+bbs$Aou[bbs$Aou == 7220] <- 7222
+
+# filter BBS mean abundance by AOU/stateroute by year -------- 
+bbs_pool = bbs %>% 
+  group_by(stateroute, Aou) %>% 
+  dplyr::summarize(abundance = mean(SpeciesTotal)) %>%
+  filter(Aou %in% focal_and_comp_species) 
+names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
+bbs_pool = data.frame(bbs_pool)
+
+# merge in occupancies of focal
+bbs_ep = full_join(expect_pres[,c("stateroute", "spAOU")], bbs_pool, by = c('stateroute' = 'stateroute', 'spAOU' = 'AOU')) %>%
+  filter(stateroute %in% routes)
+bbs_ep$abundance[is.na(bbs_ep$abundance)] = 0
+
+prefull_data = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>% 
+  left_join(temp_occ[temp_occ$Aou %in% focal_and_comp_species, ], 
+            by = c('spAOU' = 'Aou', 'stateroute' = 'stateroute')) %>%
+  left_join(bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
+  group_by(spAOU, Focal, Family, stateroute, occ, abundance.x) %>%
+  summarize(allCompN = sum(abundance.y, na.rm = T))
+
+focalcompoutput = bbs_ep %>%    
+  select(stateroute, spAOU) %>%
+  left_join(subset(shapefile_areas, mainCompetitor == 1, 
+                   select = c('focalAOU', 'compAOU', 'mainCompetitor')), 
+            by = c('spAOU' = 'focalAOU')) %>%
+  left_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
+  left_join(prefull_data, by = c('spAOU' = 'spAOU', 'stateroute' = 'stateroute')) %>%
+  select(stateroute, Focal, spAOU, Family, abundance.x, occ, abundance, allCompN)
+names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbundance", "FocalOcc","MainCompN", "AllCompN")
+
+focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
 
 # Filter number to spp present in at least 20 routes for better model results
 # Subset to get the count of routes for each spp
@@ -248,7 +198,7 @@ for (sp in unique(focalcompoutput$FocalAOU)){
 }
 numroutes = data.frame(numroutes)
 colnames(numroutes) = c("V1","FocalAOU","nroutes")
-
+numroutes$V1 <- NULL
 # Filter count to greater than or equal to 20 - nroutes much higher with updated routes
 numroutes20 = filter(numroutes, nroutes >= 20)
 numroutes20$nroutes = as.numeric(numroutes20$nroutes)
@@ -257,9 +207,9 @@ numroutes20$nroutes = as.numeric(numroutes20$nroutes)
 focalcompsub = merge(focalcompoutput, numroutes20, by = "FocalAOU")
 
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR MAIN
-focalcompsub$comp_scaled = focalcompsub$MainCompSum/(focalcompsub$FocalAbundance + focalcompsub$MainCompSum)
+focalcompsub$comp_scaled = focalcompsub$MainCompN/(focalcompsub$FocalAbundance + focalcompsub$MainCompN)
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR ALL
-focalcompsub$all_comp_scaled = focalcompsub$AllCompSum/(focalcompsub$FocalAbundance + focalcompsub$AllCompSum)
+focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundance + focalcompsub$AllCompN)
 # Creating new focalspecies index
 subfocalspecies = unique(focalcompsub$FocalAOU)
 
