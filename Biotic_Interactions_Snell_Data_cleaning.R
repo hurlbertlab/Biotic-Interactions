@@ -153,7 +153,7 @@ focal_and_comp_species = unique(c(new_spec_weights$focalAOU, new_spec_weights$Co
 # need to change winter wren AOU to 7222 from 7220 in bbs_pool
 bbs$Aou[bbs$Aou == 7220] <- 7222
 
-# filter BBS mean abundance by AOU/stateroute by year -------- 
+# pooling BBS mean abundance by AOU/stateroute and by year  
 bbs_pool = bbs %>% 
   group_by(stateroute, Aou) %>% 
   dplyr::summarize(abundance = mean(SpeciesTotal)) %>%
@@ -161,18 +161,21 @@ bbs_pool = bbs %>%
 names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
 bbs_pool = data.frame(bbs_pool)
 
-# merge in occupancies of focal
+# merge bbs pooled abundances with expected presences for all species
 bbs_ep = full_join(expect_pres[,c("stateroute", "spAOU")], bbs_pool, by = c('stateroute' = 'stateroute', 'spAOU' = 'AOU')) %>%
   filter(stateroute %in% routes)
 bbs_ep$abundance[is.na(bbs_ep$abundance)] = 0
 
+# Calculating summed competitor abundance for each focal species
 prefull_data = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>% 
   left_join(temp_occ[temp_occ$Aou %in% focal_and_comp_species, ], 
             by = c('spAOU' = 'Aou', 'stateroute' = 'stateroute')) %>%
   left_join(bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
   group_by(spAOU, Focal, Family, stateroute, occ, abundance.x) %>%
-  summarize(allCompN = sum(abundance.y, na.rm = T))
+  dplyr::summarize(allCompN = sum(abundance.y, na.rm = T))
 
+# create focalcompoutput table that adds MainCompN column to indicate primary competitors to the 
+# prefull_data with focal/comp/stroute/abundance/occ/summed abundance
 focalcompoutput = bbs_ep %>%    
   select(stateroute, spAOU) %>%
   left_join(subset(shapefile_areas, mainCompetitor == 1, 
@@ -185,7 +188,7 @@ names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbu
 
 focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
 
-# Filter number to spp present in at least 20 routes for better model results
+# Filter number to spp present at 20+ routes for better model results
 # Subset to get the count of routes for each spp
 numroutes = c()
 for (sp in unique(focalcompoutput$FocalAOU)){ 
@@ -199,17 +202,19 @@ for (sp in unique(focalcompoutput$FocalAOU)){
 numroutes = data.frame(numroutes)
 colnames(numroutes) = c("V1","FocalAOU","nroutes")
 numroutes$V1 <- NULL
-# Filter count to greater than or equal to 20 - nroutes much higher with updated routes
+# Filter count to greater than or equal to 20: nroutes much higher with updated routes
 numroutes20 = filter(numroutes, nroutes >= 20)
 numroutes20$nroutes = as.numeric(numroutes20$nroutes)
 
-# Merge with focalcompoutput data table, new # of focal spp is 113 with filters applied
+# Merge with focalcompoutput data table, new # of focal spp is 171 with route filters applied
 focalcompsub = merge(focalcompoutput, numroutes20, by = "FocalAOU")
 
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR MAIN
 focalcompsub$comp_scaled = focalcompsub$MainCompN/(focalcompsub$FocalAbundance + focalcompsub$MainCompN)
+
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR ALL
 focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundance + focalcompsub$AllCompN)
+
 # Creating new focalspecies index
 subfocalspecies = unique(focalcompsub$FocalAOU)
 
