@@ -265,14 +265,20 @@ envloc$EW[envloc$Long > -98.583333] <- 1 ## from https://tools.wmflabs.org/geoha
 envloc1 = merge(envloc, occumatrix[,c("Species", "Family")], by.x = "FocalAOU", by.y="Species", all.y = FALSE)
 # cutting down to unique subset
 envloc1 = unique(envloc1)
+envloc1 = merge(envloc1, tax_code[,c("AOU_OUT", "ALPHA.CODE")], by.x = "FocalAOU", by.y = "AOU_OUT", all.x=TRUE)
+envloc1$ALPHA.CODE = as.character(envloc1$ALPHA.CODE)
+envloc1$ALPHA.CODE[envloc1$FocalAOU == 2920] <- 'MOUQ' #Mountain Quail
+envloc1$ALPHA.CODE[envloc1$FocalAOU == 6720] <- 'PAWA' #Palm Warbler
+envloc1$ALPHA.CODE = as.factor(envloc1$ALPHA.CODE)
 
 nrank = envloc1 %>% 
   mutate(rank = row_number(-ENV))# change here for comp
 envflip = gather(nrank, "Type", "value", 2:5)
-
 envflip$rank <- factor(envflip$rank, levels = envflip$rank[order(envflip$rank)])
 envflip = plyr::arrange(envflip,(envflip$rank),envflip$FocalAOU)
+
 envflip = merge(envflip, envloc[,c("FocalAOU", "EW")], by = "FocalAOU")
+
 
 envrank = envflip %>% 
   group_by(Type == 'ENV') %>% # change here for comp
@@ -280,7 +286,7 @@ envrank = envflip %>%
 envrank <- envrank[order(envrank$rank),]
 
 envrank <- subset(envrank,Type == "ENV")
-#envrank = filter(envflip, Type == "ENV") # change here for comp
+
 ### CREATE LABEL DF FAMilY ########
 envrank$Fam_abbrev = envrank$Family
 envrank$Fam_abbrev = gsub('Emberizidae','E', envrank$Fam_abbrev)
@@ -365,7 +371,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("#2ca25f","#dd1c77","#43a2ca","white"), labels=c("Environment", "Competition","Shared Variance", "")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=20), legend.position="top", legend.justification=c(0, 1), legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:86, y = -.03, label = unique(envrank$FocalAOU), angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:86, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:86, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:86, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:86, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
+tt = t + annotate("text", x = 1:86, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:86, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:86, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:86, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:86, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
 plot(tt)
 
 ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 26, width = 34)

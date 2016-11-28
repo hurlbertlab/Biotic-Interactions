@@ -187,6 +187,7 @@ focalcompoutput = bbs_ep %>%
 names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbundance", "FocalOcc","MainCompN", "AllCompN")
 
 focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
+focalcompoutput = focalcompoutput[focalcompoutput$FocalOcc & focalcompoutput$AllCompN > 0,] 
 
 # Filter number to spp present at 20+ routes for better model results
 # Subset to get the count of routes for each spp
