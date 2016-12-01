@@ -187,28 +187,19 @@ focalcompoutput = bbs_ep %>%
 names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbundance", "FocalOcc","MainCompN", "AllCompN")
 
 focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
+focalcompoutput$MainCompN[is.na(focalcompoutput$MainCompN)] = 0
 focalcompoutput = focalcompoutput[focalcompoutput$FocalOcc & focalcompoutput$AllCompN > 0,] 
 
 # Filter number to spp present at 20+ routes for better model results
 # Subset to get the count of routes for each spp
-numroutes = c()
-for (sp in unique(focalcompoutput$FocalAOU)){ 
-  print(sp)
-  tmp = filter(focalcompoutput, FocalAOU == sp) 
-  nroutes = tmp %>%
-    group_by(FocalAOU) %>%
-    summarise(n_distinct(stateroute))
-  numroutes = rbind(numroutes, c(sp,nroutes))
-}
-numroutes = data.frame(numroutes)
-colnames(numroutes) = c("V1","FocalAOU","nroutes")
-numroutes$V1 <- NULL
-# Filter count to greater than or equal to 20: nroutes much higher with updated routes
-numroutes20 = filter(numroutes, nroutes >= 20)
-numroutes20$nroutes = as.numeric(numroutes20$nroutes)
+sppGT20rtes = focalcompoutput %>%
+  group_by(FocalAOU) %>%
+  summarise(n = n_distinct(stateroute)) %>%
+  filter(n>=20) %>%
+  select(FocalAOU)
 
 # Merge with focalcompoutput data table, new # of focal spp is 171 with route filters applied
-focalcompsub = merge(focalcompoutput, numroutes20, by = "FocalAOU")
+focalcompsub = filter(focalcompoutput, FocalAOU %in% sppGT20rtes$FocalAOU)
 
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR MAIN
 focalcompsub$comp_scaled = focalcompsub$MainCompN/(focalcompsub$FocalAbundance + focalcompsub$MainCompN)
@@ -216,8 +207,6 @@ focalcompsub$comp_scaled = focalcompsub$MainCompN/(focalcompsub$FocalAbundance +
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR ALL
 focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundance + focalcompsub$AllCompN)
 
-# Creating new focalspecies index
-subfocalspecies = unique(focalcompsub$FocalAOU)
 
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
 # read in raw env data UPDATED from MODIS script
