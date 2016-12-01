@@ -176,3 +176,53 @@ for(sp in subfocalspecies){
 }
 
 dev.off() 
+
+
+
+###### Talk plot 
+
+sp = "Sitta_canadensis"
+
+focalAOU = subset(new_spec_weights, focalcat == sp)
+spAOU = unique(focalAOU$focalAOU)
+
+file_names = dir('sp_routes/')
+setwd("sp_routes/")
+
+t1 = all_spp_list[grep(sp, all_spp_list)]
+t2 = t1[grep('.shp', t1)]
+t3 = strsplit(t2, ".shp")
+
+test.poly <- readShapePoly(paste(shapefile_path, t3, sep = "")) # reads in species-specific shapefile
+proj4string(test.poly) <- intl_proj
+sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
+
+
+# source: http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat
+routes_inside <- bbs_routes[!is.na(sp::over(bbs_routes,as(sporigin,"SpatialPolygons"))),]
+plot(routes_inside, add = T)
+
+setwd("C:/git/Biotic-Interactions")
+r = read.csv("all_expected_pres.csv", header =TRUE)
+
+occ_loc = merge(routes_inside, r[,c("stateroute", "FocalOcc", "Focal")], by = "stateroute")
+occ_sub = subset(occ_loc, Focal = "Red-breasted Nuthatch")
+occ_sub = occ_sub[,c(2:3, 5)]
+
+colfunc <- colorRampPalette(c("red","blue"))
+colfunc(16)
+occ_sub$Col <- colfunc(16)[as.numeric(cut(occ_sub$FocalOcc,16))]
+
+
+setwd("Z:/GIS/geography")
+usa = readShapePoly("Z:/GIS/geography/continent.shp")
+proj4string(usa) <- intl_proj
+usa = spTransform(usa, CRS("+proj=longlat +datum=WGS84"))
+plot(usa)
+plot(sporigin, add=TRUE, col = "gray")
+points(occ_sub$longitude, occ_sub$latitude, col = occ_sub$Col, pch=20)
+
+
+routes_inside = data.frame(routes_inside)
+routes_inside = cbind(routes_inside, spAOU)
+expect_pres=rbind(expect_pres, routes_inside)
