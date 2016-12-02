@@ -11,6 +11,7 @@ library(rgeos)
 library(gtools)
 library(sp)
 library(tidyr)
+library(dplyr)
 
 # setwd("C:/git/Biotic-Interactions")
 # read in temporal occupancy data from BI occ script
@@ -209,10 +210,13 @@ occ_loc = merge(routes_inside, r[,c("stateroute", "FocalOcc", "Focal")], by = "s
 occ_sub = subset(occ_loc, Focal = "Red-breasted Nuthatch")
 occ_sub = occ_sub[,c(2:3, 5)]
 
-colfunc <- colorRampPalette(c("red","blue"))
+colfunc <- colorRampPalette(c("blue","red"))
 colfunc(16)
 occ_sub$Col <- colfunc(16)[as.numeric(cut(occ_sub$FocalOcc,16))]
+occ_sub  = occ_sub %>%
+  arrange(FocalOcc)
 
+occ_sub$lab = signif(occ_sub$FocalOcc, 2)
 
 setwd("Z:/GIS/geography")
 usa = readShapePoly("Z:/GIS/geography/continent.shp")
@@ -220,8 +224,8 @@ proj4string(usa) <- intl_proj
 usa = spTransform(usa, CRS("+proj=longlat +datum=WGS84"))
 plot(usa)
 plot(sporigin, add=TRUE, col = "gray")
-points(occ_sub$longitude, occ_sub$latitude, col = occ_sub$Col, pch=20)
-
+points(occ_sub$longitude, occ_sub$latitude, col = unique(occ_sub$Col), pch=20, cex = 0.1)
+legend('bottomright', legend = unique(occ_sub$lab), pch=16,col = unique(occ_sub$Col), cex=0.6)
 
 routes_inside = data.frame(routes_inside)
 routes_inside = cbind(routes_inside, spAOU)

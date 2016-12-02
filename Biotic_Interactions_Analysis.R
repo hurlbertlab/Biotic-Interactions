@@ -374,7 +374,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
 tt = t + annotate("text", x = 1:86, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:86, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:86, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:86, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:86, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
 plot(tt)
 
-ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 26, width = 34)
+ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 30, width = 38)
 
 ##################### TRAITS Model ####################################
 inverselogit <- function(p) {exp(p)/(1+exp(p))} 
