@@ -23,8 +23,8 @@ occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale))
 
 ##### LIN REG #######
 # create beta output data frame
-beta_lm = matrix(NA, nrow = 115, ncol = 10)
-beta_abun = matrix(NA, nrow = 115, ncol = 10)
+beta_lm = matrix(NA, nrow = 86, ncol = 10)
+beta_abun = matrix(NA, nrow = 86,ncol = 10)
 beta_lm[sp,1] = sp
 beta_lm[sp,2] = summary(competition)$coef[1,"Estimate"]
 beta_lm[sp,3] = summary(competition)$coef[1,"Pr(>|t|)"]
@@ -143,15 +143,13 @@ glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s +
 summary(glm_occ_rand_site) 
 
 ### FIX, Neg Binom
-glm_abun_rand_site = glmer.nb(FocalAbundance ~ c_s + 
-                                abTemp + abElev + abPrecip + abEVI + (1|stateroute:Species), link=log, data = occumatrix)
-summary(glm_abundance_rand_site) 
+# glm_abun_rand_site = glmer.nb(FocalAbundance ~ c_s + 
+                            #    abTemp + abElev + abPrecip + abEVI + (1|stateroute:Species), link=log, data = occumatrix)
+# summary(glm_abundance_rand_site) 
 
 #### PLOTTING MODELS ####
 ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5) +xlab("Scaled Competitor Abundance")+ylab("Focal Occupancy") +theme_bw() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
 ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/glmoutput.png")
-
-ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalAbundance)) +stat_smooth(data=glm_abun_rand_site, lwd = 1.5) +theme_bw()
 
 ####### GLM FIT PLOTS #################################################################################################
 pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,comp_scaled,zPrecip,zElev,zEVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
@@ -161,57 +159,30 @@ newintercept <- function(p) {mean(exp(p)/(1+exp(p)))}
 
 # this relationship should be negative
 ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.871252, xend = abs(max(occumatrix$zTemp)), yend = 0.871252 +(-0.043279*max(abs(occumatrix$zTemp)))), col = "dark green", lwd=2) +
+  geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zTemp)), yend = 0.892997 +(-0.044095*max(abs(occumatrix$zTemp)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
 #geom_abline(intercept=0.97569, slope= -0.05176, lwd=1, col="blue")
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/logittemp.png")
+ggsave("C:/Git/Biotic-Interactions/logittemp.png")
 
 ggplot(data = occumatrix, aes(x = abs(zEVI), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.871252, xend = abs(max(occumatrix$zEVI)), yend = 0.871252 +(-0.086979*max(abs(occumatrix$zEVI)))), col = "dark green", lwd=2) +
+  geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zEVI)), yend = 0.892997 +(-0.094849*max(abs(occumatrix$zEVI)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
 # geom_abline(intercept=0.97569, slope= -0.05117, lwd=1, col="blue")
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/logitevi.png")
+ggsave("C:/Git/Biotic-Interactions/logitevi.png")
 
 ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.871252, xend = abs(max(occumatrix$zElev)), yend = 0.871252 +(0.005238*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
+  geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zElev)), yend = 0.892997 +(-0.010785*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/logitelev.png")
+ggsave("C:/Git/Biotic-Interactions/logitelev.png")
 
 ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.871252, xend = abs(max(occumatrix$zPrecip)), yend = 0.871252 +(0.018655*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
+  geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zPrecip)), yend = 0.892997 +(0.001575*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/logitprecip.png")
+ggsave("C:/Git/Biotic-Interactions/logitprecip.png")
 
 ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) + 
   stat_function(fun=inverselogit, color = "blue") + 
   geom_point(colour="black", shape=18, alpha = 0.02,position=position_jitter(width=0,height=.02))+ theme_classic()
-
-temperature = ggplot(data = occumatrix, aes(x = zTemp, y = FocalOcc))+geom_point(colour="black", shape=19, alpha = 0.2)  + stat_smooth(data=glm_occ_rand_site, lwd = 1.5, se = FALSE)+xlab("Mean Temperature Deviation")+ylab("Focal Occupancy")+ geom_vline(xintercept = newintercept, colour="red", linetype = "longdash") +theme_bw() +theme_bw() +theme(axis.title.x=element_text(size=28),axis.title.y=element_text(size=28, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))#+ annotate("text", x = 3, y = 0.56, label = "Environmental centroid\n for focal species", size=7,vjust=0.5, color = "black")
-
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/glmtemp.png")
-
-pElev = predict(glm_occ_rand_site, newdata=with(occumatrix1,data.frame(zTemp,comp_scaled,zPrecip,zElev=0,zEVI,stateroute,Species, FocalOcc,forest)), allow.new.levels = TRUE) #predict values assuming zElev=0
-
-newintercept1 = mean(exp(pElev)/(1+exp(pElev))) #mean of the inverse logit of those values.
-
-ggplot(data = occumatrix, aes(x = zElev, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5, se = FALSE)+geom_point(colour="black", shape=19, alpha = 0.2) +xlab("Mean Elevation Deviation")+ylab("Focal Occupancy")+ geom_vline(xintercept = newintercept1, colour="red", linetype = "longdash") +theme_bw() +theme_bw() +theme(axis.title.x=element_text(size=28),axis.title.y=element_text(size=28, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/glmelev.png")
-
-pPrecip = predict(glm_occ_rand_site, newdata=with(occumatrix1,data.frame(zTemp,comp_scaled,zPrecip=0,zElev,zEVI,stateroute,Species, FocalOcc,forest)), allow.new.levels = TRUE) #predict values assuming zPrecip=0
-
-newintercept2 = mean(exp(pPrecip)/(1+exp(pPrecip))) #mean of the inverse logit of those values.
-
-ggplot(data = occumatrix, aes(x = zPrecip, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5, se = FALSE)+geom_point(colour="black", shape=19, alpha = 0.2) +xlab("Mean Precipitation Deviation")+ylab("Focal Occupancy")+ geom_vline(xintercept = newintercept2, colour="red", linetype = "longdash") +theme_bw() +theme_bw() +theme(axis.title.x=element_text(size=28),axis.title.y=element_text(size=28, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/glmprecip.png")
-
-pEVI = predict(glm_occ_rand_site, newdata=with(occumatrix1,data.frame(zTemp,comp_scaled,zPrecip,zElev,zEVI=0,stateroute,Species, FocalOcc,forest)), allow.new.levels = TRUE) #predict values assuming zPrecip=0
-
-newintercept3 = mean(exp(pEVI)/(1+exp(pEVI))) #mean of the inverse logit of those values.
-
-ggplot(data = occumatrix, aes(x = zEVI, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5, se = FALSE)+geom_point(colour="black", shape=19, alpha = 0.2) +xlab("Mean Vegetation Deviation")+ylab("Focal Occupancy")+ geom_vline(xintercept = newintercept3, colour="red", linetype = "longdash") +theme_bw() +theme_bw() +theme(axis.title.x=element_text(size=28),axis.title.y=element_text(size=28, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/glmevi.png")
-
-ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5, se = FALSE)+geom_point(colour="black", shape=19, alpha = 0.2) +xlab("Mean Vegetation Deviation")+ylab("Focal Occupancy")+ geom_vline(xintercept = newintercept3, colour="red", linetype = "longdash") +theme_bw() +theme_bw() +theme(axis.title.x=element_text(size=28),axis.title.y=element_text(size=28, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))
 
 #### ---- Plotting GLMs ---- ####
 # Making pdf of ranges for each focal spp
@@ -398,8 +369,8 @@ total_traits = lm(inverselogit(value) ~ Trophic.Group + migclass + EW.x, data = 
 summary(total_traits)
 
 # R2 plot - lm in ggplot
-envoutputa = read.csv("envoutputa.csv", header = TRUE)
-names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
+#envoutputa = read.csv("envoutputa.csv", header = TRUE)
+#names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 R2plot = merge(envoutput, envoutputa, by = "FocalAOU")
 
 tomerge = c()
