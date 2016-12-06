@@ -16,12 +16,13 @@ library(dplyr)
 # setwd("C:/git/Biotic-Interactions")
 # read in temporal occupancy data from BI occ script
 temp_occ = read.csv("bbs_sub1.csv", header=TRUE)
+# read in lat long data
+bbs_routes = read.csv("latlong_rtes.csv",header =TRUE)
 # read in bird range shps
 shapefile_path = 'Z:/GIS/birds/All/All/'
 
 all_spp_list = list.files(shapefile_path)
-# read in lat long data
-bbs_routes = read.csv("latlong_rtes.csv",header =TRUE)
+
 
 
 # read in new_spec_weights file created in data cleaning code
@@ -141,6 +142,7 @@ for (sp in focal_spp){
   test.poly <- readShapePoly(paste(shapefile_path, t3, sep = "")) # reads in species-specific shapefile
   proj4string(test.poly) <- intl_proj
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
+  
   plot(sporigin)
   # source: http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat
   routes_inside <- bbs_routes[!is.na(over(bbs_routes,as(sporigin,"SpatialPolygons"))),]
@@ -150,12 +152,12 @@ for (sp in focal_spp){
   expect_pres=rbind(expect_pres, routes_inside)
 }
 
-setwd("C:/Git/Biotic-Interactions")
+#setwd("C:/Git/Biotic-Interactions")
 expect_pres = data.frame(expect_pres)
   
 expect_pres = dplyr::select(expect_pres, -optional)
 
-write.csv(expect_pres,"expect_pres.csv",row.names=FALSE)
+write.csv(expect_pres,"C:/Git/Biotic-Interactions/expect_pres.csv",row.names=FALSE)
 
 ######## PDF of each species BBS occurrences ########
 focalcompsub = read.csv("focalcompsub.csv", header=TRUE)
@@ -182,13 +184,13 @@ dev.off()
 
 ###### Talk plot 
 
-sp = "Sitta_canadensis"
+sp = "Oporornis_agilis"
 
 focalAOU = subset(new_spec_weights, focalcat == sp)
 spAOU = unique(focalAOU$focalAOU)
 
-file_names = dir('sp_routes/')
-setwd("sp_routes/")
+#file_names = dir('sp_routes/')
+#setwd("sp_routes/")
 
 t1 = all_spp_list[grep(sp, all_spp_list)]
 t2 = t1[grep('.shp', t1)]
@@ -201,14 +203,15 @@ sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|t
 
 # source: http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat
 routes_inside <- bbs_routes[!is.na(sp::over(bbs_routes,as(sporigin,"SpatialPolygons"))),]
-plot(routes_inside, add = T)
+# plot(routes_inside, add = T)
 
-setwd("C:/git/Biotic-Interactions")
-r = read.csv("all_expected_pres.csv", header =TRUE)
+#setwd("C:/git/Biotic-Interactions")
+r = read.csv("C:/git/Biotic-Interactions/all_expected_pres.csv", header =TRUE)
+r = subset(r,Focal == "Connecticut Warbler")
 
 occ_loc = merge(routes_inside, r[,c("stateroute", "FocalOcc", "Focal")], by = "stateroute")
-occ_sub = subset(occ_loc, Focal = "Red-breasted Nuthatch")
-occ_sub = occ_sub[,c(2:3, 5)]
+occ_sub = subset(occ_loc, Focal = "Connecticut Warbler")
+#occ_sub = occ_sub[,c(2:3, 5)]
 
 colfunc <- colorRampPalette(c("blue","red"))
 colfunc(16)
@@ -222,10 +225,26 @@ setwd("Z:/GIS/geography")
 usa = readShapePoly("Z:/GIS/geography/continent.shp")
 proj4string(usa) <- intl_proj
 usa = spTransform(usa, CRS("+proj=longlat +datum=WGS84"))
+
+pdf('Figures/warbler_plot.pdf', height = 8, width = 11)
+par(mfrow = c(1, 1), mar = c(6, 6, 1, 1), mgp = c(4, 1, 0), 
+    cex.axis = 1.5, cex.lab = 2, las = 1)
+
 plot(usa)
+
+#extent(usa, -173.4401,-57.92498,15.11517,77.79797)
+
 plot(sporigin, add=TRUE, col = "gray")
+setwd("C:/git/Biotic-Interactions")
 points(occ_sub$longitude, occ_sub$latitude, col = unique(occ_sub$Col), pch=20, cex = 0.1)
-legend('bottomright', legend = unique(occ_sub$lab), pch=16,col = unique(occ_sub$Col), cex=0.6)
+dev.off()
+
+legend_image <- as.raster(matrix(colfunc(16), ncol=1))
+plot(c(0,3),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = '')
+text(x=1.5, y = seq(0,1,l=5), labels = seq(1,0,l=5))
+rasterImage(legend_image, 0, 0, 1,1)
+
+# legend('bottomright', legend = unique(occ_sub$lab), pch=16,col = unique(occ_sub$Col), cex=0.6)
 
 routes_inside = data.frame(routes_inside)
 routes_inside = cbind(routes_inside, spAOU)
