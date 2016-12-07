@@ -92,6 +92,7 @@ if(FALSE) {  #Blocking out the for loop below. Need to change to TRUE if you wan
 
 ######## Calculating centroids for each species - using whole range #####
 centroid = c()
+new_spec_weights$focalcat = as.character(new_spec_weights$focalcat)
 for (sp in focal_spp){
   print(sp)
   t1 = all_spp_list[grep(sp, all_spp_list)]
@@ -107,7 +108,7 @@ for (sp in focal_spp){
   #plot(sporigin, col = colors, border = NA)
   trueCentroid = gCentroid(sporigin)
   coord = coordinates(spTransform(trueCentroid, CRS("+proj=longlat +datum=WGS84")))
-  focalAOU = unique(new_spec_weights[new_spec_weights$focalcat == sp, c('FocalAOU')])
+  focalAOU = unique(new_spec_weights[new_spec_weights$focalcat == sp, c('focalAOU')])
   centroid = rbind(centroid, c(sp, focalAOU, coord))
 }
 centroid = data.frame(centroid)
