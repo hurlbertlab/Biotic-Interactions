@@ -347,16 +347,16 @@ plot(tt)
 ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 30, width = 38)
 
 ##################### TRAITS Model ####################################
-inverselogit <- function(p) {exp(p)/(1+exp(p))} 
+logit = function(x) log(x/(1-x))
 
 env_lm = subset(envflip, Type == 'ENV')
 
-env_traits = lm(inverselogit(value) ~ Trophic.Group + migclass + EW.x, data = env_lm)
+env_traits = lm(logit(value) ~ Trophic.Group + migclass + EW.x, data = env_lm)
 summary(env_traits) 
 
 comp_lm = subset(envflip, Type == 'COMP')
 
-comp_traits = lm(inverselogit(value) ~ Trophic.Group + migclass + EW.x, data = comp_lm)
+comp_traits = lm(logit(value) ~ Trophic.Group + migclass + EW.x, data = comp_lm[comp_lm$value > 0,])
 summary(comp_traits) 
 
 env_sum = subset(envflip, Type != 'NONE')
@@ -364,7 +364,7 @@ total = env_sum %>%
   group_by(FocalAOU) %>%
   summarise(sum(value))
 
-total_traits = lm(inverselogit(value) ~ Trophic.Group + migclass + EW.x, data = env_sum)
+total_traits = lm(logit(value) ~ Trophic.Group + migclass + EW.x, data = env_sum)
 summary(total_traits)
 
 # R2 plot - lm in ggplot
