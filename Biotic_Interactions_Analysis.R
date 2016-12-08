@@ -2,7 +2,6 @@ library(lme4)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
-library(plyr)
 library(lmtest)
 
 # read in files created in data cleaning script
@@ -96,7 +95,7 @@ for (sp in 1:length(subfocalspecies)){
   sp1 = unique(temp$Species)
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
 }         
-dev.off()
+
 
 envoutput = data.frame(envoutput)
 envoutputa = data.frame(envoutputa)
