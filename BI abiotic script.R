@@ -17,14 +17,14 @@ library('sp')
 library('rgdal')
 
 # derived from BBS_occ script
-routes = read.csv("latlong_rtes.csv",header =TRUE)
+routes = read.csv("expect_pres.csv",header =TRUE)
 routes$latitude = abs(routes$latitude)
 # Makes routes into a spatialPointsDataframe
 coordinates(routes)=c('longitude','latitude')
 projection(routes) = CRS("+proj=longlat +ellps=WGS84")
 
 # Transforms routes to an equal-area projection - see previously defined prj.string
-routes.laea = spTransform(routes, CRS(prj.string))
+routes.laea = spTransform(routes, CRS("+proj=longlat +ellps=WGS84"))
 
 # A function that draws a circle of radius r around a point: p (x,y)
 RADIUS = 40
@@ -86,7 +86,7 @@ setwd('C:/Git/Biotic-Interactions')
 
 # Define the projection of the raster layer (this may be different for different data)
 #  See documentation in PROJ4
-projection(env.data) = CRS("+proj=longlat +ellps=WGS84") 
+projection(evi.data) = CRS("+proj=longlat +ellps=WGS84") 
 
   
 #for(env.i in env){

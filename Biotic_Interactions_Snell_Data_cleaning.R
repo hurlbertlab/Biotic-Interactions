@@ -213,7 +213,7 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 all_env = read.csv('occuenv.csv', header = T)
 # merge in ENV
 all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"))
-all_expected_pres$V1 = NULL
+
 write.csv(all_expected_pres,"all_expected_pres.csv", row.names= F)
 
 ####### END DATA CLEANING, see analysis script ##########

@@ -93,7 +93,7 @@ if(FALSE) {  #Blocking out the for loop below. Need to change to TRUE if you wan
 ######## Calculating centroids for each species - using whole range #####
 centroid = c()
 new_spec_weights$focalcat = as.character(new_spec_weights$focalcat)
-for (sp in focal_spp){
+if(FALSE) {for (sp in focal_spp){
   print(sp)
   t1 = all_spp_list[grep(sp, all_spp_list)]
   t2 = t1[grep('.shp', t1)]
@@ -111,6 +111,7 @@ for (sp in focal_spp){
   focalAOU = unique(new_spec_weights[new_spec_weights$focalcat == sp, c('focalAOU')])
   centroid = rbind(centroid, c(sp, focalAOU, coord))
 }
+}
 centroid = data.frame(centroid)
 names(centroid) = c("Species", "FocalAOU", "Long", "Lat")
 centroid$Lat = as.numeric(paste(centroid$Lat))
@@ -123,14 +124,14 @@ bbs_routes = dplyr::select(bbs_routes, -c(statenum, route))
 routes = unique(bbs_routes$stateroute)
 
 coordinates(bbs_routes) <- c("longitude", "latitude")
-proj4string(bbs_routes) <- proj4string(sporigin)
+proj4string(bbs_routes) <- intl_proj
 
 expect_pres = c()
 
 file_names = dir('sp_routes/')
 setwd("sp_routes/")
 
-for (sp in focal_spp){
+if(FALSE) {for (sp in focal_spp){
   print(sp)
   
   focalAOU = subset(new_spec_weights, focalcat == sp)
@@ -146,19 +147,19 @@ for (sp in focal_spp){
   
   plot(sporigin)
   # source: http://gis.stackexchange.com/questions/63793/how-to-overlay-a-polygon-over-spatialpointsdataframe-and-preserving-the-spdf-dat
-  routes_inside <- bbs_routes[!is.na(over(bbs_routes,as(sporigin,"SpatialPolygons"))),]
+  routes_inside <- bbs_routes[!is.na(sp::over(bbs_routes,as(sporigin,"SpatialPolygons"))),]
   plot(routes_inside, add = T)
   routes_inside = data.frame(routes_inside)
   routes_inside = cbind(routes_inside, spAOU)
   expect_pres=rbind(expect_pres, routes_inside)
 }
-
-#setwd("C:/Git/Biotic-Interactions")
+}
+setwd("C:/Git/Biotic-Interactions")
 expect_pres = data.frame(expect_pres)
   
 expect_pres = dplyr::select(expect_pres, -optional)
 
-write.csv(expect_pres,"C:/Git/Biotic-Interactions/expect_pres.csv",row.names=FALSE)
+# write.csv(expect_pres,"C:/Git/Biotic-Interactions/expect_pres.csv",row.names=FALSE)
 
 ######## PDF of each species BBS occurrences ########
 focalcompsub = read.csv("focalcompsub.csv", header=TRUE)
@@ -185,13 +186,13 @@ dev.off()
 
 ###### Talk plot 
 
-sp = "Oporornis_agilis"
+sp = "Pipilo_maculatus"
 
 focalAOU = subset(new_spec_weights, focalcat == sp)
 spAOU = unique(focalAOU$focalAOU)
 
 #file_names = dir('sp_routes/')
-#setwd("sp_routes/")
+
 
 t1 = all_spp_list[grep(sp, all_spp_list)]
 t2 = t1[grep('.shp', t1)]
@@ -206,13 +207,12 @@ sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|t
 routes_inside <- bbs_routes[!is.na(sp::over(bbs_routes,as(sporigin,"SpatialPolygons"))),]
 # plot(routes_inside, add = T)
 
-#setwd("C:/git/Biotic-Interactions")
+setwd("C:/git/Biotic-Interactions")
 r = read.csv("C:/git/Biotic-Interactions/all_expected_pres.csv", header =TRUE)
-r = subset(r,Focal == "Connecticut Warbler")
+r = subset(r,Focal == "Spotted Towhee")
 
-occ_loc = merge(routes_inside, r[,c("stateroute", "FocalOcc", "Focal")], by = "stateroute")
-occ_sub = subset(occ_loc, Focal = "Connecticut Warbler")
-#occ_sub = occ_sub[,c(2:3, 5)]
+occ_loc = merge(r[,c("stateroute", "FocalOcc", "Focal")],routes_inside, by = "stateroute")
+occ_sub = subset(occ_loc, Focal = "Spotted Towhee")
 
 colfunc <- colorRampPalette(c("blue","red"))
 colfunc(16)
@@ -227,26 +227,18 @@ usa = readShapePoly("Z:/GIS/geography/continent.shp")
 proj4string(usa) <- intl_proj
 usa = spTransform(usa, CRS("+proj=longlat +datum=WGS84"))
 
-pdf('Figures/warbler_plot.pdf', height = 8, width = 11)
+pdf('Figures/spottedtow_plot.pdf', height = 8, width = 11)
 par(mfrow = c(1, 1), mar = c(6, 6, 1, 1), mgp = c(4, 1, 0), 
     cex.axis = 1.5, cex.lab = 2, las = 1)
 
-plot(usa)
+plot(usa, col=rgb(0, 1, 0, 0.2)) #extent(usa, -173.4401,-57.92498,15.11517,77.79797)
 
-#extent(usa, -173.4401,-57.92498,15.11517,77.79797)
-
-plot(sporigin, add=TRUE, col = "gray")
+plot(sporigin, add=TRUE, col = "gray", border = "gray")
 setwd("C:/git/Biotic-Interactions")
-points(occ_sub$longitude, occ_sub$latitude, col = unique(occ_sub$Col), pch=20, cex = 0.1)
+points(occ_sub$longitude, occ_sub$latitude, col = unique(occ_sub$Col), pch=20, cex = 0.3)
 dev.off()
 
 legend_image <- as.raster(matrix(colfunc(16), ncol=1))
 plot(c(0,3),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = '')
 text(x=1.5, y = seq(0,1,l=5), labels = seq(1,0,l=5))
 rasterImage(legend_image, 0, 0, 1,1)
-
-# legend('bottomright', legend = unique(occ_sub$lab), pch=16,col = unique(occ_sub$Col), cex=0.6)
-
-routes_inside = data.frame(routes_inside)
-routes_inside = cbind(routes_inside, spAOU)
-expect_pres=rbind(expect_pres, routes_inside)
