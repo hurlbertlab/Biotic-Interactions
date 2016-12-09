@@ -21,9 +21,13 @@ occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale))
 
 
 ##### LIN REG #######
-# create beta output data frame
+# for loop subsetting env data to expected occurrence for focal species
+envoutput = c()
+envoutputa = c()
 beta_lm = matrix(NA, nrow = 86, ncol = 10)
 beta_abun = matrix(NA, nrow = 86,ncol = 10)
+# create beta output data frame
+
 beta_lm[sp,1] = sp
 beta_lm[sp,2] = summary(competition)$coef[1,"Estimate"]
 beta_lm[sp,3] = summary(competition)$coef[1,"Pr(>|t|)"]
@@ -45,10 +49,6 @@ beta_abun[sp,7] = summary(env_abun)$r.squared
 beta_abun[sp,8] = summary(both_abun)$coef[2,"Estimate"]
 beta_abun[sp,9] = summary(both_abun)$coef[2,"Pr(>|t|)"]
 beta_abun[sp,10] = summary(both_abun)$r.squared
-
-# for loop subsetting env data to expected occurrence for focal species
-envoutput = c()
-envoutputa = c()
 
 occuenv = na.omit(occuenv)
 subfocalspecies = unique(occuenv$Species)
@@ -82,6 +82,9 @@ for (sp in 1:length(subfocalspecies)){
   print(NONE) #neither variance
   sp1 = unique(temp$Species)
   envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE))
+  
+  
+
   
   #variance_partitioning 
   ENVa = summary(both_abun)$r.squared - summary(competition_abun)$r.squared
@@ -267,12 +270,12 @@ envrank$Fam_abbrev = gsub('Mimidae','M', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Vireonidae','V', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Aegithalidae','A', envrank$Fam_abbrev)                        
 envrank$Fam_abbrev = gsub('Corvidae','Co', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Timaliidae','Ti', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Troglodytidae','T', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Cuculidae','Cu', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Icteridae','I', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Picidae','Pi', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Phasianidae','Ph', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Odontophoridae','O', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Motacillidae','M', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Columbidae','Cl', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Trochilidae','Tr', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Cardinalidae','Ca', envrank$Fam_abbrev)
@@ -286,21 +289,21 @@ envrank$Fam_abbrevf = gsub('Tu','#a6bddb', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('F','#67a9cf', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Tr','#048691', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Ty','#9ecae1', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('M','#02818a', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Ti','#02818a', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('V','#016c59', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('A','#014636', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Co','#081d58', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('T','#0080ff', envrank$Fam_abbrevf)                       
 envrank$Fam_abbrevf = gsub('Cu','#253494', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('I','#225ea8', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Pi','#1d91c0', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Ph','#41b6c4', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('M','#41b6c4', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('O','#7f7fff', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Cl','#0000ff', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Ca','#016c59', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Pa','#02818a', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('S','#014636', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('P','#3690c0', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('T','#0080ff', envrank$Fam_abbrevf) 
 famlabel= envrank$Fam_abbrev
 ####### OTHER LABEL ######
 envrank$mig_abbrev = envrank$migclass
@@ -341,7 +344,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("#2ca25f","#dd1c77","#43a2ca","white"), labels=c("Environment", "Competition","Shared Variance", "")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=20), legend.position="top", legend.justification=c(0, 1), legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:86, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:86, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:86, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:86, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:86, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
+tt = t + annotate("text", x = 1:75, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:75, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:75, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:75, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:75, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
 plot(tt)
 
 ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 30, width = 38)

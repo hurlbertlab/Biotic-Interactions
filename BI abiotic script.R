@@ -18,7 +18,8 @@ library('rgdal')
 
 # derived from BBS_occ script
 routes = read.csv("expect_pres.csv",header =TRUE)
-routes$latitude = abs(routes$latitude)
+routes = routes[row.names(unique(routes[,c('latitude', 'longitude', 'stateroute')])),]
+# routes$latitude = abs(routes$latitude)
 # Makes routes into a spatialPointsDataframe
 coordinates(routes)=c('longitude','latitude')
 projection(routes) = CRS("+proj=longlat +ellps=WGS84")
@@ -48,7 +49,7 @@ circs = sapply(1:nrow(routes.laea), function(x){
   circ = Polygons(list(circ),ID=routes.laea@data$stateroute[x])
 }
 )
-circs.sp = SpatialPolygons(circs, proj4string=CRS(prj.string))
+circs.sp = SpatialPolygons(circs, proj4string=CRS("+proj=longlat +ellps=WGS84"))
 
 # Check that circle loactions look right
 plot(circs.sp)
@@ -97,13 +98,14 @@ mat.var = raster::extract(mat, circs.sp, fun = var, na.rm=T)
 #env.data = rbind(env.data, c(env.i,env.point, env.mean,env.var))
 #}
 env_mat = data.frame(stateroute = names(circs.sp), mat.point = mat.point, mat.mean = mat.mean, mat.var = mat.var)
-
+write.csv(env_mat, "env_mat.csv", row.names = FALSE)
 # Extract Data
 elev.point = raster::extract(elev, routes)
 elev.mean = raster::extract(elev, circs.sp, fun = mean, na.rm=T)
 elev.var = raster::extract(elev, circs.sp, fun = var, na.rm=T)
 
 env_elev = data.frame(stateroute = names(circs.sp), elev.point = elev.point, elev.mean = elev.mean, elev.var = elev.var)
+write.csv(env_elev, "env_elev.csv", row.names = FALSE)
 
 # Extract Data
 map.point = raster::extract(map, routes)
@@ -111,6 +113,8 @@ map.mean = raster::extract(map, circs.sp, fun = mean, na.rm=T)
 map.var = raster::extract(map, circs.sp, fun = var, na.rm=T)
 
 env_map = data.frame(stateroute = names(circs.sp), map.point = map.point, map.mean = map.mean, map.var = map.var)
+write.csv(env_map, "env_map.csv", row.names = FALSE)
+
 # Extract EVI Data
 evi.point = raster::extract(evi.data, routes)
 evi.mean = raster::extract(evi.data, circs.sp, fun = mean, na.rm=T)
@@ -118,6 +122,7 @@ evi.var = raster::extract(evi.data, circs.sp, fun = var, na.rm=T)
 
 # Put into dataframe
 env_evi = data.frame(stateroute = names(circs.sp), evi.point = evi.point, evi.mean = evi.mean, evi.var = evi.var)
+write.csv(env_evi, "env_evi.csv", row.names = FALSE)
 
 # merge together
 all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, env_elev, env_map, env_evi))
