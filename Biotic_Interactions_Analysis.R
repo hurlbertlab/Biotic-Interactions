@@ -8,7 +8,7 @@ library(lmtest)
 tax_code = read.csv("Tax_AOU_Alpha.csv", header = TRUE)
 temp_occ = read.csv("bbs_sub1.csv", header=TRUE)
 centroid=read.csv("centroid.csv", header=TRUE)
-occuenv= read.csv("all_expected_pres.csv", header = TRUE)
+occuenv= read.csv("all_expected_pres_new.csv", header = TRUE)
 Hurlbert_o = read.csv('Master_RO_Correlates_20110610.csv', header = T)
 subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
 

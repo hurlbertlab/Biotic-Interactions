@@ -177,13 +177,13 @@ prefull_data = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>%
 # create focalcompoutput table that adds MainCompN column to indicate primary competitors to the 
 # prefull_data with focal/comp/stroute/abundance/occ/summed abundance
 focalcompoutput = bbs_ep %>%    
-  select(stateroute, spAOU) %>%
+  dplyr::select(stateroute, spAOU) %>%
   left_join(subset(shapefile_areas, mainCompetitor == 1, 
                    select = c('focalAOU', 'compAOU', 'mainCompetitor')), 
             by = c('spAOU' = 'focalAOU')) %>%
   left_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
   left_join(prefull_data, by = c('spAOU' = 'spAOU', 'stateroute' = 'stateroute')) %>%
-  select(stateroute, Focal, spAOU, Family, abundance.x, occ, abundance, allCompN)
+  dplyr::select(stateroute, Focal, spAOU, Family, abundance.x, occ, abundance, allCompN)
 names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbundance", "FocalOcc","MainCompN", "AllCompN")
 
 focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
@@ -196,7 +196,7 @@ sppGT20rtes = focalcompoutput %>%
   group_by(FocalAOU) %>%
   summarise(n = n_distinct(stateroute)) %>%
   filter(n>=20) %>%
-  select(FocalAOU)
+  dplyr::select(FocalAOU)
 
 # Merge with focalcompoutput data table, new # of focal spp is 171 with route filters applied
 focalcompsub = filter(focalcompoutput, FocalAOU %in% sppGT20rtes$FocalAOU)

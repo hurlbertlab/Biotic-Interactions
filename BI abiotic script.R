@@ -17,15 +17,15 @@ library('sp')
 library('rgdal')
 
 # derived from BBS_occ script
-routes = read.csv("expect_pres.csv",header =TRUE)
-routes = routes[row.names(unique(routes[,c('latitude', 'longitude', 'stateroute')])),]
-# routes$latitude = abs(routes$latitude)
+routes = read.csv("latlong_rtes.csv",header =TRUE)
+# routes = routes[row.names(unique(routes[,c('latitude', 'longitude', 'stateroute')])),]
+routes$latitude = abs(routes$latitude)
 # Makes routes into a spatialPointsDataframe
 coordinates(routes)=c('longitude','latitude')
 projection(routes) = CRS("+proj=longlat +ellps=WGS84")
 
 # Transforms routes to an equal-area projection - see previously defined prj.string
-routes.laea = spTransform(routes, CRS("+proj=longlat +ellps=WGS84"))
+routes.laea = spTransform(routes, CRS(prj.string))
 
 # A function that draws a circle of radius r around a point: p (x,y)
 RADIUS = 40
@@ -49,17 +49,17 @@ circs = sapply(1:nrow(routes.laea), function(x){
   circ = Polygons(list(circ),ID=routes.laea@data$stateroute[x])
 }
 )
-circs.sp = SpatialPolygons(circs, proj4string=CRS("+proj=longlat +ellps=WGS84"))
+circs.sp = SpatialPolygons(circs, proj4string=CRS(prj.string))
 
-# Check that circle loactions look right
+# Check that circle locations look right
 plot(circs.sp)
 
 #####################################################################################
 #### ----EVI ----#####
-
 setwd('Z:/GIS/MODIS NDVI')
 
 evi.data = raster('Vegetation_Indices_may-aug_2000-2010')
+evi.proj <- projectRaster(evi.data, crs=prj.string)
 
 setwd('C:/Git/Biotic-Interactions/ENV DATA')
 # Read in stack of layers from all 12 months 
@@ -84,10 +84,9 @@ alt_files<-paste('alt_10m_bil', sep='')
 
 setwd('C:/Git/Biotic-Interactions')
 
-
 # Define the projection of the raster layer (this may be different for different data)
 #  See documentation in PROJ4
-projection(evi.data) = CRS("+proj=longlat +ellps=WGS84") 
+projection(evi.proj) 
 
   
 #for(env.i in env){
@@ -98,14 +97,15 @@ mat.var = raster::extract(mat, circs.sp, fun = var, na.rm=T)
 #env.data = rbind(env.data, c(env.i,env.point, env.mean,env.var))
 #}
 env_mat = data.frame(stateroute = names(circs.sp), mat.point = mat.point, mat.mean = mat.mean, mat.var = mat.var)
-write.csv(env_mat, "env_mat.csv", row.names = FALSE)
+
+env_mat = read.csv("env_mat.csv", header = TRUE)
 # Extract Data
 elev.point = raster::extract(elev, routes)
 elev.mean = raster::extract(elev, circs.sp, fun = mean, na.rm=T)
 elev.var = raster::extract(elev, circs.sp, fun = var, na.rm=T)
 
 env_elev = data.frame(stateroute = names(circs.sp), elev.point = elev.point, elev.mean = elev.mean, elev.var = elev.var)
-write.csv(env_elev, "env_elev.csv", row.names = FALSE)
+env_elev=read.csv("env_elev.csv", header = TRUE)
 
 # Extract Data
 map.point = raster::extract(map, routes)
@@ -113,22 +113,24 @@ map.mean = raster::extract(map, circs.sp, fun = mean, na.rm=T)
 map.var = raster::extract(map, circs.sp, fun = var, na.rm=T)
 
 env_map = data.frame(stateroute = names(circs.sp), map.point = map.point, map.mean = map.mean, map.var = map.var)
-write.csv(env_map, "env_map.csv", row.names = FALSE)
+env_map = read.csv("env_map.csv", header = TRUE)
 
 # Extract EVI Data
-evi.point = raster::extract(evi.data, routes)
-evi.mean = raster::extract(evi.data, circs.sp, fun = mean, na.rm=T)
-evi.var = raster::extract(evi.data, circs.sp, fun = var, na.rm=T)
+evi.point = raster::extract(evi.proj, routes.laea)
+evi.mean = raster::extract(evi.proj, circs.sp, fun = mean, na.rm=T)
+evi.var = raster::extract(evi.proj, circs.sp, fun = var, na.rm=T)
 
 # Put into dataframe
 env_evi = data.frame(stateroute = names(circs.sp), evi.point = evi.point, evi.mean = evi.mean, evi.var = evi.var)
-write.csv(env_evi, "env_evi.csv", row.names = FALSE)
+env_evi = read.csv("env_evi.csv", header = TRUE)
+# toplot = filter(env_evi, evi.mean > 0) 
 
 # merge together
 all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, env_elev, env_map, env_evi))
 
-write.csv(all_env,'C:/git/Biotic-Interactions/2001_2015_bbs_routes_Env.csv',row.names=F)
-
+# write.csv(all_env,'C:/git/Biotic-Interactions/all_env.csv',row.names=F)
+plot(evi.proj)
+points(toplot$longitude, toplot$latitude)
 ####----Creating an environmental matrix ----####
 occumatrix <- read.csv("2001_2015_bbs_occupancy.csv", header = T) # read in updated bbs data
 route.locs = read.csv('latlong_rtes.csv')
@@ -170,4 +172,4 @@ occuenv$zPrecip = (occuenv$map.mean - occuenv$Mean.Precip) / occuenv$SD.Precip
 occuenv$zElev = (occuenv$elev.mean - occuenv$Mean.Elev) / occuenv$SD.Elev
 occuenv$zEVI = (occuenv$evi.mean - occuenv$Mean.EVI) / occuenv$SD.EVI
 
-write.csv(occuenv, "occuenv.csv", row.names= FALSE)
+write.csv(occuenv, "occuenv_new.csv", row.names= FALSE)
