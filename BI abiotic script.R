@@ -124,7 +124,7 @@ evi.var = raster::extract(evi.proj, circs.sp, fun = var, na.rm=T)
 env_evi = data.frame(stateroute = names(circs.sp), evi.point = evi.point, evi.mean = evi.mean, evi.var = evi.var)
 env_evi = read.csv("env_evi.csv", header = TRUE)
 # toplot = filter(env_evi, evi.mean > 0) 
-
+#env_evi[is.na(env_evi)] <- 0
 # merge together
 all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, env_elev, env_map, env_evi))
 
