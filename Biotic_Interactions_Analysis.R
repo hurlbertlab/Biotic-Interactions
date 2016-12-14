@@ -2,14 +2,13 @@ library(lme4)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
-library(lmtest)
 
 # read in files created in data cleaning script
-tax_code = read.csv("Tax_AOU_Alpha.csv", header = TRUE)
-temp_occ = read.csv("bbs_sub1.csv", header=TRUE)
-centroid=read.csv("centroid.csv", header=TRUE)
-occuenv= read.csv("all_expected_pres_new.csv", header = TRUE)
-Hurlbert_o = read.csv('Master_RO_Correlates_20110610.csv', header = T)
+tax_code = read.csv("Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
+temp_occ = read.csv("bbs_sub1.csv", header=TRUE) # BBS occ script
+centroid=read.csv("centroid.csv", header=TRUE) # GIS script
+occuenv= read.csv("all_expected_pres_new.csv", header = TRUE) # Data cleaning script
+Hurlbert_o = read.csv('Master_RO_Correlates_20110610.csv', header = T) # Hurlbert Lab
 subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
 
 # rescaling all occupancy values  - odds ratio
@@ -344,7 +343,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("#2ca25f","#dd1c77","#43a2ca","white"), labels=c("Environment", "Competition","Shared Variance", "")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=20), legend.position="top", legend.justification=c(0, 1), legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:75, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:75, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:75, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:75, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:75, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size = 20)) 
+tt = t + annotate("text", x = 1:75, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:75, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:75, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:75, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:75, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks(9))
 plot(tt)
 
 ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 30, width = 38)
@@ -364,10 +363,11 @@ summary(comp_traits)
 
 env_sum = subset(envflip, Type != 'NONE')
 total = env_sum %>% 
-  group_by(FocalAOU) %>%
+  dplyr::group_by(FocalAOU) %>%
   summarise(sum(value))
 
-total_traits = lm(logit(value) ~ Trophic.Group + migclass + EW.x, data = env_sum)
+env_sum$edgeval = (env_sum$value * (1 - 2*edge_adjust)) + edge_adjust
+total_traits = lm(logit(edgeval) ~ Trophic.Group + migclass + EW.x, data = env_sum)
 summary(total_traits)
 
 # R2 plot - lm in ggplot
@@ -389,7 +389,7 @@ names(tomerge) = c("FocalAOU","Total.x", "Total.y")
 # R2 plot
 R2plot2 = merge(R2plot, tomerge, by = "FocalAOU")
 
-ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=35),axis.title.y=element_text(size=35, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24) + geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1) + geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "#43a2ca", cex =5, stroke = 1) +geom_abline(intercept = 0, slope = 1, col = "red", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=2))
+ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=35),axis.title.y=element_text(size=35, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24) + geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1) + geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "dark gray", cex =5, stroke = 1) +geom_abline(intercept = 0, slope = 1, col = "red", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=2))
 ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/occvabun.png")
 
 # need to change the slopes
