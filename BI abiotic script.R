@@ -1,6 +1,9 @@
 ###This script imports environmental data for BBS routes
 
 library(raster)
+library(sp)
+library(rgdal)
+library(RCurl)
 
 # Define lat/long window for raster data
 box = c(-170,-54,24,74) # North America
@@ -13,8 +16,6 @@ prj.string <- "+proj=laea +lat_0=45.235 +lon_0=-106.675 +units=km"
 
 ####################################################################################
 #### Import route locations and draw sample circles around them
-library('sp')
-library('rgdal')
 
 # derived from BBS_occ script
 routes = read.csv("latlong_rtes.csv",header =TRUE)
@@ -58,7 +59,30 @@ plot(circs.sp)
 #### ----EVI ----#####
 setwd('Z:/GIS/MODIS NDVI')
 
-evi.data = raster('Vegetation_Indices_may-aug_2000-2010')
+url <- "ftp://neoftp.sci.gsfc.nasa.gov/geotiff.float/MOD13A2_M_NDVI/"
+filenames = getURL(url, ftp.use.epsv = FALSE, dirlistonly = TRUE)
+filenames <- strsplit(filenames, "\r\n")
+filenames = unlist(filenames)
+
+# downloads all NDVI files afrom FTP site and saves to MODIS NDVI folder
+if(TRUE){for (filename in filenames) {
+  download.file(paste(url, filename, sep = ""), paste(getwd(), "/", filename, sep = ""))
+}
+}
+
+fnms <- list.files(path= "Z:/GIS/MODIS NDVI/", 
+                   pattern="MOD13A2_*") 
+r.st <- stack(lapply(fnms, function(x) raster(x)))  
+img <- raster('Z:/GIS/MODIS NDVI/MOD13A2_M_NDVI_2016-10.FLOAT.TIFF.tiff')
+
+readTIFF()que_elev <- readGDAL(".tiff")
+plot(raster(fnms[1]))
+
+vec <- readOGR("Z:/GIS/MODIS NDVI/", layer = "MOD13A2_E_NDVI_2016-11-01")
+
+
+raster('Z:/GIS/MODIS NDVI/Vegetation_Indices_may-aug_2000-2010')
+
 evi.proj <- projectRaster(evi.data, crs=prj.string)
 
 setwd('C:/Git/Biotic-Interactions/ENV DATA')
