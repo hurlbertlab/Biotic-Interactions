@@ -57,12 +57,12 @@ plot(circs.sp)
 
 #####################################################################################
 #### ----EVI ----#####
-setwd('Z:/GIS/MODIS NDVI')
+setwd('Z:/GIS/MODIS NDVI/2000_2016/2001')
 
-url <- "ftp://neoftp.sci.gsfc.nasa.gov/geotiff.float/MOD13A2_M_NDVI/"
-filenames = getURL(url, ftp.use.epsv = FALSE, dirlistonly = TRUE)
-filenames <- strsplit(filenames, "\r\n")
-filenames = unlist(filenames)
+#url <- "ftp://neoftp.sci.gsfc.nasa.gov/geotiff.float/MOD13A2_M_NDVI/"
+#filenames = getURL(url, ftp.use.epsv = FALSE, dirlistonly = TRUE)
+#filenames <- strsplit(filenames, "\r\n")
+#filenames = unlist(filenames)
 
 # downloads all NDVI files afrom FTP site and saves to MODIS NDVI folder
 if(TRUE){for (filename in filenames) {
@@ -70,13 +70,26 @@ if(TRUE){for (filename in filenames) {
 }
 }
 
-fnms <- list.files(path= "Z:/GIS/MODIS NDVI/", 
-                   pattern="MOD13A2_*") 
+fnms <- list.files(path= "Z:/GIS/MODIS NDVI/2000_2016/2000", 
+                   pattern="*.hdf") 
 r.st <- stack(lapply(fnms, function(x) raster(x)))  
-img <- raster('Z:/GIS/MODIS NDVI/MOD13A2_M_NDVI_2016-10.FLOAT.TIFF.tiff')
+img <- raster('Z:/GIS/MODIS NDVI/2000_2016/2000/MOD13A3.A2000122.h01v07.005.2007111071631.hdf')
 
-readTIFF()que_elev <- readGDAL(".tiff")
-plot(raster(fnms[1]))
+bn1 <- "MOD13A3.A2000122.h01v07.005.2007111071631.hdf"
+b01 <- raster(readGDAL(paste("Z:/GIS/MODIS NDVI/2000_2016/2000/",bn1, sep = ""), silent = TRUE))
+
+# need to convert HDFs into TIFFs
+library(gdalUtils)
+# Get a list of sds names
+sds <- get_subdatasets('full/path/filename.hdf')
+# Isolate the name of the first sds
+name <- sds[1]
+filename <- rasterTmpFile()
+extension(filename) <- 'tif'
+gdal_translate(sds[1], dst_dataset = filename)
+# Load the Geotiff created into R
+r <- raster(filename)
+
 
 vec <- readOGR("Z:/GIS/MODIS NDVI/", layer = "MOD13A2_E_NDVI_2016-11-01")
 
