@@ -70,26 +70,30 @@ if(TRUE){for (filename in filenames) {
 }
 }
 
-fnms <- list.files(path= "Z:/GIS/MODIS NDVI/2000_2016/2000", 
-                   pattern="*.hdf") 
+
 r.st <- stack(lapply(fnms, function(x) raster(x)))  
 img <- raster('Z:/GIS/MODIS NDVI/2000_2016/2000/MOD13A3.A2000122.h01v07.005.2007111071631.hdf')
 
 bn1 <- "MOD13A3.A2000122.h01v07.005.2007111071631.hdf"
 b01 <- raster(readGDAL(paste("Z:/GIS/MODIS NDVI/2000_2016/2000/",bn1, sep = ""), silent = TRUE))
 
+
+#### skip above ####
+
 # need to convert HDFs into TIFFs
 library(gdalUtils)
+fnms <- list.files(path= "Z:/GIS/EVI", pattern="*.hdf") 
+for(i in fnms){
 # Get a list of sds names
-sds <- get_subdatasets('full/path/filename.hdf')
+sds <- get_subdatasets(paste('Z:/GIS/EVI/', i, sep = ""))
 # Isolate the name of the first sds
 name <- sds[1]
 filename <- rasterTmpFile()
 extension(filename) <- 'tif'
-gdal_translate(sds[1], dst_dataset = filename)
+gdal_translate(name, "test_modis_sd1.tif")
 # Load the Geotiff created into R
 r <- raster(filename)
-
+}
 
 vec <- readOGR("Z:/GIS/MODIS NDVI/", layer = "MOD13A2_E_NDVI_2016-11-01")
 
