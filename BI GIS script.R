@@ -211,7 +211,7 @@ setwd("C:/git/Biotic-Interactions")
 r = read.csv("C:/git/Biotic-Interactions/all_expected_pres.csv", header =TRUE)
 r = subset(r,Focal == "Spotted Towhee")
 
-occ_loc = merge(r[,c("stateroute", "FocalOcc", "Focal")],routes_inside, by = "stateroute")
+occ_loc = merge(r[,c("stateroute", "FocalOcc", "FocalAbundance","Focal")],routes_inside, by = "stateroute")
 occ_sub = subset(occ_loc, Focal = "Spotted Towhee")
 
 colfunc <- colorRampPalette(c("blue","red"))
@@ -238,7 +238,16 @@ setwd("C:/git/Biotic-Interactions")
 points(occ_sub$longitude, occ_sub$latitude, col = unique(occ_sub$Col), pch=20, cex = 0.3)
 dev.off()
 
-legend_image <- as.raster(matrix(colfunc(16), ncol=1))
+colfunc <- colorRampPalette(c("gold","red"))
+colfunc(10)
+occ_sub$Cola <- colfunc(10)[as.numeric(cut(occ_sub$FocalAbundance,10))]
+occ_sub  = occ_sub %>%
+  arrange(FocalAbundance)
+
+occ_abun$lab = signif(occ_abun$FocalAbundance, 2)
+points(occ_sub$longitude, occ_sub$latitude, col = occ_sub$Cola, pch=20, cex = 0.3)
+
+legend_image <- as.raster(matrix(colfunc(20), ncol=1))
 plot(c(0,3),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = '')
 text(x=1.5, y = seq(0,1,l=5), labels = seq(1,0,l=5))
 rasterImage(legend_image, 0, 0, 1,1)
