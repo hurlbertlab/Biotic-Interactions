@@ -193,7 +193,7 @@ par(mfrow = c(3, 4))
 for(sp in subfocalspecies){ 
   print(sp)
   psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ cs(comp_scaled) + 
+  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
                               abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
   
   tes = ggplot(data = psub, aes(x = zPrecip, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
@@ -207,7 +207,7 @@ par(mfrow = c(3, 4))
 for(sp in subfocalspecies){ 
   print(sp)
   psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ cs(comp_scaled) + 
+  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
                               abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
   
   tes = ggplot(data = psub, aes(x = zTemp, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species) +theme_bw()
@@ -221,7 +221,7 @@ par(mfrow = c(3, 4))
 for(sp in subfocalspecies){ 
   print(sp)
   psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ cs(comp_scaled) + 
+  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
                               abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
   
   tes = ggplot(data = psub, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +theme_bw()
