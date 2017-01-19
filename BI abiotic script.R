@@ -84,25 +84,14 @@ b01 <- raster(readGDAL(paste("Z:/GIS/MODIS NDVI/2000_2016/2000/",bn1, sep = ""),
 
 # need to convert HDFs into TIFFs
 library(gdalUtils)
-fnms <- list.files(path= "Z:/GIS/EVI/NASA", pattern="*.hdf") 
+fnms <- list.files(path= "Z:/GIS/EVI/NASA", pattern="*.hdf")[1471,]
 for(i in fnms){
   hdf4_dataset <- paste('Z:/GIS/EVI/NASA/', i, sep = "")
-  now = gdal_translate(hdf4_dataset,"test_modis_sd1.tif",sd_index=1)
+  now = gdal_translate(hdf4_dataset, paste('Z:/GIS/EVI/', i, ".tiff", sep = ""),sd_index=1)
+} 
   
+# "MOD13A3.A2005335.h30v13.006.2015155234446.hdf" 
   
-  
-  
-# Get a list of sds names
-sds <- get_subdatasets(paste('Z:/GIS/EVI/NASA/', i, sep = ""))
-# Isolate the name of the first sds
-name <- sds[1]
-filename <- rasterTmpFile()
-extension(filename) <- 'tif'
-#filename <-gdal_translate(name, "test_modis_sd1.tif")
-# Load the Geotiff created into R
-r <- raster(filename)
-}
-
 
 out.files <- list.files(path= "Z:/GIS/EVI/NASA", pattern="hdf$", full.names=FALSE) 
 for(i in out.files){
