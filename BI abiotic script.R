@@ -57,9 +57,11 @@ plot(circs.sp)
 
 #####################################################################################
 #### ----EVI ----#####
-setwd('Z:/GIS/MODIS NDVI/2000_2016/2001')
+setwd('Z:/GIS/EVI')
 
-#url <- "ftp://neoftp.sci.gsfc.nasa.gov/geotiff.float/MOD13A2_M_NDVI/"
+#url <- "https://search.earthdata.nasa.gov/granules/download.html?project=5135767041&collection=C194001239-LPDAAC_ECS"
+#filenames <- getURL(url, ftp.use.epsv = FALSE,dirlistonly = TRUE)
+
 #filenames = getURL(url, ftp.use.epsv = FALSE, dirlistonly = TRUE)
 #filenames <- strsplit(filenames, "\r\n")
 #filenames = unlist(filenames)
@@ -82,25 +84,60 @@ b01 <- raster(readGDAL(paste("Z:/GIS/MODIS NDVI/2000_2016/2000/",bn1, sep = ""),
 
 # need to convert HDFs into TIFFs
 library(gdalUtils)
-fnms <- list.files(path= "Z:/GIS/EVI", pattern="*.hdf") 
+fnms <- list.files(path= "Z:/GIS/EVI/NASA", pattern="*.hdf") 
 for(i in fnms){
+  hdf4_dataset <- paste('Z:/GIS/EVI/NASA/', i, sep = "")
+  now = gdal_translate(hdf4_dataset,"test_modis_sd1.tif",sd_index=1)
+  
+  
+  
+  
 # Get a list of sds names
-sds <- get_subdatasets(paste('Z:/GIS/EVI/', i, sep = ""))
+sds <- get_subdatasets(paste('Z:/GIS/EVI/NASA/', i, sep = ""))
 # Isolate the name of the first sds
 name <- sds[1]
 filename <- rasterTmpFile()
 extension(filename) <- 'tif'
-gdal_translate(name, "test_modis_sd1.tif")
+#filename <-gdal_translate(name, "test_modis_sd1.tif")
 # Load the Geotiff created into R
 r <- raster(filename)
 }
 
-vec <- readOGR("Z:/GIS/MODIS NDVI/", layer = "MOD13A2_E_NDVI_2016-11-01")
+
+out.files <- list.files(path= "Z:/GIS/EVI/NASA", pattern="hdf$", full.names=FALSE) 
+for(i in out.files){
+gdal_translate(paste(i, ".tif",sep = ""), sd_index = 1) 
+}
+gdalwarp("Your_Image_Out.tif","Your_Image_OutWGS84.tif",s_srs="+proj=sinu 
+         +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs",
+         t_srs="+proj=longlat +datum=WGS84 +no_defs",srcnodata=-3000,dstnodata=-3000) 
+#handles the conversion to WGS84
+
+for (i in 1:length(fnms)){
+  
+  setwd("Z:/GIS/EVI")
+  
+  
+  reprojectHDF(hdfName       = fnms[i],               
+               filename      = out_names[i],
+               MRTpath       =  "Z:/GIS/EVI",                                 
+               resample_type = "NEAREST_NEIGHBOR",                       
+               proj_type     = "GEO",                                    
+               bands_subset  = "0 0 1 0 0 0 0 0 0 0 0 0 0",           
+               proj_params   = "0 0 0 0 0 0 0 0 0 0 0 0",              
+               datum         = "WGS84",                                 
+               pixel_size    = 0.004514)}
 
 
-raster('Z:/GIS/MODIS NDVI/Vegetation_Indices_may-aug_2000-2010')
 
-evi.proj <- projectRaster(evi.data, crs=prj.string)
+gdal_translate(i, paste("Z:/GIS/EVI/",i, sep = ""), of = "GTiff", 1)
+
+
+
+
+
+
+
 
 setwd('C:/Git/Biotic-Interactions/ENV DATA')
 # Read in stack of layers from all 12 months 
