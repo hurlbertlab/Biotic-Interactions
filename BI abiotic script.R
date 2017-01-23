@@ -84,9 +84,10 @@ b01 <- raster(readGDAL(paste("Z:/GIS/MODIS NDVI/2000_2016/2000/",bn1, sep = ""),
 
 # need to convert HDFs into TIFFs
 library(gdalUtils)
-fnms <- list.files(path= "Z:/GIS/EVI/NASA", pattern="*.hdf")[1471,]
+fnms <- list.files(path= "Z:/GIS/EVI/NASA_NEW", pattern="*.hdf")
+fnms = fnms[761:2908]
 for(i in fnms){
-  hdf4_dataset <- paste('Z:/GIS/EVI/NASA/', i, sep = "")
+  hdf4_dataset <- paste('Z:/GIS/EVI/NASA_NEW/', i, sep = "")
   now = gdal_translate(hdf4_dataset, paste('Z:/GIS/EVI/', i, ".tiff", sep = ""),sd_index=1)
 } 
   
