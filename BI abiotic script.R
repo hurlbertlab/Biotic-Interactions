@@ -85,13 +85,15 @@ b01 <- raster(readGDAL(paste("Z:/GIS/MODIS NDVI/2000_2016/2000/",bn1, sep = ""),
 # need to convert HDFs into TIFFs
 library(gdalUtils)
 fnms <- list.files(path= "Z:/GIS/EVI/NASA_NEW", pattern="*.hdf")
-fnms = fnms[761:2908]
+fnms = fnms[1:2912]
 for(i in fnms){
   hdf4_dataset <- paste('Z:/GIS/EVI/NASA_NEW/', i, sep = "")
-  now = gdal_translate(hdf4_dataset, paste('Z:/GIS/EVI/', i, ".tiff", sep = ""),sd_index=1)
+  i = gsub(".hdf", ".tif", i)
+  now = gdal_translate(hdf4_dataset, paste('Z:/GIS/EVI/', i, sep = ""),sd_index=2)
 } 
   
-# "MOD13A3.A2005335.h30v13.006.2015155234446.hdf" 
+read_file<-readTIFF('MOD13A3.A2016183.h23v02.006.2016229085548.hdf.tif') 
+# error @ 911, 1522, (daptart file), 1388 (NA), 1915, 1916
   
 
 out.files <- list.files(path= "Z:/GIS/EVI/NASA", pattern="hdf$", full.names=FALSE) 
