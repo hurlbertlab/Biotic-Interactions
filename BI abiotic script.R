@@ -82,52 +82,57 @@ b01 <- raster(readGDAL(paste("Z:/GIS/MODIS NDVI/2000_2016/2000/",bn1, sep = ""),
 
 #### skip above ####
 
-# need to convert HDFs into TIFFs
+# need to convert HDFs into TIFFs, EVI is band 2
 library(gdalUtils)
 fnms <- list.files(path= "Z:/GIS/EVI/NASA_NEW", pattern="*.hdf")
-fnms = fnms[1:2912]
+fnms = fnms[2117:2912]
 for(i in fnms){
   hdf4_dataset <- paste('Z:/GIS/EVI/NASA_NEW/', i, sep = "")
   i = gsub(".hdf", ".tif", i)
   now = gdal_translate(hdf4_dataset, paste('Z:/GIS/EVI/', i, sep = ""),sd_index=2)
 } 
   
-read_file<-readTIFF('MOD13A3.A2016183.h23v02.006.2016229085548.hdf.tif') 
-# error @ 911, 1522, (daptart file), 1388 (NA), 1915, 1916
-  
 
-out.files <- list.files(path= "Z:/GIS/EVI/NASA", pattern="hdf$", full.names=FALSE) 
-for(i in out.files){
-gdal_translate(paste(i, ".tif",sep = ""), sd_index = 1) 
+
+
+#### VRT business
+gdal_setInstallation()
+valid_install <- !is.null(getOption("gdalUtils_gdalPath"))
+if(valid_install)
+{
+  tiffs <- list.files(path= "Z:/GIS/EVI", pattern="*.tif")
+  output.vrt <- paste(tempfile(),".vrt",sep="")
+  gdalbuildvrt(gdalfile=tiffs,output.vrt=output.vrt,separate=TRUE,verbose=TRUE)
+  gdalinfo(output.vrt)
 }
-gdalwarp("Your_Image_Out.tif","Your_Image_OutWGS84.tif",s_srs="+proj=sinu 
-         +lon_0=0 +x_0=0 +y_0=0 +a=6371007.181 +b=6371007.181 +units=m +no_defs",
-         t_srs="+proj=longlat +datum=WGS84 +no_defs",srcnodata=-3000,dstnodata=-3000) 
-#handles the conversion to WGS84
-
-for (i in 1:length(fnms)){
-  
-  setwd("Z:/GIS/EVI")
-  
-  
-  reprojectHDF(hdfName       = fnms[i],               
-               filename      = out_names[i],
-               MRTpath       =  "Z:/GIS/EVI",                                 
-               resample_type = "NEAREST_NEIGHBOR",                       
-               proj_type     = "GEO",                                    
-               bands_subset  = "0 0 1 0 0 0 0 0 0 0 0 0 0",           
-               proj_params   = "0 0 0 0 0 0 0 0 0 0 0 0",              
-               datum         = "WGS84",                                 
-               pixel_size    = 0.004514)}
 
 
 
-gdal_translate(i, paste("Z:/GIS/EVI/",i, sep = ""), of = "GTiff", 1)
+#### from Tracie CC script
+e = raster(extent(15.961,69.9,-164.883,-56.953))
+tiffs <- list.files(path= "Z:/GIS/EVI", pattern="*.tif")
+
+# create a raster with that extent, and the number of rows and colums to achive a
+# similar resolution as you had before, you might have to do some math here....
+# as crs, use the same crs as in your rasters before, from the crs slot
+s<-raster(e, nrows=2906, ncols=2906, crs=files@crs)
+
+# use this raster to reproject your original raster (since your using the same crs,
+# resample should work fine
+r1<-resample(r1, s, method="ngb")
 
 
+files<-paste('Z:/GIS/EVI/',tiffs,sep='')
+evimeans<-stack(files)
 
-
-
+writeRaster(template, file="MyBigNastyRasty.tif", format="GTiff")
+mosaic_rasters(gdalfile=tiffs,dst_dataset="MyBigNastyRasty.tif",of="GTiff")
+gdalinfo("MyBigNastyRasty.tif")
+for(j in tiffs){
+  tif<-readTIFF(j)
+}
+ 
+# error @ 844, 1006, 1007, 2065-2067, 2113 "MOD13A3.A2012122.h12v05.006.2015246095954.tif"
 
 
 
