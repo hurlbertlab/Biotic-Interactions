@@ -111,7 +111,10 @@ if(valid_install)
 #### from Tracie CC script
 e = raster(extent(15.961,69.9,-164.883,-56.953))
 tiffs <- list.files(path= "Z:/GIS/EVI", pattern="*.tif")
+#tiffs  = tiffs[1202:2912]
+files<-paste('Z:/GIS/EVI/',tiffs,sep='')
 
+evimeans2<-stack(files)
 # create a raster with that extent, and the number of rows and colums to achive a
 # similar resolution as you had before, you might have to do some math here....
 # as crs, use the same crs as in your rasters before, from the crs slot
@@ -119,18 +122,47 @@ s<-raster(e, nrows=2906, ncols=2906, crs=files@crs)
 
 # use this raster to reproject your original raster (since your using the same crs,
 # resample should work fine
-r1<-resample(r1, s, method="ngb")
+r <- raster(nrow=2906, ncol=2)
+r[] <- 1:ncell(r)
+s <- raster(nrow=10, ncol=10)
+r1<-resample(r1, s, method="bilinear")
 
 
 files<-paste('Z:/GIS/EVI/',tiffs,sep='')
-evimeans<-stack(files)
+is.error <- function(x) inherits(x, "try-error")
 
-writeRaster(template, file="MyBigNastyRasty.tif", format="GTiff")
-mosaic_rasters(gdalfile=tiffs,dst_dataset="MyBigNastyRasty.tif",of="GTiff")
-gdalinfo("MyBigNastyRasty.tif")
-for(j in tiffs){
-  tif<-readTIFF(j)
+test = c()
+for(file in files){
+  w <- raster(file, crs="+proj=longlat +datum=WGS84 +ellps=WGS84")
+# evimeans<-stack(files)
+  #e = extent(w)
+# OutExtent = is.error(try(clip1 <- crop(imported_raster, extent(single))))
+  #rbind(test, e)
+  plot(w)
 }
+
+
+result = tryCatch({
+  evimeans<-stack(files)
+}, warning = function(x) {
+  suppressWarnings(na.pass(files))
+}, finally = {
+  cleanup-code
+})
+  
+raster_data <- list.files(pattern='\\.tif$', full.names=TRUE)
+w <- raster("MOD13A3.A2000092.h01v07.006.2015137040355.tif", crs="+proj=longlat +datum=WGS84 +ellps=WGS84")
+  
+for (i in 1:length(raster_data)){
+    r <- raster(raster_data[i], crs="+proj=longlat +datum=WGS84 +ellps=WGS84")
+    rc = crop(r,e)
+    rp <- projectRaster(from = rc, to = w,
+                        filename = file.path ("./crop", raster_data[i]),
+                        method = "bilinear",
+                        format = "raster",
+                        overwrite = TRUE)
+  }
+
  
 # error @ 844, 1006, 1007, 2065-2067, 2113 "MOD13A3.A2012122.h12v05.006.2015246095954.tif"
 
