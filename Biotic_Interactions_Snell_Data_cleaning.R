@@ -1,6 +1,10 @@
 # Biotic Interactions script
 # In this script we compare the differences in occupancy and abundance between
+<<<<<<< HEAD
+# focal species and their competitors using occupancy, abundance, and environmental data.
+=======
 # 63 focal species and their competitors using occupancy, abundance, and environmental data.
+>>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 # Env data was formatted in Snell_code.R from BIOL 465 project. Occupancy data from BBS ecoretriever.
 
 #setwd("C:/git/Biotic-Interactions")
@@ -209,8 +213,13 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 
 
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
+<<<<<<< HEAD
+# read in raw env data UPDATED from gimms script
+all_env = read.csv('Z:/Snell/occuenv.csv', header = T)
+=======
 # read in raw env data UPDATED from MODIS script
 all_env = read.csv('occuenv.csv', header = T)
+>>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 # merge in ENV
 all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"))
 

@@ -62,6 +62,8 @@ end_yr <- 2015
 min_num_yrs <- 15
 richness_w_env <- get_richness_ts_env_data(start_yr, end_yr, min_num_yrs)
 
+<<<<<<< HEAD
+=======
 #################################################
 #This assumes we want all gimms files that are available. It queries for files
 #that are available for download and compares against files already in the gimms
@@ -292,6 +294,7 @@ for (i in 1:length(raster_data)){
 
 
 
+>>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 setwd('C:/Git/Biotic-Interactions/ENV DATA')
 # Read in stack of layers from all 12 months 
 tmean <- getData("worldclim", var = "tmean", res = 10)
@@ -346,6 +349,19 @@ map.var = raster::extract(map, circs.sp, fun = var, na.rm=T)
 env_map = data.frame(stateroute = names(circs.sp), map.point = map.point, map.mean = map.mean, map.var = map.var)
 env_map = read.csv("env_map.csv", header = TRUE)
 
+<<<<<<< HEAD
+
+# NDVI 
+gimms_ndvi = read.csv("ENV DATA/gimms_ndvi_bbs_data.csv", header = TRUE)
+gimms_agg = gimms_ndvi %>% filter(month == c("may", "jun", "jul")) %>% 
+  group_by(site_id, year, month)  %>%  summarise(ndvi.mean=mean(ndvi))
+gimms_agg$stateroute = gimms_agg$site_id
+ndvi = gimms_agg[,c("stateroute", "ndvi.mean")]
+# merge together
+all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, env_elev, env_map, ndvi))
+
+# write.csv(all_env,'C:/git/Biotic-Interactions/all_env.csv',row.names=F)
+=======
 # Extract EVI Data
 evi.point = raster::extract(evi.proj, routes.laea)
 evi.mean = raster::extract(evi.proj, circs.sp, fun = mean, na.rm=T)
@@ -362,6 +378,7 @@ all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, en
 # write.csv(all_env,'C:/git/Biotic-Interactions/all_env.csv',row.names=F)
 plot(evi.proj)
 points(toplot$longitude, toplot$latitude)
+>>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 ####----Creating an environmental matrix ----####
 occumatrix <- read.csv("2001_2015_bbs_occupancy.csv", header = T) # read in updated bbs data
 route.locs = read.csv('latlong_rtes.csv')
@@ -371,7 +388,11 @@ latlongs$latitude = abs(latlongs$latitude)
 route.sp = coordinates(latlongs[,3:2])
 
 #mean data for all variables
+<<<<<<< HEAD
+envtable <- subset(all_env, select = c('stateroute', 'mat.mean', 'map.mean', 'elev.mean', 'ndvi.mean')) 
+=======
 envtable <- subset(all_env, select = c('stateroute', 'mat.mean', 'map.mean', 'elev.mean', 'evi.mean')) 
+>>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 
 ### Calculate metrics of interest
 ####---- Creating final data frame----####
@@ -381,14 +402,23 @@ birdsoutputm = c()
 for (species in uniq.spp) {
   spec.routes <- occumatrix[(occumatrix$Aou) == species, "stateroute"] #subset routes for each species (i) in tidybirds
   env.sub <- envtable[envtable$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
+<<<<<<< HEAD
+  envmeans = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'ndvi.mean')], 2, mean))
+  envsd = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'ndvi.mean')], 2, sd))
+=======
   envmeans = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'evi.mean')], 2, mean))
   envsd = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'evi.mean')], 2, sd))
+>>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
   
   birdsoutputm = rbind(birdsoutputm, c(species, envmeans, envsd))
   
 }
 birdsoutput = data.frame(birdsoutputm)
+<<<<<<< HEAD
+names(birdsoutput) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean.NDVI", "SD.Temp", "SD.Precip", "SD.Elev", "SD.NDVI")
+=======
 names(birdsoutput) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean.EVI", "SD.Temp", "SD.Precip", "SD.Elev", "SD.EVI")
+>>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 
 ### Combine relevant information from each of your two or more datasets using merge()
 #(species/occupancy/expected env variables/observed env variables)
@@ -401,6 +431,12 @@ occuenv <- na.omit(occuenv)
 occuenv$zTemp = (occuenv$mat.mean - occuenv$Mean.Temp) / occuenv$SD.Temp
 occuenv$zPrecip = (occuenv$map.mean - occuenv$Mean.Precip) / occuenv$SD.Precip
 occuenv$zElev = (occuenv$elev.mean - occuenv$Mean.Elev) / occuenv$SD.Elev
+<<<<<<< HEAD
+occuenv$zNDVI = (occuenv$ndvi.mean - occuenv$Mean.NDVI) / occuenv$SD.NDVI
+
+write.csv(occuenv, "Z:/Snell/occuenv.csv", row.names= FALSE)
+=======
 occuenv$zEVI = (occuenv$evi.mean - occuenv$Mean.EVI) / occuenv$SD.EVI
 
 write.csv(occuenv, "occuenv_new.csv", row.names= FALSE)
+>>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
