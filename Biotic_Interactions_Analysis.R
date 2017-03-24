@@ -4,11 +4,11 @@ library(tidyr)
 library(dplyr)
 
 # read in files created in data cleaning script
-tax_code = read.csv("Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
-temp_occ = read.csv("bbs_sub1.csv", header=TRUE) # BBS occ script
-centroid=read.csv("centroid.csv", header=TRUE) # GIS script
-occuenv= read.csv("all_expected_pres.csv", header = TRUE) # Data cleaning script
-Hurlbert_o = read.csv('Master_RO_Correlates_20110610.csv', header = T) # Hurlbert Lab
+tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
+temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS occ script
+centroid=read.csv("data/centroid.csv", header=TRUE) # GIS script
+occuenv= read.csv("data/all_expected_pres.csv", header = TRUE) # Data cleaning script
+Hurlbert_o = read.csv('data/Master_RO_Correlates_20110610.csv', header = T) # Hurlbert Lab
 subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
 
 # rescaling all occupancy values  - odds ratio
@@ -150,7 +150,7 @@ summary(glm_occ_rand_site)
 
 #### PLOTTING MODELS ####
 ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5) +xlab("Scaled Competitor Abundance")+ylab("Focal Occupancy") +theme_bw() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/glmoutput.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/glmoutput.png")
 
 ####### GLM FIT PLOTS #################################################################################################
 pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,comp_scaled,zPrecip,zElev,zEVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
@@ -163,23 +163,23 @@ ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) +
   geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zTemp)), yend = 0.892997 +(-0.044095*max(abs(occumatrix$zTemp)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
 #geom_abline(intercept=0.97569, slope= -0.05176, lwd=1, col="blue")
-ggsave("C:/Git/Biotic-Interactions/logittemp.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/logittemp.png")
 
 ggplot(data = occumatrix, aes(x = abs(zEVI), y = FocalOcc)) + 
   geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zEVI)), yend = 0.892997 +(-0.094849*max(abs(occumatrix$zEVI)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
 # geom_abline(intercept=0.97569, slope= -0.05117, lwd=1, col="blue")
-ggsave("C:/Git/Biotic-Interactions/logitevi.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/logitevi.png")
 
 ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
   geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zElev)), yend = 0.892997 +(-0.010785*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/logitelev.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/logitelev.png")
 
 ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
   geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zPrecip)), yend = 0.892997 +(0.001575*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/logitprecip.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/logitprecip.png")
 
 ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) + 
   stat_function(fun=inverselogit, color = "blue") + 
@@ -353,7 +353,7 @@ tt = t + annotate("text", x = 1:102, y = -.03, label = envrank$ALPHA.CODE, angle
 
 plot(tt)
 
-ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 30, width = 38)
+ggsave("C:/Git/Biotic-Interactions/Figures/barplot.pdf", height = 30, width = 38)
 
 ##################### TRAITS Model ####################################
 logit = function(x) log(x/(1-x))
@@ -397,7 +397,7 @@ names(tomerge) = c("FocalAOU","Total.x", "Total.y")
 R2plot2 = merge(R2plot, tomerge, by = "FocalAOU")
 
 ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=35),axis.title.y=element_text(size=35, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24) + geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1) + geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "dark gray", cex =5, stroke = 1) +geom_abline(intercept = 0, slope = 1, col = "red", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=2))
-ggsave("C:/Git/core-transient/scripts/R-scripts/Biotic Interactions Snell/occvabun.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/occvabun.png")
 
 # need to change the slopes
 ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24) + geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1) + geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "#43a2ca", cex =5, stroke = 1) +geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept= 0.03536,slope=0.43437, col = "#2ca25f", lwd = 1,linetype="dotdash")+ geom_smooth(method="lm", se= F, size = 1, aes(linetype = "dotdash", group = ENV.y))+geom_abline(intercept=0.1424,slope=0.4193, col = "#43a2ca", lwd = 1,linetype="dotdash")
@@ -428,7 +428,7 @@ envloc$EW[envloc$Long > -98.583333] <- 1 ## from https://tools.wmflabs.org/geoha
 # 1 = East
 #### ---- Plotting LMs ---- ####
 # Making pdf of ranges for each focal spp
-pdf('Lin_Reg.pdf', height = 8, width = 10)
+pdf('Figures/Lin_Reg.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
 # Plotting basic lms to understand relationships
 for(sp in subfocalspecies){ 

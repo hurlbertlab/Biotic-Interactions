@@ -19,7 +19,7 @@ prj.string <- "+proj=laea +lat_0=45.235 +lon_0=-106.675 +units=km"
 #### Import route locations and draw sample circles around them
 
 # derived from BBS_occ script
-routes = read.csv("latlong_rtes.csv",header =TRUE)
+routes = read.csv("data/latlong_rtes.csv",header =TRUE)
 # routes = routes[row.names(unique(routes[,c('latitude', 'longitude', 'stateroute')])),]
 routes$latitude = abs(routes$latitude)
 # Makes routes into a spatialPointsDataframe
@@ -101,14 +101,14 @@ mat.var = raster::extract(mat, circs.sp, fun = var, na.rm=T)
 #}
 env_mat = data.frame(stateroute = names(circs.sp), mat.point = mat.point, mat.mean = mat.mean, mat.var = mat.var)
 
-env_mat = read.csv("env_mat.csv", header = TRUE)
+env_mat = read.csv("data/env_mat.csv", header = TRUE)
 # Extract Data
 elev.point = raster::extract(elev, routes)
 elev.mean = raster::extract(elev, circs.sp, fun = mean, na.rm=T)
 elev.var = raster::extract(elev, circs.sp, fun = var, na.rm=T)
 
 env_elev = data.frame(stateroute = names(circs.sp), elev.point = elev.point, elev.mean = elev.mean, elev.var = elev.var)
-env_elev=read.csv("env_elev.csv", header = TRUE)
+env_elev=read.csv("data/env_elev.csv", header = TRUE)
 
 # Extract Data
 map.point = raster::extract(map, routes)
@@ -116,7 +116,7 @@ map.mean = raster::extract(map, circs.sp, fun = mean, na.rm=T)
 map.var = raster::extract(map, circs.sp, fun = var, na.rm=T)
 
 env_map = data.frame(stateroute = names(circs.sp), map.point = map.point, map.mean = map.mean, map.var = map.var)
-env_map = read.csv("env_map.csv", header = TRUE)
+env_map = read.csv("data/env_map.csv", header = TRUE)
 
 # NDVI 
 gimms_ndvi = read.csv("ENV DATA/gimms_ndvi_bbs_data.csv", header = TRUE)
@@ -129,8 +129,8 @@ all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, en
 
 # write.csv(all_env,'C:/git/Biotic-Interactions/all_env.csv',row.names=F)
 ####----Creating an environmental matrix ----####
-occumatrix <- read.csv("2001_2015_bbs_occupancy.csv", header = T) # read in updated bbs data
-route.locs = read.csv('latlong_rtes.csv')
+occumatrix <- read.csv("data/2001_2015_bbs_occupancy.csv", header = T) # read in updated bbs data
+route.locs = read.csv('data/latlong_rtes.csv')
 
 latlongs = subset(route.locs, select = c('stateroute', 'latitude', 'longitude'))
 latlongs$latitude = abs(latlongs$latitude)

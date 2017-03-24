@@ -8,29 +8,25 @@
 library(dplyr)
 library(tidyr)
 
-# read in range occupancy dataset 
-Hurlbert_o = read.csv('Master_RO_Correlates_20110610.csv', header = T)
+# read in all dataset inputs
+Hurlbert_o = read.csv('data/Master_RO_Correlates_20110610.csv', header = T) # range occupancy dataset 
+bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
+expect_pres = read.csv('data/expect_pres.csv', header = T) # expected presence data based on BBS for 372 landbird species --- 2001-2015
+temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS temporal occupancy data (just for 372 landbird species) --- 2001-2015
+bsize = read.csv("data/DunningBodySize_old_2008.11.12.csv", header = TRUE) # import body size data from Dunning 2008
+focal_competitor_table = read.csv("data/focal spp.csv", header = TRUE)
+AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
+shapefile_areas = read.csv("data/shapefile_areas.csv", header = TRUE) # area shapefile if not running GIS code 
+
+bsize$AOU[bsize$AOU == 7220] <- 7222 # Winter Wren
 # subset species whose range occupancies were between 0.3 and 0.7 over a 10 year period
 subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
-
-# read in BBS abundance data - from Hurlbert Lab 
-# bbs = read.csv('dataset_1.csv', header = T)
-bbs = read.csv('bbs_abun.csv', header = T)
-
 # subset bbs abundance columns
 bbs = bbs[, (names(bbs) %in% c("stateroute", "Aou", "Year","SpeciesTotal",  'routeID', 'Lati', 'Longi'))]
-
-# read in expected presence data based on BBS for 372 landbird species --- 2001-2015
-expect_pres = read.csv('expect_pres.csv', header = T)
-
-# read in BBS temporal occupancy data (just for 372 landbird species) --- 2001-2015
-temp_occ = read.csv("bbs_sub1.csv", header=TRUE) 
+# subset temporal occupancy
 temp_occ = subset(temp_occ, Aou %in% subsetocc$AOU)
-
-
 ############# ---- Set up pairwise comparison table ---- #############
 # read in table with pairwise comparison of each focal species to several potential competitors - created by hand
-focal_competitor_table = read.csv("focal spp.csv", header = TRUE)
 focal_competitor_table = dplyr::select(focal_competitor_table, AOU, CommonName, Competitor)
 names(focal_competitor_table)= c("FocalAOU", "Focal", "Competitor")
 
@@ -38,8 +34,6 @@ names(focal_competitor_table)= c("FocalAOU", "Focal", "Competitor")
 focal_unique = data.frame(unique(focal_competitor_table[, c("Focal", "FocalAOU")]))
 names(focal_unique) = c("Focal_Common","FocalAOU")
 
-# read in taxonomy data
-AOU = read.csv("Bird_Taxonomy.csv", header = TRUE)
 AOU=AOU[, (names(AOU) %in% c("SCI_NAME", "AOU_OUT", "PRIMARY_COM_NAME","FAMILY"))]
 names(AOU) = c("SciName","CommonName",  "AOU", "Family")
 
@@ -106,10 +100,6 @@ comp_AOU = dplyr::select(comp_AOU, -c(old, CompFamily))
 focal_AOU = merge(comp_AOU, sp_list[,c("match", "AOU", "Family")], by.x = "focalAOU", by.y = "AOU")
 names(focal_AOU)[6] = "FocalSciName"
 
-# import body size data from Dunning 2008
-bsize = read.csv("DunningBodySize_old_2008.11.12.csv", header = TRUE)
-bsize$AOU[bsize$AOU == 7220] <- 7222 # Winter Wren
-
 # merge in competitor and focal body size
 spec_w_bsize = merge(focal_AOU, bsize[,c("AOU", "Mass.g.")], by.x = "focalAOU", by.y = "AOU")
 spec_w_weights = merge(spec_w_bsize, bsize[,c("AOU", "Mass.g.")], by.x = "CompAOU", by.y = "AOU")
@@ -126,12 +116,10 @@ new_spec_weights$focalcat = gsub(" ", "_", new_spec_weights$FocalSciName)
 new_spec_weights$compcat = gsub(" ", "_", new_spec_weights$CompSciName)
 
 #write this data frame for GIS script
-write.csv(new_spec_weights, "new_spec_weights.csv", row.names=FALSE) 
+write.csv(new_spec_weights, "data/new_spec_weights.csv", row.names=FALSE) 
 ############# ---- Generate total species occupancies ---- #############
 # Take range overlap area to assign "main competitor" for each focal species
 # "area.df" with cols: FocalAOU, CompAOU, focalArea, compArea, intArea, intProp
-# read in area shapefile if not running GIS code 
-shapefile_areas = read.csv("shapefile_areas.csv", header = TRUE)
 shapefile_areas = dplyr::select(shapefile_areas, -X)
 
 # calculate proportion of overlap between focal range and overlap range
@@ -210,10 +198,10 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
 # read in raw env data UPDATED from gimms script
-all_env = read.csv('C:/Git/occuenv.csv', header = T)
+all_env = read.csv('Z:/Snell/occuenv.csv', header = T)
 # merge in ENV
 all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"))
 
-write.csv(all_expected_pres,"all_expected_pres.csv", row.names= F)
+write.csv(all_expected_pres,"data/all_expected_pres.csv", row.names= F)
 
 ####### END DATA CLEANING, see analysis script ##########
