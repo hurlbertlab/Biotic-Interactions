@@ -170,4 +170,4 @@ occuenv$zPrecip = (occuenv$map.mean - occuenv$Mean.Precip) / occuenv$SD.Precip
 occuenv$zElev = (occuenv$elev.mean - occuenv$Mean.Elev) / occuenv$SD.Elev
 occuenv$zNDVI = (occuenv$ndvi.mean - occuenv$Mean.NDVI) / occuenv$SD.NDVI
 
-write.csv(occuenv, "Z:/Snell/occuenv.csv", row.names= FALSE)
+write.csv(occuenv, "C:/Git/occuenv.csv", row.names= FALSE)
