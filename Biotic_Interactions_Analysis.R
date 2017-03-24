@@ -7,11 +7,7 @@ library(dplyr)
 tax_code = read.csv("Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 temp_occ = read.csv("bbs_sub1.csv", header=TRUE) # BBS occ script
 centroid=read.csv("centroid.csv", header=TRUE) # GIS script
-<<<<<<< HEAD
 occuenv= read.csv("all_expected_pres.csv", header = TRUE) # Data cleaning script
-=======
-occuenv= read.csv("all_expected_pres_new.csv", header = TRUE) # Data cleaning script
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 Hurlbert_o = read.csv('Master_RO_Correlates_20110610.csv', header = T) # Hurlbert Lab
 subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
 
@@ -27,13 +23,10 @@ occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale))
 # for loop subsetting env data to expected occurrence for focal species
 envoutput = c()
 envoutputa = c()
-<<<<<<< HEAD
+
 beta_lm = matrix(NA, nrow = 102, ncol = 10)
 beta_abun = matrix(NA, nrow = 102,ncol = 10)
-=======
-beta_lm = matrix(NA, nrow = 86, ncol = 10)
-beta_abun = matrix(NA, nrow = 86,ncol = 10)
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
+
 # create beta output data frame
 
 beta_lm[sp,1] = sp
@@ -67,29 +60,16 @@ for (sp in 1:length(subfocalspecies)){
   
   competition <- lm(temp$occ_logit ~  temp$comp_scaled) 
   # z scores separated out for env effects (as opposed to multivariate variable)
-<<<<<<< HEAD
   env_z = lm(temp$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   # z scores separated out for env effects
   both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
-=======
-  env_z = lm(temp$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI), data = temp)
-  # z scores separated out for env effects
-  both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zEVI), data = temp)
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
   
   # abundance, not temp occ - same results?
   competition_abun <- lm(temp$FocalAbundance ~  temp$comp_scaled) 
   # z scores separated out for env effects - abundance
-<<<<<<< HEAD
   env_abun = lm(temp$FocalAbundance ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   # z scores separated out for env effects - abundance
   both_abun = lm(temp$FocalAbundance ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
-=======
-  env_abun = lm(temp$FocalAbundance ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI), data = temp)
-  # z scores separated out for env effects - abundance
-  both_abun = lm(temp$FocalAbundance ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI), data = temp)
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
-  
   
   #variance_partitioning 
   ENV = summary(both_z)$r.squared - summary(competition)$r.squared
@@ -101,15 +81,8 @@ for (sp in 1:length(subfocalspecies)){
   NONE = 1 - summary(both_z)$r.squared
   print(NONE) #neither variance
   sp1 = unique(temp$Species)
-<<<<<<< HEAD
   sum = sum(ENV, COMP, SHARED)
   envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE, sum))
-=======
-  envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE))
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
-  
-  
-
   
   #variance_partitioning 
   ENVa = summary(both_abun)$r.squared - summary(competition_abun)$r.squared
@@ -127,11 +100,7 @@ for (sp in 1:length(subfocalspecies)){
 
 envoutput = data.frame(envoutput)
 envoutputa = data.frame(envoutputa)
-<<<<<<< HEAD
 names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE", "sum")
-=======
-names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 # relabel dark-eyed junco
 envoutput$FocalAOU[envoutput$FocalAOU == 5660] <- 5677
@@ -139,19 +108,12 @@ tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
 subsetocc$AOU[subsetocc$AOU == 5660] <- 5677
 subsetocc$AOU[subsetocc$AOU == 7220] <- 7222
 
-<<<<<<< HEAD
 envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'FocalAOU', by.y = "AOU_OUT", all.x = TRUE) # losing Alder Flycatcher
 
 envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")], by.x='FocalAOU', by.y='AOU', all.x = TRUE)
 
 envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU', all.x = TRUE)
-=======
-envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'FocalAOU', by.y = "AOU_OUT")
 
-envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")], by.x='FocalAOU', by.y='AOU')
-
-envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU')
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 #write.csv(envoutput, "envoutput.csv", row.names = FALSE)
 #write.csv(envoutputa, "envoutputa.csv", row.names = FALSE)
 beta_lm = data.frame(beta_lm)
@@ -168,12 +130,7 @@ occumatrix$c_s = scale(occumatrix$comp_scaled, scale = T, center = T)
 occumatrix$abTemp=abs(occumatrix$zTemp)
 occumatrix$abElev=abs(occumatrix$zElev)
 occumatrix$abPrecip=abs(occumatrix$zPrecip)
-<<<<<<< HEAD
 occumatrix$abNDVI=abs(occumatrix$zNDVI)
-=======
-occumatrix$abEVI=abs(occumatrix$zEVI)
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
-
 
 # using equation species sum*Focal occ to get success and failure for binomial anlaysis
 occumatrix$nyears = occumatrix$FocalOcc*15
@@ -182,11 +139,8 @@ occumatrix$sp_fail = as.factor(occumatrix$nyears * (1 - occumatrix$FocalOcc))
 
 #### GLM of all matrices not just subset ####
 glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s + 
-<<<<<<< HEAD
+
                             abTemp + abElev + abPrecip + abNDVI + (1|stateroute:Species), family = binomial(link = logit), data = occumatrix)
-=======
-                            abTemp + abElev + abPrecip + abEVI + (1|stateroute:Species), family = binomial(link = logit), data = occumatrix)
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 summary(glm_occ_rand_site) 
 
 ### FIX, Neg Binom
@@ -277,11 +231,8 @@ dev.off()
 
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
-<<<<<<< HEAD
+
 envloc$EW[envloc$Long > -98.583333] <- 1 ## mid point of USA
-=======
-envloc$EW[envloc$Long > -98.583333] <- 1 ## from https://tools.wmflabs.org/geohack/geohack.php?pagename=Geographic_center_of_the_contiguous_United_States&params=39_50_N_98_35_W_region:US-KS_type:landmark&title=Geographic+Center+of+the+Contiguous+United+States
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 # 1 = East
 
 envloc1 = merge(envloc, occumatrix[,c("Species", "Family")], by.x = "FocalAOU", by.y="Species", all.y = FALSE)
@@ -329,17 +280,13 @@ envrank$Fam_abbrev = gsub('Columbidae','Cl', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Trochilidae','Tr', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Cardinalidae','Ca', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Paridae','Pa', envrank$Fam_abbrev)
-<<<<<<< HEAD
 envrank$Fam_abbrev = gsub('Sylviidae','Sy', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Parulidae','P', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Sittidae','Si', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Regulidae','R', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Hirundinidae','H', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Certhiidae','Ce', envrank$Fam_abbrev)
-=======
-envrank$Fam_abbrev = gsub('Sylviidae','S', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Parulidae','P', envrank$Fam_abbrev)
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
+
 
 envrank$Fam_abbrevf = as.factor(as.character(envrank$Fam_abbrev))
 envrank$Fam_abbrevf = gsub('E','#000000', envrank$Fam_abbrevf)
@@ -359,11 +306,7 @@ envrank$Fam_abbrevf = gsub('O','#7f7fff', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Cl','#0000ff', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Ca','#016c59', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('Pa','#02818a', envrank$Fam_abbrevf)
-<<<<<<< HEAD
 envrank$Fam_abbrevf = gsub('Sy','#014636', envrank$Fam_abbrevf)
-=======
-envrank$Fam_abbrevf = gsub('S','#014636', envrank$Fam_abbrevf)
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
 envrank$Fam_abbrevf = gsub('P','#3690c0', envrank$Fam_abbrevf)
 envrank$Fam_abbrevf = gsub('T','#0080ff', envrank$Fam_abbrevf) 
 famlabel= envrank$Fam_abbrev
@@ -406,11 +349,8 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("#2ca25f","#dd1c77","#43a2ca","white"), labels=c("Environment", "Competition","Shared Variance", "")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=20), legend.position="top", legend.justification=c(0, 1), legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-<<<<<<< HEAD
 tt = t + annotate("text", x = 1:102, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:102, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:102, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:102, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:102, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks(9))
-=======
-tt = t + annotate("text", x = 1:75, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:75, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:75, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:75, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:75, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = envrank$Fam_abbrevf, fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks(9))
->>>>>>> 8e9689638283c792a876fc521cf5e1ee1ac6a7f2
+
 plot(tt)
 
 ggsave("C:/Git/Biotic-Interactions/barplot.pdf", height = 30, width = 38)
