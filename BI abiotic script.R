@@ -121,7 +121,7 @@ env_map = read.csv("data/env_map.csv", header = TRUE)
 # NDVI 
 gimms_ndvi = read.csv("ENV DATA/gimms_ndvi_bbs_data.csv", header = TRUE)
 gimms_agg = gimms_ndvi %>% filter(month == c("may", "jun", "jul")) %>% 
-  group_by(site_id, year, month)  %>%  summarise(ndvi.mean=mean(ndvi))
+  group_by(site_id)  %>%  summarise(ndvi.mean=mean(ndvi))
 gimms_agg$stateroute = gimms_agg$site_id
 ndvi = gimms_agg[,c("stateroute", "ndvi.mean")]
 # merge together
@@ -170,4 +170,4 @@ occuenv$zPrecip = (occuenv$map.mean - occuenv$Mean.Precip) / occuenv$SD.Precip
 occuenv$zElev = (occuenv$elev.mean - occuenv$Mean.Elev) / occuenv$SD.Elev
 occuenv$zNDVI = (occuenv$ndvi.mean - occuenv$Mean.NDVI) / occuenv$SD.NDVI
 
-write.csv(occuenv, "C:/Git/occuenv.csv", row.names= FALSE)
+write.csv(occuenv, "occuenv.csv", row.names= FALSE)
