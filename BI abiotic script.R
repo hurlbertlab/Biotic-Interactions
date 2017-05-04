@@ -57,7 +57,6 @@ circs.sp = SpatialPolygons(circs, proj4string=CRS(prj.string))
 plot(circs.sp)
 
 #####################################################################################
-#### ----NDVI ----#####
 start_yr <- 2001
 end_yr <- 2015
 min_num_yrs <- 15
@@ -66,7 +65,7 @@ richness_w_env <- get_richness_ts_env_data(start_yr, end_yr, min_num_yrs)
 
 setwd('C:/Git/Biotic-Interactions/ENV DATA')
 # Read in stack of layers from all 12 months 
-tmean <- getData("worldclim", var = "tmean", res = 10)
+tmean <- getData("worldclim", var = "tmean", res = 2.5)
 files<-paste('tmean',1:12,'.bil',sep='')
 tmeans<-stack(files)
 mat = calc(tmeans, mean)
@@ -74,17 +73,15 @@ mat = calc(tmeans, mean)
 #### ----Precip ----#####
 #read in precip data from world clim, stack data to get 1 MAP value
 # Read in stack of layers from all 12 months
-prec <- getData("worldclim", var = "prec", res = 10)
+prec <- getData("worldclim", var = "prec", res = 2.5)
 pfiles<-paste('prec',1:12,'.bil',sep='')
 pmeans<-stack(pfiles)
 map = calc(pmeans, mean)
 
 #### ----Elev ----#####
 #read in elevation data from world clim
-elev <- getData("worldclim", var = "alt", res = 10)
+elev <- getData("worldclim", var = "alt", res = 2.5)
 alt_files<-paste('alt_10m_bil', sep='')
-
-
 setwd('C:/Git/Biotic-Interactions')
 
 # Define the projection of the raster layer (this may be different for different data)
@@ -124,6 +121,11 @@ gimms_agg = gimms_ndvi %>% filter(month == c("may", "jun", "jul")) %>%
   group_by(site_id)  %>%  summarise(ndvi.mean=mean(ndvi))
 gimms_agg$stateroute = gimms_agg$site_id
 ndvi = gimms_agg[,c("stateroute", "ndvi.mean")]
+
+coyle = read.csv("Z:/Snell/env_data.csv", header =TRUE)
+
+
+
 # merge together
 all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, env_elev, env_map, ndvi))
 
