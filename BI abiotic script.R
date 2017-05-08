@@ -78,18 +78,17 @@ pfiles<-paste('prec',1:12,'.bil',sep='')
 pmeans<-stack(pfiles)
 map = calc(pmeans, mean)
 
-#### ----Elev ----#####
-#read in elevation data from world clim
-elev <- getData("worldclim", var = "alt", res = 2.5)
-alt_files<-paste('alt_10m_bil', sep='')
 setwd('C:/Git/Biotic-Interactions')
+#### ----Elev ----#####
+elev <- raster("Z:/GIS/DEM/sdat_10003_1_20170424_102000103.tif")
+NorthAm = readOGR("Z:/GIS/geography", "continent")
+NorthAm2 = spTransform(NorthAm, CRS("+proj=laea +lat_0=45.235 +lon_0=-106.675 +units=km"))
 
-# Define the projection of the raster layer (this may be different for different data)
-#  See documentation in PROJ4
-projection(evi.proj) 
+plot(elevNA2)
+plot(NorthAm2)
 
-  
-#for(env.i in env){
+elevNA2 = projectRaster(elev, crs = prj.string) #UNMASKED!
+elevNA3 <- raster::mask(elevNA2, NorthAm2)
 # Extract Data
 mat.point = raster::extract(mat, routes)
 mat.mean = raster::extract(mat, circs.sp, fun = mean, na.rm=T)
@@ -121,9 +120,6 @@ gimms_agg = gimms_ndvi %>% filter(month == c("may", "jun", "jul")) %>%
   group_by(site_id)  %>%  summarise(ndvi.mean=mean(ndvi))
 gimms_agg$stateroute = gimms_agg$site_id
 ndvi = gimms_agg[,c("stateroute", "ndvi.mean")]
-
-coyle = read.csv("Z:/Snell/env_data.csv", header =TRUE)
-
 
 
 # merge together
