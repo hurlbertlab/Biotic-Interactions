@@ -245,12 +245,12 @@ envloc1$ALPHA.CODE[envloc1$FocalAOU == 6720] <- 'PAWA' #Palm Warbler
 envloc1$ALPHA.CODE = as.factor(envloc1$ALPHA.CODE)
 
 nrank = envloc1 %>% 
-  mutate(rank = row_number(-ENV))# change here for comp
+  dplyr::mutate(rank = row_number(-ENV))# change here for comp
 envflip = tidyr::gather(nrank, "Type", "value", 2:5)
 envflip$rank <- factor(envflip$rank, levels = envflip$rank[order(envflip$rank)])
-envflip = plyr::arrange(envflip,(envflip$rank),envflip$FocalAOU)
+envflip = dplyr::arrange(envflip,rank)
 
-envflip = merge(envflip, envloc[,c("FocalAOU", "EW")], by = "FocalAOU")
+# envflip = merge(envflip, envloc[,c("FocalAOU", "EW")], by = "FocalAOU")
 
 envrank = envflip %>% 
   dplyr::group_by(Type == 'ENV') %>% # change here for comp
@@ -339,18 +339,19 @@ envrank$trophlabelf = gsub('I','#dd1c77', envrank$trophlabelf)
 envrank$trophlabelf = gsub('N','#ce1256', envrank$trophlabelf)
 envrank$trophlabelf = gsub('O','#67001f', envrank$trophlabelf)
 
-envrank$EW.x[envrank$EW.x == 1] <- "E"
-envrank$EW.x[envrank$EW.x == 0] <- "W" 
+envrank$EW[envrank$EW == 1] <- "E"
+envrank$EW[envrank$EW == 0] <- "W" 
 ###### PLOTTING #####
 envflip$Type = factor(envflip$Type,
-                      levels = c("ENV","COMP","SHARED","NONE"),ordered = TRUE)
-# Plot with ENV ranked in decreasing order
-t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("ENV","COMP","SHARED","NONE")))) + 
-  geom_bar(stat = "identity")  + theme_classic() +
+                      levels = c("NONE", "SHARED","COMP","ENV"),ordered = TRUE)
+envflip$value = abs(envflip$value)
+# Plot with ENV ranked in decreasing order - had to flip everything to plot right
+t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE", "SHARED","COMP","ENV")))) + 
+  geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("#2ca25f","#dd1c77","#43a2ca","white"), labels=c("Environment", "Competition","Shared Variance", "")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=20), legend.position="top", legend.justification=c(0, 1), legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+  scale_fill_manual(values=c("white","#43a2ca","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition", "Environment")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=20), legend.position="top", legend.justification=c(0, 1), legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:102, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:102, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:102, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:102, y = -.12, label = envrank$EW.x, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:102, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks(9))
+tt = t + annotate("text", x = 1:102, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:102, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:102, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:102, y = -.12, label = envrank$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:102, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks()(0:1))
 
 plot(tt)
 
