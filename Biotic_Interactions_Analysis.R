@@ -246,15 +246,15 @@ envloc1$ALPHA.CODE = as.factor(envloc1$ALPHA.CODE)
 
 nrank = envloc1 %>% 
   mutate(rank = row_number(-ENV))# change here for comp
-envflip = gather(nrank, "Type", "value", 2:5)
+envflip = tidyr::gather(nrank, "Type", "value", 2:5)
 envflip$rank <- factor(envflip$rank, levels = envflip$rank[order(envflip$rank)])
 envflip = plyr::arrange(envflip,(envflip$rank),envflip$FocalAOU)
 
 envflip = merge(envflip, envloc[,c("FocalAOU", "EW")], by = "FocalAOU")
 
 envrank = envflip %>% 
-  group_by(Type == 'ENV') %>% # change here for comp
-  mutate(rank = row_number(-value)) # need to get just the envs to rank, then plot
+  dplyr::group_by(Type == 'ENV') %>% # change here for comp
+  dplyr::mutate(rank = row_number(-value)) # need to get just the envs to rank, then plot
 envrank <- envrank[order(envrank$rank),]
 
 envrank <- subset(envrank,Type == "ENV")
