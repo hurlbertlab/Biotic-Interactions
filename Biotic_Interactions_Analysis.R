@@ -2,6 +2,7 @@ library(lme4)
 library(ggplot2)
 library(tidyr)
 library(dplyr)
+library(cowplot)
 
 # read in files created in data cleaning script
 tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
@@ -82,7 +83,7 @@ for (sp in 1:length(subfocalspecies)){
   print(NONE) #neither variance
   sp1 = unique(temp$Species)
   sum = sum(ENV, COMP, SHARED)
-  envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE))
+  envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE)) #, sum
   
   #variance_partitioning 
   ENVa = summary(both_abun)$r.squared - summary(competition_abun)$r.squared
@@ -100,7 +101,7 @@ for (sp in 1:length(subfocalspecies)){
 
 envoutput = data.frame(envoutput)
 envoutputa = data.frame(envoutputa)
-names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
+names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE") #, "Sum"
 names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 # relabel dark-eyed junco
 envoutput$FocalAOU[envoutput$FocalAOU == 5660] <- 5677
@@ -153,33 +154,47 @@ ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=
 ggsave("C:/Git/Biotic-Interactions/Figures/glmoutput.png")
 
 ####### GLM FIT PLOTS #################################################################################################
-pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,comp_scaled,zPrecip,zElev,zEVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
+pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,comp_scaled,zPrecip,zElev,zNDVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
 
 inverselogit <- function(p) {exp(p)/(1+exp(p))} 
 newintercept <- function(p) {mean(exp(p)/(1+exp(p)))} 
 
 # this relationship should be negative
-ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zTemp)), yend = 0.892997 +(-0.044095*max(abs(occumatrix$zTemp)))), col = "dark green", lwd=2) +
+temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 0.8561721, xend = abs(max(occumatrix$zTemp)), yend = 0.8561721 +(-0.044095*max(abs(occumatrix$zTemp)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
 #geom_abline(intercept=0.97569, slope= -0.05176, lwd=1, col="blue")
 ggsave("C:/Git/Biotic-Interactions/Figures/logittemp.png")
 
-ggplot(data = occumatrix, aes(x = abs(zEVI), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zEVI)), yend = 0.892997 +(-0.094849*max(abs(occumatrix$zEVI)))), col = "dark green", lwd=2) +
+ndvi = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 0.8561721, xend = abs(max(occumatrix$zNDVI)), yend = 0.8561721 +(-0.1539750*max(abs(occumatrix$zNDVI)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
 # geom_abline(intercept=0.97569, slope= -0.05117, lwd=1, col="blue")
 ggsave("C:/Git/Biotic-Interactions/Figures/logitevi.png")
 
-ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zElev)), yend = 0.892997 +(-0.010785*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
+elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 0.8561721, xend = abs(max(occumatrix$zElev)), yend = 0.8561721 +(0.0002332*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
 ggsave("C:/Git/Biotic-Interactions/Figures/logitelev.png")
 
-ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.892997, xend = abs(max(occumatrix$zPrecip)), yend = 0.892997 +(0.001575*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
+precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 0.8561721, xend = abs(max(occumatrix$zPrecip)), yend = 0.8561721 +(0.0063720*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
 ggsave("C:/Git/Biotic-Interactions/Figures/logitprecip.png")
+
+z <- plot_grid(precip+ theme(legend.position="none"),
+               ndvi + theme(legend.position="none"),
+               align = 'h',
+               labels = c("A","B"),
+               nrow = 1)
+p2 = plot_grid(elev + theme(legend.position="none"),
+              temp + theme(legend.position="none"), 
+              labels = c("C","D"),
+              align = 'h', 
+              rel_widths = c(1, 1.3))
+
+plot_grid(z, p2, ncol = 1, rel_heights = c(1, 1))
+ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf")
 
 ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) + 
   stat_function(fun=inverselogit, color = "blue") + 
@@ -194,7 +209,7 @@ for(sp in subfocalspecies){
   print(sp)
   psub = occumatrix[occumatrix$Species == sp,]
   glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
-                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
+                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
   
   tes = ggplot(data = psub, aes(x = zPrecip, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
   plot(tes)
@@ -208,7 +223,7 @@ for(sp in subfocalspecies){
   print(sp)
   psub = occumatrix[occumatrix$Species == sp,]
   glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
-                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
+                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
   
   tes = ggplot(data = psub, aes(x = zTemp, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species) +theme_bw()
   plot(tes)
@@ -222,7 +237,7 @@ for(sp in subfocalspecies){
   print(sp)
   psub = occumatrix[occumatrix$Species == sp,]
   glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
-                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
+                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
   
   tes = ggplot(data = psub, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +theme_bw()
   plot(tes)
@@ -349,25 +364,25 @@ envflip$value = abs(envflip$value)
 t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE", "SHARED","COMP","ENV")))) + 
   geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","#43a2ca","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition", "Environment")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_text(size=12), legend.text=element_text(size=20), legend.position="top", legend.justification=c(0, 1), legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+  scale_fill_manual(values=c("white","#43a2ca","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition", "Environment")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_blank(), legend.text=element_text(size=30), legend.position="top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
 tt = t + annotate("text", x = 1:102, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:102, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:102, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:102, y = -.12, label = envrank$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:102, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks()(0:1))
 
 plot(tt)
 
-ggsave("C:/Git/Biotic-Interactions/Figures/barplot.pdf", height = 30, width = 38)
+ggsave("C:/Git/Biotic-Interactions/Figures/barplot.pdf", height = 25, width = 36)
 
 ##################### TRAITS Model ####################################
 logit = function(x) log(x/(1-x))
 
 env_lm = subset(envflip, Type == 'ENV')
 
-env_traits = lm(logit(value) ~ Trophic.Group + migclass + EW.x, data = env_lm)
+env_traits = lm(logit(value) ~ Trophic.Group + migclass + EW, data = env_lm)
 summary(env_traits) 
 
 comp_lm = subset(envflip, Type == 'COMP')
 
-comp_traits = lm(logit(value) ~ Trophic.Group + migclass + EW.x, data = comp_lm[comp_lm$value > 0,])
+comp_traits = lm(logit(value) ~ Trophic.Group + migclass + EW, data = comp_lm[comp_lm$value > 0,])
 summary(comp_traits) 
 
 env_sum = subset(envflip, Type != 'NONE')
@@ -376,7 +391,7 @@ total = env_sum %>%
   summarise(sum(value))
 
 env_sum$edgeval = (env_sum$value * (1 - 2*edge_adjust)) + edge_adjust
-total_traits = lm(logit(edgeval) ~ Trophic.Group + migclass + EW.x, data = env_sum)
+total_traits = lm(logit(edgeval) ~ Trophic.Group + migclass + EW, data = env_sum)
 summary(total_traits)
 
 # R2 plot - lm in ggplot
@@ -402,78 +417,27 @@ ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=ele
 ggsave("C:/Git/Biotic-Interactions/Figures/occvabun.png")
 
 # need to change the slopes
-ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24) + geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1) + geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "#43a2ca", cex =5, stroke = 1) +geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept= 0.03536,slope=0.43437, col = "#2ca25f", lwd = 1,linetype="dotdash")+ geom_smooth(method="lm", se= F, size = 1, aes(linetype = "dotdash", group = ENV.y))+geom_abline(intercept=0.1424,slope=0.4193, col = "#43a2ca", lwd = 1,linetype="dotdash")
-
+ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") +
+      geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash") +
+      geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "#43a2ca", cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="#43a2ca",linetype="dotdash") +
+      geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))
+ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.png")
 
 
 # R2 plot - glm violin plots
-ggplot(R2plot2, aes(x = FocalAOU, y = Total.x)) + geom_violin(lwd = 2, fill = "grey", color = "grey") + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
+total = ggplot(R2plot2, aes(x = FocalAOU, y = Total.x)) + geom_violin(lwd = 2, fill = "grey", color = "grey") + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
+ggsave("C:/Git/Biotic-Interactions/Figures/totalvio.png")
 
-ggplot(R2plot2, aes(x = FocalAOU, y = COMP.x)) + geom_violin(lwd = 2, fill = "#dd1c77", color = "#dd1c77") + xlab("Competition") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) +scale_y_continuous(limits = c(0, 1))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
+comp = ggplot(R2plot2, aes(x = FocalAOU, y = COMP.x)) + geom_violin(lwd = 2, fill = "#dd1c77", color = "#dd1c77") + xlab("Competition") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) +scale_y_continuous(limits = c(0, 1))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
+ggsave("C:/Git/Biotic-Interactions/Figures/compvio.png")
 
-ggplot(R2plot2, aes(x = FocalAOU, y = ENV.x)) + geom_violin(lwd = 2, fill = "#2ca25f", color = "#2ca25f") + xlab("Environment") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30),legend.title=element_text(size=12), legend.text=element_text(size=12)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25)) +scale_y_continuous(limits = c(0, 1))
+env = ggplot(R2plot2, aes(x = FocalAOU, y = ENV.x)) + geom_violin(lwd = 2, fill = "#2ca25f", color = "#2ca25f") + xlab("Environment") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30),legend.title=element_text(size=12), legend.text=element_text(size=12)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25)) +scale_y_continuous(limits = c(0, 1))
+ggsave("C:/Git/Biotic-Interactions/Figures/envvio.png")
 
+plot_grid(total,
+          comp, 
+          env,
+          labels = c("A","B", "C"),
+          align = 'v')
+         
 #Coyle fig 1: Z:\Coyle\Projects\BBS Core\Final Analysis
-
-#### basement ### poster
-forplots = merge(Hurlbert_o[, c("AOU","Trophic.Group","Foraging","migclass")], AOUsub4[, c("AOU","Family", "CommonName")], by = "AOU")
-# midpoint long of US is -98.5795, so 1 indicates east of that line, 0 = west
-
-# Dark-eyed Junko and Winter Wren need AOUs changed
-tax_code$AOU_OUT[tax_code$AOU_OUT == 5677] = 5660
-tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] = 7222
-forplots$AOU[forplots$AOU == 7220] = 7222
-
-envloc = merge(envoutput, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU', all = TRUE)
-envloc$EW <- 0
-envloc$EW[envloc$Long > -98.583333] <- 1 ## from https://tools.wmflabs.org/geohack/geohack.php?pagename=Geographic_center_of_the_contiguous_United_States&params=39_50_N_98_35_W_region:US-KS_type:landmark&title=Geographic+Center+of+the+Contiguous+United+States
-# 1 = East
-#### ---- Plotting LMs ---- ####
-# Making pdf of ranges for each focal spp
-pdf('Figures/Lin_Reg.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-# Plotting basic lms to understand relationships
-for(sp in subfocalspecies){ 
-  print(sp)
-  psub = occuenv[occuenv$Species == sp,]
-  #psub = filter(psub, occ_logit < 9) # eliminating 100% occ?
-  title = unique(psub$FocalSciName)
-  #ggplot(psub, aes(x = psub$occ_logit, y = psub$MainCompSum)) + geom_point(data=psub, pch = 16)+geom_smooth(method = "lm", col = "red")+ theme_classic()+ xlab("Focal Occupancy")+ylab("Competitor Abundance")+ggtitle(title)
-  
-  #+ ggtitle(title[1])
-  competition <- lm(psub$occ_logit ~  psub$comp_scaled) 
-  # z scores separated out for env effects (as opposed to multivariate variable)
-  env_z = lm(occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zEVI), data = psub)
-  # z scores separated out for env effects
-  both_z = lm(psub$occ_logit ~  psub$comp_scaled + abs(psub$zTemp)+abs(psub$zElev)+abs(psub$zPrecip)+abs(psub$zEVI), data = psub)
-  
-  plot(psub$comp_scaled, psub$occ_logit, pch = 20, xlab = "Main Competitor Abundance", ylab = "Focal Occupancy (logit link)", main = psub$FocalSciName[1], sub = "Competition", abline(competition, col = "red"))
-  plot(psub$comp_scaled,psub$occ_logit,  pch = 20, xlab = "Main Competitor Abundance", ylab = "Focal Occupancy (logit link)", main = psub$FocalSciName[1], sub = "Environment", abline(env_z, col = "red"))
-  plot(psub$comp_scaled, psub$occ_logit,  pch = 20, xlab = "Main Competitor Abundance", ylab = "Focal Occupancy (logit link)", main = psub$FocalSciName[1], sub = "Both", abline(both_z, col = "red"))
-}
-dev.off()
-
-# Plotting basic lm hists to understand relationships btwn occ and abun
-hist(beta_lm$Competition_R2, 10, main = "R Squared Distribution for Competition", xlab = "Competition R Squared")
-hist(beta_lm$EnvZ_R2, 10, main = "R Squared Distribution for Env", xlab = "Env R Squared")
-hist(beta_lm$BothZ_R2, 10, main = "R Squared Distribution for Both", xlab = "Both R Squared")
-
-hist(beta_lm$Competition_Est, 10, main = "Slope Distribution for Competition", xlab = "Competition Slope")
-abline(v = mean(beta_lm$Competition_Est), col = "red", lwd = 3)
-hist(beta_lm$EnvZ_Est, 10, main = "Slope Distribution for Environment", xlab = "Environment Slope")
-abline(v = mean(beta_lm$EnvZ_Est), col = "red", lwd = 3)
-hist(beta_lm$BothZ_Est, 10, main = "Slope Distribution for Both", xlab = "Both Slope")
-abline(v = mean(beta_lm$BothZ_Est), col = "red", lwd = 3)
-
-hist(beta_abun$Competition_R2, 10, main = "R Squared Distribution for Competition", xlab = "Competition R Squared")
-hist(beta_abun$EnvZ_R2, 10, main = "R Squared Distribution for Env", xlab = "Env R Squared")
-hist(beta_abun$BothZ_R2, 10, main = "R Squared Distribution for Both", xlab = "Both R Squared")
-
-hist(beta_abun$Competition_Est, 10, main = "Slope Distribution for Competition", xlab = "Competition Slope")
-abline(v = mean(beta_abun$Competition_Est), col = "red", lwd = 3)
-hist(beta_abun$EnvZ_Est, 10, main = "Slope Distribution for Environment", xlab = "Environment Slope")
-abline(v = mean(beta_abun$EnvZ_Est), col = "red", lwd = 3)
-hist(beta_abun$BothZ_Est, 10, main = "Slope Distribution for Both", xlab = "Both Slope")
-abline(v = mean(beta_abun$BothZ_Est), col = "red", lwd = 3)
-
-beta_lm$sumR2 = beta_lm$BothZ_R2+beta_lm$Competition_R2+beta_lm$EnvZ_R2  # tbd if we'll keep this
