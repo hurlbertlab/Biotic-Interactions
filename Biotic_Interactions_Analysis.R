@@ -82,7 +82,7 @@ for (sp in 1:length(subfocalspecies)){
   print(NONE) #neither variance
   sp1 = unique(temp$Species)
   sum = sum(ENV, COMP, SHARED)
-  envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE, sum))
+  envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE))
   
   #variance_partitioning 
   ENVa = summary(both_abun)$r.squared - summary(competition_abun)$r.squared
@@ -100,7 +100,7 @@ for (sp in 1:length(subfocalspecies)){
 
 envoutput = data.frame(envoutput)
 envoutputa = data.frame(envoutputa)
-names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE", "sum")
+names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 # relabel dark-eyed junco
 envoutput$FocalAOU[envoutput$FocalAOU == 5660] <- 5677
@@ -252,7 +252,6 @@ envflip = plyr::arrange(envflip,(envflip$rank),envflip$FocalAOU)
 
 envflip = merge(envflip, envloc[,c("FocalAOU", "EW")], by = "FocalAOU")
 
-
 envrank = envflip %>% 
   group_by(Type == 'ENV') %>% # change here for comp
   mutate(rank = row_number(-value)) # need to get just the envs to rank, then plot
@@ -343,6 +342,8 @@ envrank$trophlabelf = gsub('O','#67001f', envrank$trophlabelf)
 envrank$EW.x[envrank$EW.x == 1] <- "E"
 envrank$EW.x[envrank$EW.x == 0] <- "W" 
 ###### PLOTTING #####
+envflip$Type = factor(envflip$Type,
+                      levels = c("ENV","COMP","SHARED","NONE"),ordered = TRUE)
 # Plot with ENV ranked in decreasing order
 t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("ENV","COMP","SHARED","NONE")))) + 
   geom_bar(stat = "identity")  + theme_classic() +
