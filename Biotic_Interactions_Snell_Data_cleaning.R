@@ -11,7 +11,7 @@ library(tidyr)
 # read in all dataset inputs
 Hurlbert_o = read.csv('data/Master_RO_Correlates_20110610.csv', header = T) # range occupancy dataset 
 bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
-expect_pres = read.csv('data/expect_pres.csv', header = T) # expected presence data based on BBS for 372 landbird species --- 2001-2015
+expect_pres = read.csv('data/expect_pres.csv', header = T) # expected presence data based on BBS for 372 landbird species --- 2001-2015 from NatureServ
 temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS temporal occupancy data (just for 372 landbird species) --- 2001-2015
 bsize = read.csv("data/DunningBodySize_old_2008.11.12.csv", header = TRUE) # import body size data from Dunning 2008
 focal_competitor_table = read.csv("data/focal spp.csv", header = TRUE)
@@ -200,7 +200,7 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 # read in raw env data UPDATED from gimms script
 all_env = read.csv('data/occuenv.csv', header = T)
 # merge in ENV
-all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"))
+all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"), all.y = TRUE)
 
 write.csv(all_expected_pres,"data/all_expected_pres.csv", row.names= F)
 
