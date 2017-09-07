@@ -12,7 +12,7 @@ library(tidyr)
 Hurlbert_o = read.csv('data/Master_RO_Correlates_20110610.csv', header = T) # range occupancy dataset 
 bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
 expect_pres = read.csv('data/expect_pres.csv', header = T) # expected presence data based on BBS for 372 landbird species --- 2001-2015 from NatureServ
-temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS temporal occupancy data (just for 372 landbird species) --- 2001-2015
+bbs_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS temporal occupancy data (just for 372 landbird species) --- 2001-2015
 bsize = read.csv("data/DunningBodySize_old_2008.11.12.csv", header = TRUE) # import body size data from Dunning 2008
 focal_competitor_table = read.csv("data/focal spp.csv", header = TRUE)
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
@@ -24,7 +24,9 @@ subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
 # subset bbs abundance columns
 bbs = bbs[, (names(bbs) %in% c("stateroute", "Aou", "Year","SpeciesTotal",  'routeID', 'Lati', 'Longi'))]
 # subset temporal occupancy
-temp_occ = subset(temp_occ, Aou %in% subsetocc$AOU)
+temp_occ = subset(bbs_occ, Aou %in% subsetocc$AOU)
+# Winter Wren had AOU code change (7220 to 7222), changing in occ code to reflect that
+temp_occ$Aou[temp_occ$Aou == 7220] <- 7222
 ############# ---- Set up pairwise comparison table ---- #############
 # read in table with pairwise comparison of each focal species to several potential competitors - created by hand
 focal_competitor_table = dplyr::select(focal_competitor_table, AOU, CommonName, Competitor)
@@ -86,9 +88,6 @@ sp_list$match[sp_list$match =="Oreothlypis luciae"] = "Vermivora luciae"
 sp_list$match[sp_list$match =="Geothlypis tolmiei"] = "Oporornis tolmiei"
 
 sp_list$match[sp_list$match =="Troglodytes hiemalis"] = "Troglodytes troglodytes"
-
-# Winter Wren had AOU code change (7220 to 7222), changing in occ code to reflect that
-temp_occ$Aou[temp_occ$Aou == 7220] <- 7222
 
 ###### ---- Create final focal-comp table ----######
 #merge pairwise table with taxonomy info

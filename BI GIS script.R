@@ -15,9 +15,9 @@ library(dplyr)
 
 # setwd("C:/git/Biotic-Interactions")
 # read in temporal occupancy data from BI occ script
-temp_occ = read.csv("bbs_sub1.csv", header=TRUE)
+temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE)
 # read in lat long data
-bbs_routes = read.csv("latlong_rtes.csv",header =TRUE)
+bbs_routes = read.csv("data/latlong_rtes.csv",header =TRUE)
 # read in bird range shps
 shapefile_path = 'Z:/GIS/birds/All/All/'
 
@@ -26,7 +26,7 @@ all_spp_list = list.files(shapefile_path)
 
 
 # read in new_spec_weights file created in data cleaning code
-new_spec_weights=read.csv("new_spec_weights.csv", header=TRUE)
+new_spec_weights=read.csv("data/new_spec_weights.csv", header=TRUE)
 
 # for loop to select a genus_spp from pairwise table, read in shp, subset to permanent habitat, plot focal distribution
 filesoutput = c()
