@@ -169,3 +169,9 @@ occuenv$zElev = (occuenv$elev.mean - occuenv$Mean.Elev) / occuenv$SD.Elev
 occuenv$zNDVI = (occuenv$ndvi.mean - occuenv$Mean.NDVI) / occuenv$SD.NDVI
 
 write.csv(occuenv, "data/occuenv.csv", row.names= FALSE)
+
+
+
+
+
+

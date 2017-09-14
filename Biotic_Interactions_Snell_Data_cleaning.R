@@ -18,7 +18,6 @@ focal_competitor_table = read.csv("data/focal spp.csv", header = TRUE)
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
 shapefile_areas = read.csv("data/shapefile_areas.csv", header = TRUE) # area shapefile if not running GIS code 
 
-bsize$AOU[bsize$AOU == 7220] <- 7222 # Winter Wren
 # subset species whose range occupancies were between 0.3 and 0.7 over a 10 year period
 subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
 # subset bbs abundance columns
@@ -87,8 +86,6 @@ sp_list$match[sp_list$match =="Oreothlypis luciae"] = "Vermivora luciae"
 
 sp_list$match[sp_list$match =="Geothlypis tolmiei"] = "Oporornis tolmiei"
 
-sp_list$match[sp_list$match =="Troglodytes hiemalis"] = "Troglodytes troglodytes"
-
 ###### ---- Create final focal-comp table ----######
 #merge pairwise table with taxonomy info
 comp_AOU = merge(focal_competitor_table, sp_list, by.x = "Competitor", by.y = "CommonName")
@@ -101,6 +98,7 @@ names(focal_AOU)[6] = "FocalSciName"
 
 # merge in competitor and focal body size
 spec_w_bsize = merge(focal_AOU, bsize[,c("AOU", "Mass.g.")], by.x = "focalAOU", by.y = "AOU")
+
 spec_w_weights = merge(spec_w_bsize, bsize[,c("AOU", "Mass.g.")], by.x = "CompAOU", by.y = "AOU")
 
 names(spec_w_weights)[8] = "FocalMass"

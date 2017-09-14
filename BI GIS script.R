@@ -36,7 +36,7 @@ intl_proj = CRS("+proj=longlat +datum=WGS84")
 sp_proj = CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km")
 
 ####### for loop generating shapefiles and area table for all spp - DO NOT RUN! ######
-if(FALSE) {  #Blocking out the for loop below. Need to change to TRUE if you want the loop to run.
+if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want the loop to run.
   
   for (sp in focal_spp) {
     print(sp)
