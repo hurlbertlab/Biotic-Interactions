@@ -134,9 +134,8 @@ occumatrix$abPrecip=abs(occumatrix$zPrecip)
 occumatrix$abNDVI=abs(occumatrix$zNDVI)
 
 # using equation species sum*Focal occ to get success and failure for binomial anlaysis
-occumatrix$nyears = occumatrix$FocalOcc*15
-occumatrix$sp_success = as.factor(occumatrix$nyears * occumatrix$FocalOcc)
-occumatrix$sp_fail = as.factor(occumatrix$nyears * (1 - occumatrix$FocalOcc))
+occumatrix$sp_success = 15 * occumatrix$FocalOcc
+occumatrix$sp_fail = 15 * (1 - occumatrix$FocalOcc)
 
 #### GLM of all matrices not just subset ####
 glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s + 
