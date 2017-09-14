@@ -31,6 +31,8 @@ new_spec_weights=read.csv("data/new_spec_weights.csv", header=TRUE)
 # for loop to select a genus_spp from pairwise table, read in shp, subset to permanent habitat, plot focal distribution
 filesoutput = c()
 focal_spp = unique(new_spec_weights$focalcat)
+# dropping non-intersecting polygons
+# myData = myData[-c(2, 4, 6), ]  
 
 intl_proj = CRS("+proj=longlat +datum=WGS84")
 sp_proj = CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km")
@@ -66,7 +68,7 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
       comp.poly <- readShapePoly(paste(shapefile_path, c3, sep = "")) # reads in species-specific shapefile
       proj4string(comp.poly) <- intl_proj
       corigin = comp.poly[comp.poly@data$SEASONAL == 1|comp.poly@data$SEASONAL == 2|comp.poly@data$SEASONAL ==5,]
-      corigin = spTransform(corigin, sp_proj)
+      corigin = spTransform(corigin,  CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
       plot(corigin, add = TRUE ,col = colors, border = NA) 
       # intersect from raster package
       sporigin = gBuffer(sporigin, byid=TRUE, width=0)
