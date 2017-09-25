@@ -9,8 +9,7 @@ tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS occ script
 centroid=read.csv("data/centroid.csv", header=TRUE) # GIS script
 occuenv= read.csv("data/all_expected_pres.csv", header = TRUE) # Data cleaning script
-Hurlbert_o = read.csv('data/Master_RO_Correlates_20110610.csv', header = T) # Hurlbert Lab
-subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
+subsetocc = read.csv('data/subsetocc.csv', header = T) # Hurlbert Lab
 
 # rescaling all occupancy values  - odds ratio
 # need to get rid of ones in order to not have infinity values 
@@ -25,8 +24,8 @@ occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale))
 envoutput = c()
 envoutputa = c()
 
-beta_lm = matrix(NA, nrow = 102, ncol = 10)
-beta_abun = matrix(NA, nrow = 102,ncol = 10)
+beta_lm = matrix(NA, nrow = 104, ncol = 10)
+beta_abun = matrix(NA, nrow = 104,ncol = 10)
 
 # create beta output data frame
 
@@ -52,7 +51,7 @@ beta_abun[sp,8] = summary(both_abun)$coef[2,"Estimate"]
 beta_abun[sp,9] = summary(both_abun)$coef[2,"Pr(>|t|)"]
 beta_abun[sp,10] = summary(both_abun)$r.squared
 
-occuenv = na.omit(occuenv)
+# occuenv = na.omit(occuenv)
 subfocalspecies = unique(occuenv$Species)
 
 for (sp in 1:length(subfocalspecies)){
@@ -365,7 +364,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("white","#43a2ca","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition", "Environment")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_blank(), legend.text=element_text(size=30), legend.position="top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:102, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:102, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:102, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:102, y = -.12, label = envrank$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:102, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks()(0:1))
+tt = t + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:104, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:104, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:104, y = -.12, label = envrank$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:104, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks()(0:1))
 
 plot(tt)
 

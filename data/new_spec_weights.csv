@@ -56,7 +56,7 @@
 5300,5330,"Lesser Goldfinch","Pine Siskin","Carduelis psaltria","Carduelis pinus","Fringillidae",15,10,"Carduelis_pinus","Carduelis_psaltria"
 5330,5300,"Pine Siskin","Lesser Goldfinch","Carduelis pinus","Carduelis psaltria","Fringillidae",10,15,"Carduelis_psaltria","Carduelis_pinus"
 5380,6050,"Chestnut-collared Longspur","Lark Bunting","Calcarius ornatus","Calamospiza melanocorys","Emberizidae",38,19,"Calamospiza_melanocorys","Calcarius_ornatus"
-5390,5380,"McCown's Longspur","Chestnut-collared Longspur","Calcarius mccownii","Calcarius ornatus","Emberizidae",19,23,"Calcarius_ornatus","Calcarius_mccownii"
+5390,5380,"McCown's Longspur","Chestnut-collared Longspur","Rhynchophanes mccownii","Calcarius ornatus","Emberizidae",19,23,"Calcarius_ornatus","Rhynchophanes_mccownii"
 5400,7000,"Vesper Sparrow","Sprague's Pipit","Pooecetes gramineus","Anthus spragueii","Motacillidae",25,27,"Anthus_spragueii","Pooecetes_gramineus"
 5420,5480,"Savannah Sparrow","Le Conte's Sparrow","Passerculus sandwichensis","Ammodramus leconteii","Emberizidae",13,21.33,"Ammodramus_leconteii","Passerculus_sandwichensis"
 5420,5660,"Savannah Sparrow","Dark-eyed Junco","Passerculus sandwichensis","Junco hyemalis","Emberizidae",19.75,21.33,"Junco_hyemalis","Passerculus_sandwichensis"

@@ -125,7 +125,7 @@ ndvi = gimms_agg[,c("stateroute", "ndvi.mean")]
 # merge together
 all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, env_elev, env_map, ndvi))
 
-# write.csv(all_env,'C:/git/Biotic-Interactions/all_env.csv',row.names=F)
+# write.csv(all_env,'C:/git/Biotic-Interactions/data/all_env.csv',row.names=F)
 ####----Creating an environmental matrix ----####
 occumatrix <- read.csv("data/2001_2015_bbs_occupancy.csv", header = T) # read in updated bbs data
 route.locs = read.csv('data/latlong_rtes.csv')
@@ -136,7 +136,10 @@ route.sp = coordinates(latlongs[,3:2])
 
 #mean data for all variables
 envtable <- subset(all_env, select = c('stateroute', 'mat.mean', 'map.mean', 'elev.mean', 'ndvi.mean')) 
-
+envtable$mat.mean = as.numeric(envtable$mat.mean)
+envtable$map.mean = as.numeric(envtable$map.mean)
+envtable$elev.mean = as.numeric(envtable$elev.mean)
+envtable$ndvi.mean = as.numeric(envtable$ndvi.mean)
 ### Calculate metrics of interest
 ####---- Creating final data frame----####
 #For loop to calculate mean & standard dev environmental variables for each unique species
@@ -145,7 +148,6 @@ birdsoutputm = c()
 for (species in uniq.spp) {
   spec.routes <- occumatrix[(occumatrix$Aou) == species, "stateroute"] #subset routes for each species (i) in tidybirds
   env.sub <- envtable[envtable$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
-
   envmeans = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'ndvi.mean')], 2, mean))
   envsd = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'ndvi.mean')], 2, sd))
 
@@ -158,8 +160,8 @@ names(birdsoutput) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean
 ### Combine relevant information from each of your two or more datasets using merge()
 #(species/occupancy/expected env variables/observed env variables)
 occubirds <- merge(birdsoutput, occumatrix, by.x = "Species", by.y="Aou", na.rm = T)
-occuenv <- merge(envtable, occubirds, by = "stateroute", all = F, na.rm = T)
-occuenv <- na.omit(occuenv)
+occuenv <- merge(envtable, occubirds, by = "stateroute", na.rm = T)
+# occuenv <- na.omit(occuenv) got rid of too many aous
 
 ### Conduct analyses
 #Calculating z scores for each environmnetal variable (observed mean - predicted mean/predicted SD)

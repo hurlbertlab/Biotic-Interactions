@@ -27,12 +27,15 @@ all_spp_list = list.files(shapefile_path)
 
 # read in new_spec_weights file created in data cleaning code
 new_spec_weights=read.csv("data/new_spec_weights.csv", header=TRUE)
+new_spec_weights$focalAOU = as.numeric(new_spec_weights$focalAOU)
+new_spec_weights$compAOU = as.numeric(new_spec_weights$compAOU)
 
 # for loop to select a genus_spp from pairwise table, read in shp, subset to permanent habitat, plot focal distribution
 filesoutput = c()
 focal_spp = unique(new_spec_weights$focalcat)
 # dropping non-intersecting polygons
-# myData = myData[-c(2, 4, 6), ]  
+new_spec_weights = new_spec_weights[-c(6),]
+
 
 intl_proj = CRS("+proj=longlat +datum=WGS84")
 sp_proj = CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km")
@@ -78,8 +81,8 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
       spArea = gArea(sporigin) # in m
       coArea = gArea(corigin)
       area_overlap = gArea(pi)
-      focalAOU = unique(new_spec_weights[new_spec_weights$focalcat == sp, c('FocalAOU')])
-      compAOU = unique(new_spec_weights[new_spec_weights$compcat == co, c('CompetitorAOU')])
+      focalAOU = unique(new_spec_weights[new_spec_weights$focalcat == sp, c('focalAOU')])
+      compAOU = unique(new_spec_weights[new_spec_weights$compcat == co, c('CompAOU')])
       filesoutput = rbind(filesoutput, c(sp, focalAOU, co, compAOU, spArea, coArea, area_overlap))
       
     }
@@ -161,12 +164,12 @@ expect_pres = data.frame(expect_pres)
   
 expect_pres = dplyr::select(expect_pres, -optional)
 
-# write.csv(expect_pres,"C:/Git/Biotic-Interactions/expect_pres.csv",row.names=FALSE)
+# write.csv(expect_pres,"C:/Git/Biotic-Interactions/data/expect_pres.csv",row.names=FALSE)
 
 ######## PDF of each species BBS occurrences ########
-focalcompsub = read.csv("focalcompsub.csv", header=TRUE)
+focalcompsub = read.csv("data/focalcompsub.csv", header=TRUE)
 # merge in lat/long
-latlongs = read.csv('routes 1996-2010 consecutive.csv', header = T)
+latlongs = read.csv('data/routes 1996-2010 consecutive.csv', header = T)
 plotdata_all = merge(focalcompsub, latlongs, by = "stateroute") 
 
 subfocalspecies = unique(focalcompsub$FocalAOU)

@@ -9,7 +9,6 @@ library(dplyr)
 library(tidyr)
 
 # read in all dataset inputs
-Hurlbert_o = read.csv('data/Master_RO_Correlates_20110610.csv', header = T) # range occupancy dataset 
 bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
 expect_pres = read.csv('data/expect_pres.csv', header = T) # expected presence data based on BBS for 372 landbird species --- 2001-2015 from NatureServ
 bbs_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS temporal occupancy data (just for 372 landbird species) --- 2001-2015
@@ -17,15 +16,12 @@ bsize = read.csv("data/DunningBodySize_old_2008.11.12.csv", header = TRUE) # imp
 focal_competitor_table = read.csv("data/focal spp.csv", header = TRUE)
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
 shapefile_areas = read.csv("data/shapefile_areas.csv", header = TRUE) # area shapefile if not running GIS code 
+subsetocc = read.csv("data/subsetocc.csv", header = TRUE)
 
-# subset species whose range occupancies were between 0.3 and 0.7 over a 10 year period
-subsetocc = Hurlbert_o[Hurlbert_o$X10yr.Prop > .3 & Hurlbert_o$X10yr.Prop < .7,]
 # subset bbs abundance columns
 bbs = bbs[, (names(bbs) %in% c("stateroute", "Aou", "Year","SpeciesTotal",  'routeID', 'Lati', 'Longi'))]
 # subset temporal occupancy
 temp_occ = subset(bbs_occ, Aou %in% subsetocc$AOU)
-# Winter Wren had AOU code change (7220 to 7222), changing in occ code to reflect that
-temp_occ$Aou[temp_occ$Aou == 7220] <- 7222
 ############# ---- Set up pairwise comparison table ---- #############
 # read in table with pairwise comparison of each focal species to several potential competitors - created by hand
 focal_competitor_table = dplyr::select(focal_competitor_table, AOU, CommonName, Competitor)
@@ -85,6 +81,8 @@ sp_list$match[sp_list$match =="Geothlypis formosus"] = "Oporornis formosus"
 sp_list$match[sp_list$match =="Oreothlypis luciae"] = "Vermivora luciae"
 
 sp_list$match[sp_list$match =="Geothlypis tolmiei"] = "Oporornis tolmiei"
+
+sp_list$match[sp_list$match =="Calcarius mccownii"] = "Rhynchophanes mccownii"
 
 ###### ---- Create final focal-comp table ----######
 #merge pairwise table with taxonomy info
@@ -197,7 +195,7 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 # read in raw env data UPDATED from gimms script
 all_env = read.csv('data/occuenv.csv', header = T)
 # merge in ENV
-all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"), all.y = TRUE)
+all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"), na.rm = TRUE)
 
 write.csv(all_expected_pres,"data/all_expected_pres.csv", row.names= F)
 
