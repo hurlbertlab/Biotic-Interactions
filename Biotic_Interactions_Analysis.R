@@ -23,39 +23,13 @@ occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale))
 # for loop subsetting env data to expected occurrence for focal species
 envoutput = c()
 envoutputa = c()
-
-beta_lm = matrix(NA, nrow = 104, ncol = 10)
-beta_abun = matrix(NA, nrow = 104,ncol = 10)
-
 # create beta output data frame
+beta_occ = c()
+beta_abun = c()
 
-beta_lm[sp,1] = sp
-beta_lm[sp,2] = summary(competition)$coef[1,"Estimate"]
-beta_lm[sp,3] = summary(competition)$coef[1,"Pr(>|t|)"]
-beta_lm[sp,4] = summary(competition)$r.squared #using multiple rsquared
-beta_lm[sp,5] = summary(env_z)$coef[2,"Estimate"]
-beta_lm[sp,6] = summary(env_z)$coef[2,"Pr(>|t|)"]
-beta_lm[sp,7] = summary(env_z)$r.squared 
-beta_lm[sp,8] = summary(both_z)$coef[2,"Estimate"]
-beta_lm[sp,9] = summary(both_z)$coef[2,"Pr(>|t|)"]
-beta_lm[sp,10] = summary(both_z)$r.squared 
-
-beta_abun[sp,1] = subfocalspecies[sp]
-beta_abun[sp,2] = summary(competition_abun)$coef[2,"Estimate"]
-beta_abun[sp,3] = summary(competition_abun)$coef[2,"Pr(>|t|)"]
-beta_abun[sp,4] = summary(competition_abun)$r.squared #using multiple rsquared
-beta_abun[sp,5] = summary(env_abun)$coef[2,"Estimate"]
-beta_abun[sp,6] = summary(env_abun)$coef[2,"Pr(>|t|)"]
-beta_abun[sp,7] = summary(env_abun)$r.squared 
-beta_abun[sp,8] = summary(both_abun)$coef[2,"Estimate"]
-beta_abun[sp,9] = summary(both_abun)$coef[2,"Pr(>|t|)"]
-beta_abun[sp,10] = summary(both_abun)$r.squared
-
-# occuenv = na.omit(occuenv)
 subfocalspecies = unique(occuenv$Species)
 
 for (sp in 1:length(subfocalspecies)){
-  print(sp)
   temp = subset(occuenv,occuenv$Species == subfocalspecies[sp])
   
   competition <- lm(temp$occ_logit ~  temp$comp_scaled) 
@@ -72,43 +46,65 @@ for (sp in 1:length(subfocalspecies)){
   both_abun = lm(temp$FocalAbundance ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   
   #variance_partitioning 
-  ENV = summary(both_z)$r.squared - summary(competition)$r.squared
-  print(ENV) #env only
-  COMP = summary(both_z)$r.squared - summary(env_z)$r.squared
-  print(COMP) #competition only
-  SHARED = summary(competition)$r.squared - COMP
-  print(SHARED) #shared variance
-  NONE = 1 - summary(both_z)$r.squared
-  print(NONE) #neither variance
+  ENV = summary(both_z)$r.squared - summary(competition)$r.squared #env only
+  COMP = summary(both_z)$r.squared - summary(env_z)$r.squared #competition only
+  SHARED = summary(competition)$r.squared - COMP #shared variance
+  NONE = 1 - summary(both_z)$r.squared # neither variance
   sp1 = unique(temp$Species)
   sum = sum(ENV, COMP, SHARED)
   envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE)) #, sum
   
   #variance_partitioning 
   ENVa = summary(both_abun)$r.squared - summary(competition_abun)$r.squared
-  
   COMPa = summary(both_abun)$r.squared - summary(env_abun)$r.squared
-  
   SHAREDa = summary(competition_abun)$r.squared - COMP
-  
   NONEa = 1 - summary(both_abun)$r.squared
   
   sp1 = unique(temp$Species)
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
+  # saving model output into separate data frames
+  occ_comp_est = summary(competition)$coef[1,"Estimate"]
+  occ_comp_p = summary(competition)$coef[1,"Pr(>|t|)"]
+  occ_comp_r = summary(competition)$r.squared
+  occ_env_est = summary(env_z)$coef[2,"Estimate"]
+  occ_env_p = summary(env_z)$coef[2,"Pr(>|t|)"]
+  occ_env_r = summary(env_z)$r.squared 
+  occ_b_est = summary(both_z)$coef[2,"Estimate"]
+  occ_b_p = summary(both_z)$coef[2,"Pr(>|t|)"]
+  occ_b_r = summary(both_z)$r.squared 
+
+  abun_comp_est = summary(competition_abun)$coef[1,"Estimate"]
+  abun_comp_p = summary(competition_abun)$coef[1,"Pr(>|t|)"]
+  abun_comp_r = summary(competition_abun)$r.squared #using multiple rsquared
+  abun_env_est = summary(env_abun)$coef[2,"Estimate"]
+  abun_env_p = summary(env_abun)$coef[2,"Pr(>|t|)"]
+  abun_env_r = summary(env_abun)$r.squared 
+  abun_both_est = summary(both_abun)$coef[2,"Estimate"]
+  abun_both_p = summary(both_abun)$coef[2,"Pr(>|t|)"]
+  abun_both_r = summary(both_abun)$r.squared
+  
+  beta_occ = rbind(beta_occ, c(sp1, occ_comp_est, occ_comp_p, occ_comp_r, occ_env_est, occ_env_p, occ_env_r,occ_b_est, occ_b_p , occ_b_r))
+  beta_abun = rbind(beta_abun, c(sp1, abun_comp_est, abun_comp_p, abun_comp_r, abun_env_est, abun_env_p, abun_env_r,abun_both_est, abun_both_p , abun_both_r))
+  
 }         
 
 
 envoutput = data.frame(envoutput)
 envoutputa = data.frame(envoutputa)
-names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE") #, "Sum"
+
+beta_occ = data.frame(beta_occ)
+beta_abun = data.frame(beta_abun)
+
+names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
-# relabel dark-eyed junco
+
+# relabel dark-eyed junco, winter wren
 envoutput$FocalAOU[envoutput$FocalAOU == 5660] <- 5677
 tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
 subsetocc$AOU[subsetocc$AOU == 5660] <- 5677
 subsetocc$AOU[subsetocc$AOU == 7220] <- 7222
 
-envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'FocalAOU', by.y = "AOU_OUT", all.x = TRUE) # losing Alder Flycatcher
+envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'FocalAOU', by.y = "AOU_OUT", all.x = TRUE) 
 
 envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")], by.x='FocalAOU', by.y='AOU', all.x = TRUE)
 
@@ -147,11 +143,11 @@ summary(glm_occ_rand_site)
                             #    abTemp + abElev + abPrecip + abEVI + (1|stateroute:Species), link=log, data = occumatrix)
 # summary(glm_abundance_rand_site) 
 
-#### PLOTTING MODELS ####
-ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5) +xlab("Scaled Competitor Abundance")+ylab("Focal Occupancy") +theme_bw() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
-ggsave("C:/Git/Biotic-Interactions/Figures/glmoutput.png")
+#### new fig 1? ####
+ggplot(data = all_expected_pres, aes(x = FocalAbundance, y = FocalOcc)) +geom_point(alpha = 0.2) + geom_jitter(width = 0.1) +xlab("Focal Abundance")+ylab("Focal Occupancy") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
+ggsave("C:/Git/Biotic-Interactions/Figures/fig1.png")
 
-####### GLM FIT PLOTS #################################################################################################
+####### GLM FIT PLOTS ###########
 pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,comp_scaled,zPrecip,zElev,zNDVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
 
 inverselogit <- function(p) {exp(p)/(1+exp(p))} 
@@ -159,24 +155,22 @@ newintercept <- function(p) {mean(exp(p)/(1+exp(p)))}
 
 # this relationship should be negative
 temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.8561721, xend = abs(max(occumatrix$zTemp)), yend = 0.8561721 +(-0.044095*max(abs(occumatrix$zTemp)))), col = "dark green", lwd=2) +
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zTemp)), yend = 0), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
-#geom_abline(intercept=0.97569, slope= -0.05176, lwd=1, col="blue")
 ggsave("C:/Git/Biotic-Interactions/Figures/logittemp.png")
 
 ndvi = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.8561721, xend = abs(max(occumatrix$zNDVI)), yend = 0.8561721 +(-0.1539750*max(abs(occumatrix$zNDVI)))), col = "dark green", lwd=2) +
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zNDVI)), yend = 0), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-# geom_abline(intercept=0.97569, slope= -0.05117, lwd=1, col="blue")
-ggsave("C:/Git/Biotic-Interactions/Figures/logitevi.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/logitndvi.png")
 
 elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.8561721, xend = abs(max(occumatrix$zElev)), yend = 0.8561721 +(0.0002332*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zElev)), yend = 1 +(-0.0144*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
 ggsave("C:/Git/Biotic-Interactions/Figures/logitelev.png")
 
 precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 0.8561721, xend = abs(max(occumatrix$zPrecip)), yend = 0.8561721 +(0.0063720*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zPrecip)), yend = 1 +(0.005566*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
 ggsave("C:/Git/Biotic-Interactions/Figures/logitprecip.png")
 
@@ -198,49 +192,6 @@ ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) +
   stat_function(fun=inverselogit, color = "blue") + 
   geom_point(colour="black", shape=18, alpha = 0.02,position=position_jitter(width=0,height=.02))+ theme_classic()
 
-#### ---- Plotting GLMs ---- ####
-# Making pdf of ranges for each focal spp
-pdf('precip_Reg.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-# Plotting basic lms to understand relationships
-for(sp in subfocalspecies){ 
-  print(sp)
-  psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
-                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
-  
-  tes = ggplot(data = psub, aes(x = zPrecip, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
-  plot(tes)
-}
-dev.off()
-# Making pdf of ranges for each focal spp
-pdf('Temp_Reg.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-# Plotting basic lms to understand relationships
-for(sp in subfocalspecies){ 
-  print(sp)
-  psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
-                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
-  
-  tes = ggplot(data = psub, aes(x = zTemp, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species) +theme_bw()
-  plot(tes)
-}
-dev.off()
-# Making pdf of ranges for each focal spp
-pdf('GLM_Reg.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-# Plotting basic lms to understand relationships
-for(sp in subfocalspecies){ 
-  print(sp)
-  psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
-                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
-  
-  tes = ggplot(data = psub, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +theme_bw()
-  plot(tes)
-}
-dev.off()
 
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
@@ -439,3 +390,48 @@ plot_grid(total,
           align = 'v')
          
 #Coyle fig 1: Z:\Coyle\Projects\BBS Core\Final Analysis
+
+
+#### ---- Plotting GLMs ---- ####
+# Making pdf of ranges for each focal spp
+pdf('precip_Reg.pdf', height = 8, width = 10)
+par(mfrow = c(3, 4))
+# Plotting basic lms to understand relationships
+for(sp in subfocalspecies){ 
+  print(sp)
+  psub = occumatrix[occumatrix$Species == sp,]
+  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
+                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
+  
+  tes = ggplot(data = psub, aes(x = zPrecip, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
+  plot(tes)
+}
+dev.off()
+# Making pdf of ranges for each focal spp
+pdf('Temp_Reg.pdf', height = 8, width = 10)
+par(mfrow = c(3, 4))
+# Plotting basic lms to understand relationships
+for(sp in subfocalspecies){ 
+  print(sp)
+  psub = occumatrix[occumatrix$Species == sp,]
+  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
+                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
+  
+  tes = ggplot(data = psub, aes(x = zTemp, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species) +theme_bw()
+  plot(tes)
+}
+dev.off()
+# Making pdf of ranges for each focal spp
+pdf('GLM_Reg.pdf', height = 8, width = 10)
+par(mfrow = c(3, 4))
+# Plotting basic lms to understand relationships
+for(sp in subfocalspecies){ 
+  print(sp)
+  psub = occumatrix[occumatrix$Species == sp,]
+  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
+                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
+  
+  tes = ggplot(data = psub, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +theme_bw()
+  plot(tes)
+}
+dev.off()
