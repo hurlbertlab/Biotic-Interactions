@@ -3,13 +3,20 @@ library(ggplot2)
 library(tidyr)
 library(dplyr)
 library(cowplot)
+library(ggExtra)
 
 # read in files created in data cleaning script
-tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS occ script
 centroid=read.csv("data/centroid.csv", header=TRUE) # GIS script
 occuenv= read.csv("data/all_expected_pres.csv", header = TRUE) # Data cleaning script
 subsetocc = read.csv('data/subsetocc.csv', header = T) # Hurlbert Lab
+tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
+#update tax_code Winter Wren
+tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
+# rbind Pacific wren to data frame
+pacific = data.frame("Pacific Wren", 7221,  "PAWR")
+colnames(pacific) = c("PRIMARY_COM_NAME", "AOU_OUT" ,"ALPHA.CODE")
+tax_code = rbind(tax_code, pacific)
 
 # rescaling all occupancy values  - odds ratio
 # need to get rid of ones in order to not have infinity values 
@@ -98,12 +105,6 @@ beta_abun = data.frame(beta_abun)
 names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 
-# relabel dark-eyed junco, winter wren
-envoutput$FocalAOU[envoutput$FocalAOU == 5660] <- 5677
-tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
-subsetocc$AOU[subsetocc$AOU == 5660] <- 5677
-subsetocc$AOU[subsetocc$AOU == 7220] <- 7222
-
 envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'FocalAOU', by.y = "AOU_OUT", all.x = TRUE) 
 
 envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")], by.x='FocalAOU', by.y='AOU', all.x = TRUE)
@@ -136,62 +137,12 @@ occumatrix$sp_fail = 15 * (1 - occumatrix$FocalOcc)
 glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s + 
 
                             abTemp + abElev + abPrecip + abNDVI + (1|stateroute:Species), family = binomial(link = logit), data = occumatrix)
-summary(glm_occ_rand_site) 
+summary(glm_occ_rand_site)                                    
 
-### FIX, Neg Binom
-# glm_abun_rand_site = glmer.nb(FocalAbundance ~ c_s + 
-                            #    abTemp + abElev + abPrecip + abEVI + (1|stateroute:Species), link=log, data = occumatrix)
-# summary(glm_abundance_rand_site) 
-
-#### new fig 1? ####
-ggplot(data = all_expected_pres, aes(x = FocalAbundance, y = FocalOcc)) +geom_point(alpha = 0.2) + geom_jitter(width = 0.1) +xlab("Focal Abundance")+ylab("Focal Occupancy") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
+#### new fig 1 ####
+fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point() + geom_jitter(width = 0, height = 0.02) +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = median(occuenv$FocalOcc), lwd = 1.25, col = "dark gray")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1.25, col = "dark gray") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
+ggExtra::ggMarginal(fig1 , type = "histogram", fill = "dark gray")
 ggsave("C:/Git/Biotic-Interactions/Figures/fig1.png")
-
-####### GLM FIT PLOTS ###########
-pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,comp_scaled,zPrecip,zElev,zNDVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
-
-inverselogit <- function(p) {exp(p)/(1+exp(p))} 
-newintercept <- function(p) {mean(exp(p)/(1+exp(p)))} 
-
-# this relationship should be negative
-temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zTemp)), yend = 0), col = "dark green", lwd=2) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logittemp.png")
-
-ndvi = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zNDVI)), yend = 0), col = "dark green", lwd=2) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logitndvi.png")
-
-elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zElev)), yend = 1 +(-0.0144*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logitelev.png")
-
-precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zPrecip)), yend = 1 +(0.005566*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logitprecip.png")
-
-z <- plot_grid(precip+ theme(legend.position="none"),
-               ndvi + theme(legend.position="none"),
-               align = 'h',
-               labels = c("A","B"),
-               nrow = 1)
-p2 = plot_grid(elev + theme(legend.position="none"),
-              temp + theme(legend.position="none"), 
-              labels = c("C","D"),
-              align = 'h', 
-              rel_widths = c(1, 1.3))
-
-plot_grid(z, p2, ncol = 1, rel_heights = c(1, 1))
-ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf")
-
-ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) + 
-  stat_function(fun=inverselogit, color = "blue") + 
-  geom_point(colour="black", shape=18, alpha = 0.02,position=position_jitter(width=0,height=.02))+ theme_classic()
-
 
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
@@ -209,7 +160,7 @@ envloc1$ALPHA.CODE[envloc1$FocalAOU == 6720] <- 'PAWA' #Palm Warbler
 envloc1$ALPHA.CODE = as.factor(envloc1$ALPHA.CODE)
 
 nrank = envloc1 %>% 
-  dplyr::mutate(rank = row_number(-ENV))# change here for comp
+  dplyr::mutate(rank = row_number(-COMP))# change here for comp
 envflip = tidyr::gather(nrank, "Type", "value", 2:5)
 envflip$rank <- factor(envflip$rank, levels = envflip$rank[order(envflip$rank)])
 envflip = dplyr::arrange(envflip,rank)
@@ -217,11 +168,11 @@ envflip = dplyr::arrange(envflip,rank)
 # envflip = merge(envflip, envloc[,c("FocalAOU", "EW")], by = "FocalAOU")
 
 envrank = envflip %>% 
-  dplyr::group_by(Type == 'ENV') %>% # change here for comp
+  dplyr::group_by(Type == 'COMP') %>% # change here for comp
   dplyr::mutate(rank = row_number(-value)) # need to get just the envs to rank, then plot
 envrank <- envrank[order(envrank$rank),]
 
-envrank <- subset(envrank,Type == "ENV")
+envrank <- subset(envrank,Type == "COMP") # change here for comp
 
 ### CREATE LABEL DF FAMilY ########
 envrank$Fam_abbrev = envrank$Family
@@ -307,19 +258,21 @@ envrank$EW[envrank$EW == 1] <- "E"
 envrank$EW[envrank$EW == 0] <- "W" 
 ###### PLOTTING #####
 envflip$Type = factor(envflip$Type,
-                      levels = c("NONE", "SHARED","COMP","ENV"),ordered = TRUE)
+                      levels = c("NONE", "SHARED","ENV","COMP"),ordered = TRUE)
 envflip$value = abs(envflip$value)
 # Plot with ENV ranked in decreasing order - had to flip everything to plot right
-t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE", "SHARED","COMP","ENV")))) + 
+t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE", "SHARED","ENV","COMP")))) + 
   geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","#43a2ca","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition", "Environment")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_blank(), legend.text=element_text(size=30), legend.position="top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+  scale_fill_manual(values=c("white","yellow3","#2ca25f","#dd1c77"), labels=c("","Shared Variance", "Environment", "Competition")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_blank(), legend.text=element_text(size=30), legend.position = c(0.5, 0.7),legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + annotate("text", x = 1:104, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:104, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:104, y = -.12, label = envrank$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:104, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks()(0:1))
+tt = t + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks()(0:1))
+
+#+ annotate("text", x = 1:104, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:104, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:104, y = -.12, label = envrank$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:104, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) 
 
 plot(tt)
 
-ggsave("C:/Git/Biotic-Interactions/Figures/barplot.pdf", height = 25, width = 36)
+ggsave("C:/Git/Biotic-Interactions/Figures/barplotc.pdf", height = 25, width = 36)
 
 ##################### TRAITS Model ####################################
 logit = function(x) log(x/(1-x))
@@ -408,7 +361,7 @@ for(sp in subfocalspecies){
 }
 dev.off()
 # Making pdf of ranges for each focal spp
-pdf('Temp_Reg.pdf', height = 8, width = 10)
+pdf('Figures/allspp_Reg.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
 # Plotting basic lms to understand relationships
 for(sp in subfocalspecies){ 
@@ -435,3 +388,49 @@ for(sp in subfocalspecies){
   plot(tes)
 }
 dev.off()
+
+pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,comp_scaled,zPrecip,zElev,zNDVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
+
+inverselogit <- function(p) {exp(p)/(1+exp(p))} 
+newintercept <- function(p) {mean(exp(p)/(1+exp(p)))} 
+
+# this relationship should be negative
+temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zTemp)), yend = 0), col = "dark green", lwd=2) +
+  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+ggsave("C:/Git/Biotic-Interactions/Figures/logittemp.png")
+
+ndvi = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zNDVI)), yend = 0), col = "dark green", lwd=2) +
+  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
+ggsave("C:/Git/Biotic-Interactions/Figures/logitndvi.png")
+
+elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zElev)), yend = 1 +(-0.0144*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
+  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
+ggsave("C:/Git/Biotic-Interactions/Figures/logitelev.png")
+
+precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zPrecip)), yend = 1 +(0.005566*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
+  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
+ggsave("C:/Git/Biotic-Interactions/Figures/logitprecip.png")
+
+z <- plot_grid(precip+ theme(legend.position="none"),
+               ndvi + theme(legend.position="none"),
+               align = 'h',
+               labels = c("A","B"),
+               nrow = 1)
+p2 = plot_grid(elev + theme(legend.position="none"),
+               temp + theme(legend.position="none"), 
+               labels = c("C","D"),
+               align = 'h', 
+               rel_widths = c(1, 1.3))
+
+plot_grid(z, p2, ncol = 1, rel_heights = c(1, 1))
+ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf")
+
+ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) + 
+  stat_function(fun=inverselogit, color = "blue") + 
+  geom_point(colour="black", shape=18, alpha = 0.02,position=position_jitter(width=0,height=.02))+ theme_classic()
+
+

@@ -372,6 +372,8 @@ SubsetSppID,AOU,CommonName,Competitor
 28,4660,Willow Flycatcher,Alder Flycatcher
 125,7222,Winter Wren,House Wren
 ,7221,Pacific Wren,House Wren
+,7222,Winter Wren,Pacific Wren
+,7221,Pacific Wren,Winter Wren
 125,7222,Winter Wren,Marsh Wren
 ,7221,Pacific Wren,Marsh Wren
 125,7222,Winter Wren,Sedge Wren
