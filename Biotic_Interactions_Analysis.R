@@ -39,18 +39,18 @@ subfocalspecies = unique(occuenv$Species)
 for (sp in 1:length(subfocalspecies)){
   temp = subset(occuenv,occuenv$Species == subfocalspecies[sp])
   
-  competition <- lm(temp$occ_logit ~  temp$all_comp_scaled)  # changes between main and all comps
+  competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
   # z scores separated out for env effects (as opposed to multivariate variable)
   env_z = lm(temp$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   # z scores separated out for env effects
-  both_z = lm(temp$occ_logit ~  temp$all_comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
+  both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
   
   # abundance, not temp occ - same results?
-  competition_abun <- lm(temp$FocalAbundance ~  temp$all_comp_scaled) 
+  competition_abun <- lm(temp$FocalAbundance ~  temp$comp_scaled) 
   # z scores separated out for env effects - abundance
   env_abun = lm(temp$FocalAbundance ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   # z scores separated out for env effects - abundance
-  both_abun = lm(temp$FocalAbundance ~  all_comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
+  both_abun = lm(temp$FocalAbundance ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   
   #variance_partitioning 
   ENV = summary(both_z)$r.squared - summary(competition)$r.squared #env only
@@ -110,8 +110,9 @@ envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'Foc
 envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")], by.x='FocalAOU', by.y='AOU', all.x = TRUE)
 
 envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU', all.x = TRUE)
+### supp table goes here, just need to add main competitor!
 
-#write.csv(envoutput, "envoutput.csv", row.names = FALSE)
+
 #write.csv(envoutputa, "envoutputa.csv", row.names = FALSE)
 beta_lm = data.frame(beta_lm)
 names(beta_lm) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_Est", "EnvZ_P", "EnvZ_R2", "BothZ_Est", "BothZ_P", "BothZ_R2")
@@ -123,7 +124,7 @@ names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competitio
 # and # of sites birds were not found from original bbs data
 # occumatrix = merge(temp_occ, occuenv, by.x=c("Aou", "stateroute"),by.y=c("Species", "stateroute"))
 occumatrix=occuenv
-occumatrix$c_s = scale(occumatrix$all_comp_scaled, scale = T, center = T)
+occumatrix$c_s = scale(occumatrix$comp_scaled, scale = T, center = T)
 occumatrix$abTemp=abs(occumatrix$zTemp)
 occumatrix$abElev=abs(occumatrix$zElev)
 occumatrix$abPrecip=abs(occumatrix$zPrecip)
@@ -310,12 +311,12 @@ for (s in subfocalspecies) {
 }
 tomerge = data.frame(tomerge)
 names(tomerge) = c("FocalAOU","Total.x", "Total.y")
-R2plot2$violin_env = R2plot2$ENV.x + R2plot2$SHARED.x
-R2plot2$violin_comp = R2plot2$COMP.x + R2plot2$SHARED.x
-R2plot2$violin_total = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 
 # R2 plot
 R2plot2 = merge(R2plot, tomerge, by = "FocalAOU")
+R2plot2$violin_env = R2plot2$ENV.x + R2plot2$SHARED.x
+R2plot2$violin_comp = R2plot2$COMP.x + R2plot2$SHARED.x
+R2plot2$violin_total = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 
 ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=35),axis.title.y=element_text(size=35, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24) + geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1) + geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "dark gray", cex =5, stroke = 1) +geom_abline(intercept = 0, slope = 1, col = "red", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=2))
 ggsave("C:/Git/Biotic-Interactions/Figures/occvabun.png")
@@ -327,25 +328,21 @@ ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=ele
       geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))
 ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.png")
 
+# r2 plot for main vs all competitors
+envmain = read.csv("data/envoutput.csv", header = TRUE)
+mainvall = merge(envoutput, envmain, by = "FocalAOU")
+
+ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") + geom_point(col = "#dd1c77", cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
+
 
 # R2 plot - glm violin plots
-total = ggplot(R2plot2, aes(x = FocalAOU, y = violin_total)) + geom_violin(lwd = 2, fill = "grey", color = "grey") + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
-ggsave("C:/Git/Biotic-Interactions/Figures/totalvio.png")
+R2violin = gather(R2plot2, "type", "Rval", 12:14)
 
-comp = ggplot(R2plot2, aes(x = FocalAOU, y = violin_comp)) + geom_violin(lwd = 2, fill = "#dd1c77", color = "#dd1c77") + xlab("Competition") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) +scale_y_continuous(limits = c(0, 1))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
-ggsave("C:/Git/Biotic-Interactions/Figures/compvio.png")
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Total Variance") + ylab("R2")+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey"), labels=c("Environment", "Competition", "Total Variance")) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
-env = ggplot(R2plot2, aes(x = FocalAOU, y = violin_env)) + geom_violin(lwd = 2, fill = "#2ca25f", color = "#2ca25f") + xlab("Environment") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30),legend.title=element_text(size=12), legend.text=element_text(size=12)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25)) +scale_y_continuous(limits = c(0, 1))
-ggsave("C:/Git/Biotic-Interactions/Figures/envvio.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/violin_mains.png")
 
-plot_grid(total,
-          comp, 
-          env,
-          labels = c("A","B", "C"),
-          align = 'v')
-         
 #Coyle fig 1: Z:\Coyle\Projects\BBS Core\Final Analysis
-
 
 #### ---- Plotting GLMs ---- ####
 # Making pdf of ranges for each focal spp
