@@ -39,18 +39,18 @@ subfocalspecies = unique(occuenv$Species)
 for (sp in 1:length(subfocalspecies)){
   temp = subset(occuenv,occuenv$Species == subfocalspecies[sp])
   
-  competition <- lm(temp$occ_logit ~  temp$comp_scaled) 
+  competition <- lm(temp$occ_logit ~  temp$all_comp_scaled)  # changes between main and all comps
   # z scores separated out for env effects (as opposed to multivariate variable)
   env_z = lm(temp$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   # z scores separated out for env effects
-  both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
+  both_z = lm(temp$occ_logit ~  temp$all_comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
   
   # abundance, not temp occ - same results?
-  competition_abun <- lm(temp$FocalAbundance ~  temp$comp_scaled) 
+  competition_abun <- lm(temp$FocalAbundance ~  temp$all_comp_scaled) 
   # z scores separated out for env effects - abundance
   env_abun = lm(temp$FocalAbundance ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   # z scores separated out for env effects - abundance
-  both_abun = lm(temp$FocalAbundance ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
+  both_abun = lm(temp$FocalAbundance ~  all_comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   
   #variance_partitioning 
   ENV = summary(both_z)$r.squared - summary(competition)$r.squared #env only
@@ -123,7 +123,7 @@ names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competitio
 # and # of sites birds were not found from original bbs data
 # occumatrix = merge(temp_occ, occuenv, by.x=c("Aou", "stateroute"),by.y=c("Species", "stateroute"))
 occumatrix=occuenv
-occumatrix$c_s = scale(occumatrix$comp_scaled, scale = T, center = T)
+occumatrix$c_s = scale(occumatrix$all_comp_scaled, scale = T, center = T)
 occumatrix$abTemp=abs(occumatrix$zTemp)
 occumatrix$abElev=abs(occumatrix$zElev)
 occumatrix$abPrecip=abs(occumatrix$zPrecip)
@@ -297,8 +297,7 @@ total_traits = lm(logit(edgeval) ~ Trophic.Group + migclass + EW, data = env_sum
 summary(total_traits)
 
 # R2 plot - lm in ggplot
-#envoutputa = read.csv("envoutputa.csv", header = TRUE)
-#names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
+# X = occupancy, Y = abundance
 R2plot = merge(envoutput, envoutputa, by = "FocalAOU")
 
 tomerge = c()
@@ -311,6 +310,9 @@ for (s in subfocalspecies) {
 }
 tomerge = data.frame(tomerge)
 names(tomerge) = c("FocalAOU","Total.x", "Total.y")
+R2plot2$violin_env = R2plot2$ENV.x + R2plot2$SHARED.x
+R2plot2$violin_comp = R2plot2$COMP.x + R2plot2$SHARED.x
+R2plot2$violin_total = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 
 # R2 plot
 R2plot2 = merge(R2plot, tomerge, by = "FocalAOU")
@@ -327,13 +329,13 @@ ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.png")
 
 
 # R2 plot - glm violin plots
-total = ggplot(R2plot2, aes(x = FocalAOU, y = Total.x)) + geom_violin(lwd = 2, fill = "grey", color = "grey") + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
+total = ggplot(R2plot2, aes(x = FocalAOU, y = violin_total)) + geom_violin(lwd = 2, fill = "grey", color = "grey") + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
 ggsave("C:/Git/Biotic-Interactions/Figures/totalvio.png")
 
-comp = ggplot(R2plot2, aes(x = FocalAOU, y = COMP.x)) + geom_violin(lwd = 2, fill = "#dd1c77", color = "#dd1c77") + xlab("Competition") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) +scale_y_continuous(limits = c(0, 1))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
+comp = ggplot(R2plot2, aes(x = FocalAOU, y = violin_comp)) + geom_violin(lwd = 2, fill = "#dd1c77", color = "#dd1c77") + xlab("Competition") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) +scale_y_continuous(limits = c(0, 1))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25))
 ggsave("C:/Git/Biotic-Interactions/Figures/compvio.png")
 
-env = ggplot(R2plot2, aes(x = FocalAOU, y = ENV.x)) + geom_violin(lwd = 2, fill = "#2ca25f", color = "#2ca25f") + xlab("Environment") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30),legend.title=element_text(size=12), legend.text=element_text(size=12)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25)) +scale_y_continuous(limits = c(0, 1))
+env = ggplot(R2plot2, aes(x = FocalAOU, y = violin_env)) + geom_violin(lwd = 2, fill = "#2ca25f", color = "#2ca25f") + xlab("Environment") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30),legend.title=element_text(size=12), legend.text=element_text(size=12)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25)) +scale_y_continuous(limits = c(0, 1))
 ggsave("C:/Git/Biotic-Interactions/Figures/envvio.png")
 
 plot_grid(total,
@@ -352,11 +354,14 @@ par(mfrow = c(3, 4))
 # Plotting basic lms to understand relationships
 for(sp in subfocalspecies){ 
   print(sp)
-  psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
-                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
+  psub = occuenv[occuenv$Species == sp,]
+  competition <- lm(psub$occ_logit ~  psub$comp_scaled) 
+  # z scores separated out for env effects (as opposed to multivariate variable)
+  env_z = lm(psub$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = psub)
+  # z scores separated out for env effects
+  both_z = lm(psub$occ_logit ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = psub)
   
-  tes = ggplot(data = psub, aes(x = zPrecip, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
+  tes = ggplot(data = psub, aes(x =  psub$comp_scaled, y = psub$occ_logit)) +stat_smooth(data=env_z, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
   plot(tes)
 }
 dev.off()
@@ -365,17 +370,16 @@ pdf('Figures/allspp_Reg.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
 # Plotting basic lms to understand relationships
 for(sp in subfocalspecies){ 
-  print(sp)
   psub = occumatrix[occumatrix$Species == sp,]
   glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
                               abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
   
-  tes = ggplot(data = psub, aes(x = zTemp, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +xlab(psub$Species) +theme_bw()
+  tes = ggplot(data = psub, aes(x = zTemp, y = FocalOcc)) +stat_smooth(method = "lm", lwd = 1.5,se = FALSE) +xlab(psub$Species) +ylim(0,1) +theme_bw()
   plot(tes)
 }
 dev.off()
 # Making pdf of ranges for each focal spp
-pdf('GLM_Reg.pdf', height = 8, width = 10)
+pdf('rangmaps.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
 # Plotting basic lms to understand relationships
 for(sp in subfocalspecies){ 

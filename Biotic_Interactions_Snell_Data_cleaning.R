@@ -133,9 +133,6 @@ routes = unique(temp_occ$stateroute)
 #### ---- Gathering Occupancy and Abundance Data for Biotic Comparisons ---- ####
 focal_and_comp_species = unique(c(new_spec_weights$focalAOU, new_spec_weights$CompAOU))
 
-# need to change winter wren AOU to 7222 from 7220 in bbs_pool
-bbs$Aou[bbs$Aou == 7220] <- 7222
-
 # pooling BBS mean abundance by AOU/stateroute and by year  
 bbs_pool = bbs %>% 
   group_by(stateroute, Aou) %>% 
