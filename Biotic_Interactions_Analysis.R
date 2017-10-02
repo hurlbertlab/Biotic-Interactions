@@ -141,9 +141,9 @@ glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s +
 summary(glm_occ_rand_site)                                    
 
 #### new fig 1 ####
-fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point() + geom_jitter(width = 0, height = 0.02) +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = median(occuenv$FocalOcc), lwd = 1.25, col = "dark gray")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1.25, col = "dark gray") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
+fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point() + geom_jitter(width = 0, height = 0.02) +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = median(occuenv$FocalOcc), lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
 ggExtra::ggMarginal(fig1 , type = "histogram", fill = "dark gray")
-ggsave("C:/Git/Biotic-Interactions/Figures/fig1.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/fig1.pdf")
 
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
@@ -265,7 +265,7 @@ envflip$value = abs(envflip$value)
 t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE", "SHARED","ENV","COMP")))) + 
   geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","yellow3","#2ca25f","#dd1c77"), labels=c("","Shared Variance", "Environment", "Competition")) +theme(axis.title.x=element_text(size=20),axis.title.y=element_text(size=20, angle=90),legend.title=element_blank(), legend.text=element_text(size=30), legend.position = c(0.5, 0.7),legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+  scale_fill_manual(values=c("white","yellow3","#2ca25f","#dd1c77"), labels=c("","Shared Variance", "Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=60), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 2, keyheight = 2),title=""))
 
 tt = t + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks()(0:1))
 
@@ -318,15 +318,24 @@ R2plot2$violin_env = R2plot2$ENV.x + R2plot2$SHARED.x
 R2plot2$violin_comp = R2plot2$COMP.x + R2plot2$SHARED.x
 R2plot2$violin_total = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 
-ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=35),axis.title.y=element_text(size=35, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24) + geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1) + geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "dark gray", cex =5, stroke = 1) +geom_abline(intercept = 0, slope = 1, col = "red", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=2))
-ggsave("C:/Git/Biotic-Interactions/Figures/occvabun.png")
-
 # need to change the slopes
-ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") +
+r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") +
       geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash") +
       geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "dark gray", cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash") +
       geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))
 ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.png")
+
+R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
+R2plot2$abundiff = R2plot2$COMP.y - R2plot2$ENV.y
+
+r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "dashed") + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "dashed")+ theme(axis.title.x=element_text(size=26),axis.title.y=element_blank()) + xlab("Occupancy R2") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))
+
+p2 = plot_grid(r1 + theme(legend.position="none"),
+               r2 + theme(legend.position="none"), 
+               labels = c("A","B"),
+               align = 'vh', rel_widths = c(1, 1))
+ggsave("C:/Git/Biotic-Interactions/Figures/Figure4A_B.pdf")
+
 
 # r2 plot for main vs all competitors
 envmain = read.csv("data/envoutput.csv", header = TRUE)
