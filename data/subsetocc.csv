@@ -1,145 +1,145 @@
-"AOU","CommonName","Route.Expected","X10yr.Prop","migclass","Foraging","Trophic.Group"
-2881,"Gray Partridge",168,0.304,"resid","ground glean","granivore"
-2920,"Mountain Quail",36,0.444,"resid","ground glean","granivore"
-3000,"Ruffed Grouse",375,0.403,"resid","ground glean","omnivore"
-3091,"Ring-necked Pheasant",383,0.679,"resid","ground glean","omnivore"
-3100,"Wild Turkey",419,0.699,"resid","ground glean","omnivore"
-3120,"Band-tailed Pigeon",103,0.485,"neotrop","foliage glean","granivore"
-3210,"Inca Dove",38,0.605,"resid","ground glean","granivore"
-3850,"Greater Roadrunner",79,0.684,"resid","ground glean","insectivore"
-3880,"Black-billed Cuckoo",505,0.539,"neotrop","foliage glean","insectivore"
-4021,"Red-naped Sapsucker",99,0.465,"short","bark glean","insectivore"
-4030,"Red-breasted Sapsucker",53,0.679,"short","bark glean","insectivore"
-4060,"Red-headed Woodpecker",534,0.635,"short","bark glean","omnivore"
-4070,"Acorn Woodpecker",29,0.552,"resid","bark glean","omnivore"
-4240,"Vaux's Swift",82,0.415,"neotrop","aerial foraging","insectivore"
-4290,"Black-chinned Hummingbird",112,0.384,"neotrop","hover/glean","nectarivore"
-4310,"Anna's Hummingbird",42,0.548,"resid","hover/glean","nectarivore"
-4320,"Broad-tailed Hummingbird",26,0.692,"neotrop","hover/glean","nectarivore"
-4330,"Rufous Hummingbird",81,0.63,"neotrop","hover/glean","nectarivore"
-4360,"Calliope Hummingbird",82,0.341,"neotrop","hover/glean","nectarivore"
-4480,"Cassin's Kingbird",21,0.667,"neotrop","hawks","insectivore"
-4530,"Brown-crested Flycatcher",16,0.688,"short","hover/glean","insectivore"
-4540,"Ash-throated Flycatcher",133,0.669,"neotrop","hover/glean","insectivore"
-4570,"Say's Phoebe",223,0.583,"short","hawks","insectivore"
-4580,"Black Phoebe",35,0.629,"resid","hawks","insectivore"
-4590,"Olive-sided Flycatcher",401,0.397,"neotrop","hawks","insectivore"
-4640,"Cordilleran Flycatcher",99,0.343,"neotrop","hawks","insectivore"
-4650,"Acadian Flycatcher",400,0.66,"neotrop","hawks","insectivore"
-4660,"Willow Flycatcher",628,0.527,"neotrop","hawks","insectivore"
-4661,"Alder Flycatcher",285,0.674,"neotrop","hawks","insectivore"
-4680,"Hammond's Flycatcher",142,0.465,"neotrop","hawks","insectivore"
-4690,"Dusky Flycatcher",152,0.513,"neotrop","hawks","insectivore"
-4691,"Gray Flycatcher",61,0.459,"neotrop","hawks","insectivore"
-4710,"Vermilion Flycatcher",26,0.462,"neotrop","hawks","insectivore"
-4740,"Horned Lark",657,0.574,"short","ground glean","granivore"
-4760,"Yellow-billed Magpie",12,0.583,"resid","ground glean","omnivore"
-4780,"Steller's Jay",150,0.593,"resid","ground glean","omnivore"
-4810,"Western Scrub-Jay",104,0.548,"resid","ground glean","omnivore"
-4840,"Gray Jay",115,0.513,"resid","ground glean","omnivore"
-4870,"Chihuahuan Raven",32,0.625,"resid","ground glean","omnivore"
-4890,"Northwestern Crow",15,0.6,"resid","ground glean","omnivore"
-4910,"Clark's Nutcracker",129,0.372,"resid","foliage glean","omnivore"
-4920,"Pinyon Jay",87,0.402,"resid","ground glean","omnivore"
-4970,"Yellow-headed Blackbird",247,0.518,"neotrop","ground glean","insectivore"
-5040,"Scott's Oriole",48,0.563,"neotrop","foliage glean","insct/om"
-5050,"Hooded Oriole",31,0.516,"neotrop","foliage glean","insct/om"
-5120,"Great-tailed Grackle",110,0.455,"resid","ground glean","omnivore"
-5140,"Evening Grosbeak",219,0.575,"short","ground glean","insct/om"
-5180,"Cassin's Finch",96,0.615,"short","ground glean","granivore"
-5210,"Red Crossbill",270,0.4,"short","foliage glean","granivore"
-5220,"White-winged Crossbill",149,0.315,"short","foliage glean","granivore"
-5300,"Lesser Goldfinch",117,0.632,"short","foliage glean","granivore"
-5330,"Pine Siskin",274,0.617,"short","foliage glean","granivore"
-5380,"Chestnut-collared Longspur",24,0.458,"short","ground glean","insct/om"
-5400,"Vesper Sparrow",543,0.608,"short","ground glean","insct/om"
-5450,"Baird's Sparrow",37,0.405,"neotrop","ground glean","insct/om"
-5460,"Grasshopper Sparrow",518,0.627,"neotrop","ground glean","insct/om"
-5480,"Le Conte's Sparrow",70,0.514,"short","ground glean","insct/om"
-5491,"Nelson's Sharp-tailed Sparrow",39,0.462,"short","ground glean","insct/om"
-5520,"Lark Sparrow",332,0.614,"neotrop","ground glean","insct/om"
-5540,"White-crowned Sparrow",121,0.521,"short","ground glean","insct/om"
-5570,"Golden-crowned Sparrow",15,0.467,"short","ground glean","insct/om"
-5620,"Brewer's Sparrow",165,0.6,"neotrop","ground glean","insct/om"
-5650,"Black-chinned Sparrow",26,0.308,"short","ground glean","insct/om"
-5677,"Dark-eyed Junco",344,0.605,"short","ground glean","insct/om"
-5730,"Black-throated Sparrow",89,0.607,"short","ground glean","insct/om"
-5740,"Sage Sparrow",65,0.538,"short","ground glean","insct/om"
-5800,"Rufous-crowned Sparrow",31,0.645,"resid","ground glean","insct/om"
-5830,"Lincoln's Sparrow",171,0.532,"neotrop","ground glean","insct/om"
-5840,"Swamp Sparrow",331,0.556,"short","ground glean","insct/om"
-5850,"Fox Sparrow",160,0.394,"short","ground glean","insct/om"
-5880,"Spotted Towhee",196,0.699,"short","ground glean","insct/om"
-5900,"Green-tailed Towhee",109,0.56,"neotrop","ground glean","insct/om"
-5911,"California Towhee",26,0.654,"resid","ground glean","insct/om"
-5940,"Pyrrhuloxia",29,0.655,"resid","ground glean","insct/om"
-5990,"Lazuli Bunting",166,0.669,"neotrop","ground glean","insct/om"
-6050,"Lark Bunting",67,0.612,"neotrop","ground glean","insct/om"
-6090,"Hepatic Tanager",18,0.389,"neotrop","foliage glean","insct/om"
-6150,"Violet-green Swallow",229,0.677,"neotrop","aerial foraging","insectivore"
-6160,"Bank Swallow",522,0.502,"neotrop","aerial foraging","insectivore"
-6200,"Phainopepla",25,0.68,"neotrop","foliage glean","frugivore"
-6220,"Loggerhead Shrike",599,0.467,"short","swoops","insectivore"
-6260,"Philadelphia Vireo",83,0.313,"neotrop","hover/glean","insectivore"
-6291,"Plumbeous Vireo",51,0.529,"neotrop","foliage glean","insectivore"
-6292,"Cassin's Vireo",99,0.667,"neotrop","foliage glean","insectivore"
-6320,"Hutton's Vireo",45,0.556,"resid","foliage glean","insectivore"
-6330,"Bell's Vireo",142,0.437,"neotrop","foliage glean","insectivore"
-6360,"Black-and-white Warbler",400,0.683,"neotrop","bark glean","insectivore"
-6370,"Prothonotary Warbler",298,0.386,"neotrop","bark glean","insectivore"
-6380,"Swainson's Warbler",121,0.322,"neotrop","ground glean","insectivore"
-6390,"Worm-eating Warbler",284,0.475,"neotrop","foliage glean","insectivore"
-6410,"Blue-winged Warbler",308,0.461,"neotrop","foliage glean","insectivore"
-6430,"Lucy's Warbler",16,0.625,"short","foliage glean","insectivore"
-6440,"Virginia's Warbler",21,0.476,"neotrop","ground glean","insectivore"
-6450,"Nashville Warbler",205,0.644,"neotrop","foliage glean","insectivore"
-6460,"Orange-crowned Warbler",181,0.58,"neotrop","foliage glean","insectivore"
-6470,"Tennessee Warbler",65,0.615,"neotrop","foliage glean","insectivore"
-6500,"Cape May Warbler",59,0.475,"neotrop","foliage glean","insectivore"
-6540,"Black-throated Blue Warbler",136,0.654,"neotrop","hover/glean","insectivore"
-6570,"Magnolia Warbler",156,0.692,"neotrop","hover/glean","insectivore"
-6600,"Bay-breasted Warbler",48,0.458,"neotrop","foliage glean","insectivore"
-6610,"Blackpoll Warbler",45,0.556,"neotrop","foliage glean","insectivore"
-6620,"Blackburnian Warbler",188,0.596,"neotrop","foliage glean","insct/om"
-6630,"Yellow-throated Warbler",269,0.528,"neotrop","bark glean","insectivore"
-6650,"Black-throated Gray Warbler",113,0.469,"neotrop","foliage glean","insectivore"
-6690,"Hermit Warbler",37,0.486,"neotrop","foliage glean","insectivore"
-6720,"Palm Warbler",46,0.348,"neotrop","ground glean","insectivore"
-6750,"Northern Waterthrush",236,0.538,"neotrop","ground glean","insectivore"
-6760,"Louisiana Waterthrush",376,0.516,"neotrop","ground glean","insectivore"
-6770,"Kentucky Warbler",293,0.696,"neotrop","ground glean","insectivore"
-6780,"Connecticut Warbler",36,0.389,"neotrop","ground glean","insectivore"
-6790,"Mourning Warbler",161,0.696,"neotrop","foliage glean","insectivore"
-6800,"MacGillivray's Warbler",150,0.54,"neotrop","foliage glean","insectivore"
-6830,"Yellow-breasted Chat",515,0.682,"neotrop","foliage glean","insct/om"
-6840,"Hooded Warbler",335,0.603,"neotrop","foliage glean","insectivore"
-6860,"Canada Warbler",159,0.604,"neotrop","hover/glean","insectivore"
-6870,"American Redstart",511,0.62,"neotrop","hover/glean","insectivore"
-6900,"Red-faced Warbler",12,0.333,"neotrop","foliage glean","insectivore"
-7000,"Sprague's Pipit",41,0.439,"short","ground glean","insectivore"
-7020,"Sage Thrasher",117,0.573,"short","ground glean","insectivore"
-7030,"Northern Mockingbird",779,0.646,"resid","ground glean","insectivore"
-7080,"Bendire's Thrasher",27,0.407,"short","ground glean","insectivore"
-7100,"California Thrasher",16,0.5,"resid","ground glean","insectivore"
-7150,"Rock Wren",208,0.649,"short","ground glean","insectivore"
-7190,"Bewick's Wren",140,0.664,"short","ground glean","insectivore"
-7222,"Winter Wren",280,0.589,"short","ground glean","insectivore"
-7240,"Sedge Wren",162,0.599,"short","ground glean","insectivore"
-7260,"Brown Creeper",373,0.399,"short","bark glean","insectivore"
-7280,"Red-breasted Nuthatch",354,0.658,"short","bark glean","insectivore"
-7331,"Juniper Titmouse",53,0.377,"resid","foliage glean","insct/om"
-7380,"Mountain Chickadee",139,0.547,"resid","foliage glean","insectivore"
-7400,"Boreal Chickadee",84,0.512,"resid","foliage glean","insectivore"
-7410,"Chestnut-backed Chickadee",64,0.531,"resid","foliage glean","insectivore"
-7420,"Wrentit",22,0.636,"resid","foliage glean","insectivore"
-7430,"Bushtit",93,0.505,"resid","foliage glean","insectivore"
-7480,"Golden-crowned Kinglet",307,0.463,"short","foliage glean","insectivore"
-7490,"Ruby-crowned Kinglet",249,0.454,"short","foliage glean","insectivore"
-7520,"Black-tailed Gnatcatcher",20,0.65,"resid","foliage glean","insectivore"
-7540,"Townsend's Solitaire",136,0.434,"short","hawks","insectivore"
-7580,"Swainson's Thrush",193,0.684,"neotrop","foliage glean","insectivore"
-7590,"Hermit Thrush",350,0.657,"short","ground glean","insectivore"
-7630,"Varied Thrush",91,0.648,"short","ground glean","insct/om"
-7670,"Western Bluebird",92,0.435,"short","hawks","insectivore"
-7680,"Mountain Bluebird",185,0.649,"short","swoops","insectivore"
-7221,"Pacific Wren",280,0.589,"short","ground glean","insectivore"
+"AOU","CommonName","Route.Expected","X10yr.Prop","migclass","Foraging","Trophic.Group","log_Brange_Area"
+2881,"Gray Partridge",168,0.304,"resid","ground glean","granivore",6.440889197
+2920,"Mountain Quail",36,0.444,"resid","ground glean","granivore",5.53863617
+3000,"Ruffed Grouse",375,0.403,"resid","ground glean","omnivore",6.903026706
+3091,"Ring-necked Pheasant",383,0.679,"resid","ground glean","omnivore",6.652316646
+3100,"Wild Turkey",419,0.699,"resid","ground glean","omnivore",6.60202649
+3120,"Band-tailed Pigeon",103,0.485,"neotrop","foliage glean","granivore",6.52015992
+3210,"Inca Dove",38,0.605,"resid","ground glean","granivore",6.467369336
+3850,"Greater Roadrunner",79,0.684,"resid","ground glean","insectivore",6.467242747
+3880,"Black-billed Cuckoo",505,0.539,"neotrop","foliage glean","insectivore",6.693372702
+4021,"Red-naped Sapsucker",99,0.465,"short","bark glean","insectivore",6.316427802
+4030,"Red-breasted Sapsucker",53,0.679,"short","bark glean","insectivore",5.998626495
+4060,"Red-headed Woodpecker",534,0.635,"short","bark glean","omnivore",6.71522306
+4070,"Acorn Woodpecker",29,0.552,"resid","bark glean","omnivore",6.166704463
+4240,"Vaux's Swift",82,0.415,"neotrop","aerial foraging","insectivore",6.346738847
+4290,"Black-chinned Hummingbird",112,0.384,"neotrop","hover/glean","nectarivore",6.374436404
+4310,"Anna's Hummingbird",42,0.548,"resid","hover/glean","nectarivore",5.692732742
+4320,"Broad-tailed Hummingbird",26,0.692,"neotrop","hover/glean","nectarivore",5.842692421
+4330,"Rufous Hummingbird",81,0.63,"neotrop","hover/glean","nectarivore",6.182262953
+4360,"Calliope Hummingbird",82,0.341,"neotrop","hover/glean","nectarivore",6.079417469
+4480,"Cassin's Kingbird",21,0.667,"neotrop","hawks","insectivore",6.160252724
+4530,"Brown-crested Flycatcher",16,0.688,"short","hover/glean","insectivore",7.017230534
+4540,"Ash-throated Flycatcher",133,0.669,"neotrop","hover/glean","insectivore",6.544142918
+4570,"Say's Phoebe",223,0.583,"short","hawks","insectivore",6.856367048
+4580,"Black Phoebe",35,0.629,"resid","hawks","insectivore",6.47346413
+4590,"Olive-sided Flycatcher",401,0.397,"neotrop","hawks","insectivore",6.998948705
+4640,"Cordilleran Flycatcher",99,0.343,"neotrop","hawks","insectivore",6.371067055
+4650,"Acadian Flycatcher",400,0.66,"neotrop","hawks","insectivore",6.477891249
+4660,"Willow Flycatcher",628,0.527,"neotrop","hawks","insectivore",6.862783637
+4661,"Alder Flycatcher",285,0.674,"neotrop","hawks","insectivore",6.850116526
+4680,"Hammond's Flycatcher",142,0.465,"neotrop","hawks","insectivore",6.439928424
+4690,"Dusky Flycatcher",152,0.513,"neotrop","hawks","insectivore",6.427423181
+4691,"Gray Flycatcher",61,0.459,"neotrop","hawks","insectivore",6.060036118
+4710,"Vermilion Flycatcher",26,0.462,"neotrop","hawks","insectivore",6.849407576
+4740,"Horned Lark",657,0.574,"short","ground glean","granivore",7.194039673
+4760,"Yellow-billed Magpie",12,0.583,"resid","ground glean","omnivore",4.921299614
+4780,"Steller's Jay",150,0.593,"resid","ground glean","omnivore",6.491558247
+4810,"Western Scrub-Jay",104,0.548,"resid","ground glean","omnivore",6.358636093
+4840,"Gray Jay",115,0.513,"resid","ground glean","omnivore",6.86147549
+4870,"Chihuahuan Raven",32,0.625,"resid","ground glean","omnivore",6.139331144
+4890,"Northwestern Crow",15,0.6,"resid","ground glean","omnivore",5.596868705
+4910,"Clark's Nutcracker",129,0.372,"resid","foliage glean","omnivore",6.352165907
+4920,"Pinyon Jay",87,0.402,"resid","ground glean","omnivore",6.203662099
+4970,"Yellow-headed Blackbird",247,0.518,"neotrop","ground glean","insectivore",6.676374585
+5040,"Scott's Oriole",48,0.563,"neotrop","foliage glean","insct/om",6.340021562
+5050,"Hooded Oriole",31,0.516,"neotrop","foliage glean","insct/om",6.052461156
+5120,"Great-tailed Grackle",110,0.455,"resid","ground glean","omnivore",6.69999667
+5140,"Evening Grosbeak",219,0.575,"short","ground glean","insct/om",6.594663489
+5180,"Cassin's Finch",96,0.615,"short","ground glean","granivore",6.175975296
+5210,"Red Crossbill",270,0.4,"short","foliage glean","granivore",6.828679197
+5220,"White-winged Crossbill",149,0.315,"short","foliage glean","granivore",6.905274705
+5300,"Lesser Goldfinch",117,0.632,"short","foliage glean","granivore",6.595872242
+5330,"Pine Siskin",274,0.617,"short","foliage glean","granivore",6.891129782
+5380,"Chestnut-collared Longspur",24,0.458,"short","ground glean","insct/om",5.901321532
+5400,"Vesper Sparrow",543,0.608,"short","ground glean","insct/om",6.867838277
+5450,"Baird's Sparrow",37,0.405,"neotrop","ground glean","insct/om",6.066561222
+5460,"Grasshopper Sparrow",518,0.627,"neotrop","ground glean","insct/om",6.717017952
+5480,"Le Conte's Sparrow",70,0.514,"short","ground glean","insct/om",6.455800294
+5491,"Nelson's Sharp-tailed Sparrow",39,0.462,"short","ground glean","insct/om",6.126848583
+5520,"Lark Sparrow",332,0.614,"neotrop","ground glean","insct/om",6.748255621
+5540,"White-crowned Sparrow",121,0.521,"short","ground glean","insct/om",6.865021326
+5570,"Golden-crowned Sparrow",15,0.467,"short","ground glean","insct/om",6.22169474
+5620,"Brewer's Sparrow",165,0.6,"neotrop","ground glean","insct/om",6.508100061
+5650,"Black-chinned Sparrow",26,0.308,"short","ground glean","insct/om",5.906353821
+5677,"Dark-eyed Junco",344,0.605,"short","ground glean","insct/om",7.005553568
+5730,"Black-throated Sparrow",89,0.607,"short","ground glean","insct/om",6.453255803
+5740,"Sage Sparrow",65,0.538,"short","ground glean","insct/om",6.036842973
+5800,"Rufous-crowned Sparrow",31,0.645,"resid","ground glean","insct/om",6.074302079
+5830,"Lincoln's Sparrow",171,0.532,"neotrop","ground glean","insct/om",6.877219385
+5840,"Swamp Sparrow",331,0.556,"short","ground glean","insct/om",6.778985833
+5850,"Fox Sparrow",160,0.394,"short","ground glean","insct/om",6.875780099
+5880,"Spotted Towhee",196,0.699,"short","ground glean","insct/om",6.549208642
+5900,"Green-tailed Towhee",109,0.56,"neotrop","ground glean","insct/om",6.239474707
+5911,"California Towhee",26,0.654,"resid","ground glean","insct/om",5.594074344
+5940,"Pyrrhuloxia",29,0.655,"resid","ground glean","insct/om",6.182306002
+5990,"Lazuli Bunting",166,0.669,"neotrop","ground glean","insct/om",6.450133951
+6050,"Lark Bunting",67,0.612,"neotrop","ground glean","insct/om",6.261485459
+6090,"Hepatic Tanager",18,0.389,"neotrop","foliage glean","insct/om",6.044875987
+6150,"Violet-green Swallow",229,0.677,"neotrop","aerial foraging","insectivore",6.784798723
+6160,"Bank Swallow",522,0.502,"neotrop","aerial foraging","insectivore",7.020101466
+6200,"Phainopepla",25,0.68,"neotrop","foliage glean","frugivore",6.097551195
+6220,"Loggerhead Shrike",599,0.467,"short","swoops","insectivore",6.947258737
+6260,"Philadelphia Vireo",83,0.313,"neotrop","hover/glean","insectivore",6.437755332
+6291,"Plumbeous Vireo",51,0.529,"neotrop","foliage glean","insectivore",6.112062536
+6292,"Cassin's Vireo",99,0.667,"neotrop","foliage glean","insectivore",6.149856725
+6320,"Hutton's Vireo",45,0.556,"resid","foliage glean","insectivore",6.084911406
+6330,"Bell's Vireo",142,0.437,"neotrop","foliage glean","insectivore",6.421094219
+6360,"Black-and-white Warbler",400,0.683,"neotrop","bark glean","insectivore",6.730107633
+6370,"Prothonotary Warbler",298,0.386,"neotrop","bark glean","insectivore",6.336978774
+6380,"Swainson's Warbler",121,0.322,"neotrop","ground glean","insectivore",6.058111969
+6390,"Worm-eating Warbler",284,0.475,"neotrop","foliage glean","insectivore",6.244001418
+6410,"Blue-winged Warbler",308,0.461,"neotrop","foliage glean","insectivore",6.251148041
+6430,"Lucy's Warbler",16,0.625,"short","foliage glean","insectivore",5.592746254
+6440,"Virginia's Warbler",21,0.476,"neotrop","ground glean","insectivore",5.448470672
+6450,"Nashville Warbler",205,0.644,"neotrop","foliage glean","insectivore",6.441635588
+6460,"Orange-crowned Warbler",181,0.58,"neotrop","foliage glean","insectivore",6.872268969
+6470,"Tennessee Warbler",65,0.615,"neotrop","foliage glean","insectivore",6.677389418
+6500,"Cape May Warbler",59,0.475,"neotrop","foliage glean","insectivore",6.409089329
+6540,"Black-throated Blue Warbler",136,0.654,"neotrop","hover/glean","insectivore",6.058942178
+6570,"Magnolia Warbler",156,0.692,"neotrop","hover/glean","insectivore",6.562045073
+6600,"Bay-breasted Warbler",48,0.458,"neotrop","foliage glean","insectivore",6.420967752
+6610,"Blackpoll Warbler",45,0.556,"neotrop","foliage glean","insectivore",6.800683281
+6620,"Blackburnian Warbler",188,0.596,"neotrop","foliage glean","insct/om",6.305649068
+6630,"Yellow-throated Warbler",269,0.528,"neotrop","bark glean","insectivore",6.285387663
+6650,"Black-throated Gray Warbler",113,0.469,"neotrop","foliage glean","insectivore",6.253397575
+6690,"Hermit Warbler",37,0.486,"neotrop","foliage glean","insectivore",5.525204091
+6720,"Palm Warbler",46,0.348,"neotrop","ground glean","insectivore",6.526896414
+6750,"Northern Waterthrush",236,0.538,"neotrop","ground glean","insectivore",6.879108147
+6760,"Louisiana Waterthrush",376,0.516,"neotrop","ground glean","insectivore",6.38207285
+6770,"Kentucky Warbler",293,0.696,"neotrop","ground glean","insectivore",6.294399909
+6780,"Connecticut Warbler",36,0.389,"neotrop","ground glean","insectivore",6.071364539
+6790,"Mourning Warbler",161,0.696,"neotrop","foliage glean","insectivore",6.431493274
+6800,"MacGillivray's Warbler",150,0.54,"neotrop","foliage glean","insectivore",6.420226904
+6830,"Yellow-breasted Chat",515,0.682,"neotrop","foliage glean","insct/om",6.7887435
+6840,"Hooded Warbler",335,0.603,"neotrop","foliage glean","insectivore",6.302559614
+6860,"Canada Warbler",159,0.604,"neotrop","hover/glean","insectivore",6.44081002
+6870,"American Redstart",511,0.62,"neotrop","hover/glean","insectivore",6.823346534
+6900,"Red-faced Warbler",12,0.333,"neotrop","foliage glean","insectivore",5.595267068
+7000,"Sprague's Pipit",41,0.439,"short","ground glean","insectivore",6.063598243
+7020,"Sage Thrasher",117,0.573,"short","ground glean","insectivore",6.243609908
+7030,"Northern Mockingbird",779,0.646,"resid","ground glean","insectivore",7.006082085
+7080,"Bendire's Thrasher",27,0.407,"short","ground glean","insectivore",5.88929034
+7100,"California Thrasher",16,0.5,"resid","ground glean","insectivore",5.223522804
+7150,"Rock Wren",208,0.649,"short","ground glean","insectivore",6.734154841
+7190,"Bewick's Wren",140,0.664,"short","ground glean","insectivore",6.518923403
+7222,"Winter Wren",280,0.589,"short","ground glean","insectivore",6.711282089
+7240,"Sedge Wren",162,0.599,"short","ground glean","insectivore",6.819175214
+7260,"Brown Creeper",373,0.399,"short","bark glean","insectivore",6.814916501
+7280,"Red-breasted Nuthatch",354,0.658,"short","bark glean","insectivore",6.852614261
+7331,"Juniper Titmouse",53,0.377,"resid","foliage glean","insct/om",6.025559778
+7380,"Mountain Chickadee",139,0.547,"resid","foliage glean","insectivore",6.429831151
+7400,"Boreal Chickadee",84,0.512,"resid","foliage glean","insectivore",6.849343119
+7410,"Chestnut-backed Chickadee",64,0.531,"resid","foliage glean","insectivore",5.980027894
+7420,"Wrentit",22,0.636,"resid","foliage glean","insectivore",5.418487842
+7430,"Bushtit",93,0.505,"resid","foliage glean","insectivore",6.334786229
+7480,"Golden-crowned Kinglet",307,0.463,"short","foliage glean","insectivore",6.796179824
+7490,"Ruby-crowned Kinglet",249,0.454,"short","foliage glean","insectivore",6.965023605
+7520,"Black-tailed Gnatcatcher",20,0.65,"resid","foliage glean","insectivore",6.044875921
+7540,"Townsend's Solitaire",136,0.434,"short","hawks","insectivore",6.552232205
+7580,"Swainson's Thrush",193,0.684,"neotrop","foliage glean","insectivore",6.876903667
+7590,"Hermit Thrush",350,0.657,"short","ground glean","insectivore",6.921957388
+7630,"Varied Thrush",91,0.648,"short","ground glean","insct/om",6.518491494
+7670,"Western Bluebird",92,0.435,"short","hawks","insectivore",6.250359861
+7680,"Mountain Bluebird",185,0.649,"short","swoops","insectivore",6.639805378
+7221,"Pacific Wren",280,0.589,"short","ground glean","insectivore",6.711282

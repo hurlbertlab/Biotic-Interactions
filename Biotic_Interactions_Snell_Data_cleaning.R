@@ -135,9 +135,9 @@ focal_and_comp_species = unique(c(new_spec_weights$focalAOU, new_spec_weights$Co
 
 # pooling BBS mean abundance by AOU/stateroute and by year  
 bbs_pool = bbs %>% 
-  group_by(stateroute, Aou) %>% 
+  dplyr::group_by(stateroute, Aou) %>% 
   dplyr::summarize(abundance = mean(SpeciesTotal)) %>%
-  filter(Aou %in% focal_and_comp_species) 
+  dplyr::filter(Aou %in% focal_and_comp_species) 
 names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
 bbs_pool = data.frame(bbs_pool)
 
