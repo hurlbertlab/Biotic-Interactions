@@ -333,7 +333,7 @@ r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abli
 p2 = plot_grid(r1 + theme(legend.position="none"),
                r2 + theme(legend.position="none"), 
                labels = c("A","B"),
-               align = 'vh', rel_widths = c(1, 1))
+               align = 'h')
 ggsave("C:/Git/Biotic-Interactions/Figures/Figure4A_B.pdf")
 
 
