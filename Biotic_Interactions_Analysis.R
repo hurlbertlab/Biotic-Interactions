@@ -113,7 +113,7 @@ envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'Focal
 ### supp table goes here, just need to add main competitor!
 
 
-#write.csv(envoutputa, "envoutputa.csv", row.names = FALSE)
+#write.csv(envoutputa, "data/envoutputa.csv", row.names = FALSE)
 beta_lm = data.frame(beta_lm)
 names(beta_lm) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_Est", "EnvZ_P", "EnvZ_R2", "BothZ_Est", "BothZ_P", "BothZ_R2")
 beta_abun = data.frame(beta_abun)
