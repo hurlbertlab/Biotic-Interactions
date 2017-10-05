@@ -338,11 +338,19 @@ ggsave("C:/Git/Biotic-Interactions/Figures/Figure4A_B.pdf")
 
 
 # r2 plot for main vs all competitors
-envmain = read.csv("data/envoutput.csv", header = TRUE)
-mainvall = merge(envoutput, envmain, by = "FocalAOU")
+envall = read.csv("data/envoutput_all.csv", header = TRUE)
+mainvall = merge(envoutput, envall, by = "FocalAOU")
+mainvall$total.x = mainvall$ENV.x + mainvall$COMP.x + mainvall$SHARED.x
+mainvall$total.y = mainvall$ENV.y + mainvall$COMP.y + mainvall$SHARED.y
 
 ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") + geom_point(col = "#dd1c77", cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
+ggsave("C:/Git/Biotic-Interactions/Figures/mainvallcomp.pdf")
 
+ggplot(mainvall, aes(x = ENV.y, y = ENV.x)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") + geom_point(shape = 16, col = "#2ca25f", cex =4, stroke = 1)+geom_smooth(method='lm', se=FALSE, col="#2ca25f",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
+ggsave("C:/Git/Biotic-Interactions/Figures/mainvallenv.pdf")
+
+ggplot(mainvall, aes(x = total.y, y = total.x)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") + geom_point(shape = 3, col = "dark gray", cex =4, stroke = 1)+geom_smooth(method='lm', se=FALSE, col="dark gray",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
+ggsave("C:/Git/Biotic-Interactions/Figures/mainvalltotal.pdf")
 
 # R2 plot - glm violin plots
 R2violin = gather(R2plot2, "type", "Rval", 12:14)
