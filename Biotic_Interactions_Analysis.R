@@ -149,6 +149,10 @@ fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geo
 ggExtra::ggMarginal(fig1 , type = "histogram", fill = "dark gray")
 ggsave("C:/Git/Biotic-Interactions/Figures/fig1.pdf")
 
+occuenv_sub = subset(occuenv, Species == 6540|Species == 3880|Species == 4970|Species == 5210)
+
+fig1b = ggplot(data = occuenv_sub, aes(x = n, y = FocalAbundance))+ geom_point(aes(color = as.factor(occuenv_sub$Species)), lwd = 1.5) +ylim(0,50)
+  
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
 
@@ -301,6 +305,11 @@ env_sum$edgeval = (env_sum$value * (1 - 2*edge_adjust)) + edge_adjust
 total_traits = lm(logit(edgeval) ~ Trophic.Group + migclass + EW, data = env_sum)
 summary(total_traits)
 
+# anova of traits
+env_traits = lm(logit(value) ~ EW, data = env_lm)
+anova(env_traits)
+
+
 # R2 plot - lm in ggplot
 # X = occupancy, Y = abundance
 R2plot = merge(envoutput, envoutputa, by = "FocalAOU")
@@ -340,6 +349,12 @@ p2 = plot_grid(r1 + theme(legend.position="none"),
                align = 'h')
 ggsave("C:/Git/Biotic-Interactions/Figures/Figure4A_B.pdf")
 
+#### R2 plot - glm violin plots ####
+R2violin = gather(R2plot2, "type", "Rval", 12:14)
+
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Total Variance") + ylab("R2")+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey"), labels=c("Environment", "Competition", "Total Variance")) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+
+ggsave("C:/Git/Biotic-Interactions/Figures/violin_mains.png")
 
 # r2 plot for main vs all competitors
 envall = read.csv("data/envoutput_all.csv", header = TRUE)
@@ -351,24 +366,12 @@ ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) +geom_text(aes(label = mainvall$Fo
 ggsave("C:/Git/Biotic-Interactions/Figures/mainvallcomp.pdf")
 
 
+ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) + geom_point(col = mainvall, shape=16)+theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") +geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
+
 # + geom_point(col = "#dd1c77", cex =4, shape=24)
 
 foo = merge(mainvall, focal_competitor_table, by = "FocalAOU")
 foo$difference = foo$COMP.y - foo$COMP.x ### y = all competitors, x = occupancy
-
-ggplot(mainvall, aes(x = ENV.y, y = ENV.x)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") + geom_point(shape = 16, col = "#2ca25f", cex =4, stroke = 1)+geom_smooth(method='lm', se=FALSE, col="#2ca25f",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
-ggsave("C:/Git/Biotic-Interactions/Figures/mainvallenv.pdf")
-
-ggplot(mainvall, aes(x = total.y, y = total.x)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") + geom_point(shape = 3, col = "dark gray", cex =4, stroke = 1)+geom_smooth(method='lm', se=FALSE, col="dark gray",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
-ggsave("C:/Git/Biotic-Interactions/Figures/mainvalltotal.pdf")
-
-# R2 plot - glm violin plots
-R2violin = gather(R2plot2, "type", "Rval", 12:14)
-
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Total Variance") + ylab("R2")+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey"), labels=c("Environment", "Competition", "Total Variance")) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
-
-ggsave("C:/Git/Biotic-Interactions/Figures/violin_mains.png")
-
 #Coyle fig 1: Z:\Coyle\Projects\BBS Core\Final Analysis
 
 #### ---- Plotting GLMs ---- ####
