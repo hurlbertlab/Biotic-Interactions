@@ -149,9 +149,9 @@ fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geo
 ggExtra::ggMarginal(fig1 , type = "histogram", fill = "dark gray")
 ggsave("C:/Git/Biotic-Interactions/Figures/fig1.pdf")
 
-occuenv_sub = subset(occuenv, Species == 6540|Species == 3880|Species == 4970)
-occuenv_sub2 = subset(occuenv_sub, stateroute == 38028|stateroute == 72006|stateroute == 33221)
-fig1b = ggplot(data = occuenv_sub2, aes(x = n, y = FocalAbundance))+ geom_point(aes(color = as.factor(occuenv_sub2$Species)), lwd = 1.5) +ylim(0,50)
+bbs_sub3 = subset(bbs_abun, aou == 6540|aou == 3880|aou == 4970)
+bbs_sub4 = subset(bbs_sub3, stateroute == 38028|stateroute == 72006|stateroute == 33221)
+fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$aou)), lwd = 1.5) 
   
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
