@@ -25,13 +25,13 @@ bbs_sub1 = Years %>%
   dplyr::count(aou, stateroute) 
 
 bbs_sub1$occ = bbs_sub1$n/15 # new occupancy values calculated
-write.csv(bbs_sub1, "2001_2015_bbs_occupancy.csv", row.names=FALSE)
+write.csv(bbs_sub1, "data/2001_2015_bbs_occupancy.csv", row.names=FALSE)
 
 # Save bbs abundance data
 bbs_abun = Years %>% 
   filter(year > 2000, year < 2016, stateroute %in% good_rtes$stateroute) %>% 
   dplyr::select(year, stateroute, aou, speciestotal)
-write.csv(bbs_abun, "bbs_abun.csv", row.names=FALSE)
+write.csv(bbs_abun, "data/bbs_abun.csv", row.names=FALSE)
 
 # Save latlong data for bbs routes
 latlong_rtes = bbs_eco$breed_bird_survey_routes %>% 
@@ -39,7 +39,7 @@ latlong_rtes = bbs_eco$breed_bird_survey_routes %>%
   unique() %>%    
   group_by(statenum, route) 
 latlong_rtes$stateroute = latlong_rtes$statenum*1000 + latlong_rtes$route 
-write.csv(latlong_rtes, "latlong_rtes.csv", row.names=FALSE)
+write.csv(latlong_rtes, "data/latlong_rtes.csv", row.names=FALSE)
 
 
 # get occupancy by stop

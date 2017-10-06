@@ -13,6 +13,10 @@ subsetocc = read.csv('data/subsetocc.csv', header = T) # Hurlbert Lab
 tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 #update tax_code Winter Wren
 tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
+subsetocc$AOU[subsetocc$AOU == 4810] = 4812
+temp_occ$Aou[temp_occ$Aou == 4810] = 4812
+tax_code$AOU_OUT[tax_code$AOU_OUT == 4810] = 4812
+
 # rbind Pacific wren to data frame
 pacific = data.frame("Pacific Wren", 7221,  "PAWR")
 colnames(pacific) = c("PRIMARY_COM_NAME", "AOU_OUT" ,"ALPHA.CODE")
@@ -114,8 +118,8 @@ envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'Focal
 
 
 #write.csv(envoutputa, "data/envoutputa.csv", row.names = FALSE)
-beta_lm = data.frame(beta_lm)
-names(beta_lm) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_Est", "EnvZ_P", "EnvZ_R2", "BothZ_Est", "BothZ_P", "BothZ_R2")
+beta_occ = data.frame(beta_occ)
+names(beta_occ) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_Est", "EnvZ_P", "EnvZ_R2", "BothZ_Est", "BothZ_P", "BothZ_R2")
 beta_abun = data.frame(beta_abun)
 names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_Est", "EnvZ_P", "EnvZ_R2", "BothZ_Est", "BothZ_P", "BothZ_R2")
 
@@ -141,7 +145,7 @@ glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s +
 summary(glm_occ_rand_site)                                    
 
 #### new fig 1 ####
-fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point() + geom_jitter(width = 0, height = 0.02) +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = median(occuenv$FocalOcc), lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
+fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point() + geom_jitter(width = 0, height = 0.02) +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
 ggExtra::ggMarginal(fig1 , type = "histogram", fill = "dark gray")
 ggsave("C:/Git/Biotic-Interactions/Figures/fig1.pdf")
 
@@ -343,8 +347,14 @@ mainvall = merge(envoutput, envall, by = "FocalAOU")
 mainvall$total.x = mainvall$ENV.x + mainvall$COMP.x + mainvall$SHARED.x
 mainvall$total.y = mainvall$ENV.y + mainvall$COMP.y + mainvall$SHARED.y
 
-ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") + geom_point(col = "#dd1c77", cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
+ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) +geom_text(aes(label = mainvall$FocalAOU))+theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") +geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
 ggsave("C:/Git/Biotic-Interactions/Figures/mainvallcomp.pdf")
+
+
+# + geom_point(col = "#dd1c77", cex =4, shape=24)
+
+foo = merge(mainvall, focal_competitor_table, by = "FocalAOU")
+foo$difference = foo$COMP.y - foo$COMP.x ### y = all competitors, x = occupancy
 
 ggplot(mainvall, aes(x = ENV.y, y = ENV.x)) +theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") + geom_point(shape = 16, col = "#2ca25f", cex =4, stroke = 1)+geom_smooth(method='lm', se=FALSE, col="#2ca25f",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
 ggsave("C:/Git/Biotic-Interactions/Figures/mainvallenv.pdf")

@@ -1,7 +1,17 @@
 SubsetSppID,AOU,CommonName,Competitor
 27,4650,Acadian Flycatcher,Eastern Wood-Pewee
+27,4650,Acadian Flycatcher,Alder Flycatcher
+27,4650,Acadian Flycatcher,Yellow-bellied Flycatcher
+27,4650,Acadian Flycatcher,Willow Flycatcher
+27,4650,Acadian Flycatcher,Least Flycatcher
+27,4650,Acadian Flycatcher,Olive-sided Flycatcher
 13,4070,Acorn Woodpecker,Nuttall's Woodpecker
 29,4661,Alder Flycatcher,Olive-sided Flycatcher
+29,4661,Alder Flycatcher,Western Wood-Pewee
+29,4661,Alder Flycatcher,Yellow-bellied Flycatcher
+29,4661,Alder Flycatcher,Acadian Flycatcher
+29,4661,Alder Flycatcher,Willow Flycatcher
+29,4661,Alder Flycatcher,Least Flycatcher
 30,6870,American Redstart,Black-throated Blue Warbler
 30,6870,American Redstart,Magnolia Warbler
 30,6870,American Redstart,Canada Warbler
@@ -325,6 +335,7 @@ SubsetSppID,AOU,CommonName,Competitor
 71,5880,Spotted Towhee,Green-tailed Towhee
 118,7000,Sprague's Pipit,Vesper Sparrow
 36,4780,Steller's Jay,Western Scrub-Jay
+36,4780,Steller's Jay,Clark's Nutcracker
 36,4780,Steller's Jay,Gray Jay
 139,7580,Swainson's Thrush,Hermit Thrush
 3,6380,Swainson's Warbler,Northern Waterthrush
@@ -362,7 +373,9 @@ SubsetSppID,AOU,CommonName,Competitor
 7,6440,Virginia's Warbler,Orange-crowned Warbler
 142,7670,Western Bluebird,Hermit Thrush
 142,7670,Western Bluebird,American Robin
-37,4810,Western Scrub-Jay,Steller's Jay
+37,4812,Western Scrub-Jay,Steller's Jay
+37,4812,Western Scrub-Jay,Gray Jay
+37,4812,Western Scrub-Jay,Clark's Nutcracker
 60,5540,White-crowned Sparrow,Golden-crowned Sparrow
 60,5540,White-crowned Sparrow,Lincoln's Sparrow
 60,5540,White-crowned Sparrow,Fox Sparrow
@@ -372,8 +385,6 @@ SubsetSppID,AOU,CommonName,Competitor
 28,4660,Willow Flycatcher,Alder Flycatcher
 125,7222,Winter Wren,House Wren
 ,7221,Pacific Wren,House Wren
-,7222,Winter Wren,Pacific Wren
-,7221,Pacific Wren,Winter Wren
 125,7222,Winter Wren,Marsh Wren
 ,7221,Pacific Wren,Marsh Wren
 125,7222,Winter Wren,Sedge Wren

@@ -92,7 +92,7 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
   colnames(filesoutput) = c("Focal", "focalAOU","Competitor", "compAOU","FocalArea", "CompArea", "area_overlap")
   # string split to get sci name with spaces
   filesoutput$Focal = gsub('_',' ',filesoutput$Focal)
-  write.csv(filesoutput, file = "shapefile_areas.csv")
+  write.csv(filesoutput, file = "data/shapefile_areas.csv", row.names = FALSE)
 }
 
 ######## Calculating centroids for each species - using whole range #####
@@ -121,7 +121,7 @@ centroid = data.frame(centroid)
 names(centroid) = c("Species", "FocalAOU", "Long", "Lat")
 centroid$Lat = as.numeric(paste(centroid$Lat))
 centroid$Long = as.numeric(paste(centroid$Long))
-write.csv(centroid,"centroid.csv",row.names=FALSE)
+write.csv(centroid,"data/centroid.csv",row.names=FALSE)
 
 ######## Calculating expected presences for each species using whole range #####
 bbs_routes$latitude = abs(bbs_routes$latitude)

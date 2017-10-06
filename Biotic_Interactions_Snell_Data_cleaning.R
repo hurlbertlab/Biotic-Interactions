@@ -17,9 +17,17 @@ focal_competitor_table = read.csv("data/focal spp.csv", header = TRUE)
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
 shapefile_areas = read.csv("data/shapefile_areas.csv", header = TRUE) # area shapefile if not running GIS code 
 subsetocc = read.csv("data/subsetocc.csv", header = TRUE)
+# read in raw env data UPDATED from gimms script
+all_env = read.csv('data/occuenv.csv', header = T)
+# in 2016 Western Scrub jay split into CA and Island scrub jay, not reflected in most dataframes
+expect_pres$spAOU[expect_pres$spAOU == 4810] = 4812
+bbs_occ$Aou[bbs_occ$Aou == 4810] = 4812
+bsize$AOU[bsize$AOU == 4810] = 4812
+AOU$AOU_OUT[AOU$AOU_OUT == 4810] = 4812
+shapefile_areas$focalAOU[shapefile_areas$focalAOU == 4810] = 4812
+subsetocc$AOU[subsetocc$AOU == 4810] = 4812
+all_env$Species[all_env$Species == 4810] = 4812
 
-# subset bbs abundance columns
-bbs = bbs[, (names(bbs) %in% c("stateroute", "Aou", "Year","SpeciesTotal",  'routeID', 'Lati', 'Longi'))]
 # subset temporal occupancy
 temp_occ = subset(bbs_occ, Aou %in% subsetocc$AOU)
 ############# ---- Set up pairwise comparison table ---- #############
@@ -135,10 +143,10 @@ focal_and_comp_species = unique(c(new_spec_weights$focalAOU, new_spec_weights$Co
 
 # pooling BBS mean abundance by AOU/stateroute and by year  
 bbs_pool = bbs %>% 
-  dplyr::group_by(stateroute, Aou) %>% 
-  dplyr::summarize(abundance = mean(SpeciesTotal)) %>%
-  dplyr::filter(Aou %in% focal_and_comp_species) 
-names(bbs_pool)[names(bbs_pool)=="Aou"] <- "AOU"
+  group_by(stateroute, aou) %>% 
+  dplyr::summarize(abundance = mean(speciestotal)) %>%
+  dplyr::filter(aou %in% focal_and_comp_species) 
+names(bbs_pool)[names(bbs_pool)=="aou"] <- "AOU"
 bbs_pool = data.frame(bbs_pool)
 
 # merge bbs pooled abundances with expected presences for all species
@@ -154,6 +162,9 @@ prefull_data = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>%
   group_by(spAOU, Focal, Family, stateroute, occ, abundance.x) %>%
   dplyr::summarize(allCompN = sum(abundance.y, na.rm = T))
 
+# subsetting prefull data to species in new_spec_weights
+prefull_data2 = subset(prefull_data, spAOU %in% new_spec_weights$focalAOU)
+prefull_data2 = data.frame(prefull_data2)
 # create focalcompoutput table that adds MainCompN column to indicate primary competitors to the 
 # prefull_data with focal/comp/stroute/abundance/occ/summed abundance
 focalcompoutput = bbs_ep %>%    
@@ -189,8 +200,6 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 
 
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
-# read in raw env data UPDATED from gimms script
-all_env = read.csv('data/occuenv.csv', header = T)
 # merge in ENV
 all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"), na.rm = TRUE)
 
