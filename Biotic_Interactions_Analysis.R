@@ -145,13 +145,14 @@ glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s +
 summary(glm_occ_rand_site)                                    
 
 #### new fig 1 ####
-fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point() + geom_jitter(width = 0, height = 0.02) +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) 
+fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point() + geom_jitter(width = 0, height = 0.02) +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))
+#+geom_point(data = bbs_sub4, color = "red")
 ggExtra::ggMarginal(fig1 , type = "histogram", fill = "dark gray")
 ggsave("C:/Git/Biotic-Interactions/Figures/fig1.pdf")
 
 bbs_sub3 = subset(bbs_abun, aou == 6540|aou == 3880|aou == 4970)
 bbs_sub4 = subset(bbs_sub3, stateroute == 38028|stateroute == 72006|stateroute == 33221)
-fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$aou)), lwd = 1.5) 
+fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$aou)), lwd = 1.5) +theme_classic()+xlab("Year")+ylab("Abundance") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  
   
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
@@ -267,13 +268,13 @@ envrank$EW[envrank$EW == 1] <- "E"
 envrank$EW[envrank$EW == 0] <- "W" 
 ###### PLOTTING #####
 envflip$Type = factor(envflip$Type,
-                      levels = c("NONE", "SHARED","ENV","COMP"),ordered = TRUE)
+                      levels = c("NONE", "ENV","SHARED","COMP"),ordered = TRUE)
 envflip$value = abs(envflip$value)
 # Plot with ENV ranked in decreasing order - had to flip everything to plot right
-t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE", "SHARED","ENV","COMP")))) + 
+t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE", "ENV","SHARED","COMP")))) + 
   geom_bar(stat = "identity") + theme_classic() +
-  theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","yellow3","#2ca25f","#dd1c77"), labels=c("","Shared Variance", "Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=60), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 2, keyheight = 2),title=""))
+  theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal \nSpecies") + ylab("Percent Variance Explained") +
+  scale_fill_manual(values=c("white","#2ca25f","lightskyblue","#dd1c77"), labels=c("","Environment","Shared Variance", "Competition")) +theme(axis.title.x=element_text(size=40, angle = 90),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.5,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
 tt = t + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks()(0:1))
 
@@ -309,6 +310,8 @@ summary(total_traits)
 env_traits = lm(logit(value) ~ EW, data = env_lm)
 anova(env_traits)
 
+env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
+econt = lm(logit(value) ~ FocalArea, data = env_cont)
 
 # R2 plot - lm in ggplot
 # X = occupancy, Y = abundance
