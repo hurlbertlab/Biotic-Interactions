@@ -344,7 +344,7 @@ ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.png")
 R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
 R2plot2$abundiff = R2plot2$COMP.y - R2plot2$ENV.y
 
-r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "dashed") + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "dashed")+ theme(axis.title.x=element_text(size=26),axis.title.y=element_blank()) + xlab("Occupancy R2") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))
+r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "dashed") + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "dashed")+ theme(axis.title.x=element_text(size=26),axis.title.y=element_blank()) + xlab("Competition R2 - Environment R2") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20)) + annotate("text", x = -.3, y = 0.5, label = "Abundance predicts \nmore competition") + annotate("text", x = 0.4, y = -0.3, label = "Occupancy predicts \nmore environment")
 
 p2 = plot_grid(r1 + theme(legend.position="none"),
                r2 + theme(legend.position="none"), 
