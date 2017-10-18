@@ -11,6 +11,7 @@ centroid=read.csv("data/centroid.csv", header=TRUE) # GIS script
 occuenv= read.csv("data/all_expected_pres.csv", header = TRUE) # Data cleaning script
 subsetocc = read.csv('data/subsetocc.csv', header = T) # Hurlbert Lab
 tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
+bbs_abun = read.csv("data/bbs_abun.csv", header =TRUE)
 #update tax_code Winter Wren
 tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
 subsetocc$AOU[subsetocc$AOU == 4810] = 4812
@@ -145,15 +146,18 @@ glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s +
 summary(glm_occ_rand_site)                                    
 
 #### new fig 1 ####
-fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point() + geom_jitter(width = 0, height = 0.02) +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))
+# occ1b = subset(occuenv, Species == 4880|Species == 3880|Species == 4980)
+fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point()+ geom_jitter(width = 0, height = 0.02)  +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) #+geom_point(data = occ1b, aes(x = log10(FocalAbundance), y = FocalOcc, color = "dark red"))
+
 #+geom_point(data = bbs_sub4, color = "red")
+# +geom_text(label = occuenv$Species)
 ggExtra::ggMarginal(fig1 , type = "histogram", fill = "dark gray")
 ggsave("C:/Git/Biotic-Interactions/Figures/fig1.pdf")
 
-bbs_sub3 = subset(bbs_abun, aou == 6540|aou == 3880|aou == 4970)
-bbs_sub4 = subset(bbs_sub3, stateroute == 38028|stateroute == 72006|stateroute == 33221)
-fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$aou)), lwd = 1.5) +theme_classic()+xlab("Year")+ylab("Abundance") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  
-  
+bbs_sub3 = subset(bbs_abun, stateroute == 49014)
+bbs_sub4 = subset(bbs_sub3, aou == 4880|aou == 3880|aou == 4980)
+ ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$aou)), lwd = 1.5) +theme_classic()+xlab("Year")+ylab("Abundance at route 49014") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  
+ggsave("C:/Git/Biotic-Interactions/Figures/fig1b.pdf")
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
 
