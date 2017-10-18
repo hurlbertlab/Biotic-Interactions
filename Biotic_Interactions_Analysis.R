@@ -158,6 +158,10 @@ bbs_sub3 = subset(bbs_abun, stateroute == 49014)
 bbs_sub4 = subset(bbs_sub3, aou == 4880|aou == 3880|aou == 4980)
  ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$aou)), lwd = 1.5) +theme_classic()+xlab("Year")+ylab("Abundance at route 49014") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  
 ggsave("C:/Git/Biotic-Interactions/Figures/fig1b.pdf")
+
+
+
+
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
 
@@ -272,21 +276,151 @@ envrank$EW[envrank$EW == 1] <- "E"
 envrank$EW[envrank$EW == 0] <- "W" 
 ###### PLOTTING #####
 envflip$Type = factor(envflip$Type,
-                      levels = c("NONE", "ENV","SHARED","COMP"),ordered = TRUE)
+                      levels = c("NONE","SHARED", "ENV","COMP"),ordered = TRUE)
 envflip$value = abs(envflip$value)
 # Plot with ENV ranked in decreasing order - had to flip everything to plot right
-t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE", "ENV","SHARED","COMP")))) + 
+t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + 
   geom_bar(stat = "identity") + theme_classic() +
-  theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal \nSpecies") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","#2ca25f","lightskyblue","#dd1c77"), labels=c("","Environment","Shared Variance", "Competition")) +theme(axis.title.x=element_text(size=40, angle = 90),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.5,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
+  theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
+  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=40, hjust = 1, vjust = 0.5), legend.position = c(0.5,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks=scales::pretty_breaks()(0:1))
+tt = t + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+
+# scales::pretty_breaks()(0:1)
 
 #+ annotate("text", x = 1:104, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:104, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:104, y = -.12, label = envrank$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:104, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) 
 
 plot(tt)
 
 ggsave("C:/Git/Biotic-Interactions/Figures/barplotc.pdf", height = 25, width = 36)
+
+#### ENV ####
+nrank = envloc1 %>% 
+  dplyr::mutate(rank = row_number(-ENV))# change here for comp
+envflip = tidyr::gather(nrank, "Type", "value", 2:5)
+envflip$rank <- factor(envflip$rank, levels = envflip$rank[order(envflip$rank)])
+envflip = dplyr::arrange(envflip,rank)
+
+# envflip = merge(envflip, envloc[,c("FocalAOU", "EW")], by = "FocalAOU")
+
+envrank = envflip %>% 
+  dplyr::group_by(Type == 'ENV') %>% # change here for comp
+  dplyr::mutate(rank = row_number(-value)) # need to get just the envs to rank, then plot
+envrank <- envrank[order(envrank$rank),]
+
+envrank <- subset(envrank,Type == "ENV") # change here for comp
+
+### CREATE LABEL DF FAMilY ########
+envrank$Fam_abbrev = envrank$Family
+envrank$Fam_abbrev = gsub('Emberizidae','E', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Turdidae','Tu', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Fringillidae','F', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Tyrannidae','Ty', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Mimidae','M', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Vireonidae','V', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Aegithalidae','A', envrank$Fam_abbrev)                        
+envrank$Fam_abbrev = gsub('Corvidae','Co', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Timaliidae','Ti', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Troglodytidae','T', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Cuculidae','Cu', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Icteridae','I', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Picidae','Pi', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Motacillidae','M', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Columbidae','Cl', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Trochilidae','Tr', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Cardinalidae','Ca', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Paridae','Pa', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Sylviidae','Sy', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Parulidae','P', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Sittidae','Si', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Regulidae','R', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Hirundinidae','H', envrank$Fam_abbrev)
+envrank$Fam_abbrev = gsub('Certhiidae','Ce', envrank$Fam_abbrev)
+
+
+envrank$Fam_abbrevf = as.factor(as.character(envrank$Fam_abbrev))
+envrank$Fam_abbrevf = gsub('E','#000000', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Tu','#a6bddb', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('F','#67a9cf', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Tr','#048691', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Ty','#9ecae1', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Ti','#02818a', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('V','#016c59', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('A','#014636', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Co','#081d58', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Cu','#253494', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('I','#225ea8', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Pi','#1d91c0', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('M','#41b6c4', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('O','#7f7fff', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Cl','#0000ff', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Ca','#016c59', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Pa','#02818a', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('Sy','#014636', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('P','#3690c0', envrank$Fam_abbrevf)
+envrank$Fam_abbrevf = gsub('T','#0080ff', envrank$Fam_abbrevf) 
+famlabel= envrank$Fam_abbrev
+####### OTHER LABEL ######
+envrank$mig_abbrev = envrank$migclass
+envrank$mig_abbrev = gsub("neotrop", 'L', envrank$mig_abbrev)
+envrank$mig_abbrev = gsub("resid", 'R', envrank$mig_abbrev)
+envrank$mig_abbrev = gsub("short", 'S', envrank$mig_abbrev)
+envrank$mig_abbrevf = as.factor(as.character(envrank$mig_abbrev))
+
+envrank$mig_abbrevf = gsub('L','#bae4b3', envrank$mig_abbrevf)
+envrank$mig_abbrevf = gsub('R','#31a354', envrank$mig_abbrevf)
+envrank$mig_abbrevf = gsub('S','#006d2c', envrank$mig_abbrevf)
+miglabel= envrank$mig_abbrev
+
+envrank$trophlabel = envrank$Trophic.Group
+envrank$trophlabel = gsub("frugivore", 'F', envrank$trophlabel)
+envrank$trophlabel = gsub("granivore", 'G', envrank$trophlabel)
+envrank$trophlabel = gsub("herbivore", 'H', envrank$trophlabel)
+envrank$trophlabel = gsub("insct/om", 'X', envrank$trophlabel)
+envrank$trophlabel = gsub("insectivore", 'I', envrank$trophlabel)
+envrank$trophlabel = gsub("nectarivore", 'N', envrank$trophlabel)
+envrank$trophlabel = gsub("omnivore", 'O', envrank$trophlabel)
+envrank$trophlabelf = as.factor(as.character(envrank$trophlabel))
+
+envrank$trophlabelf = gsub('F','#fbb4b9', envrank$trophlabelf)
+envrank$trophlabelf = gsub('G','#f768a1', envrank$trophlabelf)
+envrank$trophlabelf = gsub('H','#c51b8a', envrank$trophlabelf)
+envrank$trophlabelf = gsub('X','#7a0177', envrank$trophlabelf)
+envrank$trophlabelf = gsub('I','#dd1c77', envrank$trophlabelf)
+envrank$trophlabelf = gsub('N','#ce1256', envrank$trophlabelf)
+envrank$trophlabelf = gsub('O','#67001f', envrank$trophlabelf)
+
+envrank$EW[envrank$EW == 1] <- "E"
+envrank$EW[envrank$EW == 0] <- "W" 
+###### PLOTTING #####
+envflip$Type = factor(envflip$Type,
+                      levels = c("NONE", "SHARED","COMP","ENV"),ordered = TRUE)
+envflip$value = abs(envflip$value)
+# Plot with ENV ranked in decreasing order - had to flip everything to plot right
+e = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + 
+  geom_bar(stat = "identity") + theme_classic() +
+  theme(axis.text.x=element_text(size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
+  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=50, hjust = 1, vjust = 0.5), legend.position = c(0.5,0.9)) # + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
+
+ee = e + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+
+ggsave("C:/Git/Biotic-Interactions/Figures/barplot.pdf", height = 25, width = 36)
+
+
+z <- plot_grid(tt+ theme(legend.position="top"),
+               ee + theme(legend.position="none"),
+               nrow = 2,
+               align = 'v',
+               labels = c("A","B"),
+               label_size = 36,
+               hjust = -5)
+ggsave("C:/Git/Biotic-Interactions/Figures/barplotboth.pdf", height = 25, width = 36)
+
+
+
+
+
+
 
 ##################### TRAITS Model ####################################
 logit = function(x) log(x/(1-x))
