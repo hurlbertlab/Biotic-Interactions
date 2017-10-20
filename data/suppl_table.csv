@@ -1,0 +1,320 @@
+Focal Species,Focal AOU,Focal Family,Focal Alpha Code,Competitor Species,Competitor AOU,Migratory Class,Trophic Group,Centroid Longitude,Centroid Latitude,Location of Centroid 
+Band-tailed Pigeon,3120,Columbidae,BTPI,Rock Pigeon,3131,neotrop,granivore,NA,NA,West
+Black-billed Cuckoo,3880,Cuculidae,BBCU,Yellow-billed Cuckoo,3870,neotrop,insectivore,-90.76801224,43.59299361,East
+Red-naped Sapsucker,4021,Picidae,RNSA,Williamson's Sapsucker,4040,short,insectivore,-112.3709322,42.62499777,West
+Red-headed Woodpecker,4060,Picidae,RHWO,Northern Flicker,4120,short,omnivore,-92.79552612,40.10274622,East
+Red-headed Woodpecker,4060,Picidae,RHWO,Red-bellied Woodpecker,4090,short,omnivore,-92.79552612,40.10274622,East
+Black-chinned Hummingbird,4290,Trochilidae,BCHU,Broad-tailed Hummingbird,4320,neotrop,nectarivore,-110.0129228,36.56661255,West
+Broad-tailed Hummingbird,4320,Trochilidae,BTLH,Black-chinned Hummingbird,4290,neotrop,nectarivore,-106.5273414,31.90592036,West
+Rufous Hummingbird,4330,Trochilidae,RUHU,Calliope Hummingbird,4360,neotrop,nectarivore,-121.9953642,50.69042584,West
+Calliope Hummingbird,4360,Trochilidae,CAHU,Rufous Hummingbird,4330,neotrop,nectarivore,-117.1902784,45.1611794,West
+Cassin's Kingbird,4480,Tyrannidae,CAKI,Ash-throated Flycatcher,4540,neotrop,insectivore,-105.6192981,28.40141166,West
+Ash-throated Flycatcher,4540,Tyrannidae,ATFL,Cassin's Kingbird,4480,neotrop,insectivore,-108.9794232,33.85535253,West
+Ash-throated Flycatcher,4540,Tyrannidae,ATFL,Say's Phoebe,4570,neotrop,insectivore,-108.9794232,33.85535253,West
+Say's Phoebe,4570,Tyrannidae,SAPH,Western Kingbird,4470,short,insectivore,-115.3829445,48.71148593,West
+Say's Phoebe,4570,Tyrannidae,SAPH,Ash-throated Flycatcher,4540,short,insectivore,-115.3829445,48.71148593,West
+Olive-sided Flycatcher,4590,Tyrannidae,OSFL,Western Kingbird,4470,neotrop,insectivore,-106.1370818,52.213568,West
+Cordilleran Flycatcher,4640,Tyrannidae,COFL,Gray Flycatcher,4691,neotrop,insectivore,-108.8230359,36.98471524,West
+Cordilleran Flycatcher,4640,Tyrannidae,COFL,Hammond's Flycatcher,4680,neotrop,insectivore,-108.8230359,36.98471524,West
+Acadian Flycatcher,4650,Tyrannidae,ACFL,Willow Flycatcher,4660,neotrop,insectivore,-88.234211,36.72678301,East
+Acadian Flycatcher,4650,Tyrannidae,ACFL,Eastern Wood-Pewee,4610,neotrop,insectivore,-88.234211,36.72678301,East
+Acadian Flycatcher,4650,Tyrannidae,ACFL,Least Flycatcher,4670,neotrop,insectivore,-88.234211,36.72678301,East
+Acadian Flycatcher,4650,Tyrannidae,ACFL,Alder Flycatcher,4661,neotrop,insectivore,-88.234211,36.72678301,East
+Acadian Flycatcher,4650,Tyrannidae,ACFL,Yellow-bellied Flycatcher,4630,neotrop,insectivore,-88.234211,36.72678301,East
+Willow Flycatcher,4660,Tyrannidae,WIFL,Alder Flycatcher,4661,neotrop,insectivore,-102.4497992,42.62652326,West
+Alder Flycatcher,4661,Tyrannidae,ALFL,Western Wood-Pewee,4620,neotrop,insectivore,-97.26674971,55.64870537,East
+Alder Flycatcher,4661,Tyrannidae,ALFL,Willow Flycatcher,4660,neotrop,insectivore,-97.26674971,55.64870537,East
+Alder Flycatcher,4661,Tyrannidae,ALFL,Least Flycatcher,4670,neotrop,insectivore,-97.26674971,55.64870537,East
+Alder Flycatcher,4661,Tyrannidae,ALFL,Yellow-bellied Flycatcher,4630,neotrop,insectivore,-97.26674971,55.64870537,East
+Alder Flycatcher,4661,Tyrannidae,ALFL,Acadian Flycatcher,4650,neotrop,insectivore,-97.26674971,55.64870537,East
+Hammond's Flycatcher,4680,Tyrannidae,HAFL,Cordilleran Flycatcher,4640,neotrop,insectivore,-120.4175546,50.10579982,West
+Hammond's Flycatcher,4680,Tyrannidae,HAFL,Dusky Flycatcher,4690,neotrop,insectivore,-120.4175546,50.10579982,West
+Dusky Flycatcher,4690,Tyrannidae,DUFL,Gray Flycatcher,4691,neotrop,insectivore,-115.084343,43.93654116,West
+Dusky Flycatcher,4690,Tyrannidae,DUFL,Hammond's Flycatcher,4680,neotrop,insectivore,-115.084343,43.93654116,West
+Gray Flycatcher,4691,Tyrannidae,GRFL,Cordilleran Flycatcher,4640,neotrop,insectivore,-112.9449919,39.55080667,West
+Gray Flycatcher,4691,Tyrannidae,GRFL,Dusky Flycatcher,4690,neotrop,insectivore,-112.9449919,39.55080667,West
+Steller's Jay,4780,Corvidae,STJA,Western Scrub-Jay,4812,resid,omnivore,-112.3194646,40.04072158,West
+Steller's Jay,4780,Corvidae,STJA,Clark's Nutcracker,4910,resid,omnivore,-112.3194646,40.04072158,West
+Steller's Jay,4780,Corvidae,STJA,Gray Jay,4840,resid,omnivore,-112.3194646,40.04072158,West
+Western Scrub-Jay,4812,Corvidae,WESJ,Gray Jay,4840,resid,omnivore,-109.8315029,34.56352635,West
+Western Scrub-Jay,4812,Corvidae,WESJ,Clark's Nutcracker,4910,resid,omnivore,-109.8315029,34.56352635,West
+Western Scrub-Jay,4812,Corvidae,WESJ,Steller's Jay,4780,resid,omnivore,-109.8315029,34.56352635,West
+Gray Jay,4840,Corvidae,GRAJ,Clark's Nutcracker,4910,resid,omnivore,-100.9834142,57.03293422,West
+Gray Jay,4840,Corvidae,GRAJ,Steller's Jay,4780,resid,omnivore,-100.9834142,57.03293422,West
+Clark's Nutcracker,4910,Corvidae,CLNU,Gray Jay,4840,resid,omnivore,-113.5190863,42.8572419,West
+Pinyon Jay,4920,Corvidae,PIJA,Black-billed Magpie,4750,resid,omnivore,-111.5218916,38.98136772,West
+Yellow-headed Blackbird,4970,Icteridae,YHBL,Red-winged Blackbird,4980,neotrop,insectivore,-107.6043384,46.00715385,West
+Scott's Oriole,5040,Icteridae,SCOR,Bullock's Oriole,5080,neotrop,insct/om,-106.17946,29.12532905,West
+Scott's Oriole,5040,Icteridae,SCOR,Hooded Oriole,5050,neotrop,insct/om,-106.17946,29.12532905,West
+Cassin's Finch,5180,Fringillidae,CAFI,House Finch,5190,short,granivore,-113.8647052,42.8963457,West
+Red Crossbill,5210,Fringillidae,RECR,Purple Finch,5170,short,granivore,89.36838668,84.78258485,East
+Red Crossbill,5210,Fringillidae,RECR,White-winged Crossbill,5220,short,granivore,89.36838668,84.78258485,East
+White-winged Crossbill,5220,Fringillidae,WWCR,Red Crossbill,5210,short,granivore,-124.6751899,82.53408394,West
+White-winged Crossbill,5220,Fringillidae,WWCR,Purple Finch,5170,short,granivore,-124.6751899,82.53408394,West
+Lesser Goldfinch,5300,Fringillidae,LEGO,Pine Siskin,5330,short,granivore,-104.3702605,30.00699514,West
+Pine Siskin,5330,Fringillidae,PISI,Lesser Goldfinch,5300,short,granivore,-104.5229061,50.01937512,West
+Vesper Sparrow,5400,Emberizidae,VESP,Sprague's Pipit,7000,short,insct/om,-101.1572308,46.3791752,West
+Vesper Sparrow,5400,Emberizidae,VESP,Song Sparrow,5810,short,insct/om,-101.1572308,46.3791752,West
+Grasshopper Sparrow,5460,Emberizidae,GRSP,Chipping Sparrow,5600,neotrop,insct/om,-93.85897873,40.34840644,East
+Grasshopper Sparrow,5460,Emberizidae,GRSP,Baird's Sparrow,5450,neotrop,insct/om,-93.85897873,40.34840644,East
+Le Conte's Sparrow,5480,Emberizidae,LCSP,Chipping Sparrow,5600,short,insct/om,-99.84386701,53.04581279,West
+Le Conte's Sparrow,5480,Emberizidae,LCSP,Savannah Sparrow,5420,short,insct/om,-99.84386701,53.04581279,West
+Nelson's Sharp-tailed Sparrow,5491,Emberizidae,NSTS,Le Conte's Sparrow,5480,short,insct/om,-101.5660071,53.32662405,West
+Nelson's Sharp-tailed Sparrow,5491,Emberizidae,NSTS,Chipping Sparrow,5600,short,insct/om,-101.5660071,53.32662405,West
+Lark Sparrow,5520,Emberizidae,LASP,Baird's Sparrow,5450,neotrop,insct/om,-103.2978014,38.64279393,West
+White-crowned Sparrow,5540,Emberizidae,WCSP,Fox Sparrow,5850,short,insct/om,-110.6030757,59.28257331,West
+White-crowned Sparrow,5540,Emberizidae,WCSP,Golden-crowned Sparrow,5570,short,insct/om,-110.6030757,59.28257331,West
+White-crowned Sparrow,5540,Emberizidae,WCSP,Lincoln's Sparrow,5830,short,insct/om,-110.6030757,59.28257331,West
+Black-throated Sparrow,5730,Emberizidae,BTSP,Black-chinned Sparrow,5650,short,insct/om,-108.2890728,32.22388172,West
+Black-throated Sparrow,5730,Emberizidae,BTSP,Rufous-crowned Sparrow,5800,short,insct/om,-108.2890728,32.22388172,West
+Lincoln's Sparrow,5830,Emberizidae,LISP,Swamp Sparrow,5840,neotrop,insct/om,-101.3313132,55.58255636,West
+Lincoln's Sparrow,5830,Emberizidae,LISP,Fox Sparrow,5850,neotrop,insct/om,-101.3313132,55.58255636,West
+Lincoln's Sparrow,5830,Emberizidae,LISP,White-crowned Sparrow,5540,neotrop,insct/om,-101.3313132,55.58255636,West
+Swamp Sparrow,5840,Emberizidae,SWSP,White-throated Sparrow,5580,short,insct/om,-90.03219353,51.74272212,East
+Swamp Sparrow,5840,Emberizidae,SWSP,Lincoln's Sparrow,5830,short,insct/om,-90.03219353,51.74272212,East
+Fox Sparrow,5850,Emberizidae,FOSP,White-crowned Sparrow,5540,short,insct/om,-115.034891,58.21912607,West
+Fox Sparrow,5850,Emberizidae,FOSP,Lincoln's Sparrow,5830,short,insct/om,-115.034891,58.21912607,West
+Spotted Towhee,5880,Emberizidae,SPTO,Green-tailed Towhee,5900,short,insct/om,-111.1396751,41.09705826,West
+Green-tailed Towhee,5900,Emberizidae,GTTO,Spotted Towhee,5880,neotrop,insct/om,-112.3251452,39.77208196,West
+California Towhee,5911,Emberizidae,CALT,Spotted Towhee,5880,resid,insct/om,-117.4146257,33.73209104,West
+Pyrrhuloxia,5940,Cardinalidae,PYRR,Blue Grosbeak,5970,resid,insct/om,-104.178238,28.24026664,West
+Pyrrhuloxia,5940,Cardinalidae,PYRR,Northern Cardinal,5930,resid,insct/om,-104.178238,28.24026664,West
+Lark Bunting,6050,Emberizidae,LARB,Chestnut-collared Longspur,5380,neotrop,insct/om,-103.345485,43.2058067,West
+Lark Bunting,6050,Emberizidae,LARB,Lark Sparrow,5520,neotrop,insct/om,-103.345485,43.2058067,West
+Violet-green Swallow,6150,Hirundinidae,VGSW,Northern Rough-winged Swallow,6170,neotrop,insectivore,-115.1823277,44.13130671,West
+Violet-green Swallow,6150,Hirundinidae,VGSW,Barn Swallow,6130,neotrop,insectivore,-115.1823277,44.13130671,West
+Bank Swallow,6160,Hirundinidae,BANS,Tree Swallow,6140,neotrop,insectivore,46.76312728,85.61634968,East
+Bank Swallow,6160,Hirundinidae,BANS,Cliff Swallow,6120,neotrop,insectivore,46.76312728,85.61634968,East
+Philadelphia Vireo,6260,Vireonidae,PHVI,Red-eyed Vireo,6240,neotrop,insectivore,-97.28733117,52.86955187,East
+Philadelphia Vireo,6260,Vireonidae,PHVI,Blue-headed Vireo,6290,neotrop,insectivore,-97.28733117,52.86955187,East
+Plumbeous Vireo,6291,Vireonidae,PLVI,Warbling Vireo,6270,neotrop,insectivore,-108.0346247,33.84114348,West
+Cassin's Vireo,6292,Vireonidae,CAVI,Warbling Vireo,6270,neotrop,insectivore,-119.602894,44.92859121,West
+Cassin's Vireo,6292,Vireonidae,CAVI,Hutton's Vireo,6320,neotrop,insectivore,-119.602894,44.92859121,West
+Hutton's Vireo,6320,Vireonidae,HUVI,Warbling Vireo,6270,resid,insectivore,-107.7791568,30.05051695,West
+Hutton's Vireo,6320,Vireonidae,HUVI,Cassin's Vireo,6292,resid,insectivore,-107.7791568,30.05051695,West
+Bell's Vireo,6330,Vireonidae,BEVI,Warbling Vireo,6270,neotrop,insectivore,-100.2422472,34.69547509,West
+Bell's Vireo,6330,Vireonidae,BEVI,Yellow-throated Vireo,6280,neotrop,insectivore,-100.2422472,34.69547509,West
+Black-and-white Warbler,6360,Parulidae,BAWW,Prothonotary Warbler,6370,neotrop,insectivore,-89.46892155,47.64865369,East
+Black-and-white Warbler,6360,Parulidae,BAWW,Yellow-throated Warbler,6630,neotrop,insectivore,-89.46892155,47.64865369,East
+Black-and-white Warbler,6360,Parulidae,BAWW,Pine Warbler,6710,neotrop,insectivore,-89.46892155,47.64865369,East
+Prothonotary Warbler,6370,Parulidae,PROW,Yellow-throated Warbler,6630,neotrop,insectivore,-88.30712761,36.29479574,East
+Prothonotary Warbler,6370,Parulidae,PROW,Black-and-white Warbler,6360,neotrop,insectivore,-88.30712761,36.29479574,East
+Prothonotary Warbler,6370,Parulidae,PROW,Pine Warbler,6710,neotrop,insectivore,-88.30712761,36.29479574,East
+Swainson's Warbler,6380,Parulidae,SWWA,Louisiana Waterthrush,6760,neotrop,insectivore,-87.80566995,33.47389867,East
+Swainson's Warbler,6380,Parulidae,SWWA,Ovenbird,6740,neotrop,insectivore,-87.80566995,33.47389867,East
+Swainson's Warbler,6380,Parulidae,SWWA,Northern Waterthrush,6750,neotrop,insectivore,-87.80566995,33.47389867,East
+Swainson's Warbler,6380,Parulidae,SWWA,Kentucky Warbler,6770,neotrop,insectivore,-87.80566995,33.47389867,East
+Worm-eating Warbler,6390,Parulidae,WEWA,Blue-winged Warbler,6410,neotrop,insectivore,-85.96833868,36.43257556,East
+Worm-eating Warbler,6390,Parulidae,WEWA,Yellow Warbler,6520,neotrop,insectivore,-85.96833868,36.43257556,East
+Worm-eating Warbler,6390,Parulidae,WEWA,Common Yellowthroat,6810,neotrop,insectivore,-85.96833868,36.43257556,East
+Worm-eating Warbler,6390,Parulidae,WEWA,Prairie Warbler,6730,neotrop,insectivore,-85.96833868,36.43257556,East
+Worm-eating Warbler,6390,Parulidae,WEWA,Northern Parula,6480,neotrop,insectivore,-85.96833868,36.43257556,East
+Worm-eating Warbler,6390,Parulidae,WEWA,Pine Warbler,6710,neotrop,insectivore,-85.96833868,36.43257556,East
+Worm-eating Warbler,6390,Parulidae,WEWA,Hooded Warbler,6840,neotrop,insectivore,-85.96833868,36.43257556,East
+Blue-winged Warbler,6410,Parulidae,BWWA,Prairie Warbler,6730,neotrop,insectivore,-85.92958246,39.98863735,East
+Blue-winged Warbler,6410,Parulidae,BWWA,Northern Parula,6480,neotrop,insectivore,-85.92958246,39.98863735,East
+Blue-winged Warbler,6410,Parulidae,BWWA,Common Yellowthroat,6810,neotrop,insectivore,-85.92958246,39.98863735,East
+Blue-winged Warbler,6410,Parulidae,BWWA,Pine Warbler,6710,neotrop,insectivore,-85.92958246,39.98863735,East
+Blue-winged Warbler,6410,Parulidae,BWWA,Hooded Warbler,6840,neotrop,insectivore,-85.92958246,39.98863735,East
+Blue-winged Warbler,6410,Parulidae,BWWA,Worm-eating Warbler,6390,neotrop,insectivore,-85.92958246,39.98863735,East
+Blue-winged Warbler,6410,Parulidae,BWWA,Yellow Warbler,6520,neotrop,insectivore,-85.92958246,39.98863735,East
+Virginia's Warbler,6440,Parulidae,VIWA,Orange-crowned Warbler,6460,neotrop,insectivore,-109.9065924,37.77883944,West
+Nashville Warbler,6450,Parulidae,NAWA,Yellow-rumped Warbler,6550,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Wilson's Warbler,6850,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Chestnut-sided Warbler,6590,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Townsend's Warbler,6680,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Mourning Warbler,6790,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Cape May Warbler,6500,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Black-throated Green Warbler,6670,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Yellow Warbler,6520,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Common Yellowthroat,6810,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Tennessee Warbler,6470,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Blackburnian Warbler,6620,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Bay-breasted Warbler,6600,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Blackpoll Warbler,6610,neotrop,insectivore,-88.33899869,48.77723864,East
+Nashville Warbler,6450,Parulidae,NAWA,Orange-crowned Warbler,6460,neotrop,insectivore,-88.33899869,48.77723864,East
+Orange-crowned Warbler,6460,Parulidae,OCWA,Virginia's Warbler,6440,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Wilson's Warbler,6850,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Yellow-rumped Warbler,6550,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Black-throated Green Warbler,6670,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Chestnut-sided Warbler,6590,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Tennessee Warbler,6470,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Townsend's Warbler,6680,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Blackburnian Warbler,6620,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Common Yellowthroat,6810,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Blackpoll Warbler,6610,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Yellow Warbler,6520,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Cape May Warbler,6500,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Mourning Warbler,6790,neotrop,insectivore,-112.6319624,55.35349403,West
+Orange-crowned Warbler,6460,Parulidae,OCWA,Bay-breasted Warbler,6600,neotrop,insectivore,-112.6319624,55.35349403,West
+Tennessee Warbler,6470,Parulidae,TEWA,Common Yellowthroat,6810,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Nashville Warbler,6450,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Mourning Warbler,6790,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Black-throated Green Warbler,6670,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Yellow Warbler,6520,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Blackpoll Warbler,6610,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Chestnut-sided Warbler,6590,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Cape May Warbler,6500,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Orange-crowned Warbler,6460,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Yellow-rumped Warbler,6550,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Townsend's Warbler,6680,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Blackburnian Warbler,6620,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Wilson's Warbler,6850,neotrop,insectivore,-97.09335423,55.39316525,East
+Tennessee Warbler,6470,Parulidae,TEWA,Bay-breasted Warbler,6600,neotrop,insectivore,-97.09335423,55.39316525,East
+Cape May Warbler,6500,Parulidae,CMWA,Yellow Warbler,6520,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Tennessee Warbler,6470,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Chestnut-sided Warbler,6590,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Nashville Warbler,6450,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Wilson's Warbler,6850,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Bay-breasted Warbler,6600,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Blackpoll Warbler,6610,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Orange-crowned Warbler,6460,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Mourning Warbler,6790,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Black-throated Green Warbler,6670,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Yellow-rumped Warbler,6550,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Common Yellowthroat,6810,neotrop,insectivore,-94.68727116,53.55339649,East
+Cape May Warbler,6500,Parulidae,CMWA,Blackburnian Warbler,6620,neotrop,insectivore,-94.68727116,53.55339649,East
+Black-throated Blue Warbler,6540,Parulidae,BTBW,Magnolia Warbler,6570,neotrop,insectivore,-76.888266,44.86587545,East
+Black-throated Blue Warbler,6540,Parulidae,BTBW,Canada Warbler,6860,neotrop,insectivore,-76.888266,44.86587545,East
+Black-throated Blue Warbler,6540,Parulidae,BTBW,American Redstart,6870,neotrop,insectivore,-76.888266,44.86587545,East
+Magnolia Warbler,6570,Parulidae,MAWA,Canada Warbler,6860,neotrop,insectivore,-91.68323918,52.63457329,East
+Magnolia Warbler,6570,Parulidae,MAWA,American Redstart,6870,neotrop,insectivore,-91.68323918,52.63457329,East
+Magnolia Warbler,6570,Parulidae,MAWA,Black-throated Blue Warbler,6540,neotrop,insectivore,-91.68323918,52.63457329,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Blackburnian Warbler,6620,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Tennessee Warbler,6470,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Mourning Warbler,6790,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Common Yellowthroat,6810,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Yellow Warbler,6520,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Wilson's Warbler,6850,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Nashville Warbler,6450,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Yellow-rumped Warbler,6550,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Cape May Warbler,6500,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Orange-crowned Warbler,6460,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Black-throated Green Warbler,6670,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Chestnut-sided Warbler,6590,neotrop,insectivore,-88.94662997,52.93130946,East
+Bay-breasted Warbler,6600,Parulidae,BBWA,Blackpoll Warbler,6610,neotrop,insectivore,-88.94662997,52.93130946,East
+Blackpoll Warbler,6610,Parulidae,BLPW,Nashville Warbler,6450,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Wilson's Warbler,6850,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Cape May Warbler,6500,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Townsend's Warbler,6680,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Yellow-rumped Warbler,6550,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Common Yellowthroat,6810,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Bay-breasted Warbler,6600,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Tennessee Warbler,6470,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Black-throated Green Warbler,6670,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Yellow Warbler,6520,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Mourning Warbler,6790,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Chestnut-sided Warbler,6590,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Blackburnian Warbler,6620,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackpoll Warbler,6610,Parulidae,BLPW,Orange-crowned Warbler,6460,neotrop,insectivore,-103.6192983,60.75798826,West
+Blackburnian Warbler,6620,Parulidae,BLBW,Blackpoll Warbler,6610,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Chestnut-sided Warbler,6590,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Mourning Warbler,6790,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Cape May Warbler,6500,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Yellow-rumped Warbler,6550,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Wilson's Warbler,6850,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Orange-crowned Warbler,6460,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Tennessee Warbler,6470,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Yellow Warbler,6520,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Nashville Warbler,6450,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Black-throated Green Warbler,6670,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Bay-breasted Warbler,6600,neotrop,insct/om,-81.48371117,47.13744967,East
+Blackburnian Warbler,6620,Parulidae,BLBW,Common Yellowthroat,6810,neotrop,insct/om,-81.48371117,47.13744967,East
+Yellow-throated Warbler,6630,Parulidae,YTWA,Prothonotary Warbler,6370,neotrop,insectivore,-87.13174529,35.32372278,East
+Yellow-throated Warbler,6630,Parulidae,YTWA,Black-and-white Warbler,6360,neotrop,insectivore,-87.13174529,35.32372278,East
+Yellow-throated Warbler,6630,Parulidae,YTWA,Pine Warbler,6710,neotrop,insectivore,-87.13174529,35.32372278,East
+Black-throated Gray Warbler,6650,Parulidae,BTYW,Lucy's Warbler,6430,neotrop,insectivore,-114.7177979,39.87450338,West
+Black-throated Gray Warbler,6650,Parulidae,BTYW,Yellow Warbler,6520,neotrop,insectivore,-114.7177979,39.87450338,West
+Black-throated Gray Warbler,6650,Parulidae,BTYW,Grace's Warbler,6640,neotrop,insectivore,-114.7177979,39.87450338,West
+Black-throated Gray Warbler,6650,Parulidae,BTYW,Painted Redstart,6880,neotrop,insectivore,-114.7177979,39.87450338,West
+Hermit Warbler,6690,Parulidae,HEWA,MacGillivray's Warbler,6800,neotrop,insectivore,-121.7334217,41.95733133,West
+Hermit Warbler,6690,Parulidae,HEWA,Yellow-rumped Warbler,6550,neotrop,insectivore,-121.7334217,41.95733133,West
+Hermit Warbler,6690,Parulidae,HEWA,Yellow Warbler,6520,neotrop,insectivore,-121.7334217,41.95733133,West
+Hermit Warbler,6690,Parulidae,HEWA,Black-throated Gray Warbler,6650,neotrop,insectivore,-121.7334217,41.95733133,West
+Hermit Warbler,6690,Parulidae,HEWA,Common Yellowthroat,6810,neotrop,insectivore,-121.7334217,41.95733133,West
+Palm Warbler,6720,Parulidae,PAWA,Ovenbird,6740,neotrop,insectivore,-90.43304052,54.17390301,East
+Palm Warbler,6720,Parulidae,PAWA,Northern Waterthrush,6750,neotrop,insectivore,-90.43304052,54.17390301,East
+Northern Waterthrush,6750,Parulidae,NOWA,Ovenbird,6740,neotrop,insectivore,-98.76459065,57.05060217,West
+Northern Waterthrush,6750,Parulidae,NOWA,Connecticut Warbler,6780,neotrop,insectivore,-98.76459065,57.05060217,West
+Northern Waterthrush,6750,Parulidae,NOWA,Swainson's Warbler,6380,neotrop,insectivore,-98.76459065,57.05060217,West
+Northern Waterthrush,6750,Parulidae,NOWA,Palm Warbler,6720,neotrop,insectivore,-98.76459065,57.05060217,West
+Northern Waterthrush,6750,Parulidae,NOWA,Louisiana Waterthrush,6760,neotrop,insectivore,-98.76459065,57.05060217,West
+Northern Waterthrush,6750,Parulidae,NOWA,Kentucky Warbler,6770,neotrop,insectivore,-98.76459065,57.05060217,West
+Louisiana Waterthrush,6760,Parulidae,LOWA,Ovenbird,6740,neotrop,insectivore,-86.17096816,37.78911043,East
+Louisiana Waterthrush,6760,Parulidae,LOWA,Kentucky Warbler,6770,neotrop,insectivore,-86.17096816,37.78911043,East
+Louisiana Waterthrush,6760,Parulidae,LOWA,Swainson's Warbler,6380,neotrop,insectivore,-86.17096816,37.78911043,East
+Louisiana Waterthrush,6760,Parulidae,LOWA,Connecticut Warbler,6780,neotrop,insectivore,-86.17096816,37.78911043,East
+Louisiana Waterthrush,6760,Parulidae,LOWA,Northern Waterthrush,6750,neotrop,insectivore,-86.17096816,37.78911043,East
+Kentucky Warbler,6770,Parulidae,KEWA,Swainson's Warbler,6380,neotrop,insectivore,-86.65105492,36.2656617,East
+Kentucky Warbler,6770,Parulidae,KEWA,Louisiana Waterthrush,6760,neotrop,insectivore,-86.65105492,36.2656617,East
+Kentucky Warbler,6770,Parulidae,KEWA,Northern Waterthrush,6750,neotrop,insectivore,-86.65105492,36.2656617,East
+Kentucky Warbler,6770,Parulidae,KEWA,Ovenbird,6740,neotrop,insectivore,-86.65105492,36.2656617,East
+Connecticut Warbler,6780,Parulidae,CONW,Northern Waterthrush,6750,neotrop,insectivore,-95.76282667,51.3131094,East
+Connecticut Warbler,6780,Parulidae,CONW,Louisiana Waterthrush,6760,neotrop,insectivore,-95.76282667,51.3131094,East
+Connecticut Warbler,6780,Parulidae,CONW,Ovenbird,6740,neotrop,insectivore,-95.76282667,51.3131094,East
+Mourning Warbler,6790,Parulidae,MOWA,Blackpoll Warbler,6610,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Chestnut-sided Warbler,6590,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Blackburnian Warbler,6620,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Bay-breasted Warbler,6600,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Black-throated Green Warbler,6670,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Orange-crowned Warbler,6460,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Yellow Warbler,6520,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Yellow-rumped Warbler,6550,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Nashville Warbler,6450,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Wilson's Warbler,6850,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Tennessee Warbler,6470,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Common Yellowthroat,6810,neotrop,insectivore,-87.14685383,50.47484642,East
+Mourning Warbler,6790,Parulidae,MOWA,Cape May Warbler,6500,neotrop,insectivore,-87.14685383,50.47484642,East
+MacGillivray's Warbler,6800,Parulidae,MGWA,Hermit Warbler,6690,neotrop,insectivore,-117.1912725,47.00193345,West
+MacGillivray's Warbler,6800,Parulidae,MGWA,Common Yellowthroat,6810,neotrop,insectivore,-117.1912725,47.00193345,West
+MacGillivray's Warbler,6800,Parulidae,MGWA,Townsend's Warbler,6680,neotrop,insectivore,-117.1912725,47.00193345,West
+MacGillivray's Warbler,6800,Parulidae,MGWA,Yellow Warbler,6520,neotrop,insectivore,-117.1912725,47.00193345,West
+MacGillivray's Warbler,6800,Parulidae,MGWA,Black-throated Gray Warbler,6650,neotrop,insectivore,-117.1912725,47.00193345,West
+MacGillivray's Warbler,6800,Parulidae,MGWA,Yellow-rumped Warbler,6550,neotrop,insectivore,-117.1912725,47.00193345,West
+Hooded Warbler,6840,Parulidae,HOWA,Prairie Warbler,6730,neotrop,insectivore,-85.4546981,36.00389322,East
+Hooded Warbler,6840,Parulidae,HOWA,Common Yellowthroat,6810,neotrop,insectivore,-85.4546981,36.00389322,East
+Canada Warbler,6860,Parulidae,CAWA,Black-throated Blue Warbler,6540,neotrop,insectivore,-85.53444297,50.10653962,East
+Canada Warbler,6860,Parulidae,CAWA,Magnolia Warbler,6570,neotrop,insectivore,-85.53444297,50.10653962,East
+Canada Warbler,6860,Parulidae,CAWA,American Redstart,6870,neotrop,insectivore,-85.53444297,50.10653962,East
+American Redstart,6870,Parulidae,AMRE,Magnolia Warbler,6570,neotrop,insectivore,-93.84397459,48.14497888,East
+American Redstart,6870,Parulidae,AMRE,Black-throated Blue Warbler,6540,neotrop,insectivore,-93.84397459,48.14497888,East
+American Redstart,6870,Parulidae,AMRE,Least Flycatcher,4670,neotrop,insectivore,-93.84397459,48.14497888,East
+American Redstart,6870,Parulidae,AMRE,Canada Warbler,6860,neotrop,insectivore,-93.84397459,48.14497888,East
+Sprague's Pipit,7000,Motacillidae,SPPI,Vesper Sparrow,5400,short,insectivore,-105.6078186,50.66105574,West
+Sage Thrasher,7020,Mimidae,SATH,Northern Mockingbird,7030,short,insectivore,-111.9408567,42.60949559,West
+Sage Thrasher,7020,Mimidae,SATH,Bendire's Thrasher,7080,short,insectivore,-111.9408567,42.60949559,West
+Northern Mockingbird,7030,Mimidae,NOMO,Loggerhead Shrike,6220,resid,insectivore,-98.71364356,37.94911787,West
+Northern Mockingbird,7030,Mimidae,NOMO,Sage Thrasher,7020,resid,insectivore,-98.71364356,37.94911787,West
+Northern Mockingbird,7030,Mimidae,NOMO,California Thrasher,7100,resid,insectivore,-98.71364356,37.94911787,West
+Northern Mockingbird,7030,Mimidae,NOMO,Bendire's Thrasher,7080,resid,insectivore,-98.71364356,37.94911787,West
+Northern Mockingbird,7030,Mimidae,NOMO,Gray Catbird,7040,resid,insectivore,-98.71364356,37.94911787,West
+Northern Mockingbird,7030,Mimidae,NOMO,Brown Thrasher,7050,resid,insectivore,-98.71364356,37.94911787,West
+Rock Wren,7150,Troglodytidae,ROWR,House Wren,7210,short,insectivore,-107.9783401,36.48411096,West
+Rock Wren,7150,Troglodytidae,ROWR,Bewick's Wren,7190,short,insectivore,-107.9783401,36.48411096,West
+Bewick's Wren,7190,Troglodytidae,BEWR,House Wren,7210,short,insectivore,-105.572394,33.31201931,West
+Bewick's Wren,7190,Troglodytidae,BEWR,Rock Wren,7150,short,insectivore,-105.572394,33.31201931,West
+Pacific Wren,7221,Troglodytidae,PAWR,House Wren,7210,short,insectivore,-123.6803589,51.45434489,West
+Pacific Wren,7221,Troglodytidae,PAWR,Marsh Wren,7250,short,insectivore,-123.6803589,51.45434489,West
+Winter Wren,7222,Troglodytidae,WIWR,Sedge Wren,7240,short,insectivore,-84.97981676,50.46458386,East
+Winter Wren,7222,Troglodytidae,WIWR,Marsh Wren,7250,short,insectivore,-84.97981676,50.46458386,East
+Winter Wren,7222,Troglodytidae,WIWR,House Wren,7210,short,insectivore,-84.97981676,50.46458386,East
+Sedge Wren,7240,Troglodytidae,SEWR,House Wren,7210,short,insectivore,-73.48620408,-3.619629872,East
+Sedge Wren,7240,Troglodytidae,SEWR,Winter Wren,7222,short,insectivore,-73.48620408,-3.619629872,East
+Brown Creeper,7260,Certhiidae,BRCR,Red-breasted Nuthatch,7280,short,insectivore,-100.4002818,46.2318447,West
+Red-breasted Nuthatch,7280,Sittidae,RBNU,Brown Creeper,7260,short,insectivore,-102.4120915,50.66874934,West
+Juniper Titmouse,7331,Paridae,JUTI,Mountain Chickadee,7380,resid,insct/om,-111.7287688,37.83508128,West
+Mountain Chickadee,7380,Paridae,MOCH,Juniper Titmouse,7331,resid,insectivore,-114.3751408,43.9914459,West
+Boreal Chickadee,7400,Paridae,BOCH,Black-capped Chickadee,7350,resid,insectivore,-101.7855974,59.00564165,West
+Chestnut-backed Chickadee,7410,Paridae,CBCH,Bushtit,7430,resid,insectivore,-123.4053666,49.25742206,West
+Chestnut-backed Chickadee,7410,Paridae,CBCH,Oak Titmouse,7330,resid,insectivore,-123.4053666,49.25742206,West
+Wrentit,7420,Timaliidae,WREN,Oak Titmouse,7330,resid,insectivore,-120.6170142,37.9945279,West
+Bushtit,7430,Aegithalidae,BUSH,Chestnut-backed Chickadee,7410,resid,insectivore,-108.7059818,33.43591146,West
+Golden-crowned Kinglet,7480,Regulidae,GCKI,Ruby-crowned Kinglet,7490,short,insectivore,-102.7636675,50.32372323,West
+Ruby-crowned Kinglet,7490,Regulidae,RCKI,Golden-crowned Kinglet,7480,short,insectivore,-104.0322179,55.32359747,West
+Townsend's Solitaire,7540,Turdidae,TOSO,Mountain Bluebird,7680,short,insectivore,-117.7958794,48.55448018,West
+Townsend's Solitaire,7540,Turdidae,TOSO,Hermit Thrush,7590,short,insectivore,-117.7958794,48.55448018,West
+Swainson's Thrush,7580,Turdidae,SWTH,Hermit Thrush,7590,neotrop,insectivore,-103.2426014,55.45317856,West
+Hermit Thrush,7590,Turdidae,HETH,Townsend's Solitaire,7540,short,insectivore,-103.4773238,52.1864627,West
+Hermit Thrush,7590,Turdidae,HETH,Swainson's Thrush,7580,short,insectivore,-103.4773238,52.1864627,West
+Western Bluebird,7670,Turdidae,WEBL,Hermit Thrush,7590,short,insectivore,-109.7437335,34.74008011,West
+Mountain Bluebird,7680,Turdidae,MOBL,Townsend's Solitaire,7540,short,insectivore,-114.8742119,48.93131325,West
