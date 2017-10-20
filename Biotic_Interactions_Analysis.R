@@ -284,7 +284,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=40, hjust = 1, vjust = 0.5), legend.position = c(0.5,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+tt = t + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
 # scales::pretty_breaks()(0:1)
 
@@ -402,7 +402,7 @@ e = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=50, hjust = 1, vjust = 0.5), legend.position = c(0.5,0.9)) # + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
-ee = e + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+ee = e + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
 ggsave("C:/Git/Biotic-Interactions/Figures/barplot.pdf", height = 25, width = 36)
 
@@ -473,22 +473,25 @@ R2plot2$violin_comp = R2plot2$COMP.x + R2plot2$SHARED.x
 R2plot2$violin_total = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 
 # need to change the slopes
-r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y)) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(col = "#dd1c77", cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") +
-      geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y), shape = 16, col = "#2ca25f", cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash") +
-      geom_point(data = R2plot2, aes(Total.x,Total.y), shape = 3, col = "dark gray", cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash") +
-      geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))
+cols = c("Competition" ="#dd1c77","Environment" = "#2ca25f","Total" = "dark gray")
+r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y, col = "Competition")) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") +
+      geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash") +
+      geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash") +
+      geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.2,0.9))
 ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.png")
 
 R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
 R2plot2$abundiff = R2plot2$COMP.y - R2plot2$ENV.y
+R2plot2$totaldiff = R2plot2$abundiff - R2plot2$occdiff
 
-r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "dashed") + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "dashed")+ theme(axis.title.x=element_text(size=26),axis.title.y=element_blank()) + xlab("Competition R2 - Environment R2") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20)) + annotate("text", x = -.3, y = 0.5, label = "Abundance predicts \nmore competition") + annotate("text", x = 0.4, y = -0.3, label = "Occupancy predicts \nmore environment")
+r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "dashed") + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "dashed")+ geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26)) + xlab("Competition R2 - Environment R2 for Occupancy")+ ylab("Competition R2 - Environment R2 for Abundance") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20)) 
+#+ annotate("text", x = -.3, y = 0.5, label = "Abundance predicts \nmore competition") + annotate("text", x = 0.4, y = -0.3, label = "Occupancy predicts \nmore environment")
 
-p2 = plot_grid(r1 + theme(legend.position="none"),
+p2 = plot_grid(r1,
                r2 + theme(legend.position="none"), 
                labels = c("A","B"),
-               align = 'h')
-ggsave("C:/Git/Biotic-Interactions/Figures/Figure4A_B.pdf")
+               align = 'hv')
+ggsave("C:/Git/Biotic-Interactions/Figures/Figure4A_B.pdf", height = 10, width = 20)
 
 #### R2 plot - glm violin plots ####
 R2violin = gather(R2plot2, "type", "Rval", 12:14)
