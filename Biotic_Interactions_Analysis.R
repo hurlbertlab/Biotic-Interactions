@@ -12,6 +12,8 @@ occuenv= read.csv("data/all_expected_pres.csv", header = TRUE) # Data cleaning s
 subsetocc = read.csv('data/subsetocc.csv', header = T) # Hurlbert Lab
 tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 bbs_abun = read.csv("data/bbs_abun.csv", header =TRUE)
+nsw = read.csv("data/new_spec_weights.csv", header = TRUE)
+shapefile_areas = read.csv("data/shapefile_areas.csv", header =TRUE)
 #update tax_code Winter Wren
 tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
 subsetocc$AOU[subsetocc$AOU == 4810] = 4812
@@ -416,12 +418,6 @@ z <- plot_grid(tt+ theme(legend.position="top"),
                hjust = -5)
 ggsave("C:/Git/Biotic-Interactions/Figures/barplotboth.pdf", height = 25, width = 36)
 
-
-
-
-
-
-
 ##################### TRAITS Model ####################################
 logit = function(x) log(x/(1-x))
 
@@ -444,12 +440,25 @@ env_sum$edgeval = (env_sum$value * (1 - 2*edge_adjust)) + edge_adjust
 total_traits = lm(logit(edgeval) ~ Trophic.Group + migclass + EW, data = env_sum)
 summary(total_traits)
 
-# anova of traits
 env_traits = lm(logit(value) ~ EW, data = env_lm)
 anova(env_traits)
 
-env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
-econt = lm(logit(value) ~ FocalArea, data = env_cont)
+env_cont = merge(env_sum, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
+env_cont2 = merge(env_cont, occuenv[,c("Species", "zTemp","zPrecip","zElev","zNDVI", "FocalAbundance")], by.x = "FocalAOU", by.y = "Species")
+
+
+econt = lm(logit(value) ~ FocalArea + Long + Lat + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance, data = env_cont2)
+
+suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.x = "FocalAOU", by.y = "focalAOU")
+# write.csv(suppl, "data/suppl_table.csv", row.names = FALSE)
+# anova of traits
+cor.test(envoutput2$ENV, envoutputa$ENV)
+
+
+
+
+
+
 
 # R2 plot - lm in ggplot
 # X = occupancy, Y = abundance
