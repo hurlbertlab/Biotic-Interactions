@@ -25,6 +25,8 @@ pacific = data.frame("Pacific Wren", 7221,  "PAWR")
 colnames(pacific) = c("PRIMARY_COM_NAME", "AOU_OUT" ,"ALPHA.CODE")
 tax_code = rbind(tax_code, pacific)
 
+
+
 # rescaling all occupancy values  - odds ratio
 # need to get rid of ones in order to not have infinity values 
 edge_adjust = .005 
@@ -443,21 +445,46 @@ summary(total_traits)
 env_traits = lm(logit(value) ~ EW, data = env_lm)
 anova(env_traits)
 
-env_cont = merge(env_sum, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
+env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
 env_cont2 = merge(env_cont, occuenv[,c("Species", "zTemp","zPrecip","zElev","zNDVI", "FocalAbundance")], by.x = "FocalAOU", by.y = "Species")
 
 
-econt = lm(logit(value) ~ FocalArea + Long + Lat + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance, data = env_cont2)
+econt = lm(logit(value) ~ FocalArea  + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance + migclass + Trophic.Group, data = env_cont2)
+
+env_est = summary(econt)$coef[,"Estimate"]
+colname = c("Intercept","FocalArea","area_overlap","zTemp","zPrecip","zElev","zNDVI","FocalAbundance","resid","short","insct/om","insectivore","nectarivore","omnivore")
+
+comp_cont = merge(comp_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
+comp_cont2 = merge(comp_cont, occuenv[,c("Species", "zTemp","zPrecip","zElev","zNDVI", "FocalAbundance")], by.x = "FocalAOU", by.y = "Species")
+
+
+ccont = lm(logit(value) ~ FocalArea + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance + migclass + Trophic.Group, data = comp_cont2)
+comp_est = summary(ccont)$coef[,"Estimate"]
+
+
+fig5 = data.frame(colname, env_est, comp_est)
+fig5.1 = gather(fig5, "type", "val", 2:3)
+
+# to be used in geom_errorbar
+limits <- aes(x = factor(fig5.1$val), ymax = econt$exp.upper., ymin = econt$exp.lower.)
+
+
+
+ggplot(fig5.1, aes(colname, val), fill=factor(type)) + geom_point(aes(col = fig5.1$type), pch = 16, size = 4) + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+
+
+
+
+
+
+
+
+
 
 suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.x = "FocalAOU", by.y = "focalAOU")
 # write.csv(suppl, "data/suppl_table.csv", row.names = FALSE)
 # anova of traits
 cor.test(envoutput2$ENV, envoutputa$ENV)
-
-
-
-
-
 
 
 # R2 plot - lm in ggplot
