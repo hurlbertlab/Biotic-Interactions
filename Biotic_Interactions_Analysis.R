@@ -468,7 +468,7 @@ fig5.1 = gather(fig5, "type", "val", 2:3)
 # to be used in geom_errorbar
 limits <- aes(x = factor(fig5.1$val), ymax = econt$exp.upper., ymin = econt$exp.lower.)
 
-
+lower = 1/(1+exp(-conf[,1]))) #(confint function)
 
 ggplot(fig5.1, aes(colname, val), fill=factor(type)) + geom_point(aes(col = fig5.1$type), pch = 16, size = 4) + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
