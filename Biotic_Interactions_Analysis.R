@@ -79,8 +79,8 @@ for (sp in 1:length(subfocalspecies)){
   sp1 = unique(temp$Species)
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
   # saving model output into separate data frames
-  occ_comp_est = summary(competition)$coef[1,"Estimate"]
-  occ_comp_p = summary(competition)$coef[1,"Pr(>|t|)"]
+  occ_comp_est = summary(competition)$coef[2,"Estimate"]
+  occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
   occ_comp_r = summary(competition)$r.squared
   occ_env_est = summary(env_z)$coef[2,"Estimate"]
   occ_env_p = summary(env_z)$coef[2,"Pr(>|t|)"]
@@ -460,17 +460,14 @@ comp_cont2 = merge(comp_cont, occuenv[,c("Species", "zTemp","zPrecip","zElev","z
 
 ccont = lm(logit(value) ~ FocalArea + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance + migclass + Trophic.Group, data = comp_cont2)
 comp_est = summary(ccont)$coef[,"Estimate"]
+comp_lower = fig5.1$val - as.vector(summary(ccont)$coef[,"Std. Error"])
+comp_upper = fig5.1$val + as.vector(summary(ccont)$coef[,"Std. Error"])
 
 
 fig5 = data.frame(colname, env_est, comp_est)
 fig5.1 = gather(fig5, "type", "val", 2:3)
 
-# to be used in geom_errorbar
-limits <- aes(x = factor(fig5.1$val), ymax = econt$exp.upper., ymin = econt$exp.lower.)
-
-lower = 1/(1+exp(-conf[,1]))) #(confint function)
-
-ggplot(fig5.1, aes(colname, val), fill=factor(type)) + geom_point(aes(col = fig5.1$type), pch = 16, size = 4) + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+ggplot(fig5.1, aes(colname, val), fill=factor(type)) + geom_point(aes(col = fig5.1$type), pch = 16, size = 6) + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title="")) + geom_errorbar(data=fig5.1, mapping=aes(colname, ymin=comp_lower, ymax=comp_upper), width=0.2, size=1, color="black")
 
 
 
@@ -520,7 +517,7 @@ R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
 R2plot2$abundiff = R2plot2$COMP.y - R2plot2$ENV.y
 R2plot2$totaldiff = R2plot2$abundiff - R2plot2$occdiff
 
-r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "dashed") + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "dashed")+ geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26)) + xlab("Competition R2 - Environment R2 for Occupancy")+ ylab("Competition R2 - Environment R2 for Abundance") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20)) 
+r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "dashed") + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "dashed")+ geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26)) + xlab("")+ ylab("") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20)) 
 #+ annotate("text", x = -.3, y = 0.5, label = "Abundance predicts \nmore competition") + annotate("text", x = 0.4, y = -0.3, label = "Occupancy predicts \nmore environment")
 
 p2 = plot_grid(r1,
