@@ -14,6 +14,7 @@ tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 bbs_abun = read.csv("data/bbs_abun.csv", header =TRUE)
 nsw = read.csv("data/new_spec_weights.csv", header = TRUE)
 shapefile_areas = read.csv("data/shapefile_areas.csv", header =TRUE)
+AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
 #update tax_code Winter Wren
 tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
 subsetocc$AOU[subsetocc$AOU == 4810] = 4812
@@ -25,15 +26,12 @@ pacific = data.frame("Pacific Wren", 7221,  "PAWR")
 colnames(pacific) = c("PRIMARY_COM_NAME", "AOU_OUT" ,"ALPHA.CODE")
 tax_code = rbind(tax_code, pacific)
 
-
-
 # rescaling all occupancy values  - odds ratio
 # need to get rid of ones in order to not have infinity values 
 edge_adjust = .005 
 occuenv$FocalOcc_scale = (occuenv$FocalOcc * (1 - 2*edge_adjust)) + edge_adjust
 # create logit transformation function, did on rescaled vals
 occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale)) 
-
 
 ##### LIN REG #######
 # for loop subsetting env data to expected occurrence for focal species
@@ -127,6 +125,26 @@ beta_occ = data.frame(beta_occ)
 names(beta_occ) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_Est", "EnvZ_P", "EnvZ_R2", "BothZ_Est", "BothZ_P", "BothZ_R2")
 beta_abun = data.frame(beta_abun)
 names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_Est", "EnvZ_P", "EnvZ_R2", "BothZ_Est", "BothZ_P", "BothZ_R2")
+
+##### non-competitor comparison ######
+noncompdf = read.csv("data/noncompdf.csv", header =TRUE)
+subfocspecies = unique(noncompdf$FocalAOU)
+for (sp in 1:length(subfocspecies)){
+  temp = subset(noncompdf, noncompdf$FocalAOU == subfocspecies[sp])
+  tempfam = unique(as.character(temp$FocalFamily))
+  subcompspecies = dplyr::filter(noncompdf, stateroute %in% temp$stateroute)
+  subcompspecies = dplyr::filter(noncompdf, noncompdf$FocalAOU != subfocspecies[sp] & noncompdf$FocalFamily != tempfam)
+  subcomplist = unique(subcompspecies$CompAOU)
+
+  comproutes = dplyr::filter(noncompdf, stateroute %in% temp$stateroute & noncompdf$FocalFamily != tempfam)
+    
+  lm(CompN ~ FocalOcc)
+
+}         
+
+
+
+
 
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
