@@ -129,20 +129,33 @@ names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competitio
 ##### non-competitor comparison ######
 noncompdf = read.csv("data/noncompdf.csv", header =TRUE)
 subfocspecies = unique(noncompdf$FocalAOU)
+subfocspecies = subfocspecies[! subfocspecies %in% c(5660, 5400, 5650, 5800, 5730)]
+noncomps = c()
 for (sp in 1:length(subfocspecies)){
   temp = subset(noncompdf, noncompdf$FocalAOU == subfocspecies[sp])
+  if(is.na(sum(temp$FocalOcc))==FALSE){
   tempfam = unique(as.character(temp$FocalFamily))
-  subcompspecies = dplyr::filter(noncompdf, stateroute %in% temp$stateroute)
-  subcompspecies = dplyr::filter(noncompdf, noncompdf$FocalAOU != subfocspecies[sp] & noncompdf$FocalFamily != tempfam)
-  subcomplist = unique(subcompspecies$CompAOU)
-
-  comproutes = dplyr::filter(noncompdf, stateroute %in% temp$stateroute & noncompdf$FocalFamily != tempfam)
-    
-  lm(CompN ~ FocalOcc)
-
+  comproutes = dplyr::filter(noncompdf, stateroute %in% temp$stateroute & noncompdf$FocalFamily != tempfam & noncompdf$FocalAOU != subfocspecies[sp])
+  subcomplist = unique(comproutes$CompAOU)
+  compabuns = comproutes %>%
+    group_by(stateroute, CompAOU) %>%
+    summarize(sumcomp = sum(CompN),
+              meancomp = mean(CompN)) 
+  mergespp = left_join(temp, compabuns, by = c("stateroute", "CompAOU"))
+  FocalAOU = unique(mergespp$FocalAOU)
+  CompAOU = unique(mergespp$CompAOU)
+  for(co in CompAOU){
+    lms = lm(mergespp$CompN ~ mergespp$FocalOcc)
+    lms_est = summary(lms)$coef[2,"Estimate"]
+    lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
+    lms_r = summary(lms)$r.squared
+    noncomps = rbind(noncomps, c(FocalAOU, co,lms_est, lms_p, lms_r))
+    }
+  }
 }         
 
-
+noncomps = data.frame(noncomps)
+names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 
 
 
