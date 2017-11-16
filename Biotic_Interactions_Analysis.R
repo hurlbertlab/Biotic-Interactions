@@ -158,6 +158,15 @@ for (sp in 1:length(subfocspecies)){
 noncomps = data.frame(noncomps)
 names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 
+noncompplot = noncomps[!duplicated(noncomps$FocalAOU), ] 
+
+noncompplot = ggplot(data=noncompplot, aes(reorder(FocalAOU, -R2), y=R2)) + 
+  geom_bar(stat = "identity") + theme_classic() +
+  theme(axis.text.x=element_text(size=10,vjust=0.5, angle = 90),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=50, hjust = 1, vjust = 0.5), legend.position = c(0.5,0.9))
+
+# violin plot not working
+# ggplot(noncompplot, aes(as.factor(FocalAOU), R2)) + geom_violin() + xlab("Total Variance") + ylab("R2")+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey"), labels=c("Competition","Environment", "Total Variance")) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+
 
 
 #### ---- GLM fitting  ---- ####
@@ -500,15 +509,7 @@ fig5 = data.frame(colname, env_est, comp_est)
 fig5.1 = gather(fig5, "type", "val", 2:3)
 
 ggplot(fig5.1, aes(colname, val), fill=factor(type)) + geom_point(aes(col = fig5.1$type), pch = 16, size = 6) + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title="")) + geom_errorbar(data=fig5.1, mapping=aes(colname, ymin=comp_lower, ymax=comp_upper), width=0.2, size=1, color="black")
-
-
-
-
-
-
-
-
-
+write.csv("C:/Git/Biotic-Interactions/Figures/estimateplots.pdf")
 
 suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.x = "FocalAOU", by.y = "focalAOU")
 # write.csv(suppl, "data/suppl_table.csv", row.names = FALSE)
