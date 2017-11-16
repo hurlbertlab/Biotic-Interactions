@@ -132,25 +132,44 @@ subfocspecies = unique(noncompdf$FocalAOU)
 # subfocspecies = subfocspecies[! subfocspecies %in% c(5660, 5400, 5650, 5800, 5730)]
 noncomps = c()
 for (sp in 1:length(subfocspecies)){
-  temp.5 = subset(noncompdf, noncompdf$FocalAOU == subfocspecies[sp])
-  temp = temp.5[!is.na(temp.5$FocalOcc),]
+  
+  # filter occuenv' to focal species
+  
+  # loop: choose a noncompetitor from list of hetero-familial species
+  
+  # subset bbs to stateroutes for focal species, calc mean N over appropriate time period
+  
+  # join to filtered occuenv'
+  
+  # save R2, estimate, p
+  
+  # end noncompetitor loop
+  
+  # end focal sp loop
+  
+  
+  
+  temp = subset(noncompdf, noncompdf$FocalAOU == subfocspecies[sp]) %>%
+    filter(!is.na(FocalOcc))
   if(length(temp$FocalOcc) != 0){
-  tempfam = unique(as.character(temp$FocalFamily))
-  comproutes = dplyr::filter(noncompdf, stateroute %in% temp$stateroute & noncompdf$FocalFamily != tempfam & noncompdf$FocalAOU != subfocspecies[sp])
-  subcomplist = unique(comproutes$CompAOU)
-  compabuns = comproutes %>%
-    group_by(stateroute, CompAOU) %>%
-    summarize(sumcomp = sum(CompN),
-              meancomp = mean(CompN)) 
-  mergespp = left_join(temp, compabuns, by = c("stateroute", "CompAOU"))
-  FocalAOU = unique(mergespp$FocalAOU)
-  CompAOU = unique(mergespp$CompAOU)
-  for(co in CompAOU){
-    lms = lm(mergespp$CompN ~ mergespp$FocalOcc)
-    lms_est = summary(lms)$coef[2,"Estimate"]
-    lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
-    lms_r = summary(lms)$r.squared
-    noncomps = rbind(noncomps, c(FocalAOU, co,lms_est, lms_p, lms_r))
+    tempfam = unique(as.character(temp$FocalFamily))
+    comproutes = dplyr::filter(noncompdf, stateroute %in% temp$stateroute & 
+                                 noncompdf$FocalFamily != tempfam & 
+                                 noncompdf$FocalAOU != subfocspecies[sp])
+    subcomplist = unique(comproutes$CompAOU)
+    compabuns = comproutes %>%
+      group_by(stateroute, CompAOU) %>%
+      summarize(sumcomp = sum(CompN),
+                meancomp = mean(CompN)) 
+    mergespp = left_join(temp, compabuns, by = c("stateroute", "CompAOU"))
+    FocalAOU = unique(mergespp$FocalAOU)
+    CompAOU = unique(mergespp$CompAOU)
+    for(co in CompAOU){
+      lms = lm(mergespp$CompN ~ mergespp$FocalOcc)
+      lms_est = summary(lms)$coef[2,"Estimate"]
+      lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
+      lms_r = summary(lms)$r.squared
+      noncomps = rbind(noncomps, c(FocalAOU, co,lms_est, lms_p, lms_r))
     }
   }
 }         
