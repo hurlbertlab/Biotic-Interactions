@@ -173,6 +173,12 @@ noncompdf2 = data.frame(noncompdf2$stateroute, noncompdf2$spAOU, noncompdf2$abun
 names(noncompdf2) = c("stateroute","FocalAOU", "FocalAbun","Comp","Focal","CompAOU", "FocalFamily","n", "FocalOcc", "CompN")
 write.csv(noncompdf2, "data/noncompdf.csv", row.names = FALSE)
 
+comps.5 = unique(focalcompoutput$compAOU)
+comps.5 = data.frame(comps.5)
+comps.5 = na.omit(comps.5)
+comps = merge(comps.5, AOU[c("AOU", "Family")], by.x = "comps.5", by.y = "AOU")
+write.csv(comps, "data/comps.csv", row.names = FALSE)
+
 # subsetting prefull data to species in new_spec_weights
 prefull_data2 = subset(prefull_data, spAOU %in% new_spec_weights$focalAOU)
 prefull_data2 = data.frame(prefull_data2)
