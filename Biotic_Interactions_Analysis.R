@@ -129,11 +129,12 @@ names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competitio
 ##### non-competitor comparison ######
 noncompdf = read.csv("data/noncompdf.csv", header =TRUE)
 subfocspecies = unique(noncompdf$FocalAOU)
-subfocspecies = subfocspecies[! subfocspecies %in% c(5660, 5400, 5650, 5800, 5730)]
+# subfocspecies = subfocspecies[! subfocspecies %in% c(5660, 5400, 5650, 5800, 5730)]
 noncomps = c()
 for (sp in 1:length(subfocspecies)){
-  temp = subset(noncompdf, noncompdf$FocalAOU == subfocspecies[sp])
-  if(is.na(sum(temp$FocalOcc))==FALSE){
+  temp.5 = subset(noncompdf, noncompdf$FocalAOU == subfocspecies[sp])
+  temp = temp.5[!is.na(temp.5$FocalOcc),]
+  if(length(temp$FocalOcc) != 0){
   tempfam = unique(as.character(temp$FocalFamily))
   comproutes = dplyr::filter(noncompdf, stateroute %in% temp$stateroute & noncompdf$FocalFamily != tempfam & noncompdf$FocalAOU != subfocspecies[sp])
   subcomplist = unique(comproutes$CompAOU)
