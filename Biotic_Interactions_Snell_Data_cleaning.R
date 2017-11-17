@@ -162,17 +162,6 @@ prefull_data = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>%
   group_by(spAOU, Focal, Family, stateroute, occ, abundance.x) %>%
   dplyr::summarize(allCompN = sum(abundance.y, na.rm = T))
 
-
-noncompdf = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>% 
-  left_join(temp_occ[temp_occ$Aou %in% focal_and_comp_species, ], 
-            by = c('spAOU' = 'Aou', 'stateroute' = 'stateroute')) %>%
-  left_join(bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
-  group_by(spAOU, Focal, Family, stateroute, occ, abundance.x)
-noncompdf2 = subset(noncompdf, spAOU %in% new_spec_weights$focalAOU)
-noncompdf2 = data.frame(noncompdf2$stateroute, noncompdf2$spAOU, noncompdf2$abundance.x, noncompdf2$Competitor, noncompdf2$Focal, noncompdf2$CompAOU, noncompdf2$Family, noncompdf2$n, noncompdf2$occ, noncompdf2$abundance.y)
-names(noncompdf2) = c("stateroute","FocalAOU", "FocalAbun","Comp","Focal","CompAOU", "FocalFamily","n", "FocalOcc", "CompN")
-write.csv(noncompdf2, "data/noncompdf.csv", row.names = FALSE)
-
 comps.5 = unique(focalcompoutput$compAOU)
 comps.5 = data.frame(comps.5)
 comps.5 = na.omit(comps.5)
