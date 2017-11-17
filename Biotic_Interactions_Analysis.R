@@ -131,42 +131,25 @@ names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competitio
 noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "Family")]
 subfocspecies = unique(noncompdf$Species)
 maincomps = read.csv("data/comps.csv", header = TRUE)
-maincomps = maincomp[!duplicated(maincomps), ]
-comps = maincomps[,1]
+maincomps = maincomps[!duplicated(maincomps), ]
 noncomps = c()
 for (sp in 1:length(subfocspecies)){
   FocalAOU = subfocspecies[sp]
-  
-  # filter occuenv' to focal species
-  
-  # loop: choose a noncompetitor from list of hetero-familial species
-  
-  # subset bbs to stateroutes for focal species, calc mean N over appropriate time period
-  
-  # join to filtered occuenv'
-  
-  # save R2, estimate, p
-  
-  # end noncompetitor loop
-  
-  # end focal sp loop
-  
   temp = subset(noncompdf, Species == subfocspecies[sp]) 
   tempfam = unique(as.character(temp$Family))
   if(length(temp$FocalOcc) != 0){
     maincomp = filter(maincomps, Family != tempfam)
-    
+    comps = maincomp[,1]
     for(co in comps){
       compAOU = co
-        ctemp = subset(bbs, aou == co) 
-        routes = dplyr::filter(ctemp, stateroute %in% temp$stateroute & 
-                                 aou != subfocspecies[sp]) %>%
-          group_by(stateroute, aou) %>%
-          summarize(sumcomp = sum(speciestotal),
-                    meancomp = mean(speciestotal)) 
-        # routes = na.omit(routes)
-        mergespp = left_join(temp, routes, by = "stateroute")
-        if(!is.na(mergespp$aou) == TRUE & is.na(mergespp$meancomp) == TRUE){ # need to get rid of all the extra NAs
+      ctemp = subset(bbs, aou == co) 
+      routes = dplyr::filter(ctemp, stateroute %in% temp$stateroute & 
+                      aou != subfocspecies[sp]) %>%
+        group_by(stateroute, aou) %>%
+        summarize(sumcomp = sum(speciestotal),
+                      meancomp = mean(speciestotal)) 
+        mergespp = left_join(routes, temp, by = "stateroute")
+        if(length(unique(mergespp$FocalOcc)) > 1){ # !is.na(mergespp$aou) == TRUE
         lms = lm(mergespp$meancomp ~ mergespp$FocalOcc)
         lms_est = summary(lms)$coef[2,"Estimate"]
         lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
@@ -179,17 +162,6 @@ for (sp in 1:length(subfocspecies)){
 
 noncomps = data.frame(noncomps)
 names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
-
-noncompplot = noncomps[!duplicated(noncomps$FocalAOU), ] 
-
-noncompplot = ggplot(data=noncompplot, aes(reorder(FocalAOU, -R2), y=R2)) + 
-  geom_bar(stat = "identity") + theme_classic() +
-  theme(axis.text.x=element_text(size=10,vjust=0.5, angle = 90),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=50, hjust = 1, vjust = 0.5), legend.position = c(0.5,0.9))
-
-# violin plot not working
-# ggplot(noncompplot, aes(as.factor(FocalAOU), R2)) + geom_violin() + xlab("Total Variance") + ylab("R2")+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey"), labels=c("Competition","Environment", "Total Variance")) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
-
-
 
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
