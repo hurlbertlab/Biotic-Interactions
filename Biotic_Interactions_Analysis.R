@@ -132,13 +132,14 @@ noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "F
 subfocspecies = unique(noncompdf$Species)
 maincomps = read.csv("data/comps.csv", header = TRUE)
 maincomps = maincomps[!duplicated(maincomps), ]
+
 noncomps = c()
 for (sp in 1:length(subfocspecies)){
   FocalAOU = subfocspecies[sp]
   temp = subset(noncompdf, Species == subfocspecies[sp]) 
   tempfam = unique(as.character(temp$Family))
   if(length(temp$FocalOcc) != 0){
-    maincomp = filter(maincomps, Family != tempfam)
+    maincomp = dplyr::filter(maincomps, Family != tempfam)
     comps = maincomp[,1]
     for(co in comps){
       compAOU = co
@@ -160,8 +161,32 @@ for (sp in 1:length(subfocspecies)){
   }
 }         
 
+
+
 noncomps = data.frame(noncomps)
 names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
+# write.csv(noncomps, "data/noncomps.csv", row.names = FALSE)
+
+#### non comp plots ####
+pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
+par(mfrow = c(3, 4))
+for (sp in unique(noncomps$FocalAOU)){
+  temp = subset(noncomps, FocalAOU == sp) 
+  hist(temp$Estimate, xlab = unique(temp$FocalAOU[temp$FocalAOU == sp]))
+  abline(v=mean(temp$Estimate), col = "blue", lwd = 2)
+  
+}
+dev.off()
+
+pdf('Figures/noncomp_r2.pdf', height = 8, width = 10)
+par(mfrow = c(3, 4))
+for (sp in unique(noncomps$FocalAOU)){
+  temp = subset(noncomps, FocalAOU == sp) 
+  hist(temp$R2, xlab = unique(temp$FocalAOU[temp$FocalAOU == sp]))
+  abline(v=mean(temp$R2), col = "blue", lwd = 2)
+  
+}
+dev.off()
 
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found

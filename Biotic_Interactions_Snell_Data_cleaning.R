@@ -162,12 +162,6 @@ prefull_data = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>%
   group_by(spAOU, Focal, Family, stateroute, occ, abundance.x) %>%
   dplyr::summarize(allCompN = sum(abundance.y, na.rm = T))
 
-comps.5 = unique(focalcompoutput$compAOU)
-comps.5 = data.frame(comps.5)
-comps.5 = na.omit(comps.5)
-comps = merge(comps.5, AOU[c("AOU", "Family")], by.x = "comps.5", by.y = "AOU")
-write.csv(comps, "data/comps.csv", row.names = FALSE)
-
 # subsetting prefull data to species in new_spec_weights
 prefull_data2 = subset(prefull_data, spAOU %in% new_spec_weights$focalAOU)
 prefull_data2 = data.frame(prefull_data2)
@@ -186,6 +180,15 @@ names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbu
 focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
 focalcompoutput$MainCompN[is.na(focalcompoutput$MainCompN)] = 0
 focalcompoutput = focalcompoutput[focalcompoutput$FocalOcc & focalcompoutput$AllCompN > 0,] 
+
+### selecting competitors
+comps.5 = unique(focalcompoutput$compAOU)
+comps.5 = data.frame(comps.5)
+comps.5 = na.omit(comps.5)
+comps = merge(comps.5, AOU[c("AOU", "Family")], by.x = "comps.5", by.y = "AOU")
+# write.csv(comps, "data/comps.csv", row.names = FALSE)
+
+
 
 # Filter number to spp present at 20+ routes for better model results
 # Subset to get the count of routes for each spp
