@@ -188,6 +188,13 @@ for (sp in unique(noncomps$FocalAOU)){
 }
 dev.off()
 
+noncomps$type = "Species"
+ggplot(noncomps, aes(type, log10(R2))) + geom_violin(linetype = "blank", aes(fill = factor(noncomps$type))) + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
+
+ggsave("C:/Git/Biotic-Interactions/Figures/violin_noncomps.png")
+
+
+
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
 # and # of sites birds were not found from original bbs data
