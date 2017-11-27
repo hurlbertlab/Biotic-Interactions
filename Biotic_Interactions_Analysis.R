@@ -45,6 +45,7 @@ beta_abun = c()
 subfocalspecies = unique(occuenv$Species)
 
 for (sp in 1:length(subfocalspecies)){
+  print(sp)
   temp = subset(occuenv,occuenv$Species == subfocalspecies[sp])
   
   competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
@@ -78,8 +79,8 @@ for (sp in 1:length(subfocalspecies)){
   sp1 = unique(temp$Species)
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
   # saving model output into separate data frames
-  occ_comp_est = summary(competition)$coef[2,"Estimate"]
-  occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
+  occ_comp_est = summary(competition)$coef[1,"Estimate"]
+  occ_comp_p = summary(competition)$coef[1,"Pr(>|t|)"]
   occ_comp_r = summary(competition)$r.squared
   occ_env_est = summary(env_z)$coef[2,"Estimate"]
   occ_env_p = summary(env_z)$coef[2,"Pr(>|t|)"]
@@ -144,6 +145,7 @@ for (sp in 1:length(subfocspecies)){
     for(co in comps){
       compAOU = co
       ctemp = subset(bbs, aou == co) 
+      envoutputp = subset(beta_occ, FocalAOU == subfocspecies[sp])[,4] #### using comp R2
       routes = dplyr::filter(ctemp, stateroute %in% temp$stateroute & 
                       aou != subfocspecies[sp]) %>%
         group_by(stateroute, aou) %>%
@@ -155,7 +157,13 @@ for (sp in 1:length(subfocspecies)){
         lms_est = summary(lms)$coef[2,"Estimate"]
         lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
         lms_r = summary(lms)$r.squared
-        noncomps = rbind(noncomps, c(FocalAOU, compAOU,lms_est, lms_p, lms_r))
+        #if(lms_r > envoutputp){
+        #  tally(lms_p)
+        #}
+        
+        
+        
+        noncomps = rbind(noncomps, c(FocalAOU, compAOU,lms_est, lms_p, lms_r, envoutputp))
       }
     }
   }
@@ -164,8 +172,21 @@ for (sp in 1:length(subfocspecies)){
 
 
 noncomps = data.frame(noncomps)
-names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
+names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2", "mainR")
 # write.csv(noncomps, "data/noncomps.csv", row.names = FALSE)
+
+nonps = na.omit(noncomps) %>% 
+  group_by(FocalAOU) %>%
+  tally(R2 > mainR)
+names(nonps) = c("FocalAOU", "main_g_non")
+
+numcomps = na.omit(noncomps) %>% 
+ # group_by(FocalAOU) %>%
+  count(FocalAOU)
+names(numcomps) = c("FocalAOU", "Comp_count")
+  
+noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
+noncompsdist$newp = noncompsdist$main_g_non/(noncompsdist$Comp_count + 1)
 
 #### non comp plots ####
 pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
