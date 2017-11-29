@@ -241,20 +241,25 @@ summary(glm_occ_rand_site)
 occ1b = occuenv %>% filter(Species == 4660|Species == 7222|Species == 5840) %>%
         filter(stateroute == 68015)
 
-fig1 = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point()+ geom_jitter(width = 0, height = 0.02)  +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) + geom_point(data = occ1b, aes(x = log10(FocalAbundance), y = FocalOcc, color = as.factor(occ1b$Focal)))
-
+fig1a = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point()+ geom_jitter(width = 0, height = 0.02)  +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) + geom_point(data = occ1b, aes(x = log10(FocalAbundance), y = FocalOcc, color = as.factor(occ1b$Focal), size = 1.25)) +theme(legend.position = "none")
 #+geom_point(data = bbs_sub4, color = "red")
 # +geom_text(label = occuenv$Species)
-ggExtra::ggMarginal(fig1 , type = "histogram", fill = "dark gray")
+ggExtra::ggMarginal(fig1a , type = "histogram", fill = "dark gray")
 ggsave("C:/Git/Biotic-Interactions/Figures/fig1.pdf")
 
-# bbs_sub3 = subset(bbs_abun, stateroute == 68015)
-# bbs_sub4 = subset(bbs_sub3, aou == 4660|aou == 7222|aou == 5840)
-# write.csv(bbs_sub4, "data/bbs_route68015.csv", row.names = FALSE)
+bbs_sub3 = subset(bbs_abun, stateroute == 68015)
+bbs_sub3.5 = subset(bbs_sub3, aou == 4660|aou == 7222|aou == 5840)
 bbs_sub4 = read.csv("data/bbs_route68015.csv", header = TRUE)
-ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$SpeciesName)), lwd = 1.5) +theme_classic()+xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))
+fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$SpeciesName)), lwd = 1.5) +theme_classic()+xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))
 
+fig1 = plot_grid(fig1a + theme(legend.position="none"),
+               fig1b + theme(legend.position="none"), 
+               labels = c("A","B"),
+               align = 'h', 
+               rel_widths = c(1, 1.3))
 
+plot_grid(fig1, p2, ncol = 1, rel_heights = c(1, 1))
+ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf")
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
 
