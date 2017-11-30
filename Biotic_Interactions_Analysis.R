@@ -143,16 +143,15 @@ for (sp in 1:length(subfocspecies)){
     maincomp = dplyr::filter(maincomps, Family != tempfam)
     comps = maincomp[,1]
     for(co in comps){
-      compAOU = co
-      ctemp = subset(bbs, aou == co) 
-      envoutputp = subset(beta_occ, FocalAOU == subfocspecies[sp])[,4] #### using comp R2
-      routes = dplyr::filter(ctemp, stateroute %in% temp$stateroute & 
-                      aou != subfocspecies[sp]) %>%
+      mergespp = subset(bbs, aou == co) %>% 
         group_by(stateroute, aou) %>%
         summarize(sumcomp = sum(speciestotal),
-                      meancomp = mean(speciestotal)) 
-        mergespp = left_join(routes, temp, by = "stateroute")
-        if(length(unique(mergespp$FocalOcc)) > 1){ # !is.na(mergespp$aou) == TRUE
+                      meancomp = mean(speciestotal)) %>%
+        right_join(temp, by = "stateroute")
+      
+      mergespp$meancomp[is.na(mergespp$meancomp)] = 0
+      
+      if(length(unique(mergespp$FocalOcc)) > 2){ # !is.na(mergespp$aou) == TRUE
         lms = lm(mergespp$meancomp ~ mergespp$FocalOcc)
         lms_est = summary(lms)$coef[2,"Estimate"]
         lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
@@ -161,9 +160,10 @@ for (sp in 1:length(subfocspecies)){
         #  tally(lms_p)
         #}
         
+        envoutputp = subset(beta_occ, FocalAOU == subfocspecies[sp])[,4] #### using comp R2
         
         
-        noncomps = rbind(noncomps, c(FocalAOU, compAOU,lms_est, lms_p, lms_r, envoutputp))
+        noncomps = rbind(noncomps, c(FocalAOU, co,lms_est, lms_p, lms_r, envoutputp))
       }
     }
   }
