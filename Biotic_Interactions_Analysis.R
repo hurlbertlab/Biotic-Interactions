@@ -253,12 +253,13 @@ fig1a = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +ge
 #+geom_point(data = bbs_sub4, color = "red")
 # +geom_text(label = occuenv$Species)
 ggExtra::ggMarginal(fig1a , type = "histogram", fill = "dark gray")
-ggsave("C:/Git/Biotic-Interactions/Figures/fig1.pdf")
+ggsave("C:/Git/Biotic-Interactions/Figures/fig1.tiff", height = 8, width = 12)
 
 bbs_sub3.5 = bbs_abun %>% filter(aou == 6860|aou == 7222|aou == 5840) %>%
   filter(stateroute == 68015)
 bbs_sub4 = read.csv("data/bbs_route68015.csv", header = TRUE)
-fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$SpeciesName)), lwd = 1.5) + geom_point(aes(color = as.factor(bbs_sub4$SpeciesName), size = 12))+theme_classic()+xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))+ geom_hline(yintercept = 0, aes(color = "#ffffff"), lwd = 1.5)+ scale_color_manual(breaks = c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"), values=c("#F8766D","#7CAE00", "#00BFC4"), labels=c("Swamp Sparrow",  "Canada Warbler", "Winter Wren")) 
+fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$SpeciesName)), lwd = 1.5) + geom_point(aes(color = as.factor(bbs_sub4$SpeciesName), size = 12))+theme_classic()+xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16), legend.text = element_text(size = 12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))+ scale_y_continuous(breaks = c(0, 5, 10, 20, 29))+ geom_hline(yintercept = 0, aes(color = "#ffffff"), lwd = 1.5)+ scale_color_manual(breaks = c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"), values=c("#F8766D","#7CAE00", "#00BFC4"), labels=c("Swamp Sparrow",  "Canada Warbler", "Winter Wren")) 
+ggsave("C:/Git/Biotic-Interactions/Figures/1b.pdf", height = 8, width = 12)
 
 fig1 = plot_grid(fig1a + theme(legend.position="none"),
                fig1b + theme(legend.position="none"), 
@@ -267,7 +268,7 @@ fig1 = plot_grid(fig1a + theme(legend.position="none"),
                rel_widths = c(1, 1.3))
 
 plot_grid(fig1, p2, ncol = 1, rel_heights = c(1, 1))
-ggsave("C:/Git/Biotic-Interactions/Figures/1b.pdf")
+
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
 
