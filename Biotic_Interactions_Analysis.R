@@ -173,6 +173,8 @@ for (sp in 1:length(subfocspecies)){
 
 noncomps = data.frame(noncomps)
 names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2", "mainR")
+# have to remove pairing of American REdstart/least flycatcher, non-familial pairing based on lit
+noncomps = noncomps[!(noncomps$FocalAOU == 6870 & noncomps$CompetitorAOU == 4670),]
 # write.csv(noncomps, "data/noncomps.csv", row.names = FALSE)
 
 nonps = na.omit(noncomps) %>% 
@@ -181,19 +183,24 @@ nonps = na.omit(noncomps) %>%
 names(nonps) = c("FocalAOU", "main_g_non")
 
 numcomps = na.omit(noncomps) %>% 
- # group_by(FocalAOU) %>%
   count(FocalAOU)
 names(numcomps) = c("FocalAOU", "Comp_count")
   
 noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
 noncompsdist$newp = noncompsdist$main_g_non/(noncompsdist$Comp_count + 1)
 
+hist(noncompsdist$newp,xlab = "", main = "Distribution of P-values of non-competitors")
+abline(v=mean(noncompsdist$newp), col = "blue", lwd = 2)
+
+hist(noncomps$R2)
+hist(noncomps$Estimate)
+
 #### non comp plots ####
 pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
 for (sp in unique(noncomps$FocalAOU)){
   temp = subset(noncomps, FocalAOU == sp) 
-  hist(temp$Estimate, xlab = unique(temp$FocalAOU[temp$FocalAOU == sp]))
+  hist(temp$Estimate, xlab = unique(temp$FocalAOU[temp$FocalAOU == sp]), main = "Distribution of Estimates")
   abline(v=mean(temp$Estimate), col = "blue", lwd = 2)
   
 }
@@ -203,7 +210,8 @@ pdf('Figures/noncomp_r2.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
 for (sp in unique(noncomps$FocalAOU)){
   temp = subset(noncomps, FocalAOU == sp) 
-  hist(temp$R2, xlab = unique(temp$FocalAOU[temp$FocalAOU == sp]))
+  temp = na.omit(temp)
+  hist(temp$R2, xlab = unique(temp$FocalAOU[temp$FocalAOU == sp]), main = expression("Distribution of R"^2))
   abline(v=mean(temp$R2), col = "blue", lwd = 2)
   
 }
@@ -238,19 +246,19 @@ glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s +
 summary(glm_occ_rand_site)                                    
 
 #### new fig 1 ####
-occ1b = occuenv %>% filter(Species == 4660|Species == 7222|Species == 5840) %>%
+occ1b = occuenv %>% filter(Species == 6860|Species == 7222|Species == 5840) %>%
         filter(stateroute == 68015)
 
-fig1a = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point()+ geom_jitter(width = 0, height = 0.02)  +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) + geom_point(data = occ1b, aes(x = log10(FocalAbundance), y = FocalOcc, color = as.factor(occ1b$Focal), size = 1.25)) +theme(legend.position = "none")
+fig1a = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point()+ geom_jitter(width = 0, height = 0.02)  +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) + geom_point(data = occ1b, aes(x = log10(FocalAbundance), y = FocalOcc, color = as.factor(occ1b$Focal), size = 1.25)) +theme(legend.position = "none")+ scale_color_manual(breaks = c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"), values=c("#F8766D","#7CAE00", "#00BFC4"), labels=c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"))
 #+geom_point(data = bbs_sub4, color = "red")
 # +geom_text(label = occuenv$Species)
 ggExtra::ggMarginal(fig1a , type = "histogram", fill = "dark gray")
 ggsave("C:/Git/Biotic-Interactions/Figures/fig1.pdf")
 
-bbs_sub3 = subset(bbs_abun, stateroute == 68015)
-bbs_sub3.5 = subset(bbs_sub3, aou == 4660|aou == 7222|aou == 5840)
+bbs_sub3.5 = bbs_abun %>% filter(aou == 6860|aou == 7222|aou == 5840) %>%
+  filter(stateroute == 68015)
 bbs_sub4 = read.csv("data/bbs_route68015.csv", header = TRUE)
-fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$SpeciesName)), lwd = 1.5) +theme_classic()+xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))
+fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$SpeciesName)), lwd = 1.5) + geom_point(aes(color = as.factor(bbs_sub4$SpeciesName), size = 12))+theme_classic()+xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))+ geom_hline(yintercept = 0, aes(color = "#ffffff"), lwd = 1.5)+ scale_color_manual(breaks = c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"), values=c("#F8766D","#7CAE00", "#00BFC4"), labels=c("Swamp Sparrow",  "Canada Warbler", "Winter Wren")) 
 
 fig1 = plot_grid(fig1a + theme(legend.position="none"),
                fig1b + theme(legend.position="none"), 
@@ -259,7 +267,7 @@ fig1 = plot_grid(fig1a + theme(legend.position="none"),
                rel_widths = c(1, 1.3))
 
 plot_grid(fig1, p2, ncol = 1, rel_heights = c(1, 1))
-ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf")
+ggsave("C:/Git/Biotic-Interactions/Figures/1b.pdf")
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
 
