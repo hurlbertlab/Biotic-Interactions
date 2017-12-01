@@ -50,7 +50,7 @@ for (sp in 1:length(subfocalspecies)){
   
   competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
   # z scores separated out for env effects (as opposed to multivariate variable)
-  env_z = lm(temp$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
+  env_z = lm(temp$occ_logit ~ abs(zTemp) + abs(zElev) + abs(zPrecip) + abs(zNDVI), data = temp)
   # z scores separated out for env effects
   both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
   
@@ -79,23 +79,23 @@ for (sp in 1:length(subfocalspecies)){
   sp1 = unique(temp$Species)
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
   # saving model output into separate data frames
-  occ_comp_est = summary(competition)$coef[1,"Estimate"]
-  occ_comp_p = summary(competition)$coef[1,"Pr(>|t|)"]
+  occ_comp_est = summary(competition)$coef[2,"Estimate"]
+  occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
   occ_comp_r = summary(competition)$r.squared
-  occ_env_est = summary(env_z)$coef[2,"Estimate"]
-  occ_env_p = summary(env_z)$coef[2,"Pr(>|t|)"]
+  #occ_env_est = summary(env_z)$coef[2,"Estimate"]
+  #occ_env_p = summary(env_z)$coef[2,"Pr(>|t|)"]
   occ_env_r = summary(env_z)$r.squared 
-  occ_b_est = summary(both_z)$coef[2,"Estimate"]
+  #occ_b_est = summary(both_z)$coef[2,"Estimate"]
   occ_b_p = summary(both_z)$coef[2,"Pr(>|t|)"]
   occ_b_r = summary(both_z)$r.squared 
 
-  abun_comp_est = summary(competition_abun)$coef[1,"Estimate"]
-  abun_comp_p = summary(competition_abun)$coef[1,"Pr(>|t|)"]
+  abun_comp_est = summary(competition_abun)$coef[2,"Estimate"]
+  abun_comp_p = summary(competition_abun)$coef[2,"Pr(>|t|)"]
   abun_comp_r = summary(competition_abun)$r.squared #using multiple rsquared
-  abun_env_est = summary(env_abun)$coef[2,"Estimate"]
-  abun_env_p = summary(env_abun)$coef[2,"Pr(>|t|)"]
+  #abun_env_est = summary(env_abun)$coef[2,"Estimate"]
+  #abun_env_p = summary(env_abun)$coef[2,"Pr(>|t|)"]
   abun_env_r = summary(env_abun)$r.squared 
-  abun_both_est = summary(both_abun)$coef[2,"Estimate"]
+  #abun_both_est = summary(both_abun)$coef[2,"Estimate"]
   abun_both_p = summary(both_abun)$coef[2,"Pr(>|t|)"]
   abun_both_r = summary(both_abun)$r.squared
   
@@ -131,17 +131,18 @@ names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competitio
 ##### non-competitor comparison ######
 noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "Family")]
 subfocspecies = unique(noncompdf$Species)
-maincomps = read.csv("data/comps.csv", header = TRUE)
-maincomps = maincomps[!duplicated(maincomps), ]
+#maincomps = read.csv("data/comps.csv", header = TRUE)
+#maincomps = maincomps[!duplicated(maincomps), ]
 
 noncomps = c()
-for (sp in 1:length(subfocspecies)){
-  FocalAOU = subfocspecies[sp]
-  temp = subset(noncompdf, Species == subfocspecies[sp]) 
+for (sp in subfocspecies){
+  FocalAOU = sp
+  temp = subset(noncompdf, Species == sp) 
   tempfam = unique(as.character(temp$Family))
-  if(length(temp$FocalOcc) != 0){
-    maincomp = dplyr::filter(maincomps, Family != tempfam)
-    comps = maincomp[,1]
+  if(nrow(temp) > 0){
+    ncomps = dplyr::filter(maincomps, Family != tempfam) %>%
+      select(comps.5) %>% 
+      unlist()
     for(co in comps){
       mergespp = subset(bbs, aou == co) %>% 
         group_by(stateroute, aou) %>%
@@ -151,7 +152,7 @@ for (sp in 1:length(subfocspecies)){
       
       mergespp$meancomp[is.na(mergespp$meancomp)] = 0
       
-      if(length(mergespp$meancomp[!is.na(mergespp$aou)] == TRUE) > 2){ 
+      if(length(unique(mergespp$meancomp[!is.na(mergespp$meancomp)])) > 2){ 
         lms = lm(mergespp$meancomp ~ mergespp$FocalOcc)
         lms_est = summary(lms)$coef[2,"Estimate"]
         lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
@@ -186,17 +187,19 @@ noncompsdist$newp = noncompsdist$main_g_non/(noncompsdist$Comp_count + 1)
 hist(noncompsdist$newp,xlab = "", main = "Distribution of P-values of non-competitors")
 abline(v=mean(noncompsdist$newp), col = "blue", lwd = 2)
 
-hist(noncomps$R2)
-abline(v=mean(noncomps$R2), col = "blue", lwd = 2)
-hist(na.omit(log10(noncomps$Estimate)))
+hist(noncomps2$R2)
+abline(v=mean(noncomps2$R2), col = "blue", lwd = 2)
+hist(na.omit(log10(noncomps2$Estimate)))
 abline(v=mean(na.omit(log10(noncomps$Estimate))), col = "blue", lwd = 2)
 #### non comp plots ####
 pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
 for (sp in unique(noncomps$FocalAOU)){
   temp = subset(noncomps, FocalAOU == sp) 
-  hist(temp$Estimate, xlab = unique(temp$FocalAOU[temp$FocalAOU == sp]), main = "Distribution of Estimates")
-  abline(v=mean(temp$Estimate), col = "blue", lwd = 2)
+  comp_est = beta_occ$Competition_Est[beta_occ$FocalAOU == sp]
+  hist(temp$Estimate, xlab = 'Estimate', 
+       main = sp, xlim = c(min(temp$Estimate, comp_est), max(temp$Estimate, comp_est)))
+  abline(v = comp_est, col = "blue", lwd = 2)
   
 }
 dev.off()
@@ -206,8 +209,10 @@ par(mfrow = c(3, 4))
 for (sp in unique(noncomps$FocalAOU)){
   temp = subset(noncomps, FocalAOU == sp) 
   temp = na.omit(temp)
-  hist(temp$R2, xlab = unique(temp$FocalAOU[temp$FocalAOU == sp]), main = expression("Distribution of R"^2))
-  abline(v=mean(temp$R2), col = "blue", lwd = 2)
+  comp_r2 = beta_occ$Competition_R2[beta_occ$FocalAOU == sp]
+  hist(temp$R2, xlab = expression('R'^2), main = sp,
+       xlim = c(0, max(temp$R2, comp_r2)))
+  abline(v = comp_r2, col = "blue", lwd = 2)
   
 }
 dev.off()
