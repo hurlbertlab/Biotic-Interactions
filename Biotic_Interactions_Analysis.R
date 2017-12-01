@@ -78,6 +78,8 @@ for (sp in 1:length(subfocalspecies)){
   
   sp1 = unique(temp$Species)
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
+  
+  if(length(unique(temp$comp_scaled[!is.na(temp$comp_scaled)])) > 2){
   # saving model output into separate data frames
   occ_comp_est = summary(competition)$coef[2,"Estimate"]
   occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
@@ -101,7 +103,7 @@ for (sp in 1:length(subfocalspecies)){
   
   beta_occ = rbind(beta_occ, c(sp1, occ_comp_est, occ_comp_p, occ_comp_r, occ_env_est, occ_env_p, occ_env_r,occ_b_est, occ_b_p , occ_b_r))
   beta_abun = rbind(beta_abun, c(sp1, abun_comp_est, abun_comp_p, abun_comp_r, abun_env_est, abun_env_p, abun_env_r,abun_both_est, abun_both_p , abun_both_r))
-  
+  } 
 }         
 
 
@@ -131,7 +133,7 @@ names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competitio
 ##### non-competitor comparison ######
 noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "Family")]
 subfocspecies = unique(noncompdf$Species)
-#maincomps = read.csv("data/comps.csv", header = TRUE)
+#maincomps = read.csv("data/comps.csv", header = TRUE) redo this part of the script in DC
 #maincomps = maincomps[!duplicated(maincomps), ]
 
 noncomps = c()
@@ -182,10 +184,10 @@ numcomps = na.omit(noncomps2) %>%
 names(numcomps) = c("FocalAOU", "Comp_count")
   
 noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
-noncompsdist$newp = noncompsdist$main_g_non/(noncompsdist$Comp_count + 1)
+noncompsdist$nullp = noncompsdist$main_g_non/(noncompsdist$Comp_count + 1)
 
-hist(noncompsdist$newp,xlab = "", main = "Distribution of P-values of non-competitors")
-abline(v=mean(noncompsdist$newp), col = "blue", lwd = 2)
+hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
+abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
 
 hist(noncomps2$R2)
 abline(v=mean(noncomps2$R2), col = "blue", lwd = 2)
