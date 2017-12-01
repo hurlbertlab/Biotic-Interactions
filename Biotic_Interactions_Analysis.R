@@ -151,38 +151,32 @@ for (sp in 1:length(subfocspecies)){
       
       mergespp$meancomp[is.na(mergespp$meancomp)] = 0
       
-      if(length(unique(mergespp$FocalOcc)) > 2){ # !is.na(mergespp$aou) == TRUE
+      if(length(mergespp$meancomp[!is.na(mergespp$aou)] == TRUE) > 2){ 
         lms = lm(mergespp$meancomp ~ mergespp$FocalOcc)
         lms_est = summary(lms)$coef[2,"Estimate"]
         lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
         lms_r = summary(lms)$r.squared
-        #if(lms_r > envoutputp){
-        #  tally(lms_p)
-        #}
         
-        envoutputp = subset(beta_occ, FocalAOU == subfocspecies[sp])[,4] #### using comp R2
-        
-        
-        noncomps = rbind(noncomps, c(FocalAOU, co,lms_est, lms_p, lms_r, envoutputp))
+        noncomps = rbind(noncomps, c(FocalAOU, co,lms_est, lms_p, lms_r))
       }
     }
   }
 }         
 
-
-
 noncomps = data.frame(noncomps)
-names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2", "mainR")
+names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 # have to remove pairing of American REdstart/least flycatcher, non-familial pairing based on lit
 noncomps = noncomps[!(noncomps$FocalAOU == 6870 & noncomps$CompetitorAOU == 4670),]
+
+noncomps2 = right_join(beta_occ[,c("FocalAOU", "Competition_R2")], noncomps, "FocalAOU" = "FocalAOU")
 # write.csv(noncomps, "data/noncomps.csv", row.names = FALSE)
 
-nonps = na.omit(noncomps) %>% 
+nonps = na.omit(noncomps2) %>% 
   group_by(FocalAOU) %>%
-  tally(R2 > mainR)
+  tally(R2 > Competition_R2)
 names(nonps) = c("FocalAOU", "main_g_non")
 
-numcomps = na.omit(noncomps) %>% 
+numcomps = na.omit(noncomps2) %>% 
   count(FocalAOU)
 names(numcomps) = c("FocalAOU", "Comp_count")
   
@@ -193,8 +187,9 @@ hist(noncompsdist$newp,xlab = "", main = "Distribution of P-values of non-compet
 abline(v=mean(noncompsdist$newp), col = "blue", lwd = 2)
 
 hist(noncomps$R2)
-hist(noncomps$Estimate)
-
+abline(v=mean(noncomps$R2), col = "blue", lwd = 2)
+hist(na.omit(log10(noncomps$Estimate)))
+abline(v=mean(na.omit(log10(noncomps$Estimate))), col = "blue", lwd = 2)
 #### non comp plots ####
 pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
@@ -218,7 +213,7 @@ for (sp in unique(noncomps$FocalAOU)){
 dev.off()
 
 noncomps$type = "Species"
-ggplot(noncomps, aes(type, log10(R2))) + geom_violin(linetype = "blank", aes(fill = factor(noncomps$type))) + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
+ggplot(noncomps, aes(type, R2)) + geom_violin(linetype = "blank", aes(fill = factor(noncomps$type))) + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
 
 ggsave("C:/Git/Biotic-Interactions/Figures/violin_noncomps.png")
 
@@ -253,7 +248,7 @@ fig1a = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +ge
 #+geom_point(data = bbs_sub4, color = "red")
 # +geom_text(label = occuenv$Species)
 ggExtra::ggMarginal(fig1a , type = "histogram", fill = "dark gray")
-ggsave("C:/Git/Biotic-Interactions/Figures/fig1.tiff", height = 8, width = 12)
+ggsave("C:/Git/Biotic-Interactions/Figures/fig1.png", height = 8, width = 12)
 
 bbs_sub3.5 = bbs_abun %>% filter(aou == 6860|aou == 7222|aou == 5840) %>%
   filter(stateroute == 68015)
