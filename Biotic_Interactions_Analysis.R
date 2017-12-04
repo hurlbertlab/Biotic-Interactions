@@ -101,8 +101,8 @@ for (sp in 1:length(subfocalspecies)){
   abun_both_p = summary(both_abun)$coef[2,"Pr(>|t|)"]
   abun_both_r = summary(both_abun)$r.squared
   
-  beta_occ = rbind(beta_occ, c(sp1, occ_comp_est, occ_comp_p, occ_comp_r, occ_env_est, occ_env_p, occ_env_r,occ_b_est, occ_b_p , occ_b_r))
-  beta_abun = rbind(beta_abun, c(sp1, abun_comp_est, abun_comp_p, abun_comp_r, abun_env_est, abun_env_p, abun_env_r,abun_both_est, abun_both_p , abun_both_r))
+  beta_occ = rbind(beta_occ, c(sp1, occ_comp_est, occ_comp_p, occ_comp_r, occ_env_r, occ_b_p, occ_b_r))
+  beta_abun = rbind(beta_abun, c(sp1, abun_comp_est, abun_comp_p, abun_comp_r, abun_env_r, abun_both_p , abun_both_r))
   } 
 }         
 
@@ -126,24 +126,24 @@ envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'Focal
 
 #write.csv(envoutputa, "data/envoutputa.csv", row.names = FALSE)
 beta_occ = data.frame(beta_occ)
-names(beta_occ) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_Est", "EnvZ_P", "EnvZ_R2", "BothZ_Est", "BothZ_P", "BothZ_R2")
+names(beta_occ) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
 beta_abun = data.frame(beta_abun)
-names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_Est", "EnvZ_P", "EnvZ_R2", "BothZ_Est", "BothZ_P", "BothZ_R2")
+names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
 
 ##### non-competitor comparison ######
 noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "Family")]
 subfocspecies = unique(noncompdf$Species)
-#maincomps = read.csv("data/comps.csv", header = TRUE) redo this part of the script in DC
-#maincomps = maincomps[!duplicated(maincomps), ]
+noncomps = read.csv("data/noncomps.csv", header = TRUE) 
+comps = unique(noncomps$AOU)
 
-noncomps = c()
+noncomps_output = c()
 for (sp in subfocspecies){
   FocalAOU = sp
   temp = subset(noncompdf, Species == sp) 
   tempfam = unique(as.character(temp$Family))
   if(nrow(temp) > 0){
-    ncomps = dplyr::filter(maincomps, Family != tempfam) %>%
-      select(comps.5) %>% 
+    ncomps = dplyr::filter(noncomps, Family != tempfam) %>%
+      select(AOU) %>% 
       unlist()
     for(co in comps){
       mergespp = subset(bbs, aou == co) %>% 
@@ -151,35 +151,36 @@ for (sp in subfocspecies){
         summarize(sumcomp = sum(speciestotal),
                       meancomp = mean(speciestotal)) %>%
         right_join(temp, by = "stateroute")
+    
+      # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) 
+      mergespp$comp_scaled = mergespp$sumcomp/(mergespp$FocalAbundance + mergespp$sumcomp)
+      mergespp$comp_scaled[is.na(mergespp$comp_scaled)] = 0
       
-      mergespp$meancomp[is.na(mergespp$meancomp)] = 0
-      
-      if(length(unique(mergespp$meancomp[!is.na(mergespp$meancomp)])) > 2){ 
-        lms = lm(mergespp$meancomp ~ mergespp$FocalOcc)
+      if(length(unique(mergespp$comp_scaled[!is.na(mergespp$comp_scaled)])) > 2){ 
+        lms = lm(mergespp$comp_scaled ~ mergespp$FocalOcc)
         lms_est = summary(lms)$coef[2,"Estimate"]
         lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
         lms_r = summary(lms)$r.squared
         
-        noncomps = rbind(noncomps, c(FocalAOU, co,lms_est, lms_p, lms_r))
+        noncomps_output = rbind(noncomps_output, c(FocalAOU, co,lms_est, lms_p, lms_r))
       }
     }
   }
 }         
 
-noncomps = data.frame(noncomps)
-names(noncomps) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
+noncomps_output = data.frame(noncomps_output)
+names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 # have to remove pairing of American REdstart/least flycatcher, non-familial pairing based on lit
-noncomps = noncomps[!(noncomps$FocalAOU == 6870 & noncomps$CompetitorAOU == 4670),]
+noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
 
-noncomps2 = right_join(beta_occ[,c("FocalAOU", "Competition_R2")], noncomps, "FocalAOU" = "FocalAOU")
-# write.csv(noncomps, "data/noncomps.csv", row.names = FALSE)
+# write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
 
-nonps = na.omit(noncomps2) %>% 
+nonps = na.omit(noncomps_output) %>% 
   group_by(FocalAOU) %>%
   tally(R2 > Competition_R2)
 names(nonps) = c("FocalAOU", "main_g_non")
 
-numcomps = na.omit(noncomps2) %>% 
+numcomps = na.omit(noncomps_output) %>% 
   count(FocalAOU)
 names(numcomps) = c("FocalAOU", "Comp_count")
   
@@ -189,15 +190,15 @@ noncompsdist$nullp = noncompsdist$main_g_non/(noncompsdist$Comp_count + 1)
 hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
 abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
 
-hist(noncomps2$R2)
-abline(v=mean(noncomps2$R2), col = "blue", lwd = 2)
-hist(na.omit(log10(noncomps2$Estimate)))
-abline(v=mean(na.omit(log10(noncomps$Estimate))), col = "blue", lwd = 2)
+hist(noncomps_output$R2)
+abline(v=mean(noncomps_output$R2), col = "blue", lwd = 2)
+hist(na.omit(log10(noncomps_output$Estimate)))
+abline(v=mean(na.omit(log10(noncomps_output$Estimate))), col = "blue", lwd = 2)
 #### non comp plots ####
 pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
-for (sp in unique(noncomps$FocalAOU)){
-  temp = subset(noncomps, FocalAOU == sp) 
+for (sp in unique(noncomps_output$FocalAOU)){
+  temp = subset(noncomps_output, FocalAOU == sp) 
   comp_est = beta_occ$Competition_Est[beta_occ$FocalAOU == sp]
   hist(temp$Estimate, xlab = 'Estimate', 
        main = sp, xlim = c(min(temp$Estimate, comp_est), max(temp$Estimate, comp_est)))
@@ -208,14 +209,12 @@ dev.off()
 
 pdf('Figures/noncomp_r2.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
-for (sp in unique(noncomps$FocalAOU)){
-  temp = subset(noncomps, FocalAOU == sp) 
-  temp = na.omit(temp)
+for (sp in unique(noncomps_output$FocalAOU)){
+  temp = subset(noncomps_output, FocalAOU == sp) 
   comp_r2 = beta_occ$Competition_R2[beta_occ$FocalAOU == sp]
   hist(temp$R2, xlab = expression('R'^2), main = sp,
        xlim = c(0, max(temp$R2, comp_r2)))
   abline(v = comp_r2, col = "blue", lwd = 2)
-  
 }
 dev.off()
 

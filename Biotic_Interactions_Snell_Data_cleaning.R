@@ -181,12 +181,14 @@ focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
 focalcompoutput$MainCompN[is.na(focalcompoutput$MainCompN)] = 0
 focalcompoutput = focalcompoutput[focalcompoutput$FocalOcc & focalcompoutput$AllCompN > 0,] 
 
-### selecting competitors
-comps.5 = unique(focalcompoutput$compAOU)
-comps.5 = data.frame(comps.5)
-comps.5 = na.omit(comps.5)
-comps = merge(comps.5, AOU[c("AOU", "Family")], by.x = "comps.5", by.y = "AOU")
-# write.csv(comps, "data/comps.csv", row.names = FALSE)
+#### selecting competitors for noncomp analysis ####
+uniq_comps = unique(shapefile_areas$compAOU)
+uniq_foc = filter(shapefile_areas, !focalAOU %in% uniq_comps)[,2]
+uniq_spp = data.frame(c(uniq_comps, uniq_foc))
+noncomps = left_join(uniq_spp, AOU[c("AOU", "Family")], by = c("c.uniq_comps..uniq_foc." = "AOU"))
+noncomps = noncomps[!duplicated(noncomps),]
+noncomps$AOU = noncomps$c.uniq_comps..uniq_foc.
+# write.csv(noncomps[,c(2,3)], "data/noncomps.csv", row.names = FALSE)
 
 
 
