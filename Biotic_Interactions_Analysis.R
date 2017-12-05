@@ -132,9 +132,9 @@ names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competitio
 
 ##### non-competitor comparison ######
 noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "Family")]
-subfocspecies = unique(noncompdf$Species)
+subfocspecies = unique(occuenv$Species)
 noncomps = read.csv("data/noncomps.csv", header = TRUE) 
-comps = unique(noncomps$AOU)
+
 
 noncomps_output = c()
 for (sp in subfocspecies){
@@ -145,6 +145,8 @@ for (sp in subfocspecies){
     ncomps = dplyr::filter(noncomps, Family != tempfam) %>%
       select(AOU) %>% 
       unlist()
+    comps = unique(noncomps$AOU)
+    comps = subset(comps, !comps %in% sp)
     for(co in comps){
       mergespp = subset(bbs, aou == co) %>% 
         group_by(stateroute, aou) %>%
@@ -174,8 +176,8 @@ names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
 
 # write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
-
-nonps = na.omit(noncomps_output) %>% 
+noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2")], by = "FocalAOU")
+nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
   tally(R2 > Competition_R2)
 names(nonps) = c("FocalAOU", "main_g_non")
@@ -191,9 +193,9 @@ hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-compe
 abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
 
 hist(noncomps_output$R2)
-abline(v=mean(noncomps_output$R2), col = "blue", lwd = 2)
-hist(na.omit(log10(noncomps_output$Estimate)))
-abline(v=mean(na.omit(log10(noncomps_output$Estimate))), col = "blue", lwd = 2)
+abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
+hist(na.omit(noncomps_output$Estimate), xlim = c(-4.5, 1.5))
+abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
 #### non comp plots ####
 pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
@@ -218,13 +220,13 @@ for (sp in unique(noncomps_output$FocalAOU)){
 }
 dev.off()
 
-noncomps$type = "Species"
-ggplot(noncomps, aes(type, R2)) + geom_violin(linetype = "blank", aes(fill = factor(noncomps$type))) + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
+noncomps_output$type = "Species"
+ggplot(noncomps_output, aes(type, R2)) + geom_violin(linetype = "blank", aes(fill = factor(noncomps_output$type))) + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
 
 ggsave("C:/Git/Biotic-Interactions/Figures/violin_noncomps.png")
 
 noncompsdist$type = "Species"
-ggplot(noncompsdist, aes(type, newp)) + geom_violin(linetype = "blank", aes(fill = factor(noncompsdist$type))) + xlab("Total Variance") + ylab("P-val")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
+ggplot(noncompsdist, aes(type, nullp)) + geom_violin(linetype = "blank", aes(fill = factor(noncompsdist$type))) + xlab("Total Variance") + ylab("P-val")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
 
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
@@ -260,7 +262,7 @@ ggsave("C:/Git/Biotic-Interactions/Figures/fig1.png", height = 8, width = 12)
 bbs_sub3.5 = bbs_abun %>% filter(aou == 6860|aou == 7222|aou == 5840) %>%
   filter(stateroute == 68015)
 bbs_sub4 = read.csv("data/bbs_route68015.csv", header = TRUE)
-fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$SpeciesName)), lwd = 1.5) + geom_point(aes(color = as.factor(bbs_sub4$SpeciesName), size = 12))+theme_classic()+xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16), legend.text = element_text(size = 12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))+ scale_y_continuous(breaks = c(0, 5, 10, 20, 29))+ geom_hline(yintercept = 0, aes(color = "#ffffff"), lwd = 1.5)+ scale_color_manual(breaks = c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"), values=c("#F8766D","#7CAE00", "#00BFC4"), labels=c("Swamp Sparrow",  "Canada Warbler", "Winter Wren")) 
+fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$SpeciesName)), lwd = 1.5) + geom_point(aes(color = as.factor(bbs_sub4$SpeciesName), size = 12))+theme_classic()+xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16), legend.text = element_text(size = 12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))+ scale_y_continuous(breaks = c(0, 5, 10, 20, 29))+ scale_color_manual(breaks = c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"), values=c("#F8766D","#7CAE00", "#00BFC4"), labels=c("Swamp Sparrow",  "Canada Warbler", "Winter Wren")) # + geom_hline(yintercept = 0, aes(color = "#ffffff"), lwd = 1.5)
 ggsave("C:/Git/Biotic-Interactions/Figures/1b.pdf", height = 8, width = 12)
 
 fig1 = plot_grid(fig1a + theme(legend.position="none"),
