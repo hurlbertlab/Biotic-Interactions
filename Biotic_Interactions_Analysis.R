@@ -192,9 +192,9 @@ noncompsdist$nullp = noncompsdist$main_g_non/(noncompsdist$Comp_count + 1)
 hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
 abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
 
-hist(noncomps_output$R2)
+hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", xlab = expression('R'^2))
 abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
-hist(na.omit(noncomps_output$Estimate), xlim = c(-4.5, 1.5))
+hist(na.omit(noncomps_output$Estimate), xlim = c(-4.5, 1.5), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate')
 abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
 #### non comp plots ####
 pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
