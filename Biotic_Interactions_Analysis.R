@@ -150,12 +150,11 @@ for (sp in subfocspecies){
     for(co in comps){
       mergespp = subset(bbs, aou == co) %>% 
         group_by(stateroute, aou) %>%
-        summarize(sumcomp = sum(speciestotal),
-                      meancomp = mean(speciestotal)) %>%
+        summarize(meancomp = mean(speciestotal)) %>%
         right_join(temp, by = "stateroute")
     
       # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) 
-      mergespp$comp_scaled = mergespp$sumcomp/(mergespp$FocalAbundance + mergespp$sumcomp)
+      mergespp$comp_scaled = mergespp$meancomp/(mergespp$FocalAbundance + mergespp$meancomp)
       mergespp$comp_scaled[is.na(mergespp$comp_scaled)] = 0
       
       if(length(unique(mergespp$comp_scaled[!is.na(mergespp$comp_scaled)])) > 2){ 
