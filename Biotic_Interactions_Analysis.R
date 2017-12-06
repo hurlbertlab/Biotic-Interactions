@@ -178,7 +178,7 @@ noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_
 noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2")], by = "FocalAOU")
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
-  tally(R2 > Competition_R2)
+  tally(R2 >= Competition_R2)
 names(nonps) = c("FocalAOU", "main_g_non")
 
 numcomps = na.omit(noncomps_output) %>% 
@@ -186,7 +186,7 @@ numcomps = na.omit(noncomps_output) %>%
 names(numcomps) = c("FocalAOU", "Comp_count")
   
 noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
-noncompsdist$nullp = noncompsdist$main_g_non/(noncompsdist$Comp_count + 1)
+noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
 
 hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
 abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
