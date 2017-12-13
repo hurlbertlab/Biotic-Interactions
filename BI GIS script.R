@@ -115,7 +115,7 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
   spArea = gArea(sporigin) # in m
   coArea = gArea(corigin)
   area_overlap = gArea(pi)
-  sp = "Patagioenas fasciata"
+  sp = "Patagioenas fasciata" #### these need to be converted to characters to rbind with filesoutput
   co = "Columba livia"
   filesoutput = rbind(filesoutput, c(sp, 3120, co, 3131, spArea, coArea, area_overlap))
   
