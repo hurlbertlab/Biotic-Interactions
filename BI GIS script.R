@@ -16,6 +16,7 @@ library(dplyr)
 # setwd("C:/git/Biotic-Interactions")
 # read in temporal occupancy data from BI occ script
 temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE)
+temp_occ$Aou[temp_occ$Aou == 4810] = 4812
 # read in lat long data
 bbs_routes = read.csv("data/latlong_rtes.csv",header =TRUE)
 # read in bird range shps
@@ -28,12 +29,13 @@ all_spp_list = list.files(shapefile_path)
 # read in new_spec_weights file created in data cleaning code
 new_spec_weights=read.csv("data/new_spec_weights.csv", header=TRUE)
 new_spec_weights$focalAOU = as.numeric(new_spec_weights$focalAOU)
-new_spec_weights$compAOU = as.numeric(new_spec_weights$compAOU)
+new_spec_weights$compAOU = as.numeric(new_spec_weights$CompAOU)
+pigeon = new_spec_weights[c(6),]
 
 # for loop to select a genus_spp from pairwise table, read in shp, subset to permanent habitat, plot focal distribution
 filesoutput = c()
-focal_spp = unique(new_spec_weights$focalcat)
 # dropping non-intersecting polygons
+focal_spp = unique(new_spec_weights$focalcat)
 new_spec_weights = new_spec_weights[-c(6),]
 
 
@@ -88,10 +90,40 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
     }
   } 
   
+  sp = pigeon[,10]
+  t1 = all_spp_list[grep(sp, all_spp_list)]
+  t2 = t1[grep('.shp', t1)]
+  t3 = strsplit(t2, ".shp")
+  test.poly <- readShapePoly(paste(shapefile_path, t3, sep = "")) # reads in species-specific shapefile
+  proj4string(test.poly) <- intl_proj
+  colors = c("blue", "yellow", "green", "red", "purple")
+  # subset to just permanent or breeding residents
+  sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
+  sporigin = spTransform(test.poly, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
+  plot(sporigin, col = colors, border = NA) 
+  gArea(spTransform(sporigin, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km")))
+  
+  comp.poly <- readOGR("Z:/GIS/birds/All/All/colu_livi_pl.shp") # reads in species-specific shapefile
+  proj4string(comp.poly) <- intl_proj
+  corigin = spTransform(comp.poly,  CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
+  plot(corigin, add = TRUE ,col = colors, border = NA) 
+  # intersect from raster package
+  sporigin = gBuffer(sporigin, byid=TRUE, width=0)
+  corigin = gBuffer(corigin, byid=TRUE, width=0)
+  
+  pi = intersect(sporigin, corigin)
+  spArea = gArea(sporigin) # in m
+  coArea = gArea(corigin)
+  area_overlap = gArea(pi)
+  sp = "Patagioenas fasciata"
+  co = "Columba livia"
+  filesoutput = rbind(filesoutput, c(sp, 3120, co, 3131, spArea, coArea, area_overlap))
+  
   filesoutput = data.frame(filesoutput)
   colnames(filesoutput) = c("Focal", "focalAOU","Competitor", "compAOU","FocalArea", "CompArea", "area_overlap")
   # string split to get sci name with spaces
   filesoutput$Focal = gsub('_',' ',filesoutput$Focal)
+  filesoutput$Competitor = gsub('_',' ',filesoutput$Competitor)
   write.csv(filesoutput, file = "data/shapefile_areas.csv", row.names = FALSE)
 }
 

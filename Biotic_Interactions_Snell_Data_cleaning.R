@@ -24,7 +24,7 @@ expect_pres$spAOU[expect_pres$spAOU == 4810] = 4812
 bbs_occ$Aou[bbs_occ$Aou == 4810] = 4812
 bsize$AOU[bsize$AOU == 4810] = 4812
 AOU$AOU_OUT[AOU$AOU_OUT == 4810] = 4812
-shapefile_areas$focalAOU[shapefile_areas$focalAOU == 4810] = 4812
+shapefile_areas$compAOU[shapefile_areas$compAOU == 4810] = 4812
 subsetocc$AOU[subsetocc$AOU == 4810] = 4812
 all_env$Species[all_env$Species == 4810] = 4812
 

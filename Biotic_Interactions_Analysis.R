@@ -46,7 +46,7 @@ subfocalspecies = unique(occuenv$Species)
 
 for (sp in 1:length(subfocalspecies)){
   print(sp)
-  temp = subset(occuenv,occuenv$Species == subfocalspecies[sp])
+  temp = subset(occuenv,Species == subfocalspecies[sp])
   
   competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
   # z scores separated out for env effects (as opposed to multivariate variable)
@@ -131,17 +131,9 @@ beta_abun = data.frame(beta_abun)
 names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
 
 ##### non-competitor comparison ######
-noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "Family")]
-subfocspecies = unique(occuenv$Species)
+noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "Family", "FocalOcc_scale", "occ_logit")]
+subfocspecies = unique(noncompdf$Species)
 noncomps = read.csv("data/noncomps.csv", header = TRUE) 
-
-
-# rescaling all occupancy values  - odds ratio
-# need to get rid of ones in order to not have infinity values 
-edge_adjust = .005 
-noncompdf$FocalOcc_scale = (noncompdf$FocalOcc * (1 - 2*edge_adjust)) + edge_adjust
-# create logit transformation function, did on rescaled vals
-noncompdf$occ_logit =  log(noncompdf$FocalOcc_scale/(1-noncompdf$FocalOcc_scale)) 
 
 noncomps_output = c()
 for (sp in subfocspecies){
@@ -150,7 +142,7 @@ for (sp in subfocspecies){
   tempfam = unique(as.character(temp$Family))
   if(nrow(temp) > 0){
     ncomps = dplyr::filter(noncomps, Family != tempfam) %>%
-      select(AOU) %>% 
+      dplyr::select(AOU) %>% 
       unlist()
     comps = unique(noncomps$AOU)
     comps = subset(comps, !comps %in% sp)
@@ -182,7 +174,7 @@ names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
 
 # write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
-noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2")], by = "FocalAOU")
+noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est")], by = "FocalAOU")
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
   tally(R2 >= Competition_R2)
@@ -195,13 +187,16 @@ names(numcomps) = c("FocalAOU", "Comp_count")
 noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
 noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
 
+noncompsdist_trait = merge(noncompsdist, envoutput2[,c("FocalAOU", "migclass", "Trophic.Group")], by = "FocalAOU")
+
 hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
 abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
 
 hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", xlab = expression('R'^2))
 abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
-hist(na.omit(noncomps_output$Estimate), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate')
+hist(na.omit(noncomps_output$Estimate), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate', xlim = c(-40, 40))
 abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
+
 #### non comp plots ####
 # noncomps_output = merge(noncomps_output, nsw[,c("focalAOU", "Family")], by.x = "FocalAOU", by.y = "focalAOU")
 noncomps_output = noncomps_output %>% arrange(FocalAOU)
