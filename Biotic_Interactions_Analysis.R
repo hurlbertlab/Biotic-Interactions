@@ -84,7 +84,7 @@ for (sp in 1:length(subfocalspecies)){
   occ_comp_est = summary(competition)$coef[2,"Estimate"]
   occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
   occ_comp_r = summary(competition)$r.squared
-  #occ_env_est = summary(env_z)$coef[2,"Estimate"]
+  #occ_env_est = mean(summary(env_z)$coef[,"Estimate"])
   #occ_env_p = summary(env_z)$coef[2,"Pr(>|t|)"]
   occ_env_r = summary(env_z)$r.squared 
   #occ_b_est = summary(both_z)$coef[2,"Estimate"]
@@ -101,7 +101,7 @@ for (sp in 1:length(subfocalspecies)){
   abun_both_p = summary(both_abun)$coef[2,"Pr(>|t|)"]
   abun_both_r = summary(both_abun)$r.squared
   
-  beta_occ = rbind(beta_occ, c(sp1, occ_comp_est, occ_comp_p, occ_comp_r, occ_env_r, occ_b_p, occ_b_r))
+  beta_occ = rbind(beta_occ, c(sp1, occ_comp_est, occ_comp_p, occ_comp_r,occ_env_r, occ_b_p, occ_b_r))
   beta_abun = rbind(beta_abun, c(sp1, abun_comp_est, abun_comp_p, abun_comp_r, abun_env_r, abun_both_p , abun_both_r))
   } 
 }         
@@ -109,9 +109,6 @@ for (sp in 1:length(subfocalspecies)){
 
 envoutput = data.frame(envoutput)
 envoutputa = data.frame(envoutputa)
-
-beta_occ = data.frame(beta_occ)
-beta_abun = data.frame(beta_abun)
 
 names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
@@ -121,8 +118,6 @@ envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'Foc
 envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")], by.x='FocalAOU', by.y='AOU', all.x = TRUE)
 
 envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU', all.x = TRUE)
-### supp table goes here, just need to add main competitor!
-
 
 #write.csv(envoutputa, "data/envoutputa.csv", row.names = FALSE)
 beta_occ = data.frame(beta_occ)
@@ -678,11 +673,10 @@ pdf('Figures/allspp_Reg.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
 # Plotting basic lms to understand relationships
 for(sp in subfocalspecies){ 
-  psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
-                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
+  temp = occumatrix[occumatrix$Species == sp,]
+  lm = lm(temp$occ_logit ~  abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
   
-  tes = ggplot(data = psub, aes(x = zTemp, y = FocalOcc)) +stat_smooth(method = "lm", lwd = 1.5,se = FALSE) +xlab(psub$Species) +ylim(0,1) +theme_bw()
+  tes = ggplot(data = temp, aes(x = zTemp, y = FocalOcc)) +stat_smooth(method = "lm", lwd = 1.5,se = FALSE) +xlab(temp$Species) +ylim(0,1) +theme_bw()
   plot(tes)
 }
 dev.off()
