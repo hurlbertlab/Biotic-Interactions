@@ -270,8 +270,6 @@ fig1 = plot_grid(fig1a + theme(legend.position="none"),
                align = 'h', 
                rel_widths = c(1, 1.3))
 
-plot_grid(fig1, fig1b, ncol = 1, rel_heights = c(1, 1))
-
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
 
