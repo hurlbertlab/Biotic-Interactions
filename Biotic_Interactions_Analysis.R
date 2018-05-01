@@ -192,6 +192,28 @@ abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
 hist(na.omit(noncomps_output$Estimate), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate', xlim = c(-40, 40))
 abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
 
+
+noncomps_output_bocc$Null = "Null"
+noncomps_output_bocc$Comp = "Comp"
+
+ggplot(noncomps_output_bocc) +
+  stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
+  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
+  xlab("R2") + ylab("Density") +
+  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Null Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
+
+ggplot(noncomps_output_bocc) +
+  stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
+  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  xlab("Estimate") + ylab("Density") +
+  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Null Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
+
+ggplot(noncomps_output) +
+  stat_density(fill="#c994c7", aes(P))
+ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
+
 #### non comp plots ####
 # noncomps_output = merge(noncomps_output, nsw[,c("focalAOU", "Family")], by.x = "FocalAOU", by.y = "focalAOU")
 noncomps_output = noncomps_output %>% arrange(FocalAOU)
@@ -269,6 +291,15 @@ fig1 = plot_grid(fig1a + theme(legend.position="none"),
                labels = c("A","B"),
                align = 'h', 
                rel_widths = c(1, 1.3))
+
+
+bbs_sub4 = bbs_abun %>%
+  filter(stateroute == 68015)  %>% left_join(tax_code, by = c("aou" = "AOU_OUT"))%>% filter(aou %in%  c(4980, 6280
+, 6130, 6160, 5980))
+bbs_sub4$speciestotal[bbs_sub4$speciestotal == 0] <- NA
+ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$PRIMARY_COM_NAME)), lwd = 1.5) + theme_classic() +xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16), legend.text = element_text(size = 12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))+ scale_color_manual(breaks = c("Bank Swallow",  "Barn Swallow", "Indigo Bunting", "Red-winged Blackbird", "Yellow-throated Vireo"), values=c("#e41a1c","#377eb8", "#4daf4a", "#984ea3", '#ff7f00', "#fc8d62")) 
+ggsave("C:/Git/Biotic-Interactions/Figures/forLB.pdf", height = 7, width = 12)
+
 
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
