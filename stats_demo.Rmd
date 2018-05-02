@@ -1,0 +1,141 @@
+---
+title: "Null mods BI"
+author: "Sara Snell"
+date: "April 5, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Install libraries and read in datasets
+Create logit transformation function
+```{r cars}
+library(lme4)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(cowplot)
+library(ggExtra)
+
+occuenv= read.csv("data/all_expected_pres.csv", header = TRUE) # created in data cleaning script
+bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
+noncomps = read.csv("data/noncomps.csv", header = TRUE) 
+
+# rescaling all occupancy values  - odds ratio
+# need to get rid of 1s in order to not have infinity values 
+edge_adjust = .005 
+occuenv$FocalOcc_scale = (occuenv$FocalOcc * (1 - 2*edge_adjust)) + edge_adjust
+# create logit transformation function, did on rescaled vals
+occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale)) 
+```
+
+Non-competitor null model: 
+We used the null model to validate our findings for the competitive interactions to distinguish if our assigned competitor predicted focal occupancy better than a randomly assigned species. We matched each focal species to all competitor species in a different family and ran linear models of scaled competitor abundance and focal occupancy to confirm that the estimates and R2 values were better for our assigned main competitor-focal relationships than null competitors. 
+```{r}
+# subset to relevant columns
+noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "Family", "FocalOcc_scale", "occ_logit")]
+# select unique species for loop
+subfocspecies = unique(noncompdf$Species)
+
+# create empty output
+noncomps_output = c()
+# begin for loop
+for (sp in subfocspecies){
+  FocalAOU = sp
+  temp = subset(noncompdf, Species == sp) # subset master df to rows equal to sp (single species)
+  tempfam = unique(as.character(temp$Family)) # store family information for sp
+  if(nrow(temp) > 0){                         # run loop if subset is not equal to 0
+    ncomps = dplyr::filter(noncomps, Family != tempfam) %>% # filtering master df to species whose family is not sp family
+      dplyr::select(AOU) %>%                                # select AOU of those species and store as a vector
+      unlist()
+    comps = unique(noncomps$AOU)
+    comps = subset(comps, !comps %in% sp)               # subset competitors, select competitors that are no sp's competitors
+    for(co in comps){                               # nested loop (competitors)
+      mergespp = subset(bbs, aou == co) %>%       # subset the bbs df to the competitor == co
+        group_by(stateroute, aou) %>%             # group by stateroute and aou and get the mean abundance at each route
+        summarize(meancomp = mean(speciestotal)) %>%  
+        right_join(temp, by = "stateroute")     # right join original subset "temp" df
+    
+      
+      mergespp$comp_scaled = mergespp$meancomp/(mergespp$FocalAbundance + mergespp$meancomp) # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) 
+      mergespp$comp_scaled[is.na(mergespp$comp_scaled)] = 0
+      
+      if(length(unique(mergespp$comp_scaled[!is.na(mergespp$comp_scaled)])) > 2){ # if length excluding na > 2
+        lms <- lm(mergespp$occ_logit ~  mergespp$comp_scaled)   # run a simple lm between occupancy and scaled abundance
+        lms_est = summary(lms)$coef[2,"Estimate"]     # store parameters
+        lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
+        lms_r = summary(lms)$r.squared
+        
+        noncomps_output = rbind(noncomps_output, c(FocalAOU, co,lms_est, lms_p, lms_r)) # save output
+      }
+    }
+  }
+}         
+
+noncomps_output = data.frame(noncomps_output)
+names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
+# have to remove pairing of American REdstart/least flycatcher, non-familial pairing based on lit
+noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
+
+```
+
+visualize output
+```{r}
+noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est")], by = "FocalAOU")
+nonps = na.omit(noncomps_output_bocc) %>% 
+  group_by(FocalAOU) %>%
+  tally(R2 >= Competition_R2)
+names(nonps) = c("FocalAOU", "main_g_non")
+
+numcomps = na.omit(noncomps_output) %>% 
+  count(FocalAOU)
+names(numcomps) = c("FocalAOU", "Comp_count")
+  
+noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
+noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
+
+noncompsdist_trait = merge(noncompsdist, envoutput2[,c("FocalAOU", "migclass", "Trophic.Group")], by = "FocalAOU")
+
+hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
+abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
+
+hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", xlab = expression('R'^2))
+abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
+hist(na.omit(noncomps_output$Estimate), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate', xlim = c(-40, 40))
+abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
+
+#### non comp plots ####
+noncomps_output = noncomps_output %>% arrange(FocalAOU)
+pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
+par(mfrow = c(3, 4))
+for (sp in unique(noncomps_output$FocalAOU)){
+  temp = subset(noncomps_output, FocalAOU == sp) 
+  comp_est = beta_occ$Competition_Est[beta_occ$FocalAOU == sp]
+  hist(temp$Estimate, xlab = 'Estimate', 
+       main = sp, xlim = c(min(temp$Estimate, comp_est), max(temp$Estimate, comp_est)))
+  abline(v = comp_est, col = "blue", lwd = 2)
+  
+}
+dev.off()
+
+pdf('Figures/noncomp_r2.pdf', height = 8, width = 10)
+par(mfrow = c(3, 4))
+for (sp in unique(noncomps_output$FocalAOU)){
+  temp = subset(noncomps_output, FocalAOU == sp) 
+  comp_r2 = beta_occ$Competition_R2[beta_occ$FocalAOU == sp]
+  hist(temp$R2, xlab = expression('R'^2), main = sp,
+       xlim = c(0, max(temp$R2, comp_r2)))
+  abline(v = comp_r2, col = "blue", lwd = 2)
+}
+dev.off()
+
+noncomps_output$type = "Species"
+ggplot(noncomps_output, aes(type, R2)) + geom_violin(linetype = "blank", aes(fill = factor(noncomps_output$type))) + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
+
+ggsave("C:/Git/Biotic-Interactions/Figures/violin_noncomps.png")
+
+noncompsdist$type = "Species"
+ggplot(noncompsdist, aes(type, nullp)) + geom_violin(linetype = "blank", aes(fill = factor(noncompsdist$type))) + xlab("Total Variance") + ylab("P-val")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
+```
