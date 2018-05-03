@@ -169,7 +169,7 @@ names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
 
 # write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
-noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est")], by = "FocalAOU")
+noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
   tally(R2 >= Competition_R2)
@@ -196,23 +196,49 @@ abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
 noncomps_output_bocc$Null = "Null"
 noncomps_output_bocc$Comp = "Comp"
 
-ggplot(noncomps_output_bocc) +
+R = ggplot(noncomps_output_bocc) +
   stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
   stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
-  xlab("R2") + ylab("Density") +
-  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Null Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
-ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
+  xlab(expression("R"^"2")) + ylab("Density") +
+  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
 
-ggplot(noncomps_output_bocc) +
+E = ggplot(noncomps_output_bocc) +
   stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
   stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   xlab("Estimate") + ylab("Density") +
-  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Null Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
-ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
+  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
 
-ggplot(noncomps_output) +
-  stat_density(fill="#c994c7", aes(P))
-ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
+P = ggplot(noncomps_output_bocc) +
+  stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = mean(noncomps_output_bocc$Competition_P), col = "black") +
+  xlab("P") + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
+
+plot_grid(P+ theme(legend.position="none"),
+          R + theme(legend.position="none"),
+          E + theme(legend.position="none"),
+          align = 'h',
+          labels = c("A","B", "C"),
+          nrow = 1)
+ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_null.pdf", height = 6, width = 12)
+
+
+#### example non-comp dist and main R2 ######
+single_dist = subset(noncomps_output_bocc, FocalAOU == 7580)
+ggplot(single_dist) +
+  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5) +
+  xlab(expression("Swainson's Thrush R"^"2")) + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+
+ggplot(single_dist) +
+  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5) +
+  xlab(expression("Swainson's Thrush Estimate")) + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
 
 #### non comp plots ####
 # noncomps_output = merge(noncomps_output, nsw[,c("focalAOU", "Family")], by.x = "FocalAOU", by.y = "focalAOU")
@@ -662,7 +688,7 @@ ggsave("C:/Git/Biotic-Interactions/Figures/Figure4A_B.pdf", height = 10, width =
 #### R2 plot - glm violin plots ####
 R2violin = gather(R2plot2, "type", "Rval", 12:14)
 
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Variance Explained") + ylab(bquote("R"^"2"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey"), labels=c("Competition","Environment", "Total Variance")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Variance Explained") + ylab(bquote("R"^"2"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey"), labels=c("Competition","Environment", "Total Variance")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=mean, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
 
 ggsave("C:/Git/Biotic-Interactions/Figures/violin_mains.pdf")
 
