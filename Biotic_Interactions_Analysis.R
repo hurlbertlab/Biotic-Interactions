@@ -169,7 +169,7 @@ names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
 
 # write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
-noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est")], by = "FocalAOU")
+noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
   tally(R2 >= Competition_R2)
@@ -191,6 +191,54 @@ hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", 
 abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
 hist(na.omit(noncomps_output$Estimate), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate', xlim = c(-40, 40))
 abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
+
+
+noncomps_output_bocc$Null = "Null"
+noncomps_output_bocc$Comp = "Comp"
+
+R = ggplot(noncomps_output_bocc) +
+  stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
+  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
+  xlab(expression("R"^"2")) + ylab("Density") +
+  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
+
+E = ggplot(noncomps_output_bocc) +
+  stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
+  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  xlab("Estimate") + ylab("Density") +
+  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
+
+P = ggplot(noncomps_output_bocc) +
+  stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = mean(noncomps_output_bocc$Competition_P), col = "black") +
+  xlab("P") + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
+
+plot_grid(P+ theme(legend.position="none"),
+          R + theme(legend.position="none"),
+          E + theme(legend.position="none"),
+          align = 'h',
+          labels = c("A","B", "C"),
+          nrow = 1)
+ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_null.pdf", height = 6, width = 12)
+
+
+#### example non-comp dist and main R2 ######
+single_dist = subset(noncomps_output_bocc, FocalAOU == 7580)
+ggplot(single_dist) +
+  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5) +
+  xlab(expression("Swainson's Thrush R"^"2")) + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+
+ggplot(single_dist) +
+  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5) +
+  xlab(expression("Swainson's Thrush Estimate")) + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
 
 #### non comp plots ####
 # noncomps_output = merge(noncomps_output, nsw[,c("focalAOU", "Family")], by.x = "FocalAOU", by.y = "focalAOU")
@@ -270,7 +318,14 @@ fig1 = plot_grid(fig1a + theme(legend.position="none"),
                align = 'h', 
                rel_widths = c(1, 1.3))
 
-plot_grid(fig1, p2, ncol = 1, rel_heights = c(1, 1))
+
+bbs_sub4 = bbs_abun %>%
+  filter(stateroute == 68015)  %>% left_join(tax_code, by = c("aou" = "AOU_OUT"))%>% filter(aou %in%  c(4980, 6280
+, 6130, 6160, 5980))
+bbs_sub4$speciestotal[bbs_sub4$speciestotal == 0] <- NA
+ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$PRIMARY_COM_NAME)), lwd = 1.5) + theme_classic() +xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16), legend.text = element_text(size = 12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))+ scale_color_manual(breaks = c("Bank Swallow",  "Barn Swallow", "Indigo Bunting", "Red-winged Blackbird", "Yellow-throated Vireo"), values=c("#e41a1c","#377eb8", "#4daf4a", "#984ea3", '#ff7f00', "#fc8d62")) 
+ggsave("C:/Git/Biotic-Interactions/Figures/forLB.pdf", height = 7, width = 12)
+
 
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
@@ -607,7 +662,7 @@ R2plot2$violin_total = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 
 # need to change the slopes
 cols = c("Competition" ="#dd1c77","Environment" = "#2ca25f","Total" = "dark gray")
-r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y, col = "Competition")) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab("Occupancy R2") + ylab("Abundance R2") + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") +
+r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y, col = "Competition")) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab(bquote("Occupancy R"^"2")) + ylab(bquote("Abundance R"^"2")) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") +
       geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash") +
       geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash") +ylim(c(0, 0.8))+ xlim(c(0, 0.8))+
       geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.2,0.9))
@@ -619,17 +674,21 @@ R2plot2$totaldiff = R2plot2$abundiff - R2plot2$occdiff
 
 r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "dashed")+ylim(c(-0.4, 0.6)) + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "dashed")+ geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26)) + xlab("")+ ylab("") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20)) 
 #+ annotate("text", x = -.3, y = 0.5, label = "Abundance predicts \nmore competition") + annotate("text", x = 0.4, y = -0.3, label = "Occupancy predicts \nmore environment")
+smooth_vals = predict(loess(COMP.x~COMP.y,R2plot2), R2plot2$COMP.y)
+summary(lm(ENV.x~ENV.y,data = R2plot2))
+
 
 p2 = plot_grid(r1,
                r2 + theme(legend.position="none"), 
                labels = c("A","B"),
+               label_size = 35,
                align = 'hv')
 ggsave("C:/Git/Biotic-Interactions/Figures/Figure4A_B.pdf", height = 10, width = 20)
 
 #### R2 plot - glm violin plots ####
 R2violin = gather(R2plot2, "type", "Rval", 12:14)
 
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Total Variance") + ylab("R2")+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey"), labels=c("Competition","Environment", "Total Variance")) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Variance Explained") + ylab(bquote("R"^"2"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey"), labels=c("Competition","Environment", "Total Variance")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=mean, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
 
 ggsave("C:/Git/Biotic-Interactions/Figures/violin_mains.pdf")
 
