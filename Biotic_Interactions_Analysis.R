@@ -77,6 +77,7 @@ for (sp in 1:length(subfocalspecies)){
   NONEa = 1 - summary(both_abun)$r.squared
   
   sp1 = unique(temp$Species)
+  
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
   
   if(length(unique(temp$comp_scaled[!is.na(temp$comp_scaled)])) > 2){

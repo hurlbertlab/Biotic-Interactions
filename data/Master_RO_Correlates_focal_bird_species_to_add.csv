@@ -1,0 +1,260 @@
+AOU,CommonName,Route Expected,MeanN,logN,Mass(g),logMass,migclass,10yr Prop,Foraging,Trophic Group
+4950,Brown-headed Cowbird,799,12.78552574,1.106718591,45,1.653212514,short,0.984,ground glean,insectivore
+3160,Mourning Dove,802,29.18252171,1.465122817,123,2.089905111,short,0.976,ground glean,granivore
+4520,Great Crested Flycatcher,555,5.001592789,0.69910833,34,1.531478917,neotrop,0.973,hawks,insectivore
+4090,Red-bellied Woodpecker,404,7.951178219,0.900431488,67,1.826074803,resid,0.968,bark glean,insectivore
+4610,Eastern Wood-Pewee,524,4.567775431,0.659704744,14,1.146128036,neotrop,0.968,hawks,insectivore
+4770,Blue Jay,602,11.83519451,1.0731754,87,1.939519253,short,0.96,ground glean,omnivore
+4980,Red-winged Blackbird,818,56.53293975,1.75230157,53,1.72427587,short,0.96,ground glean,insectivore
+5110,Common Grackle,639,38.9449502,1.590451153,127,2.103803721,short,0.958,ground glean,omnivore
+7660,Eastern Bluebird,529,6.32957142,0.801374305,32,1.505149978,short,0.958,hawks,insectivore
+6130,Barn Swallow,794,15.24404619,1.183100256,17.5,1.243038049,neotrop,0.951,aerial foraging,insectivore
+7310,Tufted Titmouse,439,11.76243616,1.070497279,22,1.342422681,resid,0.948,foliage glean,insectivore
+7610,American Robin,793,37.11890607,1.569595169,77,1.886490725,short,0.945,ground glean,insct/om
+4120,Northern Flicker,800,3.400093648,0.531490879,132.17,2.12113289,resid,0.939,ground glean,insectivore
+4880,American Crow,768,32.17991018,1.507584828,458,2.660865478,short,0.936,ground glean,omnivore
+5930,Northern Cardinal,543,27.65276305,1.441738532,47.25,1.674401813,resid,0.936,ground glean,insct/om
+4560,Eastern Phoebe,516,4.306813328,0.634156048,20,1.301029996,short,0.932,hawks,insectivore
+7360,Carolina Chickadee,255,8.659627534,0.937499213,11,1.041392685,resid,0.929,foliage glean,insectivore
+6810,Common Yellowthroat,715,11.17657588,1.048308771,10.58,1.024485668,neotrop,0.926,foliage glean,insectivore
+5010,Eastern Meadowlark,546,16.0918425,1.206605773,102,2.008600172,short,0.925,ground glean,insct/om
+7050,Brown Thrasher,589,4.041785119,0.606573221,69,1.838849091,short,0.925,ground glean,omnivore
+7180,Carolina Wren,405,13.30076938,1.123876763,19,1.278753601,resid,0.923,ground glean,insectivore
+7550,Wood Thrush,490,7.473629037,0.873531537,47,1.672097858,neotrop,0.922,ground glean,insectivore
+5810,Song Sparrow,648,18.96061129,1.277852335,21.33,1.328990855,short,0.917,ground glean,insct/om
+5290,American Goldfinch,636,10.92408662,1.038385135,13.25,1.122215878,short,0.91,foliage glean,granivore
+5870,Eastern Towhee,487,9.797177466,0.991100975,42,1.62324929,short,0.908,ground glean,insct/om
+7570,Gray-cheeked Thrush,21,9.034484563,0.95590338,33,1.51851394,neotrop,0.905,ground glean,insectivore
+4440,Eastern Kingbird,687,5.120066566,0.709275607,44,1.643452676,neotrop,0.904,hawks,insectivore
+4230,Chimney Swift,578,8.994389871,0.953971709,24,1.380211242,neotrop,0.901,aerial foraging,insectivore
+5630,Field Sparrow,478,7.023927203,0.846580002,13,1.113943352,short,0.889,ground glean,insct/om
+5190,House Finch,637,11.05211928,1.043445563,21,1.322219295,short,0.887,ground glean,granivore
+7210,House Wren,612,8.715260322,0.940280364,10.5,1.021189299,neotrop,0.886,ground glean,insectivore
+4900,Fish Crow,163,6.80633097,0.832913064,274.75,2.438937701,short,0.883,ground glean,omnivore
+3960,Ladder-backed Woodpecker,42,2.534492618,0.403891031,30,1.477121255,resid,0.881,bark glean,insectivore
+7070,Curve-billed Thrasher,33,4.152417027,0.618300963,79,1.897627091,short,0.879,ground glean,insectivore
+4860,Common Raven,327,7.251431028,0.860423721,1207.5,3.081887139,resid,0.878,ground glean,omnivore
+4050,Pileated Woodpecker,532,2.22259514,0.34686036,287.5,2.458637849,resid,0.874,bark glean,insectivore
+7040,Gray Catbird,636,6.703587331,0.826307272,37,1.568201724,neotrop,0.874,ground glean,insct/om
+5280,Common Redpoll,23,18.7724413,1.273520755,13,1.113943352,short,0.87,foliage glean,granivore
+2890,Northern Bobwhite,406,14.88358498,1.172707551,178,2.250420002,resid,0.869,ground glean,herbivore
+5980,Indigo Bunting,594,17.5877525,1.245210345,15,1.176091259,neotrop,0.869,ground glean,insct/om
+5070,Baltimore Oriole,494,4.519633725,0.655103241,34.25,1.534660576,neotrop,0.868,foliage glean,insectivore
+6190,Cedar Waxwing,536,8.845444013,0.946719638,32.5,1.511883361,short,0.868,foliage glean,insct/om
+6240,Red-eyed Vireo,673,16.03897171,1.205176521,15.5,1.190331698,neotrop,0.866,hover/glean,insectivore
+7120,Crissal Thrasher,22,1.720026455,0.235535127,63,1.799340549,resid,0.864,ground glean,insectivore
+6590,Chestnut-sided Warbler,204,7.812758872,0.892804421,9.75,0.989004616,neotrop,0.863,foliage glean,insct/om
+6882,House Sparrow,811,31.22503644,1.494502954,27.75,1.443262987,resid,0.859,ground glean,insct/om
+5600,Chipping Sparrow,774,13.29193487,1.123588205,12,1.079181246,neotrop,0.851,ground glean,insct/om
+6080,Scarlet Tanager,409,3.738840674,0.572736959,29,1.462397998,neotrop,0.851,hover/glean,insectivore
+5970,Blue Grosbeak,298,5.309109658,0.725021696,28.5,1.45484486,neotrop,0.846,ground glean,insectivore
+7330,Oak Titmouse,13,12.67908886,1.103088046,18.25,1.261262869,resid,0.846,foliage glean,insectivore
+3940,Downy Woodpecker,801,2.649490545,0.423162374,27,1.431363764,resid,0.841,bark glean,insectivore
+2950,Gambel's Quail,25,23.66203563,1.374052104,170,2.230448921,resid,0.84,ground glean,granivore
+2930,Scaled Quail,31,7.64021879,0.883105795,191,2.281033367,resid,0.839,ground glean,granivore
+3870,Yellow-billed Cuckoo,526,4.89375893,0.689642572,64,1.806179974,neotrop,0.838,foliage glean,insectivore
+6520,Yellow Warbler,704,7.935042699,0.899549268,11.5,1.06069784,neotrop,0.835,foliage glean,insectivore
+4110,Gila Woodpecker,12,14.81201637,1.170614183,65.25,1.814580516,resid,0.833,bark glean,omnivore
+7130,Cactus Wren,36,12.68930325,1.103437776,39,1.591064607,resid,0.833,ground glean,insectivore
+5100,Brewer's Blackbird,284,23.16553697,1.364842371,63,1.799340549,short,0.824,ground glean,insectivore
+6140,Tree Swallow,630,7.587802101,0.880115995,20,1.301029996,short,0.819,aerial foraging,insectivore
+5920,Abert's Towhee,11,4.246583851,0.628039704,46.25,1.665111737,resid,0.818,ground glean,insct/om
+7350,Black-capped Chickadee,495,7.433137517,0.871172168,11,1.041392685,resid,0.816,foliage glean,insectivore
+4641,Pacific-slope Flycatcher,59,10.17031259,1.007334301,10,1,neotrop,0.814,hawks,insectivore
+5060,Orchard Oriole,459,3.811221886,0.581064234,19.5,1.290034611,neotrop,0.813,foliage glean,insct/om
+4430,Scissor-tailed Flycatcher,59,16.06452577,1.20586791,43,1.633468456,neotrop,0.797,hawks,insectivore
+5950,Rose-breasted Grosbeak,383,3.722335734,0.570815542,46,1.662757832,neotrop,0.796,foliage glean,insectivore
+5910,Canyon Towhee,28,4.559384301,0.658906199,44,1.643452676,resid,0.786,ground glean,insct/om
+4280,Ruby-throated Hummingbird,561,1.573553055,0.19688139,3.5,0.544068044,neotrop,0.784,hover/glean,nectarivore
+6310,White-eyed Vireo,381,7.208997163,0.857874855,11,1.041392685,neotrop,0.782,foliage glean,insectivore
+6280,Yellow-throated Vireo,461,2.138930019,0.330196576,18,1.255272505,neotrop,0.781,foliage glean,insectivore
+5080,Bullock's Oriole,186,4.247118888,0.628094418,34.25,1.534660576,neotrop,0.78,foliage glean,insectivore
+5011,Western Meadowlark,365,52.58654888,1.72087467,112,2.049218023,short,0.778,ground glean,insct/om
+6290,Blue-headed Vireo,180,3.244859608,0.511195911,17,1.230448921,neotrop,0.778,foliage glean,insectivore
+4470,Western Kingbird,233,9.774968009,0.990115345,40,1.602059991,neotrop,0.773,hawks,insectivore
+3131,Rock Dove,799,10.94572001,1.039244335,369,2.567026366,resid,0.771,ground glean,granivore
+5130,Boat-tailed Grackle,35,31.79121105,1.502307072,165.5,2.218797998,resid,0.771,ground glean,omnivore
+4670,Least Flycatcher,331,5.649399715,0.752002304,10,1,neotrop,0.77,hover/glean,insectivore
+3970,Nuttall's Woodpecker,13,4.979115792,0.697152226,38,1.579783597,resid,0.769,bark glean,insectivore
+6680,Townsend's Warbler,56,9.849421769,0.993410735,9,0.954242509,neotrop,0.768,foliage glean,insectivore
+6070,Western Tanager,167,9.008911877,0.954672339,28,1.447158031,neotrop,0.766,foliage glean,insectivore
+4960,Bronzed Cowbird,17,6.1353125,0.787836688,60,1.77815125,short,0.765,ground glean,insectivore
+5590,American Tree Sparrow,17,15.25689866,1.183466262,20,1.301029996,short,0.765,ground glean,insct/om
+4020,Yellow-bellied Sapsucker,207,3.563876593,0.551922657,50,1.698970004,short,0.758,bark glean,insectivore
+6850,Wilson's Warbler,128,6.519428999,0.81420956,7.5,0.875061263,neotrop,0.758,foliage glean,insectivore
+5780,Cassin's Sparrow,53,22.82408918,1.358393456,19,1.278753601,short,0.755,ground glean,insct/om
+6730,Prairie Warbler,261,3.359077655,0.526220044,8.25,0.916453949,neotrop,0.755,foliage glean,insectivore
+3200,Common Ground-Dove,73,4.870084302,0.687536479,30,1.477121255,resid,0.753,ground glean,granivore
+4620,Western Wood-Pewee,262,6.385705239,0.805208868,13,1.113943352,neotrop,0.752,hawks,insectivore
+6170,Northern Rough-winged Swallow,777,4.383286983,0.641799906,16,1.204119983,neotrop,0.752,aerial foraging,insectivore
+5960,Black-headed Grosbeak,209,6.235867217,0.794896859,42.5,1.62838893,neotrop,0.751,foliage glean,insectivore
+7510,Blue-gray Gnatcatcher,542,5.231173762,0.718599146,6,0.77815125,neotrop,0.751,foliage glean,insectivore
+6740,Ovenbird,456,12.49436923,1.096714336,19,1.278753601,neotrop,0.739,ground glean,insectivore
+6010,Painted Bunting,57,10.0754794,1.003265719,16,1.204119983,neotrop,0.737,ground glean,insct/om
+5420,Savannah Sparrow,511,14.68427065,1.16685238,21.33,1.328990855,short,0.734,ground glean,insct/om
+6100,Summer Tanager,307,4.785915751,0.679965049,28,1.447158031,neotrop,0.733,foliage glean,insectivore
+4750,Black-billed Magpie,209,10.46149244,1.019593646,177.5,2.249198357,resid,0.732,ground glean,omnivore
+5580,White-throated Sparrow,174,22.44786111,1.351174967,25.9,1.413299764,short,0.73,ground glean,insct/om
+5610,Clay-colored Sparrow,115,16.08607524,1.206450096,12,1.079181246,neotrop,0.73,ground glean,insct/om
+6710,Pine Warbler,293,7.066176895,0.849184505,12,1.079181246,short,0.73,bark glean,insct/om
+4940,Bobolink,351,10.8369701,1.034907875,28.75,1.458637849,neotrop,0.727,ground glean,insct/om
+7460,Verdin,33,8.703962375,0.939717005,7,0.84509804,resid,0.727,foliage glean,insectivore
+3190,White-winged Dove,29,20.22272487,1.305839673,153,2.184691431,short,0.724,ground glean,granivore
+2940,California Quail,86,10.27866603,1.011936755,176,2.245512668,resid,0.721,ground glean,granivore
+6270,Warbling Vireo,697,6.476860394,0.811364536,15,1.176091259,neotrop,0.72,foliage glean,insectivore
+5170,Purple Finch,278,3.120427643,0.494214117,25,1.397940009,short,0.719,ground glean,granivore
+6480,Northern Parula,408,3.931587667,0.594567964,9,0.954242509,neotrop,0.718,foliage glean,insectivore
+7290,Brown-headed Nuthatch,110,3.205764476,0.505931612,10,1,resid,0.718,bark glean,insectivore
+7270,White-breasted Nuthatch,721,3.00705396,0.478141221,21,1.322219295,resid,0.717,bark glean,insectivore
+3930,Hairy Woodpecker,776,1.694036367,0.228922729,66.25,1.821185883,resid,0.714,bark glean,insectivore
+7560,Veery,317,7.74471376,0.889005371,31,1.491361694,neotrop,0.713,ground glean,insectivore
+6550,Yellow-rumped Warbler,316,10.83560186,1.034853039,12.38,1.092720645,short,0.712,foliage glean,insectivore
+6110,Purple Martin,553,9.453097221,0.975574124,49,1.69019608,neotrop,0.707,aerial foraging,insectivore
+6120,Cliff Swallow,614,33.78219094,1.528687812,22,1.342422681,neotrop,0.705,aerial foraging,insectivore
+6670,Black-throated Green Warbler,230,4.713536713,0.673346894,9,0.954242509,neotrop,0.704,foliage glean,insectivore
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
+,,,,,,,,,,
