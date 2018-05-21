@@ -21,7 +21,7 @@ temp_occ$Aou[temp_occ$Aou == 4810] = 4812
 bbs_routes = read.csv("data/latlong_rtes.csv",header =TRUE)
 # read in bird range shps
 shapefile_path = 'Z:/GIS/birds/All/All/'
-
+# on mac shapefile_path = '/Volumes/hurlbertlab/GIS/birds/All/All'
 all_spp_list = list.files(shapefile_path)
 
 

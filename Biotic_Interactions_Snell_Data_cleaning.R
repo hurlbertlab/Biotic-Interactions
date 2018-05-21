@@ -46,8 +46,9 @@ names(AOU) = c("SciName","CommonName",  "AOU", "Family")
 AOUsub = AOU[-grep("sp\\.", AOU$CommonName),] 
 AOUsub2 = AOUsub[-grep("\\)", AOUsub$CommonName),]
 AOUsub3 = AOUsub2[-grep(" \\(", AOUsub2$CommonName),]
-AOUsub4 = unique(AOUsub3)
-sp_list = na.omit(AOUsub4)
+AOUsub4 = AOUsub3[-grep("/", AOUsub3$CommonName),] 
+AOUsub5 = unique(AOUsub4)
+sp_list = na.omit(AOUsub5)
 
 ############# ----  nomenclature corrections for shapefiles,correct name is "match" column ---- ######
 sp_list$match = as.character(sp_list$SciName)
