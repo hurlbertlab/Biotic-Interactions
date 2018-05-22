@@ -14,6 +14,24 @@ library(tidyr)
 library(dplyr)
 
 # setwd("C:/git/Biotic-Interactions")
+pi_catch = function(pi) {
+  if (!is.null(pi)){
+    pi_out = tryCatch( #### TRYCATCH
+      
+      {
+        suppressWarnings(pi) 
+      },
+      warning = function(cond) {
+        test = gArea(pi)
+      },
+      error = function(cond) {
+        return(NA)
+      })
+    return(gArea(pi))
+  }
+  else area_overlap = NA
+}
+
 # read in temporal occupancy data from BI occ script
 temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE)
 temp_occ$Aou[temp_occ$Aou == 4810] = 4812
@@ -30,14 +48,11 @@ all_spp_list = list.files(shapefile_path)
 new_spec_weights=read.csv("data/new_spec_weights.csv", header=TRUE)
 new_spec_weights$focalAOU = as.numeric(new_spec_weights$focalAOU)
 new_spec_weights$compAOU = as.numeric(new_spec_weights$CompAOU)
-pigeon = new_spec_weights[c(6),]
-
+new_spec_weights = unique(new_spec_weights)
 # for loop to select a genus_spp from pairwise table, read in shp, subset to permanent habitat, plot focal distribution
 filesoutput = c()
 # dropping non-intersecting polygons
 focal_spp = unique(new_spec_weights$focalcat)
-new_spec_weights = new_spec_weights[-c(6),]
-
 
 intl_proj = CRS("+proj=longlat +datum=WGS84")
 sp_proj = CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km")
@@ -50,8 +65,8 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
     t1 = all_spp_list[grep(sp, all_spp_list)]
     t2 = t1[grep('.shp', t1)]
     t3 = strsplit(t2, ".shp")
-    
     test.poly <- readShapePoly(paste(shapefile_path, t3, sep = "")) # reads in species-specific shapefile
+    # test.poly <- rgdal::readOGR(dsn = shapefile_path, layer = t3) # reads in species-specific shapefile
     proj4string(test.poly) <- intl_proj
     colors = c("blue", "yellow", "green", "red", "purple")
     # subset to just permanent or breeding residents
@@ -78,11 +93,10 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
       # intersect from raster package
       sporigin = gBuffer(sporigin, byid=TRUE, width=0)
       corigin = gBuffer(corigin, byid=TRUE, width=0)
-      
-      pi = intersect(sporigin, corigin)
+      pi = raster::intersect(sporigin, corigin)
       spArea = gArea(sporigin) # in m
       coArea = gArea(corigin)
-      area_overlap = gArea(pi)
+      area_overlap = pi_catch(pi)
       focalAOU = unique(new_spec_weights[new_spec_weights$focalcat == sp, c('focalAOU')])
       compAOU = unique(new_spec_weights[new_spec_weights$compcat == co, c('CompAOU')])
       filesoutput = rbind(filesoutput, c(sp, focalAOU, co, compAOU, spArea, coArea, area_overlap))
@@ -90,34 +104,7 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
     }
   } 
   
-  sp = pigeon[,10]
-  t1 = all_spp_list[grep(sp, all_spp_list)]
-  t2 = t1[grep('.shp', t1)]
-  t3 = strsplit(t2, ".shp")
-  test.poly <- readShapePoly(paste(shapefile_path, t3, sep = "")) # reads in species-specific shapefile
-  proj4string(test.poly) <- intl_proj
-  colors = c("blue", "yellow", "green", "red", "purple")
-  # subset to just permanent or breeding residents
-  sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
-  sporigin = spTransform(test.poly, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
-  plot(sporigin, col = colors, border = NA) 
-  gArea(spTransform(sporigin, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km")))
-  
-  comp.poly <- readOGR("Z:/GIS/birds/All/All/colu_livi_pl.shp") # reads in species-specific shapefile
-  proj4string(comp.poly) <- intl_proj
-  corigin = spTransform(comp.poly,  CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
-  plot(corigin, add = TRUE ,col = colors, border = NA) 
-  # intersect from raster package
-  sporigin = gBuffer(sporigin, byid=TRUE, width=0)
-  corigin = gBuffer(corigin, byid=TRUE, width=0)
-  
-  pi = intersect(sporigin, corigin)
-  spArea = gArea(sporigin) # in m
-  coArea = gArea(corigin)
-  area_overlap = gArea(pi)
-  sp = "Patagioenas fasciata" #### these need to be converted to characters to rbind with filesoutput
-  co = "Columba livia"
-  filesoutput = rbind(filesoutput, c(sp, 3120, co, 3131, spArea, coArea, area_overlap))
+
   
   filesoutput = data.frame(filesoutput)
   colnames(filesoutput) = c("Focal", "focalAOU","Competitor", "compAOU","FocalArea", "CompArea", "area_overlap")

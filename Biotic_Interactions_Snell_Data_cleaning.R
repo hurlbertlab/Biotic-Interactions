@@ -93,6 +93,11 @@ sp_list$match[sp_list$match =="Geothlypis tolmiei"] = "Oporornis tolmiei"
 
 sp_list$match[sp_list$match =="Calcarius mccownii"] = "Rhynchophanes mccownii"
 
+sp_list$match[sp_list$match =="Picoides villosus"] = "Leuconotopicus villosus"
+
+sp_list$match[sp_list$match =="Picoides pubescens"] = "Dryobates pubescens"
+
+sp_list$match[sp_list$match =="Picoides dorsalis"] = "Picoides tridactylus"
 ###### ---- Create final focal-comp table ----######
 #merge pairwise table with taxonomy info
 comp_AOU = merge(focal_competitor_table, sp_list, by.x = "Competitor", by.y = "CommonName")
