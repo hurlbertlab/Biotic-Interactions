@@ -42,7 +42,12 @@ shapefile_path = 'Z:/GIS/birds/All/All/'
 # on mac shapefile_path = '/Volumes/hurlbertlab/GIS/birds/All/All'
 all_spp_list = list.files(shapefile_path)
 
-
+# test to see which species d/n have matching names
+all_spp_list2 = gsub("(.*)_.*", "\\1", all_spp_list) 
+all_spp_list2 = unique(all_spp_list2)
+all_spp_list2 = data.frame(all_spp_list2)
+match = anti_join(new_spec_weights, all_spp_list2, by = c("focalcat" = "all_spp_list2"))
+match = unique(match)
 
 # read in new_spec_weights file created in data cleaning code
 new_spec_weights=read.csv("data/new_spec_weights.csv", header=TRUE)

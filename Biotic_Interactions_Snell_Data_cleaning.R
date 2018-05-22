@@ -106,6 +106,8 @@ sp_list$match[sp_list$match =="Picoides albolarvatus"] = "Leuconotopicus albolar
 sp_list$match[sp_list$match =="Picoides borealis"] = "Leuconotopicus borealis"
 
 sp_list$match[sp_list$match =="Carduelis hornemanni"] = "Carduelis flammea"
+
+sp_list$match[sp_list$match =="Aimophila cassinii"] = "Peucaea cassinii"
 ###### ---- Create final focal-comp table ----######
 #merge pairwise table with taxonomy info
 comp_AOU = merge(focal_competitor_table, sp_list, by.x = "Competitor", by.y = "CommonName")
