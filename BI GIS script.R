@@ -42,18 +42,20 @@ shapefile_path = 'Z:/GIS/birds/All/All/'
 # on mac shapefile_path = '/Volumes/hurlbertlab/GIS/birds/All/All'
 all_spp_list = list.files(shapefile_path)
 
-# test to see which species d/n have matching names
-all_spp_list2 = gsub("(.*)_.*", "\\1", all_spp_list) 
-all_spp_list2 = unique(all_spp_list2)
-all_spp_list2 = data.frame(all_spp_list2)
-match = anti_join(new_spec_weights, all_spp_list2, by = c("focalcat" = "all_spp_list2"))
-match = unique(match)
 
 # read in new_spec_weights file created in data cleaning code
 new_spec_weights=read.csv("data/new_spec_weights.csv", header=TRUE)
 new_spec_weights$focalAOU = as.numeric(new_spec_weights$focalAOU)
 new_spec_weights$compAOU = as.numeric(new_spec_weights$CompAOU)
 new_spec_weights = unique(new_spec_weights)
+
+# test to see which species d/n have matching names
+all_spp_list2 = gsub("(.*)_.*", "\\1", all_spp_list) 
+all_spp_list2 = unique(all_spp_list2)
+all_spp_list2 = data.frame(all_spp_list2)
+match = anti_join(new_spec_weights, all_spp_list2, by = c("compcat" = "all_spp_list2")) # have to check both focal and comp
+match = unique(match)
+
 # for loop to select a genus_spp from pairwise table, read in shp, subset to permanent habitat, plot focal distribution
 filesoutput = c()
 # dropping non-intersecting polygons
@@ -65,7 +67,7 @@ sp_proj = CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km")
 ####### for loop generating shapefiles and area table for all spp - DO NOT RUN! ######
 if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want the loop to run.
   
-  for (sp in focal_spp) {
+  for (sp in focal_spp[85:233]) { ### issue with Carduelis_flammea 
     print(sp)
     t1 = all_spp_list[grep(sp, all_spp_list)]
     t2 = t1[grep('.shp', t1)]
@@ -80,13 +82,17 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
     plot(sporigin, col = colors, border = NA) 
     gArea(spTransform(sporigin, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km")))
     
+   # fix <- slot(sporigin, "polygons")
+   # fixa <- lapply(fix, checkPolygonsHoles)
+    
     # list this focal spp competitor
     tmp = filter(new_spec_weights, sp == new_spec_weights$focalcat)
     comp_spp = tmp$compcat
     
     # match competitor sp to focal spp, intersect its range with the focal range,
     # and calcualte the area of overlap between the two species.
-    for(co in comp_spp) {          
+    for(co in comp_spp) { 
+      print(co)
       c1 = all_spp_list[grep(co, all_spp_list)]
       c2 = c1[grep('.shp', c1)]
       c3 = strsplit(c2, ".shp")

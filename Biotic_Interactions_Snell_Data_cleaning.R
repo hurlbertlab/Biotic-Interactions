@@ -108,6 +108,16 @@ sp_list$match[sp_list$match =="Picoides borealis"] = "Leuconotopicus borealis"
 sp_list$match[sp_list$match =="Carduelis hornemanni"] = "Carduelis flammea"
 
 sp_list$match[sp_list$match =="Aimophila cassinii"] = "Peucaea cassinii"
+
+sp_list$match[sp_list$match =="Aimophila aestivalis"] = "Peucaea aestivalis"
+
+sp_list$match[sp_list$match =="Aimophila botterii"] = "Peucaea botterii"
+
+sp_list$match[sp_list$match =="Aimophila carpalis"] = "Peucaea carpalis"
+
+sp_list$match[sp_list$match =="Oreothlypis crissalis"] = "Vermivora crissalis"
+
+sp_list$match[sp_list$match =="Ixoreus naevius"] = "Zoothera naevia"
 ###### ---- Create final focal-comp table ----######
 #merge pairwise table with taxonomy info
 comp_AOU = merge(focal_competitor_table, sp_list, by.x = "Competitor", by.y = "CommonName")
