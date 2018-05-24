@@ -458,7 +458,7 @@ tt = t + annotate("text", x = 1:173, y = -.03, label = envrank$ALPHA.CODE, angle
 
 plot(tt)
 
-ggsave("C:/Git/Biotic-Interactions/Figures/barplotc.pdf", height = 25, width = 36)
+ggsave("Figures/barplotc.pdf", height = 25, width = 36)
 
 #### ENV ####
 nrank = envloc1 %>% 
@@ -684,14 +684,14 @@ p2 = plot_grid(r1,
                labels = c("A","B"),
                label_size = 35,
                align = 'hv')
-ggsave("C:/Git/Biotic-Interactions/Figures/Figure4A_B.pdf", height = 10, width = 20)
+ggsave("Figures/Figure4A_B.pdf", height = 10, width = 20)
 
 #### R2 plot - glm violin plots ####
 R2violin = gather(R2plot2, "type", "Rval", 12:14)
 
 ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Variance Explained") + ylab(bquote("R"^"2"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey"), labels=c("Competition","Environment", "Total Variance")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=mean, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
 
-ggsave("C:/Git/Biotic-Interactions/Figures/violin_mains.pdf")
+ggsave("Figures/violin_mains.pdf")
 
 # r2 plot for main vs all competitors
 envall = read.csv("data/envoutput_all.csv", header = TRUE)
