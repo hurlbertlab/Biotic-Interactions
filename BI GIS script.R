@@ -126,6 +126,8 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
 }
 
 ######## Calculating centroids for each species - using whole range #####
+shapefile_areas = read.csv("data/shapefile_areas.csv", header = TRUE)
+shapefile_areas = na.omit(shapefile_areas)
 centroid = c()
 new_spec_weights$focalcat = as.character(new_spec_weights$focalcat)
 if(FALSE) {for (sp in focal_spp){

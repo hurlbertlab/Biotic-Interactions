@@ -149,7 +149,7 @@ write.csv(new_spec_weights, "data/new_spec_weights.csv", row.names=FALSE)
 ############# ---- Generate total species occupancies ---- #############
 # Take range overlap area to assign "main competitor" for each focal species
 # "area.df" with cols: FocalAOU, CompAOU, focalArea, compArea, intArea, intProp
-shapefile_areas = dplyr::select(shapefile_areas, -X)
+shapefile_areas = na.omit(shapefile_areas)
 
 # calculate proportion of overlap between focal range and overlap range
 shapefile_areas$PropOverlap = shapefile_areas$area_overlap/shapefile_areas$FocalArea
@@ -218,16 +218,16 @@ noncomps$AOU = noncomps$c.uniq_comps..uniq_foc.
 
 
 
-# Filter number to spp present at 20+ routes for better model results
+# Filter number to spp present at 40+ routes for better model results
 # Subset to get the count of routes for each spp
-sppGT20rtes = focalcompoutput %>%
+sppGT40rtes = focalcompoutput %>%
   group_by(FocalAOU) %>%
   summarise(n = n_distinct(stateroute)) %>%
-  filter(n>=20) %>%
+  filter(n>=40) %>% 
   dplyr::select(FocalAOU)
 
 # Merge with focalcompoutput data table, new # of focal spp is 171 with route filters applied
-focalcompsub = filter(focalcompoutput, FocalAOU %in% sppGT20rtes$FocalAOU)
+focalcompsub = filter(focalcompoutput, FocalAOU %in% sppGT40rtes$FocalAOU)
 
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR MAIN
 focalcompsub$comp_scaled = focalcompsub$MainCompN/(focalcompsub$FocalAbundance + focalcompsub$MainCompN)
