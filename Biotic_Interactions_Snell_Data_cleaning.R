@@ -205,7 +205,7 @@ names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbu
 
 focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
 focalcompoutput$MainCompN[is.na(focalcompoutput$MainCompN)] = 0
-focalcompoutput = focalcompoutput[focalcompoutput$FocalOcc & focalcompoutput$AllCompN > 0,] 
+# focalcompoutput2 = focalcompoutput[focalcompoutput$FocalOcc > 0 & focalcompoutput$AllCompN > 0,] 
 
 #### selecting competitors for noncomp analysis ####
 uniq_comps = unique(shapefile_areas$compAOU)
@@ -220,10 +220,10 @@ noncomps$AOU = noncomps$c.uniq_comps..uniq_foc.
 
 # Filter number to spp present at 40+ routes for better model results
 # Subset to get the count of routes for each spp
-sppGT40rtes = focalcompoutput %>%
-  group_by(FocalAOU) %>%
+sppGT50rtes = focalcompoutput %>%
+  group_by(FocalAOU, Focal) %>%
   summarise(n = n_distinct(stateroute)) %>%
-  filter(n>=40) %>% 
+  filter(n>=50) %>% 
   dplyr::select(FocalAOU)
 
 # Merge with focalcompoutput data table, new # of focal spp is 171 with route filters applied
