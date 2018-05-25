@@ -48,6 +48,8 @@ new_spec_weights=read.csv("data/new_spec_weights.csv", header=TRUE)
 new_spec_weights$focalAOU = as.numeric(new_spec_weights$focalAOU)
 new_spec_weights$compAOU = as.numeric(new_spec_weights$CompAOU)
 new_spec_weights = unique(new_spec_weights)
+# columba livia is an introduced species, remove from analyses
+new_spec_weights = new_spec_weights[new_spec_weights$FocalSciName != "Columba livia",]
 
 # test to see which species d/n have matching names
 all_spp_list2 = gsub("(.*)_.*", "\\1", all_spp_list) 
@@ -128,9 +130,10 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
 ######## Calculating centroids for each species - using whole range #####
 shapefile_areas = read.csv("data/shapefile_areas.csv", header = TRUE)
 shapefile_areas = na.omit(shapefile_areas)
+shapefile_areas = shapefile_areas[shapefile_areas$Focal != "Columba livia",]
 centroid = c()
 new_spec_weights$focalcat = as.character(new_spec_weights$focalcat)
-if(FALSE) {for (sp in focal_spp){
+if(FALSE) {for (sp in focal_spp[85:233]){
   print(sp)
   t1 = all_spp_list[grep(sp, all_spp_list)]
   t2 = t1[grep('.shp', t1)]
