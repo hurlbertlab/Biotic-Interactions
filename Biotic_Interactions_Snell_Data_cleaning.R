@@ -181,11 +181,11 @@ bbs_ep = full_join(expect_pres[,c("stateroute", "spAOU")], bbs_pool, by = c('sta
 bbs_ep$abundance[is.na(bbs_ep$abundance)] = 0
 
 # Calculating summed competitor abundance for each focal species
-prefull_data = left_join(bbs_ep, focal_AOU, by = c('spAOU' = 'focalAOU')) %>% 
+prefull_data = left_join(focal_AOU, bbs_ep, by = c('focalAOU'= 'spAOU')) %>% 
   left_join(temp_occ[temp_occ$Aou %in% focal_and_comp_species, ], 
-            by = c('spAOU' = 'Aou', 'stateroute' = 'stateroute')) %>%
+            by = c('focalAOU' = 'Aou', 'stateroute' = 'stateroute')) %>%
   left_join(bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
-  group_by(spAOU, Focal, Family, stateroute, occ, abundance.x) %>%
+  group_by(focalAOU, Focal, Family, stateroute, occ, abundance.x) %>%
   dplyr::summarize(allCompN = sum(abundance.y, na.rm = T))
 
 # subsetting prefull data to species in new_spec_weights
@@ -195,11 +195,11 @@ prefull_data2 = data.frame(prefull_data2)
 # prefull_data with focal/comp/stroute/abundance/occ/summed abundance
 focalcompoutput = bbs_ep %>%    
   dplyr::select(stateroute, spAOU) %>%
-  left_join(subset(shapefile_areas, mainCompetitor == 1, 
+  right_join(subset(shapefile_areas, mainCompetitor == 1, 
                    select = c('focalAOU', 'compAOU', 'mainCompetitor')), 
             by = c('spAOU' = 'focalAOU')) %>%
   left_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
-  left_join(prefull_data, by = c('spAOU' = 'spAOU', 'stateroute' = 'stateroute')) %>%
+  left_join(prefull_data, by = c('spAOU' = 'focalAOU', 'stateroute' = 'stateroute')) %>%
   dplyr::select(stateroute, Focal, spAOU, Family, abundance.x, occ, abundance, allCompN)
 names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbundance", "FocalOcc","MainCompN", "AllCompN")
 
@@ -227,7 +227,7 @@ sppGT50rtes = focalcompoutput %>%
   dplyr::select(FocalAOU)
 
 # Merge with focalcompoutput data table, new # of focal spp is 171 with route filters applied
-focalcompsub = filter(focalcompoutput, FocalAOU %in% sppGT40rtes$FocalAOU)
+focalcompsub = filter(focalcompoutput, FocalAOU %in% sppGT50rtes$FocalAOU)
 
 # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) ### FOR MAIN
 focalcompsub$comp_scaled = focalcompsub$MainCompN/(focalcompsub$FocalAbundance + focalcompsub$MainCompN)
@@ -238,7 +238,8 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
 # merge in ENV
-all_expected_pres = merge(all_env, focalcompsub, by.x = c("stateroute", "Species"), by.y = c("stateroute", "FocalAOU"), na.rm = TRUE)
+focalcompsub$FocalAOU[focalcompsub$FocalAOU == 5660] = 5677
+all_expected_pres = left_join(focalcompsub, all_env, by = c("stateroute" = "stateroute", "FocalAOU" = "Species" ), na.rm = TRUE)
 
 write.csv(all_expected_pres,"data/all_expected_pres.csv", row.names= F)
 

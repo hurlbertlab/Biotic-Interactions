@@ -42,11 +42,11 @@ envoutputa = c()
 beta_occ = c()
 beta_abun = c()
 
-subfocalspecies = unique(occuenv$Species)
+subfocalspecies = unique(occuenv$FocalAOU)
 
 for (sp in 1:length(subfocalspecies)){
   print(sp)
-  temp = subset(occuenv,Species == subfocalspecies[sp])
+  temp = subset(occuenv,FocalAOU == subfocalspecies[sp])
   
   competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
   # z scores separated out for env effects (as opposed to multivariate variable)
@@ -66,7 +66,7 @@ for (sp in 1:length(subfocalspecies)){
   COMP = summary(both_z)$r.squared - summary(env_z)$r.squared #competition only
   SHARED = summary(competition)$r.squared - COMP #shared variance
   NONE = 1 - summary(both_z)$r.squared # neither variance
-  sp1 = unique(temp$Species)
+  sp1 = unique(temp$FocalAOU)
   sum = sum(ENV, COMP, SHARED)
   envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE)) #, sum
   
@@ -76,7 +76,7 @@ for (sp in 1:length(subfocalspecies)){
   SHAREDa = summary(competition_abun)$r.squared - COMP
   NONEa = 1 - summary(both_abun)$r.squared
   
-  sp1 = unique(temp$Species)
+  sp1 = unique(temp$FocalAOU)
   
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
   
