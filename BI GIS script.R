@@ -131,6 +131,12 @@ if(TRUE) {  #Blocking out the for loop below. Need to change to TRUE if you want
 shapefile_areas = read.csv("data/shapefile_areas.csv", header = TRUE)
 shapefile_areas = na.omit(shapefile_areas)
 shapefile_areas = shapefile_areas[shapefile_areas$Focal != "Columba livia",]
+continent = readOGR("Z:/GIS/geography/continent.shp", "continent")
+plot(continent,
+     col=c("white","black","grey50","red","blue","orange","green","yellow")) 
+continent2 = continent[continent@data$Polygon == 1,]
+plot(continent2)
+
 centroid = c()
 new_spec_weights$focalcat = as.character(new_spec_weights$focalcat)
 if(FALSE) {for (sp in focal_spp[85:233]){
@@ -146,6 +152,7 @@ if(FALSE) {for (sp in focal_spp[85:233]){
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
   sporigin = spTransform(sporigin, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
   #plot(sporigin, col = colors, border = NA)
+  sporig_clip = 
   trueCentroid = gCentroid(sporigin)
   coord = coordinates(spTransform(trueCentroid, CRS("+proj=longlat +datum=WGS84")))
   focalAOU = unique(new_spec_weights[new_spec_weights$focalcat == sp, c('focalAOU')])

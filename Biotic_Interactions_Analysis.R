@@ -51,7 +51,7 @@ subfocalspecies = unique(occuenv$FocalAOU)[-99] #excluding sage sparrow bc no go
 
 for (sp in 1:length(subfocalspecies)){
   print(sp)
-  temp = subset(occuenv,FocalAOU == subfocalspecies[sp])
+  temp = subset(occuenv, FocalAOU == subfocalspecies[sp])
   
   competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
   # z scores separated out for env effects (as opposed to multivariate variable)
@@ -132,14 +132,14 @@ beta_abun = data.frame(beta_abun)
 names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
 
 ##### non-competitor comparison ######
-noncompdf = occuenv[,c("Species", "stateroute", "FocalOcc", "FocalAbundance", "Family", "FocalOcc_scale", "occ_logit")]
-subfocspecies = unique(noncompdf$Species)
+noncompdf = occuenv[,c("FocalAOU", "stateroute", "FocalOcc", "FocalAbundance", "Family", "FocalOcc_scale", "occ_logit")]
+subfocspecies = unique(noncompdf$FocalAOU)
 noncomps = read.csv("data/noncomps.csv", header = TRUE) 
 
 noncomps_output = c()
 for (sp in subfocspecies){
   FocalAOU = sp
-  temp = subset(noncompdf, Species == sp) 
+  temp = subset(noncompdf, FocalAOU == sp) 
   tempfam = unique(as.character(temp$Family))
   if(nrow(temp) > 0){
     ncomps = dplyr::filter(noncomps, Family != tempfam) %>%
@@ -297,7 +297,7 @@ occumatrix$sp_fail = 15 * (1 - occumatrix$FocalOcc)
 
 #### GLM of all matrices not just subset ####
 glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s + 
-    abTemp + abElev + abPrecip + abNDVI + (1|stateroute:FocalAOU), family = binomial(link = logit), data = test)
+    abTemp + abElev + abPrecip + abNDVI + (1|stateroute:FocalAOU), family = binomial(link = logit), data = occumatrix)
 summary(glm_occ_rand_site)                                    
 
 #### new fig 1 ####
@@ -454,7 +454,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=40, hjust = 1, vjust = 0.5), legend.position = c(0.5,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:199, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+tt = t + annotate("text", x = 1:177, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
 # scales::pretty_breaks()(0:1)
 
@@ -480,57 +480,8 @@ envrank <- envrank[order(envrank$rank),]
 
 envrank <- subset(envrank,Type == "ENV") # change here for comp
 
-### CREATE LABEL DF FAMilY ########
-envrank$Fam_abbrev = envrank$Family
-envrank$Fam_abbrev = gsub('Emberizidae','E', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Turdidae','Tu', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Fringillidae','F', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Tyrannidae','Ty', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Mimidae','M', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Vireonidae','V', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Aegithalidae','A', envrank$Fam_abbrev)                        
-envrank$Fam_abbrev = gsub('Corvidae','Co', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Timaliidae','Ti', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Troglodytidae','T', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Cuculidae','Cu', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Icteridae','I', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Picidae','Pi', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Motacillidae','M', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Columbidae','Cl', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Trochilidae','Tr', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Cardinalidae','Ca', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Paridae','Pa', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Sylviidae','Sy', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Parulidae','P', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Sittidae','Si', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Regulidae','R', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Hirundinidae','H', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Certhiidae','Ce', envrank$Fam_abbrev)
-
-
-envrank$Fam_abbrevf = as.factor(as.character(envrank$Fam_abbrev))
-envrank$Fam_abbrevf = gsub('E','#000000', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Tu','#a6bddb', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('F','#67a9cf', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Tr','#048691', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Ty','#9ecae1', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Ti','#02818a', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('V','#016c59', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('A','#014636', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Co','#081d58', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Cu','#253494', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('I','#225ea8', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Pi','#1d91c0', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('M','#41b6c4', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('O','#7f7fff', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Cl','#0000ff', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Ca','#016c59', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Pa','#02818a', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Sy','#014636', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('P','#3690c0', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('T','#0080ff', envrank$Fam_abbrevf) 
-famlabel= envrank$Fam_abbrev
-####### OTHER LABEL ######
+# CREATE LABEL DF FAMilY 
+# OTHER LABEL #
 envrank$mig_abbrev = envrank$migclass
 envrank$mig_abbrev = gsub("neotrop", 'L', envrank$mig_abbrev)
 envrank$mig_abbrev = gsub("resid", 'R', envrank$mig_abbrev)
@@ -572,11 +523,11 @@ e = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=50, hjust = 1, vjust = 0.5), legend.position = c(0.5,0.9)) # + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
-ee = e + annotate("text", x = 1:104, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=1,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+ee = e + annotate("text", x = 1:177, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=1,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
 ee
 
-ggsave("C:/Git/Biotic-Interactions/Figures/barplot.pdf", height = 25, width = 36)
+ggsave("C:/Git/Biotic-Interactions/Figures/barplot.pdf", height = 25, width = 48)
 
 
 z <- plot_grid(tt+ theme(legend.position="top"),
@@ -776,12 +727,12 @@ ndvi = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) +
 ggsave("C:/Git/Biotic-Interactions/Figures/logitndvi.png")
 
 elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zElev)), yend = 1 +(-0.0144*max(abs(occumatrix$zElev)))), col = "dark green", lwd=2)  + 
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zElev)), yend = 0), col = "dark green", lwd=2)  + 
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
 ggsave("C:/Git/Biotic-Interactions/Figures/logitelev.png")
 
 precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zPrecip)), yend = 1 +(0.005566*max(abs(occumatrix$zPrecip)))), col = "dark green", lwd=2) +
+  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zPrecip)), yend = 0), col = "dark green", lwd=2) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
 ggsave("C:/Git/Biotic-Interactions/Figures/logitprecip.png")
 

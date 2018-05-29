@@ -176,7 +176,8 @@ names(bbs_pool)[names(bbs_pool)=="aou"] <- "AOU"
 bbs_pool = data.frame(bbs_pool)
 
 # merge bbs pooled abundances with expected presences for all species
-bbs_ep = full_join(expect_pres[,c("stateroute", "spAOU")], bbs_pool, by = c('stateroute' = 'stateroute', 'spAOU' = 'AOU')) %>%
+bbs_ep = full_join(expect_pres[,c("stateroute", "spAOU")], bbs_pool, 
+                   by = c('stateroute' = 'stateroute', 'spAOU' = 'AOU')) %>%
   filter(stateroute %in% routes)
 bbs_ep$abundance[is.na(bbs_ep$abundance)] = 0
 
@@ -185,11 +186,11 @@ prefull_data = left_join(focal_AOU, bbs_ep, by = c('focalAOU'= 'spAOU')) %>%
   left_join(temp_occ[temp_occ$Aou %in% focal_and_comp_species, ], 
             by = c('focalAOU' = 'Aou', 'stateroute' = 'stateroute')) %>%
   left_join(bbs_pool, by = c('CompAOU' = 'AOU', 'stateroute' = 'stateroute')) %>%
-  group_by(focalAOU, Focal, Family, stateroute, occ, abundance.x) %>%
-  dplyr::summarize(allCompN = sum(abundance.y, na.rm = T))
+  group_by(focalAOU, Focal, Family, stateroute, occ, abundance.x) %>% 
+  dplyr::summarize(allCompN = sum(abundance.y, na.rm = T)) %>% na.omit(.)
 
 # subsetting prefull data to species in new_spec_weights
-prefull_data2 = subset(prefull_data, spAOU %in% new_spec_weights$focalAOU)
+prefull_data2 = subset(prefull_data, focalAOU %in% new_spec_weights$focalAOU)
 prefull_data2 = data.frame(prefull_data2)
 # create focalcompoutput table that adds MainCompN column to indicate primary competitors to the 
 # prefull_data with focal/comp/stroute/abundance/occ/summed abundance
@@ -205,7 +206,7 @@ names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbu
 
 focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
 focalcompoutput$MainCompN[is.na(focalcompoutput$MainCompN)] = 0
-# focalcompoutput2 = focalcompoutput[focalcompoutput$FocalOcc > 0 & focalcompoutput$AllCompN > 0,] 
+# focalcompoutput = focalcompoutput[!is.na(focalcompoutput$FocalOcc)  & !is.na(focalcompoutput$AllCompN),] 
 
 #### selecting competitors for noncomp analysis ####
 uniq_comps = unique(shapefile_areas$compAOU)
@@ -239,7 +240,8 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
 # merge in ENV
 focalcompsub$FocalAOU[focalcompsub$FocalAOU == 5660] = 5677
-all_expected_pres = left_join(focalcompsub, all_env, by = c("stateroute" = "stateroute", "FocalAOU" = "Species" ), na.rm = TRUE)
+all_expected_pres = left_join(focalcompsub, all_env, by = c("stateroute" = "stateroute", "FocalAOU" = "Species"))
+all_expected_pres = na.omit(all_expected_pres)
 
 write.csv(all_expected_pres,"data/all_expected_pres.csv", row.names= F)
 
