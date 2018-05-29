@@ -21,11 +21,16 @@ tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
 subsetocc$AOU[subsetocc$AOU == 4810] = 4812
 temp_occ$Aou[temp_occ$Aou == 4810] = 4812
 tax_code$AOU_OUT[tax_code$AOU_OUT == 4810] = 4812
+tax_code$AOU_OUT[tax_code$AOU_OUT == 4123] = 4120
 
-# rbind Pacific wren to data frame
-pacific = data.frame("Pacific Wren", 7221,  "PAWR")
-colnames(pacific) = c("PRIMARY_COM_NAME", "AOU_OUT" ,"ALPHA.CODE")
-tax_code = rbind(tax_code, pacific)
+# rbind missing spp to tax code data frame
+pacific = c("Pacific Wren", 7221,  "PAWR")
+quail = c("California Quail", 2940,  "CAQU")
+quail2 = c("Scaled Quail", 2930,  "SCQU")
+lost_spp = t(data.frame(pacific, quail, quail2, stringsAsFactors = FALSE))
+colnames(lost_spp) = c("PRIMARY_COM_NAME", "AOU_OUT" ,"ALPHA.CODE")
+tax_code = rbind(tax_code, lost_spp)
+tax_code$AOU_OUT = as.numeric(tax_code$AOU_OUT)
 
 # rescaling all occupancy values  - odds ratio
 # need to get rid of ones in order to not have infinity values 
@@ -42,7 +47,7 @@ envoutputa = c()
 beta_occ = c()
 beta_abun = c()
 
-subfocalspecies = unique(occuenv$FocalAOU)
+subfocalspecies = unique(occuenv$FocalAOU)[-99] #excluding sage sparrow bc no good routes
 
 for (sp in 1:length(subfocalspecies)){
   print(sp)
@@ -292,12 +297,11 @@ occumatrix$sp_fail = 15 * (1 - occumatrix$FocalOcc)
 
 #### GLM of all matrices not just subset ####
 glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s + 
-
-                            abTemp + abElev + abPrecip + abNDVI + (1|stateroute:Species), family = binomial(link = logit), data = occumatrix)
+    abTemp + abElev + abPrecip + abNDVI + (1|stateroute:FocalAOU), family = binomial(link = logit), data = test)
 summary(glm_occ_rand_site)                                    
 
 #### new fig 1 ####
-occ1b = occuenv %>% filter(Species == 6860|Species == 7222|Species == 5840) %>%
+occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
         filter(stateroute == 68015)
 
 fig1a = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point()+ geom_jitter(width = 0, height = 0.02)  +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "red")+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "red") +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) + geom_point(data = occ1b, aes(x = log10(FocalAbundance), y = FocalOcc, color = as.factor(occ1b$Focal), size = 3)) +theme(legend.position = "none")+ scale_color_manual(breaks = c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"), values=c("#F8766D","#7CAE00", "#00BFC4"), labels=c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"))
@@ -334,7 +338,7 @@ envloc$EW <- 0
 envloc$EW[envloc$Long > -98.583333] <- 1 ## mid point of USA
 # 1 = East
 
-envloc1 = merge(envloc, occumatrix[,c("Species", "Family")], by.x = "FocalAOU", by.y="Species", all.y = FALSE)
+envloc1 = merge(envloc, occumatrix[,c("FocalAOU", "Family")], by.x = "FocalAOU", by.y="FocalAOU", all.y = FALSE)
 # cutting down to unique subset
 envloc1 = unique(envloc1)
 envloc1 = merge(envloc1, tax_code[,c("AOU_OUT", "ALPHA.CODE")], by.x = "FocalAOU", by.y = "AOU_OUT", all.x=TRUE)
@@ -450,7 +454,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=40, hjust = 1, vjust = 0.5), legend.position = c(0.5,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:173, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+tt = t + annotate("text", x = 1:199, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
 # scales::pretty_breaks()(0:1)
 
@@ -458,7 +462,7 @@ tt = t + annotate("text", x = 1:173, y = -.03, label = envrank$ALPHA.CODE, angle
 
 plot(tt)
 
-ggsave("Figures/barplotc.pdf", height = 25, width = 36)
+ggsave("Figures/barplotc.pdf", height = 35, width = 48)
 
 #### ENV ####
 nrank = envloc1 %>% 
@@ -610,7 +614,7 @@ env_traits = lm(logit(value) ~ EW, data = env_lm)
 anova(env_traits)
 
 env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
-env_cont2 = merge(env_cont, occuenv[,c("Species", "zTemp","zPrecip","zElev","zNDVI", "FocalAbundance")], by.x = "FocalAOU", by.y = "Species")
+env_cont2 = merge(env_cont, occuenv[,c("FocalAOU", "zTemp","zPrecip","zElev","zNDVI", "FocalAbundance")], by.x = "FocalAOU", by.y = "FocalAOU")
 
 
 econt = lm(logit(value) ~ FocalArea  + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance + migclass + Trophic.Group, data = env_cont2)
@@ -619,7 +623,7 @@ env_est = summary(econt)$coef[,"Estimate"]
 colname = c("Intercept","FocalArea","area_overlap","zTemp","zPrecip","zElev","zNDVI","FocalAbundance","resid","short","insct/om","insectivore","nectarivore","omnivore")
 
 comp_cont = merge(comp_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
-comp_cont2 = merge(comp_cont, occuenv[,c("Species", "zTemp","zPrecip","zElev","zNDVI", "FocalAbundance")], by.x = "FocalAOU", by.y = "Species")
+comp_cont2 = merge(comp_cont, occuenv[,c("FocalAOU", "zTemp","zPrecip","zElev","zNDVI", "FocalAbundance")], by.x = "FocalAOU", by.y = "FocalAOU")
 
 
 ccont = lm(logit(value) ~ FocalArea + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance + migclass + Trophic.Group, data = comp_cont2)
