@@ -123,11 +123,11 @@ sp_list$match[sp_list$match =="Ixoreus naevius"] = "Zoothera naevia"
 comp_AOU = merge(focal_competitor_table, sp_list, by.x = "Competitor", by.y = "CommonName")
 names(comp_AOU) = c("Competitor", "focalAOU", "Focal", "old", "CompAOU", "CompFamily","CompSciName")
 comp_AOU = dplyr::select(comp_AOU, -c(old, CompFamily))
-
+comp_AOU$CompAOU[comp_AOU$CompAOU == 5660] = 5677
 # merging in focal sci name to table
 focal_AOU = merge(comp_AOU, sp_list[,c("match", "AOU", "Family")], by.x = "focalAOU", by.y = "AOU")
 names(focal_AOU)[6] = "FocalSciName"
-
+focal_AOU$focalAOU[focal_AOU$focalAOU == 5660] = 5677
 # merge in competitor and focal body size
 spec_w_bsize = merge(focal_AOU, bsize[,c("AOU", "Mass.g.")], by.x = "focalAOU", by.y = "AOU")
 
@@ -150,6 +150,8 @@ write.csv(new_spec_weights, "data/new_spec_weights.csv", row.names=FALSE)
 # Take range overlap area to assign "main competitor" for each focal species
 # "area.df" with cols: FocalAOU, CompAOU, focalArea, compArea, intArea, intProp
 shapefile_areas = na.omit(shapefile_areas)
+shapefile_areas$focalAOU[shapefile_areas$focalAOU == 5660] = 5677
+shapefile_areas$compAOU[shapefile_areas$compAOU == 5660] = 5677
 
 # calculate proportion of overlap between focal range and overlap range
 shapefile_areas$PropOverlap = shapefile_areas$area_overlap/shapefile_areas$FocalArea
@@ -180,6 +182,7 @@ bbs_ep = full_join(expect_pres[,c("stateroute", "spAOU")], bbs_pool,
                    by = c('stateroute' = 'stateroute', 'spAOU' = 'AOU')) %>%
   filter(stateroute %in% routes)
 bbs_ep$abundance[is.na(bbs_ep$abundance)] = 0
+bbs_ep$spAOU[bbs_ep$spAOU == 5660] = 5677
 
 # Calculating summed competitor abundance for each focal species
 prefull_data = left_join(focal_AOU, bbs_ep, by = c('focalAOU'= 'spAOU')) %>% 
@@ -194,19 +197,20 @@ prefull_data2 = subset(prefull_data, focalAOU %in% new_spec_weights$focalAOU)
 prefull_data2 = data.frame(prefull_data2)
 # create focalcompoutput table that adds MainCompN column to indicate primary competitors to the 
 # prefull_data with focal/comp/stroute/abundance/occ/summed abundance
-focalcompoutput = bbs_ep %>%    
+focalcompoutput.5 = bbs_ep %>%    
   dplyr::select(stateroute, spAOU) %>%
   right_join(subset(shapefile_areas, mainCompetitor == 1, 
                    select = c('focalAOU', 'compAOU', 'mainCompetitor')), 
             by = c('spAOU' = 'focalAOU')) %>%
-  left_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
-  left_join(prefull_data, by = c('spAOU' = 'focalAOU', 'stateroute' = 'stateroute')) %>%
+  right_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
+  right_join(prefull_data, by = c('spAOU' = 'focalAOU', 'stateroute' = 'stateroute')) %>%
   dplyr::select(stateroute, Focal, spAOU, Family, abundance.x, occ, abundance, allCompN)
-names(focalcompoutput) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbundance", "FocalOcc","MainCompN", "AllCompN")
+names(focalcompoutput.5) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbundance", "FocalOcc","MainCompN", "AllCompN")
 
+focalcompoutput = focalcompoutput.5[!is.na(focalcompoutput.5$FocalOcc)  & !is.na(focalcompoutput.5$AllCompN),] 
 focalcompoutput$FocalOcc[is.na(focalcompoutput$FocalOcc)] = 0
 focalcompoutput$MainCompN[is.na(focalcompoutput$MainCompN)] = 0
-# focalcompoutput = focalcompoutput[!is.na(focalcompoutput$FocalOcc)  & !is.na(focalcompoutput$AllCompN),] 
+
 
 #### selecting competitors for noncomp analysis ####
 uniq_comps = unique(shapefile_areas$compAOU)
@@ -239,7 +243,7 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
 # merge in ENV
-focalcompsub$FocalAOU[focalcompsub$FocalAOU == 5660] = 5677
+
 all_expected_pres = left_join(focalcompsub, all_env, by = c("stateroute" = "stateroute", "FocalAOU" = "Species"))
 all_expected_pres = na.omit(all_expected_pres)
 

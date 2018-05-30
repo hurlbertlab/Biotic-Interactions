@@ -47,7 +47,7 @@ envoutputa = c()
 beta_occ = c()
 beta_abun = c()
 
-subfocalspecies = unique(occuenv$FocalAOU)[-99] #excluding sage sparrow bc no good routes
+subfocalspecies = unique(occuenv$FocalAOU) #[-99] excluding sage sparrow bc no good routes
 
 for (sp in 1:length(subfocalspecies)){
   print(sp)

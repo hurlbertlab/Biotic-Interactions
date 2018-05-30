@@ -48,7 +48,7 @@ new_spec_weights=read.csv("data/new_spec_weights.csv", header=TRUE)
 new_spec_weights$focalAOU = as.numeric(new_spec_weights$focalAOU)
 new_spec_weights$compAOU = as.numeric(new_spec_weights$CompAOU)
 new_spec_weights = unique(new_spec_weights)
-# columba livia is an introduced species, remove from analyses
+# columba livia is an introduced species, remove from analyses 
 new_spec_weights = new_spec_weights[new_spec_weights$FocalSciName != "Columba livia",]
 
 # test to see which species d/n have matching names
@@ -132,14 +132,13 @@ shapefile_areas = read.csv("data/shapefile_areas.csv", header = TRUE)
 shapefile_areas = na.omit(shapefile_areas)
 shapefile_areas = shapefile_areas[shapefile_areas$Focal != "Columba livia",]
 continent = readOGR("Z:/GIS/geography/continent.shp", "continent")
-plot(continent,
-     col=c("white","black","grey50","red","blue","orange","green","yellow")) 
-continent2 = continent[continent@data$Polygon == 1,]
+continent2 = continent[continent@data$CONTINENT == "North America",]
+continent2 = spTransform(continent2, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
 plot(continent2)
 
 centroid = c()
 new_spec_weights$focalcat = as.character(new_spec_weights$focalcat)
-if(FALSE) {for (sp in focal_spp[85:233]){
+if(FALSE) {for (sp in focal_spp[84:232]){
   print(sp)
   t1 = all_spp_list[grep(sp, all_spp_list)]
   t2 = t1[grep('.shp', t1)]
@@ -151,9 +150,8 @@ if(FALSE) {for (sp in focal_spp[85:233]){
   # subset to just permanent or breeding residents
   sporigin = test.poly[test.poly@data$SEASONAL == 1|test.poly@data$SEASONAL == 2|test.poly@data$SEASONAL ==5,]
   sporigin = spTransform(sporigin, CRS("+proj=laea +lat_0=40 +lon_0=-100 +units=km"))
-  #plot(sporigin, col = colors, border = NA)
-  sporig_clip = 
-  trueCentroid = gCentroid(sporigin)
+  sporig_clip = raster::intersect(sporigin, continent2)
+  trueCentroid = gCentroid(sporig_clip)
   coord = coordinates(spTransform(trueCentroid, CRS("+proj=longlat +datum=WGS84")))
   focalAOU = unique(new_spec_weights[new_spec_weights$focalcat == sp, c('focalAOU')])
   centroid = rbind(centroid, c(sp, focalAOU, coord))
