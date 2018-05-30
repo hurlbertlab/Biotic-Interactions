@@ -131,155 +131,6 @@ names(beta_occ) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition
 beta_abun = data.frame(beta_abun)
 names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
 
-##### non-competitor comparison ######
-noncompdf = occuenv[,c("FocalAOU", "stateroute", "FocalOcc", "FocalAbundance", "Family", "FocalOcc_scale", "occ_logit")]
-subfocspecies = unique(noncompdf$FocalAOU)
-noncomps = read.csv("data/noncomps.csv", header = TRUE) 
-
-noncomps_output = c()
-for (sp in subfocspecies){
-  FocalAOU = sp
-  temp = subset(noncompdf, FocalAOU == sp) 
-  tempfam = unique(as.character(temp$Family))
-  if(nrow(temp) > 0){
-    ncomps = dplyr::filter(noncomps, Family != tempfam) %>%
-      dplyr::select(AOU) %>% 
-      unlist()
-    comps = unique(noncomps$AOU)
-    comps = subset(comps, !comps %in% sp)
-    for(co in comps){
-      mergespp = subset(bbs, aou == co) %>% 
-        group_by(stateroute, aou) %>%
-        summarize(meancomp = mean(speciestotal)) %>%
-        right_join(temp, by = "stateroute")
-    
-      # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) 
-      mergespp$comp_scaled = mergespp$meancomp/(mergespp$FocalAbundance + mergespp$meancomp) 
-      mergespp$comp_scaled[is.na(mergespp$comp_scaled)] = 0
-      
-      if(length(unique(mergespp$comp_scaled[!is.na(mergespp$comp_scaled)])) > 2){ 
-        lms <- lm(mergespp$occ_logit ~  mergespp$comp_scaled) 
-        lms_est = summary(lms)$coef[2,"Estimate"]
-        lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
-        lms_r = summary(lms)$r.squared
-        
-        noncomps_output = rbind(noncomps_output, c(FocalAOU, co,lms_est, lms_p, lms_r))
-      }
-    }
-  }
-}         
-
-noncomps_output = data.frame(noncomps_output)
-names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
-# have to remove pairing of American REdstart/least flycatcher, non-familial pairing based on lit
-noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
-
-# write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
-noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
-nonps = na.omit(noncomps_output_bocc) %>% 
-  group_by(FocalAOU) %>%
-  tally(R2 >= Competition_R2)
-names(nonps) = c("FocalAOU", "main_g_non")
-
-numcomps = na.omit(noncomps_output) %>% 
-  count(FocalAOU)
-names(numcomps) = c("FocalAOU", "Comp_count")
-  
-noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
-noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
-
-noncompsdist_trait = merge(noncompsdist, envoutput2[,c("FocalAOU", "migclass", "Trophic.Group")], by = "FocalAOU")
-
-hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
-abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
-
-hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", xlab = expression('R'^2))
-abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
-hist(na.omit(noncomps_output$Estimate), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate', xlim = c(-40, 40))
-abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
-
-
-noncomps_output_bocc$Null = "Null"
-noncomps_output_bocc$Comp = "Comp"
-
-R = ggplot(noncomps_output_bocc) +
-  stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
-  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
-  xlab(expression("R"^"2")) + ylab("Density") +
-  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
-#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
-
-E = ggplot(noncomps_output_bocc) +
-  stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
-  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab("Estimate") + ylab("Density") +
-  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
-#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
-
-P = ggplot(noncomps_output_bocc) +
-  stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = mean(noncomps_output_bocc$Competition_P), col = "black") +
-  xlab("P") + ylab("Density") +
-  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
-#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
-
-plot_grid(P+ theme(legend.position="none"),
-          R + theme(legend.position="none"),
-          E + theme(legend.position="none"),
-          align = 'h',
-          labels = c("A","B", "C"),
-          nrow = 1)
-ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_null.pdf", height = 6, width = 12)
-
-
-#### example non-comp dist and main R2 ######
-single_dist = subset(noncomps_output_bocc, FocalAOU == 7580)
-ggplot(single_dist) +
-  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5) +
-  xlab(expression("Swainson's Thrush R"^"2")) + ylab("Density") +
-  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
-
-ggplot(single_dist) +
-  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5) +
-  xlab(expression("Swainson's Thrush Estimate")) + ylab("Density") +
-  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
-
-#### non comp plots ####
-# noncomps_output = merge(noncomps_output, nsw[,c("focalAOU", "Family")], by.x = "FocalAOU", by.y = "focalAOU")
-noncomps_output = noncomps_output %>% arrange(FocalAOU)
-pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-for (sp in unique(noncomps_output$FocalAOU)){
-  temp = subset(noncomps_output, FocalAOU == sp) 
-  comp_est = beta_occ$Competition_Est[beta_occ$FocalAOU == sp]
-  hist(temp$Estimate, xlab = 'Estimate', 
-       main = sp, xlim = c(min(temp$Estimate, comp_est), max(temp$Estimate, comp_est)))
-  abline(v = comp_est, col = "blue", lwd = 2)
-  
-}
-dev.off()
-
-pdf('Figures/noncomp_r2.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-for (sp in unique(noncomps_output$FocalAOU)){
-  temp = subset(noncomps_output, FocalAOU == sp) 
-  comp_r2 = beta_occ$Competition_R2[beta_occ$FocalAOU == sp]
-  hist(temp$R2, xlab = expression('R'^2), main = sp,
-       xlim = c(0, max(temp$R2, comp_r2)))
-  abline(v = comp_r2, col = "blue", lwd = 2)
-}
-dev.off()
-
-noncomps_output$type = "Species"
-ggplot(noncomps_output, aes(type, R2)) + geom_violin(linetype = "blank", aes(fill = factor(noncomps_output$type))) + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
-
-ggsave("C:/Git/Biotic-Interactions/Figures/violin_noncomps.png")
-
-noncompsdist$type = "Species"
-ggplot(noncompsdist, aes(type, nullp)) + geom_violin(linetype = "blank", aes(fill = factor(noncompsdist$type))) + xlab("Total Variance") + ylab("P-val")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
-
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
 # and # of sites birds were not found from original bbs data
@@ -454,7 +305,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=40, hjust = 1, vjust = 0.5), legend.position = c(0.5,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:177, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+tt = t + annotate("text", x = 1:183, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
 # scales::pretty_breaks()(0:1)
 
@@ -649,7 +500,7 @@ ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", a
 ggsave("Figures/violin_mains.pdf")
 
 # r2 plot for main vs all competitors
-envall = read.csv("data/envoutput_all.csv", header = TRUE)
+# envall = read.csv("data/envoutput_all.csv", header = TRUE) NEEDS TO BE CHANGED
 mainvall = merge(envoutput, envall, by = "FocalAOU")
 mainvall$total.x = mainvall$ENV.x + mainvall$COMP.x + mainvall$SHARED.x
 mainvall$total.y = mainvall$ENV.y + mainvall$COMP.y + mainvall$SHARED.y
@@ -663,6 +514,160 @@ ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) + geom_point(col = mainvall, shape
 
 foo = merge(mainvall, focal_competitor_table, by = "FocalAOU")
 foo$difference = foo$COMP.y - foo$COMP.x ### y = all competitors, x = occupancy
+
+
+
+
+##### non-competitor comparison ######
+noncompdf = occuenv[,c("FocalAOU", "stateroute", "FocalOcc", "FocalAbundance", "Family", "FocalOcc_scale", "occ_logit")]
+subfocspecies = unique(noncompdf$FocalAOU)
+noncomps = read.csv("data/noncomps.csv", header = TRUE) 
+
+noncomps_output = c()
+for (sp in subfocspecies){
+  FocalAOU = sp
+  temp = subset(noncompdf, FocalAOU == sp) 
+  tempfam = unique(as.character(temp$Family))
+  if(nrow(temp) > 0){
+    ncomps = dplyr::filter(noncomps, Family != tempfam) %>%
+      dplyr::select(AOU) %>% 
+      unlist()
+    comps = unique(noncomps$AOU)
+    comps = subset(comps, !comps %in% sp)
+    for(co in comps){
+      mergespp = subset(bbs, aou == co) %>% 
+        group_by(stateroute, aou) %>%
+        summarize(meancomp = mean(speciestotal)) %>%
+        right_join(temp, by = "stateroute")
+      
+      # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) 
+      mergespp$comp_scaled = mergespp$meancomp/(mergespp$FocalAbundance + mergespp$meancomp) 
+      mergespp$comp_scaled[is.na(mergespp$comp_scaled)] = 0
+      
+      if(length(unique(mergespp$comp_scaled[!is.na(mergespp$comp_scaled)])) > 2){ 
+        lms <- lm(mergespp$occ_logit ~  mergespp$comp_scaled) 
+        lms_est = summary(lms)$coef[2,"Estimate"]
+        lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
+        lms_r = summary(lms)$r.squared
+        
+        noncomps_output = rbind(noncomps_output, c(FocalAOU, co,lms_est, lms_p, lms_r))
+      }
+    }
+  }
+}         
+
+noncomps_output = data.frame(noncomps_output)
+names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
+# have to remove pairing of American REdstart/least flycatcher, non-familial pairing based on lit
+noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
+
+# write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
+noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
+nonps = na.omit(noncomps_output_bocc) %>% 
+  group_by(FocalAOU) %>%
+  tally(R2 >= Competition_R2)
+names(nonps) = c("FocalAOU", "main_g_non")
+
+numcomps = na.omit(noncomps_output) %>% 
+  count(FocalAOU)
+names(numcomps) = c("FocalAOU", "Comp_count")
+
+noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
+noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
+
+noncompsdist_trait = merge(noncompsdist, envoutput2[,c("FocalAOU", "migclass", "Trophic.Group")], by = "FocalAOU")
+
+hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
+abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
+
+hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", xlab = expression('R'^2))
+abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
+hist(na.omit(noncomps_output$Estimate), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate', xlim = c(-40, 40))
+abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
+
+
+noncomps_output_bocc$Null = "Null"
+noncomps_output_bocc$Comp = "Comp"
+
+R = ggplot(noncomps_output_bocc) +
+  stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
+  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
+  xlab(expression("R"^"2")) + ylab("Density") +
+  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
+
+E = ggplot(noncomps_output_bocc) +
+  stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
+  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  xlab("Estimate") + ylab("Density") +
+  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
+
+P = ggplot(noncomps_output_bocc) +
+  stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = mean(noncomps_output_bocc$Competition_P), col = "black") +
+  xlab("P") + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
+
+plot_grid(P+ theme(legend.position="none"),
+          R + theme(legend.position="none"),
+          E + theme(legend.position="none"),
+          align = 'h',
+          labels = c("A","B", "C"),
+          nrow = 1)
+ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_null.pdf", height = 6, width = 12)
+
+
+#### example non-comp dist and main R2 ######
+single_dist = subset(noncomps_output_bocc, FocalAOU == 7580)
+ggplot(single_dist) +
+  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5) +
+  xlab(expression("Swainson's Thrush R"^"2")) + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+
+ggplot(single_dist) +
+  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5) +
+  xlab(expression("Swainson's Thrush Estimate")) + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+
+#### non comp plots ####
+# noncomps_output = merge(noncomps_output, nsw[,c("focalAOU", "Family")], by.x = "FocalAOU", by.y = "focalAOU")
+noncomps_output = noncomps_output %>% arrange(FocalAOU)
+pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
+par(mfrow = c(3, 4))
+for (sp in unique(noncomps_output$FocalAOU)){
+  temp = subset(noncomps_output, FocalAOU == sp) 
+  comp_est = beta_occ$Competition_Est[beta_occ$FocalAOU == sp]
+  hist(temp$Estimate, xlab = 'Estimate', 
+       main = sp, xlim = c(min(temp$Estimate, comp_est), max(temp$Estimate, comp_est)))
+  abline(v = comp_est, col = "blue", lwd = 2)
+  
+}
+dev.off()
+
+pdf('Figures/noncomp_r2.pdf', height = 8, width = 10)
+par(mfrow = c(3, 4))
+for (sp in unique(noncomps_output$FocalAOU)){
+  temp = subset(noncomps_output, FocalAOU == sp) 
+  comp_r2 = beta_occ$Competition_R2[beta_occ$FocalAOU == sp]
+  hist(temp$R2, xlab = expression('R'^2), main = sp,
+       xlim = c(0, max(temp$R2, comp_r2)))
+  abline(v = comp_r2, col = "blue", lwd = 2)
+}
+dev.off()
+
+noncomps_output$type = "Species"
+ggplot(noncomps_output, aes(type, R2)) + geom_violin(linetype = "blank", aes(fill = factor(noncomps_output$type))) + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
+
+ggsave("C:/Git/Biotic-Interactions/Figures/violin_noncomps.png")
+
+noncompsdist$type = "Species"
+ggplot(noncompsdist, aes(type, nullp)) + geom_violin(linetype = "blank", aes(fill = factor(noncompsdist$type))) + xlab("Total Variance") + ylab("P-val")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
+
+
 
 
 #### ---- Plotting GLMs ---- ####

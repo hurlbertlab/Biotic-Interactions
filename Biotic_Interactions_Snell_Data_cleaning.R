@@ -246,6 +246,7 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 
 all_expected_pres = left_join(focalcompsub, all_env, by = c("stateroute" = "stateroute", "FocalAOU" = "Species"))
 all_expected_pres = na.omit(all_expected_pres)
+all_expected_pres = all_expected_pres[all_expected_pres$Focal != "Rock Pigeon",]
 
 write.csv(all_expected_pres,"data/all_expected_pres.csv", row.names= F)
 
