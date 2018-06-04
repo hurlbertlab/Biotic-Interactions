@@ -11,7 +11,7 @@ library(tidyr)
 # read in all dataset inputs
 bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
 expect_pres = read.csv('data/expect_pres.csv', header = T) # expected presence data based on BBS for 372 landbird species --- 2001-2015 from NatureServ
-bbs_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS temporal occupancy data (just for 372 landbird species) --- 2001-2015
+bbs_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS temporal occupancy data (just for landbird species) --- 2001-2015
 bsize = read.csv("data/DunningBodySize_old_2008.11.12.csv", header = TRUE) # import body size data from Dunning 2008
 focal_competitor_table = read.csv("data/focal spp.csv", header = TRUE)
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
@@ -163,10 +163,10 @@ for (s in unique(shapefile_areas$focalAOU)) {
   shapefile_areas$mainCompetitor[shapefile_areas$focalAOU == s & shapefile_areas$PropOverlap == maxOverlap] = 1 # 1 assigns main competitor
 }
 
+#### ---- Gathering Occupancy and Abundance Data for Biotic Comparisons ---- ####
 # pull out stateroutes that have been continuously sampled 2001-2015
 routes = unique(temp_occ$stateroute)
 
-#### ---- Gathering Occupancy and Abundance Data for Biotic Comparisons ---- ####
 focal_and_comp_species = unique(c(new_spec_weights$focalAOU, new_spec_weights$CompAOU))
 
 # pooling BBS mean abundance by AOU/stateroute and by year  
@@ -199,11 +199,11 @@ prefull_data2 = data.frame(prefull_data2)
 # prefull_data with focal/comp/stroute/abundance/occ/summed abundance
 focalcompoutput.5 = bbs_ep %>%    
   dplyr::select(stateroute, spAOU) %>%
-  right_join(subset(shapefile_areas, mainCompetitor == 1, 
+  left_join(subset(shapefile_areas, mainCompetitor == 1, 
                    select = c('focalAOU', 'compAOU', 'mainCompetitor')), 
             by = c('spAOU' = 'focalAOU')) %>%
-  right_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
-  right_join(prefull_data, by = c('spAOU' = 'focalAOU', 'stateroute' = 'stateroute')) %>%
+  left_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
+  left_join(prefull_data, by = c('spAOU' = 'focalAOU', 'stateroute' = 'stateroute')) %>%
   dplyr::select(stateroute, Focal, spAOU, Family, abundance.x, occ, abundance, allCompN)
 names(focalcompoutput.5) = c("stateroute","Focal", "FocalAOU", "Family", "FocalAbundance", "FocalOcc","MainCompN", "AllCompN")
 
