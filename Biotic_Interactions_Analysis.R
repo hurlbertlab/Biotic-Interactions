@@ -73,7 +73,8 @@ for (sp in 1:length(subfocalspecies)){
   NONE = 1 - summary(both_z)$r.squared # neither variance
   sp1 = unique(temp$FocalAOU)
   sum = sum(ENV, COMP, SHARED)
-  envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE)) #, sum
+  n = length(temp$stateroute)
+  envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE, n)) #, sum
   
   #variance_partitioning 
   ENVa = summary(both_abun)$r.squared - summary(competition_abun)$r.squared
@@ -82,6 +83,7 @@ for (sp in 1:length(subfocalspecies)){
   NONEa = 1 - summary(both_abun)$r.squared
   
   sp1 = unique(temp$FocalAOU)
+  
   
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
   
@@ -116,7 +118,7 @@ for (sp in 1:length(subfocalspecies)){
 envoutput = data.frame(envoutput)
 envoutputa = data.frame(envoutputa)
 
-names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
+names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE", "n")
 names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 
 envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'FocalAOU', by.y = "AOU_OUT", all.x = TRUE) 
@@ -148,8 +150,12 @@ occumatrix$sp_fail = 15 * (1 - occumatrix$FocalOcc)
 
 #### GLM of all matrices not just subset ####
 glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s + 
-    abTemp + abElev + abPrecip + abNDVI + (1|stateroute:FocalAOU), family = binomial(link = logit), data = occumatrix)
+    abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix)
 summary(glm_occ_rand_site)                                    
+
+
+mm <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
+        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, prior=normal (0, 188))
 
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
@@ -185,9 +191,9 @@ ggsave("C:/Git/Biotic-Interactions/Figures/forLB.pdf", height = 7, width = 12)
 
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
-
 envloc$EW[envloc$Long > -98.583333] <- 1 ## mid point of USA
 # 1 = East
+envloc$COMPSC = envloc$COMP/(envloc$COMP+envloc$ENV)
 
 envloc1 = merge(envloc, occumatrix[,c("FocalAOU", "Family")], by.x = "FocalAOU", by.y="FocalAOU", all.y = FALSE)
 # cutting down to unique subset
@@ -395,12 +401,12 @@ logit = function(x) log(x/(1-x))
 
 env_lm = subset(envflip, Type == 'ENV')
 
-env_traits = lm(logit(value) ~ Trophic.Group + migclass + EW, data = env_lm)
-summary(env_traits) 
+# env_traits = lm(logit(value) ~ Trophic.Group + migclass + EW, data = env_lm)
+# summary(env_traits) 
 
 comp_lm = subset(envflip, Type == 'COMP')
 
-comp_traits = lm(logit(value) ~ Trophic.Group + migclass + EW, data = comp_lm[comp_lm$value > 0,])
+comp_traits = lm(COMPSC ~ Trophic.Group + migclass + Lat + Long, data = comp_lm, weights = n)
 summary(comp_traits) 
 
 env_sum = subset(envflip, Type != 'NONE')
