@@ -224,7 +224,7 @@ envrank <- envrank[order(envrank$rank),]
 
 envrank <- subset(envrank,Type == "COMP") # change here for comp
 
-### CREATE LABEL DF FAMilY ########
+### CREATE LABEL OF FAMilY ########
 envrank$Fam_abbrev = envrank$Family
 envrank$Fam_abbrev = gsub('Emberizidae','E', envrank$Fam_abbrev)
 envrank$Fam_abbrev = gsub('Turdidae','Tu', envrank$Fam_abbrev)
@@ -591,6 +591,8 @@ names(numcomps) = c("FocalAOU", "Comp_count")
 
 noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
 noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
+nullpsub = filter(noncompsdist, nullp < 0.05) %>% 
+  left_join(., envoutput1, by = "FocalAOU")
 
 noncompsdist_trait = merge(noncompsdist, envoutput2[,c("FocalAOU", "migclass", "Trophic.Group")], by = "FocalAOU")
 
