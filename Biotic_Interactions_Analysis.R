@@ -156,8 +156,9 @@ summary(glm_occ_rand_site)
 
 
 # occumatrix = subset(occumatrix, FocalAOU == 5880)
+# rstan::rstan_options(iter = 300)
 mm <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
-        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
@@ -326,6 +327,9 @@ plot(tt)
 
 ggsave("Figures/barplotc.pdf", height = 35, width = 48)
 
+hist(envoutput$ENV + envoutput$SHARED)
+hist(envoutput$COMP + envoutput$SHARED)
+
 #### ENV ####
 nrank = envloc1 %>% 
   dplyr::mutate(rank = row_number(-ENV))# change here for comp
@@ -444,11 +448,11 @@ comp_cont2 = merge(comp_cont, occuenv[,c("FocalAOU", "zTemp","zPrecip","zElev","
 ccont = lm(COMPSC ~ FocalArea + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance + migclass + Trophic.Group, data = comp_cont2)
 comp_est = summary(ccont)$coef[,"Estimate"]
 comp_est = data.frame(colname, comp_est)
-comp_lower = fig5.1$val - as.vector(summary(ccont)$coef[,"Std. Error"])
-comp_upper = fig5.1$val + as.vector(summary(ccont)$coef[,"Std. Error"])
+comp_lower = fig5$comp_est - as.vector(summary(ccont)$coef[,"Std. Error"])
+comp_upper = fig5$comp_est + as.vector(summary(ccont)$coef[,"Std. Error"])
 
 
-fig5 = data.frame(colname, env_est, comp_est)
+fig5 = data.frame(env_est, comp_est)
 fig5.1 = gather(fig5, "type", "val", 2:3)
 
 ggplot(fig5.1, aes(colname, val), fill=factor(type)) + geom_point(aes(col = fig5.1$type), pch = 16, size = 6) + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) +scale_y_continuous(limits = c(-3, 3), breaks = c(-3, -2, -1, 0, 1, 2, 3)) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title="")) + geom_errorbar(data=fig5.1, mapping=aes(colname, ymin=comp_lower, ymax=comp_upper), width=0.2, size=1, color="black")
@@ -508,6 +512,10 @@ p2 = plot_grid(r1,
                label_size = 35,
                align = 'hv')
 ggsave("Figures/Figure4A_B.pdf", height = 10, width = 20)
+
+
+ggplot(envoutput, aes(x = ENV, y = COMP)) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab(bquote("Environment R"^"2")) + ylab(bquote("Competitor R"^"2")) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="red",linetype="dotdash")+geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.2,0.9))
+
 
 #### R2 plot - glm violin plots ####
 R2violin = gather(R2plot2, "type", "Rval", 13:15)
