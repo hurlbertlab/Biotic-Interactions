@@ -4,6 +4,7 @@ library(tidyr)
 library(dplyr)
 library(cowplot)
 library(ggExtra)
+library(rstanarm)
 
 # read in files created in data cleaning script
 temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS occ script
@@ -155,9 +156,8 @@ summary(glm_occ_rand_site)
 
 
 # occumatrix = subset(occumatrix, FocalAOU == 5880)
-library(rstanarm)
-mm <- stan_glm(cbind(sp_success, sp_fail) ~ c_s + 
-        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, devoc(regularization = 1, concentration = 1, shape = 1, scale = 1))
+mm <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
+        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
