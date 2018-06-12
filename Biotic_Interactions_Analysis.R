@@ -514,7 +514,7 @@ p2 = plot_grid(r1,
 ggsave("Figures/Figure4A_B.pdf", height = 10, width = 20)
 
 
-ggplot(envoutput, aes(x = ENV, y = COMP)) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab(bquote("Environment R"^"2")) + ylab(bquote("Competitor R"^"2")) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="red",linetype="dotdash")+geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.2,0.9))
+ggplot(envoutput, aes(x = ENV, y = COMP)) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab(bquote("Environment R"^"2")) + ylab(bquote("Competitor R"^"2")) + geom_point(cex =4, shape=16)+geom_smooth(method='lm', se=FALSE, col="black",linetype="dotdash")+geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.2,0.9))
 
 
 #### R2 plot - glm violin plots ####
