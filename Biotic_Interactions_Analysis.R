@@ -327,7 +327,8 @@ plot(tt)
 
 ggsave("Figures/barplotc.pdf", height = 35, width = 48)
 
-hist(envoutput$ENV + envoutput$SHARED)
+geom_histogram(envoutput$ENV + envoutput$SHARED)
+ggplot(envoutput, aes(x = ENV+SHARED)) + geom_histogram(binwidth = 0.05, fill = "#2ca25f") + xlab("Environment and Shared Variance Explained") + ylab("Frequency")
 hist(envoutput$COMP + envoutput$SHARED)
 
 #### ENV ####
