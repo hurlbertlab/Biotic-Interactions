@@ -156,9 +156,26 @@ summary(glm_occ_rand_site)
 
 
 # occumatrix = subset(occumatrix, FocalAOU == 5880)
-# rstan::rstan_options(iter = 300)
-mm <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
-        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+# mm <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
+#        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+# write.csv(summary(mm), row.names= TRUE)
+mm2 = read.csv("bayesian_sum_mod_output_full.csv", header = TRUE)
+modoutput2 = subset(mm2, mean > -2.52e+05)
+modoutput2$X = gsub("b", "", modoutput2$X) 
+modoutput2$X = gsub("(Intercept)", "", modoutput2$X) 
+modoutput2$X = gsub("FocalAOU", "", modoutput2$X) 
+modoutput2$X = gsub(":", "", modoutput2$X) 
+modoutput2$X = gsub("", "", modoutput2$X) 
+
+
+hist(modoutput2$mean, breaks = 20)
+
+mm3 = read.csv("data/processed_bayesian.csv", header = TRUE) #removed global vals, only have ind spp
+ggplot(data = mm3) + #geom_point() + geom_ribbon(aes(ymin = X2.5., ymax = X97.5.))
+stat_density(aes(mm3$mean))
+
+ggplot(data = mm3, aes(as.factor(X), X50.)) + geom_point()
+
 
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
