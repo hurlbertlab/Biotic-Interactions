@@ -174,8 +174,16 @@ mm3 = read.csv("data/processed_bayesian.csv", header = TRUE) #removed global val
 ggplot(data = mm3) + #geom_point() + geom_ribbon(aes(ymin = X2.5., ymax = X97.5.))
 stat_density(aes(mm3$mean))
 
-ggplot(data = mm3, aes(as.factor(X), X50.)) + geom_point()
+# arrange in increasing order of ES
+bmod_rank = dplyr::arrange(mm3,mean)
+bmod_rank$X = reorder(bmod_rank$X, bmod_rank$mean, order = is.ordered(bmod_rank$mean))
+bmod_rank$gray = "black"
+bmod_rank[c(86, 88, 90:103),12] = "gray"
+bmod_rank$AOU_OUT = bmod_rank$X
+bmod_rank = merge(bmod_rank, tax_code[c("AOU_OUT", "ALPHA.CODE")], by = "AOU_OUT")
 
+ggplot(data = bmod_rank, aes(as.factor(X), mean)) + geom_point(aes(x = as.factor(X), y = mean), color = as.factor(bmod_rank$gray)) + geom_errorbar(data=bmod_rank, mapping=aes(x=as.factor(X), ymin=X2.5., ymax=X97.5.), color = as.factor(bmod_rank$gray)) + geom_hline(yintercept = 0, col = "red", lty = 2)  + xlab("Species") + ylab("Mean") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=9, angle = 90))
+ggsave("Figures/bayes_plot.pdf", width = 16, height = 8)
 
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
