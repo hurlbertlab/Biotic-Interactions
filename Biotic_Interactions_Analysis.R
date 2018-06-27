@@ -159,7 +159,7 @@ summary(glm_occ_rand_site)
 # mm <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
 #        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 # write.csv(summary(mm), row.names= TRUE)
-mm2 = read.csv("bayesian_sum_mod_output_full.csv", header = TRUE)
+mm2 = read.csv("data/bayesian_sum_mod_output_full.csv", header = TRUE)
 modoutput2 = subset(mm2, mean > -2.52e+05)
 modoutput2$X = gsub("b", "", modoutput2$X) 
 modoutput2$X = gsub("(Intercept)", "", modoutput2$X) 
@@ -185,6 +185,11 @@ bmod_rank = merge(bmod_rank, tax_code[c("AOU_OUT", "ALPHA.CODE")], by = "AOU_OUT
 ggplot(data = bmod_rank, aes(as.factor(X), mean)) + geom_point(aes(x = as.factor(X), y = mean), color = as.factor(bmod_rank$gray)) + geom_errorbar(data=bmod_rank, mapping=aes(x=as.factor(X), ymin=X2.5., ymax=X97.5.), color = as.factor(bmod_rank$gray)) + geom_hline(yintercept = 0, col = "red", lty = 2)  + xlab("Species") + ylab("Mean") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=9, angle = 90))
 ggsave("Figures/bayes_plot.pdf", width = 16, height = 8)
 
+mm_fixed = mm2[1:6,]
+
+temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 1, xend = abs(-0.4478090), yend = 0), col = "dark green", lwd=2) + #geom_smooth
+  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
         filter(stateroute == 68015)
@@ -218,7 +223,6 @@ ggsave("C:/Git/Biotic-Interactions/Figures/forLB.pdf", height = 7, width = 12)
 
 
 ggplot(envoutput1, aes(x = ENV, y = COMP)) + geom_point() + geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.2,0.9))
-
 
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
