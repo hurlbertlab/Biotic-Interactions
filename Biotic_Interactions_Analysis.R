@@ -352,6 +352,13 @@ plot(tt)
 
 ggsave("Figures/barplotc.pdf", height = 35, width = 48)
 
+#### top 10
+envflip_sub = envflip[1:80,]
+w = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + geom_bar(stat = "identity") + theme_classic() +
+  theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
+  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.6)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:20, y = -.01, label = envrank$ALPHA.CODE[1:20], angle=90,size=6,vjust=0.5,hjust = 1, color = "black")  + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+ggsave("Figures/barplotc_sub.pdf", height = 18, width = 16)
+
 geom_histogram(envoutput$ENV + envoutput$SHARED)
 ggplot(envoutput, aes(x = ENV+SHARED)) + geom_histogram(binwidth = 0.05, fill = "#2ca25f") + xlab("Environment and Shared Variance Explained") + ylab("Frequency")
 hist(envoutput$COMP + envoutput$SHARED)
@@ -431,6 +438,12 @@ z <- plot_grid(tt+ theme(legend.position="top"),
                hjust = -6)
 ggsave("C:/Git/Biotic-Interactions/Figures/barplotboth.pdf", height = 25, width = 36)
 
+
+envflip_sub = envflip[1:80,]
+w = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + geom_bar(stat = "identity") + theme_classic() +
+  theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
+  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.6)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:20, y = -.01, label = envrank$ALPHA.CODE[1:20], angle=90,size=6,vjust=0.5,hjust = 1, color = "black")  + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+ggsave("Figures/barplote_sub.pdf", height = 18, width = 16)
 
 
 ##################### TRAITS Model ####################################
