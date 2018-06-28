@@ -5,6 +5,7 @@ library(dplyr)
 library(cowplot)
 library(ggExtra)
 library(rstanarm)
+library(boot)
 
 # read in files created in data cleaning script
 temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS occ script
@@ -188,8 +189,37 @@ ggsave("Figures/bayes_plot.pdf", width = 16, height = 8)
 mm_fixed = mm2[1:6,]
 
 temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(-0.4478090), yend = 0), col = "dark green", lwd=2) + #geom_smooth
+    geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[3]), yend = 0), col = "dark green", lwd=2) + 
+    geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3])) +
+    # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+
+elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[4]), yend = 0), col = "dark green", lwd=2) + 
+  geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[4], ymax = inv.logit(mm_fixed$X97.5)[4])) +
+  # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
+  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+
+precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[5]), yend = 0), col = "dark green", lwd=2) + 
+  geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[5], ymax = inv.logit(mm_fixed$X97.5)[5])) +
+  # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
+  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+
+NDVI = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[6]), yend = 0), col = "dark green", lwd=2) + 
+  geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[6], ymax = inv.logit(mm_fixed$X97.5)[6])) +
+  # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
+  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+
+
+comp = ggplot(data = occumatrix, aes(x = abs(c_s), y = FocalOcc)) + 
+  geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) + 
+  geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[2], ymax = inv.logit(mm_fixed$X97.5)[2])) +
+  # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
+  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+
+
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
         filter(stateroute == 68015)
@@ -475,29 +505,56 @@ summary(total_traits)
 env_traits = lm(logit(value) ~ EW, data = env_lm)
 anova(env_traits)
 
+#column names to manipulate in plot
+colname = c("Intercept","FocalArea","Area Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Herbivore","Insct/Om","Insectivore","Nectarivore","Omnivore")
+
+# creating env traits model to compare to comp and weighted traits mods
 env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
-env_cont2 = merge(env_cont, occuenv[,c("FocalAOU", "zTemp","zPrecip","zElev","zNDVI", "FocalAbundance")], by.x = "FocalAOU", by.y = "FocalAOU")
-
-
-econt = lm(logit(value) ~ FocalArea  + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance + migclass + Trophic.Group, data = env_cont2)
-
+env_cont2 = merge(env_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by.x = "FocalAOU", by.y = "FocalAOU")
+econt = lm(logit(value) ~ FocalArea  + area_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = env_cont2)
 env_est = summary(econt)$coef[,"Estimate"]
-colname = c("Intercept","FocalArea","area_overlap","zTemp","zPrecip","zElev","zNDVI","FocalAbundance","resid","short", "herbivore","insct/om","insectivore","nectarivore","omnivore")
+env = data.frame(colname, env_est)
+env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - as.vector(summary(econt)$coef[,"Std. Error"])
+env$env_upper = as.vector(summary(econt)$coefficients[,"Estimate"]) + as.vector(summary(econt)$coef[,"Std. Error"])
 
-comp_cont = merge(comp_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
-comp_cont2 = merge(comp_cont, occuenv[,c("FocalAOU", "zTemp","zPrecip","zElev","zNDVI", "FocalAbundance")], by.x = "FocalAOU", by.y = "FocalAOU")
+env_trait_rank = env %>% 
+  dplyr::mutate(rank = row_number(-env_est)) 
+env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
+
+# making comp mod - not working.
+comp_cont = left_join(comp_lm, shapefile_areas, by = c("FocalAOU"= "focalAOU"))
+comp_cont2 = left_join(comp_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = c("FocalAOU" = "FocalAOU"))
+# ccont = lm(logit(value) ~ FocalArea  + area_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont2)
+env_est = summary(econt)$coef[,"Estimate"]
+env = data.frame(colname, env_est)
+env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - as.vector(summary(econt)$coef[,"Std. Error"])
+env$env_upper = as.vector(summary(econt)$coefficients[,"Estimate"]) + as.vector(summary(econt)$coef[,"Std. Error"])
+
+env_trait_rank = env %>% 
+  dplyr::mutate(rank = row_number(-env_est)) 
+env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
 
 
-ccont = lm(COMPSC ~ FocalArea + area_overlap + zTemp + zPrecip + zElev + zNDVI + FocalAbundance + migclass + Trophic.Group, data = comp_cont2)
-comp_est = summary(ccont)$coef[,"Estimate"]
-comp_est = data.frame(colname, comp_est)
+# this is the trait mod scaled by comp/env. there are > 183 rows bc of the competitors (FocalArea, area_overalp)
+trait_mod_scale = lm(COMPSC ~ FocalArea + area_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont2)
+scaled_est = summary(trait_mod_scale)$coef[,"Estimate"]
+scaled_est = data.frame(colname, scaled_est)
+scaled_est$scaled_lower =  as.vector(summary(trait_mod_scale)$coefficients[,"Estimate"]) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
+scaled_est$scaled_upper = as.vector(summary(trait_mod_scale)$coefficients[,"Estimate"]) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 
-fig5 = data.frame(env_est, comp_est)
-fig5$comp_lower = fig5$comp_est - as.vector(summary(ccont)$coef[,"Std. Error"])
-fig5$comp_upper = fig5$comp_est + as.vector(summary(ccont)$coef[,"Std. Error"])
-fig5.1 = gather(fig5, "type", "val", 1,3)
+scaled_rank = scaled_est %>% 
+  dplyr::mutate(rank = row_number(-scaled_est)) 
+scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 
-ggplot(fig5.1, aes(colname, val), fill=factor(type)) + geom_point(aes(col = fig5.1$type), pch = 16, size = 6) + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title="")) + geom_errorbar(data=fig5.1, mapping=aes(colname, ymin=comp_lower, ymax=comp_upper), width=0.2, size=1, color="black")
+# as.factor(rank)
+ggplot(scaled_rank2, aes(colname, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
+  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
+  scale_x_discrete("Parameter Estimate", labels = c("Intercept","Insectivore","Omnivore","Insct/Om","Nectarivore", "Herbivore", "Short", "Precip", "Area Overlap", "FocalArea", "Elev", "Temp", "Resident", "NDVI")) +
+  geom_hline(yintercept = 0, col = "red", lty = 2) +
+  geom_point(data = env, aes(colname, env_est), pch = 16, size = 5, col = "blue") + geom_errorbar(data=env, mapping=aes(ymin=env_lower, ymax=env_upper), width=0.2, size=1, color="black")
+  xlab("Parameter Estimate") + ylab("Value") + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
+  theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
+  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("C:/Git/Biotic-Interactions/Figures/estimateplots.pdf")
 
 ggplot(comp_est, aes(colname, comp_est)) + geom_point() + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) +scale_y_continuous(limits = c(-3, 3), breaks = c(-3, -2, -1, 0, 1, 2, 3)) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title="")) + geom_errorbar(data=fig5.1, mapping=aes(colname, ymin=comp_lower, ymax=comp_upper), width=0.2, size=1, color="black")
