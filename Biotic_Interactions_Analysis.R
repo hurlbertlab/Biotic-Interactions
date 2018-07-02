@@ -224,6 +224,18 @@ comp = ggplot(data = occumatrix, aes(x = abs(c_s), y = FocalOcc)) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
 ggsave("C:/Git/Biotic-Interactions/Figures/comp.pdf", height = 8, width = 12)
 
+z <- plot_grid(precip+ theme(legend.position="none"),
+               NDVI + theme(legend.position="none"),
+               align = 'h',
+               labels = c("A","B"),
+               nrow = 1)
+p2 = plot_grid(elev + theme(legend.position="none"),
+               temp + theme(legend.position="none"), 
+               labels = c("C","D"),
+               align = 'h')
+
+plot_grid(z, p2, ncol = 2, rel_heights = c(1, 1))
+ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf", height = 8, width = 20)
 
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
@@ -550,18 +562,23 @@ scaled_est$scaled_upper = as.vector(summary(trait_mod_scale)$coefficients[,"Esti
 scaled_rank = scaled_est %>% 
   dplyr::mutate(rank = row_number(-scaled_est)) 
 scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
-
 scaled_rank2$colname = factor(scaled_rank2$colname,
        levels = c("Intercept", "Insectivore", "Omnivore", "Insct/Om", "Nectarivore", "Herbivore", 
                   "Short", "Precip", "Area Overlap", "FocalArea", "Elev", "Temp", "Resident", "NDVI"),ordered = TRUE)
 
-ggplot(scaled_rank2, aes(colname, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
-  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
+scaled_rank3 <- scaled_rank2[c(1:5,14),]
+scaled_rank3$colname = factor(scaled_rank3$colname,
+       levels = c("Intercept", "Insectivore", "Omnivore", "Insct/Om", "Nectarivore", "NDVI"),ordered = TRUE)
+
+
+
+ggplot(scaled_rank3, aes(colname, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
+  geom_errorbar(data=scaled_rank3, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
   scale_x_discrete("Parameter Estimate", labels = c("Intercept","Insectivore","Omnivore","Insct/Om","Nectarivore", "Herbivore", "Short", "Precip", "Area Overlap", "FocalArea", "Elev", "Temp", "Resident", "NDVI")) +
   geom_hline(yintercept = 0, col = "red", lty = 2) +
  # geom_point(data = env, aes(colname, env_est), pch = 16, size = 5, col = "blue") + geom_errorbar(data=env, mapping=aes(ymin=env_lower, ymax=env_upper), width=0.2, size=1, color="black")
   xlab("Parameter Estimate") + ylab("Value") + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
-  theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
+  theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("C:/Git/Biotic-Interactions/Figures/estimateplots.pdf", height = 8, width = 12)
 
@@ -601,7 +618,7 @@ r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y, col = "Competition")) +theme_cl
       geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash") +
       geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash") +ylim(c(0, 0.8))+ xlim(c(0, 0.8))+
       geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.2,0.9))
-ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.png")
+ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.pdf", height = 8, width = 12)
 
 R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
 R2plot2$abundiff = R2plot2$COMP.y - R2plot2$ENV.y
