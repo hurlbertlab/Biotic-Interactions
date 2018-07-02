@@ -189,35 +189,40 @@ ggsave("Figures/bayes_plot.pdf", width = 16, height = 8)
 mm_fixed = mm2[1:6,]
 
 temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
-    geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[3]), yend = 0), col = "dark green", lwd=2) + 
-    geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3])) +
-    # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
+   # geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[3]), yend = 0), col = "dark green", lwd=2) + 
+   # geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3])) +
+    geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3], data = occumatrix) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+# geom smooth
+ggsave("C:/Git/Biotic-Interactions/Figures/temp.pdf", height = 8, width = 12)
 
 elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[4]), yend = 0), col = "dark green", lwd=2) + 
-  geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[4], ymax = inv.logit(mm_fixed$X97.5)[4])) +
+ # geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[4]), yend = 0), col = "dark green", lwd=2) + 
+  geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[4]*abs(zElev), ymin = inv.logit(mm_fixed$X2.5)[4], ymax = inv.logit(mm_fixed$X97.5)[4], data = occumatrix) +
   # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+ggsave("C:/Git/Biotic-Interactions/Figures/elev.pdf", height = 8, width = 12)
 
 precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[5]), yend = 0), col = "dark green", lwd=2) + 
-  geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[5], ymax = inv.logit(mm_fixed$X97.5)[5])) +
-  # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
+  # geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[5]), yend = 0), col = "dark green", lwd=2) + 
+  # geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[5], ymax = inv.logit(mm_fixed$X97.5)[5])) +
+  geom_smooth(stat = "smooth",formula = FocalOcc ~ inv.logit(mm_fixed$mean)[5]*abs(zPrecip), aes(ymin = inv.logit(mm_fixed$X2.5)[5], ymax = inv.logit(mm_fixed$X97.5)[5])) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+ggsave("C:/Git/Biotic-Interactions/Figures/precip.pdf", height = 8, width = 12)
 
 NDVI = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[6]), yend = 0), col = "dark green", lwd=2) + 
-  geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[6], ymax = inv.logit(mm_fixed$X97.5)[6])) +
-  # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
+  # geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[6]), yend = 0), col = "dark green", lwd=2) + 
+  #geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[6], ymax = inv.logit(mm_fixed$X97.5)[6])) +
+  geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[6]*abs(zNDVI), aes(ymin = inv.logit(mm_fixed$X2.5)[6], ymax = inv.logit(mm_fixed$X97.5)[6])) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
-
+ggsave("C:/Git/Biotic-Interactions/Figures/ndvi.pdf", height = 8, width = 12)
 
 comp = ggplot(data = occumatrix, aes(x = abs(c_s), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) + 
-  geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[2], ymax = inv.logit(mm_fixed$X97.5)[2])) +
-  # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
+  #geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) + 
+  #geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[2], ymax = inv.logit(mm_fixed$X97.5)[2])) +
+  geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[32]*abs(c_s), aes(ymin = inv.logit(mm_fixed$X2.5)[2], ymax = inv.logit(mm_fixed$X97.5)[2])) +
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+ggsave("C:/Git/Biotic-Interactions/Figures/comp.pdf", height = 8, width = 12)
 
 
 #### new fig 1 ####
@@ -546,16 +551,19 @@ scaled_rank = scaled_est %>%
   dplyr::mutate(rank = row_number(-scaled_est)) 
 scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 
-# as.factor(rank)
+scaled_rank2$colname = factor(scaled_rank2$colname,
+       levels = c("Intercept", "Insectivore", "Omnivore", "Insct/Om", "Nectarivore", "Herbivore", 
+                  "Short", "Precip", "Area Overlap", "FocalArea", "Elev", "Temp", "Resident", "NDVI"),ordered = TRUE)
+
 ggplot(scaled_rank2, aes(colname, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
   geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
   scale_x_discrete("Parameter Estimate", labels = c("Intercept","Insectivore","Omnivore","Insct/Om","Nectarivore", "Herbivore", "Short", "Precip", "Area Overlap", "FocalArea", "Elev", "Temp", "Resident", "NDVI")) +
   geom_hline(yintercept = 0, col = "red", lty = 2) +
-  geom_point(data = env, aes(colname, env_est), pch = 16, size = 5, col = "blue") + geom_errorbar(data=env, mapping=aes(ymin=env_lower, ymax=env_upper), width=0.2, size=1, color="black")
+ # geom_point(data = env, aes(colname, env_est), pch = 16, size = 5, col = "blue") + geom_errorbar(data=env, mapping=aes(ymin=env_lower, ymax=env_upper), width=0.2, size=1, color="black")
   xlab("Parameter Estimate") + ylab("Value") + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
-ggsave("C:/Git/Biotic-Interactions/Figures/estimateplots.pdf")
+ggsave("C:/Git/Biotic-Interactions/Figures/estimateplots.pdf", height = 8, width = 12)
 
 ggplot(comp_est, aes(colname, comp_est)) + geom_point() + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) +scale_y_continuous(limits = c(-3, 3), breaks = c(-3, -2, -1, 0, 1, 2, 3)) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title="")) + geom_errorbar(data=fig5.1, mapping=aes(colname, ymin=comp_lower, ymax=comp_upper), width=0.2, size=1, color="black")
 
