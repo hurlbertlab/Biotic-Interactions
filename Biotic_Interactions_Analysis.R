@@ -188,36 +188,38 @@ ggsave("Figures/bayes_plot.pdf", width = 16, height = 8)
 
 mm_fixed = mm2[1:6,]
 
-temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
+tempsub = occumatrix[occumatrix$abTemp < quantile(occumatrix$abTemp, 0.95), ]
+temp = ggplot(data = tempsub, aes(x = abTemp, y = FocalOcc)) + scale_x_continuous(limits = c(0,2))  +
    # geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[3]), yend = 0), col = "dark green", lwd=2) + 
    # geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3])) +
-    geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3], data = occumatrix) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
-# geom smooth
+    geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abTemp, ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3], data = tempsub)  + theme_classic() + xlab("Temperature") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16))
+  # geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + 
 ggsave("C:/Git/Biotic-Interactions/Figures/temp.pdf", height = 8, width = 12)
 
-elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
+elevsub = occumatrix[occumatrix$abElev < quantile(occumatrix$abElev, 0.95), ]
+elev = ggplot(data = elevsub, aes(x = abElev, y = FocalOcc)) + theme_classic() + 
  # geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[4]), yend = 0), col = "dark green", lwd=2) + 
-  geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[4]*abs(zElev), ymin = inv.logit(mm_fixed$X2.5)[4], ymax = inv.logit(mm_fixed$X97.5)[4], data = occumatrix) +
+  geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[4]*abElev, ymin = inv.logit(mm_fixed$X2.5)[4], ymax = inv.logit(mm_fixed$X97.5)[4], data = elevsub) + xlab("Elevation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16))
   # geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abs(zTemp), aes(ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3]))
   geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
 ggsave("C:/Git/Biotic-Interactions/Figures/elev.pdf", height = 8, width = 12)
 
-precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
-  # geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[5]), yend = 0), col = "dark green", lwd=2) + 
-  # geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[5], ymax = inv.logit(mm_fixed$X97.5)[5])) +
-  geom_smooth(stat = "smooth",formula = FocalOcc ~ inv.logit(mm_fixed$mean)[5]*abs(zPrecip), aes(ymin = inv.logit(mm_fixed$X2.5)[5], ymax = inv.logit(mm_fixed$X97.5)[5])) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+precipsub = occumatrix[occumatrix$abPrecip < quantile(occumatrix$abPrecip, 0.95), ]
+precip = ggplot(data = precipsub, aes(x = abPrecip, y = FocalOcc)) + scale_x_continuous(limits = c(0,2)) +
+  geom_smooth(stat = "smooth",formula = FocalOcc ~ inv.logit(mm_fixed$mean)[5]*abPrecip, aes(ymin = inv.logit(mm_fixed$X2.5)[5], ymax = inv.logit(mm_fixed$X97.5)[5])) + theme_classic()+ xlab("Precipitation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16))
+
 ggsave("C:/Git/Biotic-Interactions/Figures/precip.pdf", height = 8, width = 12)
 
-NDVI = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) + 
+ndvisub = occumatrix[occumatrix$abNDVI < quantile(occumatrix$abNDVI, 0.95), ]
+NDVI = ggplot(data = occumatrix, aes(x = abNDVI, y = FocalOcc))  +
   # geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[6]), yend = 0), col = "dark green", lwd=2) + 
   #geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[6], ymax = inv.logit(mm_fixed$X97.5)[6])) +
-  geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[6]*abs(zNDVI), aes(ymin = inv.logit(mm_fixed$X2.5)[6], ymax = inv.logit(mm_fixed$X97.5)[6])) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+  geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[6]*abNDVI, aes(ymin = inv.logit(mm_fixed$X2.5)[6], ymax = inv.logit(mm_fixed$X97.5)[6])) +theme_classic()+ xlab("NDVI") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16))
+  # geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + 
 ggsave("C:/Git/Biotic-Interactions/Figures/ndvi.pdf", height = 8, width = 12)
 
-comp = ggplot(data = occumatrix, aes(x = abs(c_s), y = FocalOcc)) + 
+cssub = occumatrix[abs(occumatrix$c_s) < quantile(abs(occumatrix$c_s), 0.95), ]
+comp = ggplot(data = cssub, aes(x = abs(c_s), y = FocalOcc)) + 
   #geom_segment(aes(x = 0, y = 1, xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) + 
   #geom_ribbon(stat = "identity", aes(ymin = inv.logit(mm_fixed$X2.5)[2], ymax = inv.logit(mm_fixed$X97.5)[2])) +
   geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[32]*abs(c_s), aes(ymin = inv.logit(mm_fixed$X2.5)[2], ymax = inv.logit(mm_fixed$X97.5)[2])) +
@@ -236,6 +238,11 @@ p2 = plot_grid(elev + theme(legend.position="none"),
 
 plot_grid(z, p2, ncol = 2, rel_heights = c(1, 1))
 ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf", height = 8, width = 20)
+
+
+ggplot(mm_fixed, aes(x = X, y = mean)) + geom_point(pch=15, size = 5, col = "dark blue") + theme_classic() + geom_hline(yintercept = 0, lty = 2, color = "red") + geom_errorbar(ymin = mm_fixed$X2.5., ymax = mm_fixed$X97.5., width=0.2, size=1, color="black") + scale_y_continuous(limits = c(-0.6, 1.6)) + xlab("Parameter Estimate") + ylab("Value") +
+  scale_x_discrete("Parameter Estimate", labels = c("Intercept","Elevation","NDVI","Precipitation", "Temperature", "Competitor Abundance")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
+  theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
@@ -522,8 +529,6 @@ summary(total_traits)
 env_traits = lm(logit(value) ~ EW, data = env_lm)
 anova(env_traits)
 
-#column names to manipulate in plot
-colname = c("Intercept","FocalArea","Area Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Herbivore","Insct/Om","Insectivore","Nectarivore","Omnivore")
 
 # creating env traits model to compare to comp and weighted traits mods
 env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
@@ -541,7 +546,15 @@ env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
 # making comp mod - not working.
 comp_cont = left_join(comp_lm, shapefile_areas, by = c("FocalAOU"= "focalAOU"))
 comp_cont2 = left_join(comp_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = c("FocalAOU" = "FocalAOU"))
-# ccont = lm(logit(value) ~ FocalArea  + area_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont2)
+comp_cont2$area_overlap[is.na(comp_cont2$area_overlap)] <- 0 
+comp_cont2$overlap_percent = comp_cont2$area_overlap/(comp_cont2$FocalArea + comp_cont2$CompArea)
+
+comp_cont3 = comp_cont2 %>%
+  group_by(FocalAOU) %>%
+  summarize(sum_overlap = sum(overlap_percent))
+comp_cont4 = left_join(comp_cont3, unique(comp_cont2[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI", "n", "migclass", "Trophic.Group", "Long", "Lat","EW", "COMPSC", "Family", "ALPHA.CODE", "rank", "Type", "value", "Focal")]), by = "FocalAOU")
+
+
 env_est = summary(econt)$coef[,"Estimate"]
 env = data.frame(colname, env_est)
 env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - as.vector(summary(econt)$coef[,"Std. Error"])
@@ -551,9 +564,10 @@ env_trait_rank = env %>%
   dplyr::mutate(rank = row_number(-env_est)) 
 env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
 
-
+#column names to manipulate in plot
+colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Herbivore","Insct/Om","Insectivore","Nectarivore","Omnivore")
 # this is the trait mod scaled by comp/env. there are > 183 rows bc of the competitors (FocalArea, area_overalp)
-trait_mod_scale = lm(COMPSC ~ FocalArea + area_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont2)
+trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
 scaled_est = summary(trait_mod_scale)$coef[,"Estimate"]
 scaled_est = data.frame(colname, scaled_est)
 scaled_est$scaled_lower =  as.vector(summary(trait_mod_scale)$coefficients[,"Estimate"]) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
@@ -563,24 +577,18 @@ scaled_rank = scaled_est %>%
   dplyr::mutate(rank = row_number(-scaled_est)) 
 scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$colname = factor(scaled_rank2$colname,
-       levels = c("Intercept", "Insectivore", "Omnivore", "Insct/Om", "Nectarivore", "Herbivore", 
-                  "Short", "Precip", "Area Overlap", "FocalArea", "Elev", "Temp", "Resident", "NDVI"),ordered = TRUE)
+       levels = c("Intercept","Omnivore","Insectivore","Insct/Om","Nectarivore","Sum Overlap","Herbivore","Precip","Elev","Temp","Short", "Resident","NDVI"),ordered = TRUE)
 
-scaled_rank3 <- scaled_rank2[c(1:5,14),]
+scaled_rank3 <- scaled_rank2[c(2:6,12:13),]
 scaled_rank3$colname = factor(scaled_rank3$colname,
-       levels = c("Intercept", "Insectivore", "Omnivore", "Insct/Om", "Nectarivore", "NDVI"),ordered = TRUE)
-
-
+       levels = c("Omnivore","Insectivore","Insct/Om","Nectarivore","Sum Overlap","Resident","NDVI"),ordered = TRUE)
 
 ggplot(scaled_rank3, aes(colname, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
   geom_errorbar(data=scaled_rank3, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
-  scale_x_discrete("Parameter Estimate", labels = c("Intercept","Insectivore","Omnivore","Insct/Om","Nectarivore", "Herbivore", "Short", "Precip", "Area Overlap", "FocalArea", "Elev", "Temp", "Resident", "NDVI")) +
-  geom_hline(yintercept = 0, col = "red", lty = 2) +
- # geom_point(data = env, aes(colname, env_est), pch = 16, size = 5, col = "blue") + geom_errorbar(data=env, mapping=aes(ymin=env_lower, ymax=env_upper), width=0.2, size=1, color="black")
-  xlab("Parameter Estimate") + ylab("Value") + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
+  geom_hline(yintercept = 0, col = "red", lty = 2) + xlab("Parameter Estimate") + ylab("Value") + theme_classic()+ ylim(-3, 1) + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
-ggsave("C:/Git/Biotic-Interactions/Figures/estimateplots.pdf", height = 8, width = 12)
+ggsave("C:/Git/Biotic-Interactions/Figures/traitestimateplot.pdf", height = 8, width = 12)
 
 ggplot(comp_est, aes(colname, comp_est)) + geom_point() + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) +scale_y_continuous(limits = c(-3, 3), breaks = c(-3, -2, -1, 0, 1, 2, 3)) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title="")) + geom_errorbar(data=fig5.1, mapping=aes(colname, ymin=comp_lower, ymax=comp_upper), width=0.2, size=1, color="black")
 
