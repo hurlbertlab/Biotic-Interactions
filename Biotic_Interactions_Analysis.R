@@ -234,6 +234,7 @@ mm_fixed2 = mm_fixed[2:6,]
 ggplot(mm_fixed2, aes(x = X, y = mean)) + geom_point(pch=15, size = 5, col = "dark blue") + theme_classic() + geom_hline(yintercept = 0, lty = 2, color = "red") + geom_errorbar(ymin = mm_fixed2$X2.5., ymax = mm_fixed2$X97.5., width=0.2, size=1, color="black") + scale_y_continuous(limits = c(-0.6, .1)) + xlab("Parameter Estimate") + ylab("Value") +
   scale_x_discrete("Parameter Estimate", labels = c("Elevation","NDVI","Precipitation", "Temperature", "Competitor Abundance"))+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+ggsave("C:/Git/Biotic-Interactions/Figures/abiotic_estimates.pdf", height = 8, width = 11)
 
 #### new fig 1 ####
 occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
