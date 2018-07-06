@@ -586,7 +586,7 @@ colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","
 trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
 
 
-# trait_mod_scale = lm(COMPSC ~ Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI, data = comp_cont4)
+# trait_mod_scale = lm(COMPSC ~ Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + focal range size + sum overlap, data = comp_cont4)
 # trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4)
 scaled_est = summary(trait_mod_scale)$coef[,"Estimate"]
 scaled_est = data.frame("Trophic" = c("Granivore","Herbivore","Insct/Om","Insectivore","Nectarivore","Omnivore"), scaled_est)
