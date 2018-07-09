@@ -569,30 +569,26 @@ env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
 #column names to manipulate in plot
 colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Herbivore","Insct/Om","Insectivore","Nectarivore","Omnivore")
 # this is the trait mod scaled by comp/env. there are > 183 rows bc of the competitors (FocalArea, area_overalp)
-trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
-
-
-# trait_mod_scale = lm(COMPSC ~ Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI, data = comp_cont4)
-# trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4)
-scaled_est = summary(trait_mod_scale)$coef[,"Estimate"]
-scaled_est2 = c(scaled_est[1], scaled_est[2:6] + scaled_est[1])
+# trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
+comp_cont4 = filter(comp_cont4, Trophic.Group != "nectarivore")
+colname = c("Granivore", "Herbivore","Insct/Om","Insectivore","Omnivore")
+trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4)
+scaled_est1 = summary(trait_mod_scale)$coef[,"Estimate"]
+scaled_est2 = c(scaled_est1[1], scaled_est1[2:5] + scaled_est1[1])
 scaled_est = data.frame(colname, scaled_est)
-scaled_est$scaled_lower =  as.vector(summary(trait_mod_scale)$coefficients[,"Estimate"]) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
-scaled_est$scaled_upper = as.vector(summary(trait_mod_scale)$coefficients[,"Estimate"]) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
+scaled_est$scaled_lower =  as.vector(scaled_est$scaled_est) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
+scaled_est$scaled_upper = as.vector(scaled_est$scaled_est) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
+
 
 scaled_rank = scaled_est %>% 
   dplyr::mutate(rank = row_number(-scaled_est)) 
 scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$colname = factor(scaled_rank2$colname,
-       levels = c("Intercept","Omnivore","Insectivore","Insct/Om","Nectarivore","Sum Overlap","Herbivore","Precip","Elev","Temp","Short", "Resident","NDVI"),ordered = TRUE)
+       levels = c("Insectivore","Insct/Om","Granivore","Omnivore","Herbivore"),ordered = TRUE)
 
-scaled_rank3 <- scaled_rank2[c(2:6,12:13),]
-scaled_rank3$colname = factor(scaled_rank3$colname,
-       levels = c("Omnivore","Insectivore","Insct/Om","Nectarivore","Sum Overlap","Resident","NDVI"),ordered = TRUE)
-
-ggplot(scaled_rank3, aes(colname, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
-  geom_errorbar(data=scaled_rank3, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
-  geom_hline(yintercept = 0, col = "red", lty = 2) + xlab("Parameter Estimate") + ylab("Value") + theme_classic()+ ylim(-3, 1) + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
+ggplot(scaled_rank2, aes(colname, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
+  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
+  geom_hline(yintercept = 0, col = "red", lty = 2) + xlab("Parameter Estimate") + ylab("Value") + theme_classic()+ ylim(-0.5, 0.5) + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("C:/Git/Biotic-Interactions/Figures/traitestimateplot.pdf", height = 8, width = 12)
