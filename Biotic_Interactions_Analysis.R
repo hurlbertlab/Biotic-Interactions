@@ -158,7 +158,7 @@ summary(glm_occ_rand_site)
 
 mm <- stan_glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
         abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
-# write.csv(summary(mm), row.names= TRUE)
+# write.csv(summary(mm),"data/bayesian_sum_mod_output_full.csv", row.names= TRUE)
 mm2 = read.csv("data/bayesian_sum_mod_output_full.csv", header = TRUE)
 modoutput2 = subset(mm2, mean > -2.52e+05)
 modoutput2$X = gsub("b", "", modoutput2$X) 
@@ -170,9 +170,7 @@ modoutput2$X = gsub("", "", modoutput2$X)
 
 hist(modoutput2$mean, breaks = 20)
 
-mm3 = read.csv("data/processed_bayesian.csv", header = TRUE) #removed global vals, only have ind spp
-ggplot(data = mm3) + #geom_point() + geom_ribbon(aes(ymin = X2.5., ymax = X97.5.))
-stat_density(aes(mm3$mean))
+# mm3 = read.csv("data/processed_bayesian.csv", header = TRUE) #removed global vals, only have ind spp
 
 # arrange in increasing order of ES
 bmod_rank = dplyr::arrange(mm3,mean)
@@ -568,7 +566,7 @@ comp_cont2$overlap_percent = comp_cont2$area_overlap/(comp_cont2$FocalArea + com
 comp_cont3 = comp_cont2 %>%
   group_by(FocalAOU) %>%
   summarize(sum_overlap = sum(overlap_percent))
-comp_cont4 = left_join(comp_cont3, unique(comp_cont2[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI", "n", "migclass", "Trophic.Group", "Long", "Lat","EW", "COMPSC", "Family", "ALPHA.CODE", "rank", "Type", "value", "Focal")]), by = "FocalAOU")
+comp_cont4 = left_join(comp_cont3, unique(comp_cont2[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI", "n", "migclass", "Trophic.Group", "Long", "Lat","EW", "COMPSC", "Family", "ALPHA.CODE", "rank", "Type", "value", "Focal", "FocalArea")]), by = "FocalAOU")
 
 
 env_est = summary(econt)$coef[,"Estimate"]
@@ -586,10 +584,9 @@ colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","
 trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
 
 
-# trait_mod_scale = lm(COMPSC ~ Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + focal range size + sum overlap, data = comp_cont4)
-# trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4)
+trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4)
 scaled_est = summary(trait_mod_scale)$coef[,"Estimate"]
-scaled_est = data.frame("Trophic" = c("Granivore","Herbivore","Insct/Om","Insectivore","Nectarivore","Omnivore"), scaled_est)
+scaled_est = data.frame("Trophic" = c("Granivore","Herbivore","Insect/Om","Insectivore","Nectarivore","Omnivore"), scaled_est)
 scaled_est$scaled_lower =  as.vector(summary(trait_mod_scale)$coefficients[,"Estimate"]) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 scaled_est$scaled_upper = as.vector(summary(trait_mod_scale)$coefficients[,"Estimate"]) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 
@@ -597,11 +594,11 @@ scaled_rank = scaled_est %>%
   dplyr::mutate(rank = row_number(-scaled_est)) 
 scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$Trophic = factor(scaled_rank2$Trophic,
-       levels = c("Insectivore","Nectarivore","Insct/Om","Granivore","Omnivore","Herbivore"),ordered = TRUE)
+       levels = c("Insectivore","Nectarivore","Insect/Om","Granivore","Omnivore","Herbivore"),ordered = TRUE)
 
 # scaled_rank3 <- scaled_rank2[c(2:6,12:13),]
 scaled_rank3$colname = factor(scaled_rank3$colname,
-       levels = c("Omnivore","Insectivore","Insct/Om","Nectarivore","Sum Overlap","Resident","NDVI"),ordered = TRUE)
+       levels = c("Omnivore","Insectivore","Insect/Om","Nectarivore","Sum Overlap","Resident","NDVI"),ordered = TRUE)
 
 ggplot(scaled_rank2, aes(Trophic, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
   geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
@@ -610,8 +607,25 @@ ggplot(scaled_rank2, aes(Trophic, scaled_est)) + geom_point(pch=15, size = 5, co
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("C:/Git/Biotic-Interactions/Figures/traitestimateplot.pdf", height = 6, width = 12)
 
-ggplot(comp_est, aes(colname, comp_est)) + geom_point() + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) +scale_y_continuous(limits = c(-3, 3), breaks = c(-3, -2, -1, 0, 1, 2, 3)) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title="")) + geom_errorbar(data=fig5.1, mapping=aes(colname, ymin=comp_lower, ymax=comp_upper), width=0.2, size=1, color="black")
+trait_mod_cont = lm(COMPSC ~ Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + FocalArea + sum_overlap, data = comp_cont4)
+scaled_est = summary(trait_mod_cont)$coef[,"Estimate"]
+scaled_est = data.frame("Factor" = c("Intercept","Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI","FocalArea", "Overlap"), scaled_est)
+scaled_est$scaled_lower =  as.vector(summary(trait_mod_cont)$coefficients[,"Estimate"]) - as.vector(summary(trait_mod_cont)$coef[,"Std. Error"])
+scaled_est$scaled_upper = as.vector(summary(trait_mod_cont)$coefficients[,"Estimate"]) + as.vector(summary(trait_mod_cont)$coef[,"Std. Error"])
 
+scaled_rank = scaled_est %>% 
+  dplyr::mutate(rank = row_number(-scaled_est)) 
+scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
+scaled_rank2$Factor = factor(scaled_rank2$Factor,
+                              levels = c("Intercept","Overlap","Mean.Precip","FocalArea","Mean.Elev","Mean.Temp", "Mean.NDVI"),ordered = TRUE)
+
+scaled_rankNDVI = subset(scaled_rank2, Factor == "Mean.NDVI")
+ggplot(scaled_rankNDVI, aes(Factor, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
+  geom_errorbar(data=scaled_rankNDVI, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
+  geom_hline(yintercept = 0, col = "red", lty = 2) + xlab("Parameter Estimate") + ylab("Value") + theme_classic()+ ylim(-3, 1) + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
+  theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
+  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+ggsave("C:/Git/Biotic-Interactions/Figures/contestimateplot.pdf", height = 6, width = 12)
 
 suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.x = "FocalAOU", by.y = "focalAOU")
 # write.csv(suppl, "data/suppl_table.csv", row.names = FALSE)
