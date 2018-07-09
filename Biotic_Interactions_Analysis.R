@@ -224,17 +224,13 @@ comp = ggplot(data = cssub, aes(x = abs(c_s), y = FocalOcc)) +
 ggsave("C:/Git/Biotic-Interactions/Figures/comp.pdf", height = 8, width = 12)
 #   geom_segment(aes(x = 0, y =  inv.logit(mm_fixed$mean)[1], xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) 
 
-z <- plot_grid(precip+ theme(legend.position="none"),
+z <- plot_grid(elev + theme(legend.position="none"),
+               temp + theme(legend.position="none"),
                NDVI + theme(legend.position="none"),
+               comp + theme(legend.position="none"),
                align = 'h',
-               labels = c("A","B"),
+               labels = c("A","B", "C", "D"),
                nrow = 1)
-p2 = plot_grid(elev + theme(legend.position="none"),
-               temp + theme(legend.position="none"), 
-               labels = c("C","D"),
-               align = 'h')
-
-plot_grid(z, p2, ncol = 2, rel_heights = c(1, 1))
 ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf", height = 8, width = 20)
 
 mm_fixed2 = mm_fixed[2:6,]
@@ -560,7 +556,6 @@ comp_cont3 = comp_cont2 %>%
   group_by(FocalAOU) %>%
   summarize(sum_overlap = sum(overlap_percent))
 comp_cont4 = left_join(comp_cont3, unique(comp_cont2[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI", "n", "migclass", "Trophic.Group", "Long", "Lat","EW", "COMPSC", "Family", "ALPHA.CODE", "rank", "Type", "value", "Focal")]), by = "FocalAOU")
-
 
 env_est = summary(econt)$coef[,"Estimate"]
 env = data.frame(colname, env_est)
