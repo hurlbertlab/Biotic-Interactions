@@ -577,7 +577,6 @@ trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev 
 scaled_est = summary(trait_mod_scale)$coef[,"Estimate"]
 scaled_est2 = c(scaled_est[1], scaled_est[2:6] + scaled_est[1])
 scaled_est = data.frame(colname, scaled_est)
-scaled_est$scaled_est = 
 scaled_est$scaled_lower =  as.vector(summary(trait_mod_scale)$coefficients[,"Estimate"]) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 scaled_est$scaled_upper = as.vector(summary(trait_mod_scale)$coefficients[,"Estimate"]) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 
