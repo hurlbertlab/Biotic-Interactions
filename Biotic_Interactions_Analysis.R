@@ -290,6 +290,7 @@ envloc1$ALPHA.CODE = as.factor(envloc1$ALPHA.CODE)
 
 nrank = envloc1 %>% 
   dplyr::mutate(rank = row_number(-COMP))# change here for comp
+nrank$NONE = 0
 envflip = tidyr::gather(nrank, "Type", "value", 2:5)
 envflip$rank <- factor(envflip$rank, levels = envflip$rank[order(envflip$rank)])
 envflip = dplyr::arrange(envflip,rank)
@@ -411,13 +412,13 @@ maincomp2 = subset(maincomp, mainCompetitor == 1)
 envflip_labs = subset(envflip_sub, Type == "ENV")
 envflip_sub2 = left_join(envflip_labs, maincomp2, by = c("FocalAOU" = "focalAOU"))
 envflip_sub2.5 = left_join(envflip_sub2, tax_code[, c("AOU_OUT", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "AOU_OUT"))
-envflip_sub3 = left_join(envflip_sub2.5, tax_code, by = c("compAOU" = "AOU_OUT"))
+envflip_sub3 = unique(left_join(envflip_sub2.5, tax_code, by = c("compAOU" = "AOU_OUT")))
 
 
 envflip_sub = envflip[1:60,]
-w = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + geom_bar(stat = "identity") + theme_classic() +
+c = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black")  + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8)) + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=4,vjust=0.5,hjust = 1, color = "white")
+  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24))   + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=8,vjust=0.5,hjust = 1, color = "white", fontface = "bold") + ylim(0, 0.8) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") #+ scale_y_continuous(breaks = c(0,0.52,0.5,0.75, 1))
 ggsave("Figures/barplotc_sub.pdf", height = 18, width = 16)
 
 geom_histogram(envoutput$ENV + envoutput$SHARED)
@@ -427,6 +428,7 @@ hist(envoutput$COMP + envoutput$SHARED)
 #### ENV ####
 nrank = envloc1 %>% 
   dplyr::mutate(rank = row_number(-ENV))# change here for comp
+nrank$NONE = 0
 envflip = tidyr::gather(nrank, "Type", "value", 2:5)
 envflip$rank <- factor(envflip$rank, levels = envflip$rank[order(envflip$rank)])
 envflip = dplyr::arrange(envflip,rank)
@@ -499,14 +501,22 @@ z <- plot_grid(tt+ theme(legend.position="top"),
                hjust = -6)
 ggsave("C:/Git/Biotic-Interactions/Figures/barplotboth.pdf", height = 25, width = 36)
 
+env_sub = envflip[1:60,]
+env_labs = unique(subset(env_sub, Type == "ENV"))
+env_sub2 = left_join(env_labs, maincomp2, by = c("FocalAOU" = "focalAOU"))
+env_sub2.5 = left_join(env_sub2, tax_code[, c("AOU_OUT", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "AOU_OUT"))
+env_sub3 = unique(left_join(env_sub2.5, tax_code, by = c("compAOU" = "AOU_OUT")))
 
-envflip_sub = envflip[1:80,]
-w = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + geom_bar(stat = "identity") + theme_classic() +
+w = ggplot(data=env_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.6)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:20, y = -.01, label = envrank$ALPHA.CODE[1:20], angle=90,size=6,vjust=0.5,hjust = 1, color = "black")  + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.6)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") +ylim(0,0.8)# + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 ggsave("Figures/barplote_sub.pdf", height = 18, width = 16)
 
 
+plot_grid(c+ theme(legend.position="none"),
+          w + theme(legend.position="none"),
+          align = 'hv')
+ggsave("C:/Git/Biotic-Interactions/Figures/subbarplotboth.pdf", height = 15, width = 40)
 ##################### TRAITS Model ####################################
 logit = function(x) log(x/(1-x))
 
@@ -575,25 +585,54 @@ colname = c("Granivore", "Herbivore","Insct/Om","Insectivore","Omnivore")
 trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4)
 scaled_est1 = summary(trait_mod_scale)$coef[,"Estimate"]
 scaled_est2 = c(scaled_est1[1], scaled_est1[2:5] + scaled_est1[1])
-scaled_est = data.frame(colname, scaled_est)
+scaled_est = data.frame(colname, scaled_est2)
 scaled_est$scaled_lower =  as.vector(scaled_est$scaled_est) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 scaled_est$scaled_upper = as.vector(scaled_est$scaled_est) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 
 
 scaled_rank = scaled_est %>% 
-  dplyr::mutate(rank = row_number(-scaled_est)) 
+  dplyr::mutate(rank = row_number(-scaled_est2)) 
 scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$colname = factor(scaled_rank2$colname,
-       levels = c("Insectivore","Insct/Om","Granivore","Omnivore","Herbivore"),ordered = TRUE)
+       levels = c("Insectivore","Insct/Om","Omnivore","Granivore","Herbivore"),ordered = TRUE)
 
-ggplot(scaled_rank2, aes(colname, scaled_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
+ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=15, size = 5, col = "dark blue") + 
   geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
   geom_hline(yintercept = 0, col = "red", lty = 2) + xlab("Parameter Estimate") + ylab("Value") + theme_classic()+ ylim(-0.5, 0.5) + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("C:/Git/Biotic-Interactions/Figures/traitestimateplot.pdf", height = 8, width = 12)
 
-ggplot(comp_est, aes(colname, comp_est)) + geom_point() + xlab("Parameter Estimate") + ylab("Value")+scale_color_manual(breaks = c("comp_est", "env_est"), values=c("#dd1c77","#2ca25f"), labels=c("Competition","Environment")) +scale_y_continuous(limits = c(-3, 3), breaks = c(-3, -2, -1, 0, 1, 2, 3)) + theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_text(size=10),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title="")) + geom_errorbar(data=fig5.1, mapping=aes(colname, ymin=comp_lower, ymax=comp_upper), width=0.2, size=1, color="black")
+#### mig mod ####
+#column names to manipulate in plot
+colname = c("Neotropical", "Resident" ,  "Short-distance")
+trait_mod_scale = lm(COMPSC ~ migclass, data = comp_cont4)
+scaled_est1 = summary(trait_mod_scale)$coef[,"Estimate"]
+scaled_est2 = c(scaled_est1[1], scaled_est1[2:3] + scaled_est1[1])
+scaled_est = data.frame(colname, scaled_est2)
+scaled_est$scaled_lower =  as.vector(scaled_est$scaled_est) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
+scaled_est$scaled_upper = as.vector(scaled_est$scaled_est) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
+
+
+scaled_rank = scaled_est %>% 
+  dplyr::mutate(rank = row_number(-scaled_est2)) 
+scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
+scaled_rank2$colname = factor(scaled_rank2$colname,
+                              levels = c("Neotropical",  "Short-distance",  "Resident"),ordered = TRUE)
+
+ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=15, size = 5, col = "dark blue") + 
+  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
+  geom_hline(yintercept = 0, col = "red", lty = 2) + xlab("Parameter Estimate") + ylab("Value") + theme_classic()+ ylim(-0.5, 0.5) + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
+  theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
+  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+ggsave("C:/Git/Biotic-Interactions/Figures/traitestimate_mig.pdf", height = 8, width = 12)
+
+
+
+
+
+
+
 
 
 suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.x = "FocalAOU", by.y = "focalAOU")
