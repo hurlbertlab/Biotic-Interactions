@@ -516,7 +516,7 @@ ggsave("Figures/barplote_sub.pdf", height = 18, width = 16)
 plot_grid(c+ theme(legend.position="none"),
           w + theme(legend.position="none"),
           align = 'hv')
-ggsave("C:/Git/Biotic-Interactions/Figures/subbarplotboth.pdf", height = 15, width = 40)
+ggsave("C:/Git/Biotic-Interactions/Figures/subbarplotboth.pdf", height = 10, width = 40)
 ##################### TRAITS Model ####################################
 logit = function(x) log(x/(1-x))
 
@@ -627,19 +627,10 @@ ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=15, size = 5, c
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("C:/Git/Biotic-Interactions/Figures/traitestimate_mig.pdf", height = 8, width = 12)
 
-
-
-
-
-
-
-
-
 suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.x = "FocalAOU", by.y = "focalAOU")
 # write.csv(suppl, "data/suppl_table.csv", row.names = FALSE)
 # anova of traits
 cor.test(envoutput2$ENV, envoutputa$ENV)
-
 
 # R2 plot - lm in ggplot
 # X = occupancy, Y = abundance
@@ -692,7 +683,9 @@ ggplot(envoutput, aes(x = ENV, y = COMP)) +theme_classic()+ theme(axis.title.x=e
 
 
 #### R2 plot - glm violin plots ####
-R2violin = gather(R2plot2, "type", "Rval", 13:15)
+R2violin.5 = left_join(R2plot2, envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
+R2violin = gather(R2violin.5, "type", "Rval", 13:15, 19)
+
 
 ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Variance Explained") + ylab(bquote("R"^"2"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey"), labels=c("Competition","Environment", "Total Variance")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=mean, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
 
