@@ -188,41 +188,41 @@ ggsave("Figures/bayes_plot.pdf", width = 16, height = 8)
 
 mm_fixed = mm2[1:6,]
 
+occumatrix$cspred = inv.logit(occumatrix$comp_scaled * mm_fixed$mean[2] + mm_fixed$mean[1])
+occumatrix$temppred = inv.logit(occumatrix$abTemp * mm_fixed$mean[3] + mm_fixed$mean[1])
+occumatrix$elevpred = inv.logit(occumatrix$abElev * mm_fixed$mean[4] + mm_fixed$mean[1])
+occumatrix$precippred = inv.logit(occumatrix$abPrecip * mm_fixed$mean[5] + mm_fixed$mean[1])
+occumatrix$ndvipred = inv.logit(occumatrix$abNDVI * mm_fixed$mean[6] + mm_fixed$mean[1])
+# temp_pred <- predict(stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
+#abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1)), newdata = data.frame(range(occumatrix$abTemp)), type = "response")
 tempsub = occumatrix[occumatrix$abTemp < quantile(occumatrix$abTemp, 0.95), ]
-temp = ggplot(data = tempsub, aes(x = abTemp, y = FocalOcc)) + scale_x_continuous(limits = c(0,2))  +
-   # geom_segment(aes(x = 0, y = inv.logit(1.4981655), xend = inv.logit(mm_fixed$mean[3]), yend = 0), col = "dark green", lwd=2) + 
- geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abTemp + 1, ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3], data = tempsub, color = "red", lwd = 2, fill = "red")  + theme_classic() + xlab("Temperature") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16)) + geom_point( shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) 
+tempsub = tempsub[,c("FocalAOU", "FocalOcc", "abTemp", "abElev", "abPrecip", "abNDVI", "temppred")]
+temp = ggplot(data = tempsub, aes(x = abTemp, y = temppred)) + scale_x_continuous(limits = c(0,2))  +
+  geom_point(data = tempsub, aes(x = abTemp, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic() + xlab("Temperature") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16))
+#geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abTemp + 1, ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3], data = tempsub)  
 ggsave("C:/Git/Biotic-Interactions/Figures/temp.pdf", height = 8, width = 12)
 
 elevsub = occumatrix[occumatrix$abElev < quantile(occumatrix$abElev, 0.95), ]
-elev = ggplot(data = elevsub, aes(x = abElev, y = FocalOcc)) + theme_classic() + geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[4]*abElev+ 1, ymin = inv.logit(mm_fixed$X2.5)[4], ymax = inv.logit(mm_fixed$X97.5)[4], data = elevsub, color = "red", lwd = 2, fill = "red") + xlab("Elevation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16)) + geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))
-# + geom_segment(aes(x = 0, y = inv.logit(mm_fixed$mean)[1], xend = inv.logit(mm_fixed$mean[4]), yend = 0), col = "dark green", lwd=2)  
+elev = ggplot(data = elevsub, aes(x = abElev, y = elevpred)) + theme_classic()  +
+  geom_point(data = elevsub, aes(x = abElev, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + xlab("Elevation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16)) 
 ggsave("C:/Git/Biotic-Interactions/Figures/elev.pdf", height = 8, width = 12)
 
 precipsub = occumatrix[occumatrix$abPrecip < quantile(occumatrix$abPrecip, 0.95), ]
-precip = ggplot(data = precipsub, aes(x = abPrecip, y = FocalOcc)) + scale_x_continuous(limits = c(0,2))  + geom_smooth(stat = "smooth",formula = FocalOcc ~ inv.logit(mm_fixed$mean)[5]*abPrecip + 1, aes(ymin = inv.logit(mm_fixed$X2.5)[5], ymax = inv.logit(mm_fixed$X97.5)[5]), color = "red", lwd = 2, fill = "red") + theme_classic()+ xlab("Precipitation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16))  + geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))# + geom_segment(aes(x = 0, y = inv.logit(mm_fixed$mean)[1], xend = inv.logit(mm_fixed$mean[5]), yend = 0), col = "dark green", lwd=2)
-
+precip = ggplot(data = precipsub, aes(x = abPrecip, y = precippred)) + scale_x_continuous(limits = c(0,2))  + geom_point(data = elevsub, aes(x = abPrecip, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "red", lwd = 3) + theme_classic()+ xlab("Precipitation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16))  
 ggsave("C:/Git/Biotic-Interactions/Figures/precip.pdf", height = 8, width = 12)
 
 ndvisub = occumatrix[occumatrix$abNDVI < quantile(occumatrix$abNDVI, 0.95), ]
-NDVI = ggplot(data = ndvisub, aes(x = abNDVI, y = FocalOcc)) +
-   geom_smooth(stat = "smooth",formula = FocalOcc ~ inv.logit(mm_fixed$mean)[6]*abNDVI +  1, aes(ymin = inv.logit(mm_fixed$X2.5)[6], ymax = inv.logit(mm_fixed$X97.5)[6]), color = "red", lwd = 2, fill = "red") +theme_classic()+ xlab("NDVI") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16)) + geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))  #   + geom_segment(aes(x = 0, y =  inv.logit(mm_fixed$mean)[1], xend = inv.logit(mm_fixed$mean[6]), yend = 0), col = "dark green", lwd=2)
+NDVI = ggplot(data = ndvisub, aes(x = abNDVI, y = ndvipred)) +
+  geom_point(data = ndvisub, aes(x = abNDVI, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) +theme_classic()+ xlab("NDVI") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16)) 
 
-# fit a loess line
-# loess_fit <- loess(FocalOcc ~ abNDVI, ndvisub)
-# lines(ndvisub$NDVI, predict(loess_fit), col = "blue")
-
-# fit a non-linear regression
-# nls_fit <- nls(FocalOcc ~ mm_fixed$mean[6]*abNDVI + 1, data= ndvisub)
-# lines(Data$x, predict(nls_fit), col = "red")
 ggsave("C:/Git/Biotic-Interactions/Figures/ndvi.pdf", height = 8, width = 12)
 
-cssub = occumatrix[abs(occumatrix$c_s) < quantile(abs(occumatrix$c_s), 0.95), ]
-comp = ggplot(data = cssub, aes(x = abs(c_s), y = FocalOcc)) + 
-  geom_smooth(formula = FocalOcc ~ inv.logit(mm_fixed$mean)[2]*abs(c_s) +  1, aes(ymin = inv.logit(mm_fixed$X2.5)[2], ymax = inv.logit(mm_fixed$X97.5)[2]), color = "red", lwd = 2, fill = "red") +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
+cssub = occumatrix[abs(occumatrix$comp_scaled) < quantile(abs(occumatrix$comp_scaled), 0.95), ]
+comp = ggplot(data = cssub, aes(x = comp_scaled, y = cspred)) + xlim(0,1) +
+  geom_point(data = cssub, aes(x = comp_scaled, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#dd1c77", lwd = 3) + theme_classic()+ xlab("Competitor Abundance") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16)) 
 ggsave("C:/Git/Biotic-Interactions/Figures/comp.pdf", height = 8, width = 12)
 #   geom_segment(aes(x = 0, y =  inv.logit(mm_fixed$mean)[1], xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) 
+
 
 z <- plot_grid(elev + theme(legend.position="none"),
                temp + theme(legend.position="none"),
