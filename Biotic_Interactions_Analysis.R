@@ -577,14 +577,14 @@ env_trait_rank = env %>%
 env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
 
 #column names to manipulate in plot
-colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Herbivore","Insct/Om","Insectivore","Nectarivore","Omnivore")
+colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Insct/Om","Insectivore","Nectarivore","Omnivore")
 # this is the trait mod scaled by comp/env. there are > 183 rows bc of the competitors (FocalArea, area_overalp)
 # trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
-comp_cont4 = filter(comp_cont4, Trophic.Group != "nectarivore")
-colname = c("Granivore", "Herbivore","Insct/Om","Insectivore","Omnivore")
+comp_cont4 = filter(comp_cont4, Trophic.Group != "nectarivore" & Trophic.Group != "herbivore")
+colname = c("Granivore", "Insectivore/\nOmnivore","Insectivore","Omnivore")
 trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4)
 scaled_est1 = summary(trait_mod_scale)$coef[,"Estimate"]
-scaled_est2 = c(scaled_est1[1], scaled_est1[2:5] + scaled_est1[1])
+scaled_est2 = c(scaled_est1[1], scaled_est1[2:4] + scaled_est1[1])
 scaled_est = data.frame(colname, scaled_est2)
 scaled_est$scaled_lower =  as.vector(scaled_est$scaled_est) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 scaled_est$scaled_upper = as.vector(scaled_est$scaled_est) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
@@ -594,14 +594,16 @@ scaled_rank = scaled_est %>%
   dplyr::mutate(rank = row_number(-scaled_est2)) 
 scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$colname = factor(scaled_rank2$colname,
-       levels = c("Insectivore","Insct/Om","Omnivore","Granivore","Herbivore"),ordered = TRUE)
+       levels = c("Insectivore","Insectivore/\nOmnivore","Omnivore","Granivore","Herbivore"),ordered = TRUE)
 
 ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=15, size = 5, col = "dark blue") + 
-  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
-  geom_hline(yintercept = 0, col = "red", lty = 2) + xlab("Parameter Estimate") + ylab("Value") + theme_classic()+ ylim(-0.5, 0.5) + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
+  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("Competitor R"^"2")) + xlab("Trophic Group") + theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + ylim(0,0.5) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("C:/Git/Biotic-Interactions/Figures/traitestimateplot.pdf", height = 8, width = 12)
+
+# ggplot(comp_cont4, aes(as.factor(Trophic.Group), COMPSC)) + geom_violin(linetype = "blank", aes(fill = factor(comp_cont4$Trophic.Group)))
+
 
 #### mig mod ####
 #column names to manipulate in plot
@@ -621,8 +623,7 @@ scaled_rank2$colname = factor(scaled_rank2$colname,
                               levels = c("Neotropical",  "Short-distance",  "Resident"),ordered = TRUE)
 
 ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=15, size = 5, col = "dark blue") + 
-  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") +
-  geom_hline(yintercept = 0, col = "red", lty = 2) + xlab("Parameter Estimate") + ylab("Value") + theme_classic()+ ylim(-0.5, 0.5) + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
+  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("Competitor R"^"2")) + xlab("Migratory Group") + theme_classic()+ ylim(0,0.5)+ theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("C:/Git/Biotic-Interactions/Figures/traitestimate_mig.pdf", height = 8, width = 12)
@@ -689,7 +690,7 @@ R2violin = gather(R2violin.5, "type", "Rval", 13:15, 19)
 R2violin$type = factor(R2violin$type,
                               levels = c("violin_comp","violin_env", "violin_total","COMPSC"),ordered = TRUE)
 
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Variance Explained") + ylab(bquote("R"^"2"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey", "#636363"), labels=c("Competition","Environment", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 0.8)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=mean, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Variance Explained") + ylab(bquote("R"^"2"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey", "#636363"), labels=c("Competition","Environment", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25, angle = 90),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=mean, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
 
 ggsave("Figures/violin_mains.pdf", height = 8, width = 12)
 
