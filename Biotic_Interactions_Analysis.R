@@ -582,13 +582,12 @@ colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","
 # trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
 comp_cont4 = filter(comp_cont4, Trophic.Group != "nectarivore" & Trophic.Group != "herbivore")
 colname = c("Granivore", "Insectivore/\nOmnivore","Insectivore","Omnivore")
-trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4)
+trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4, weights = n)
 scaled_est1 = summary(trait_mod_scale)$coef[,"Estimate"]
 scaled_est2 = c(scaled_est1[1], scaled_est1[2:4] + scaled_est1[1])
 scaled_est = data.frame(colname, scaled_est2)
 scaled_est$scaled_lower =  as.vector(scaled_est$scaled_est) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 scaled_est$scaled_upper = as.vector(scaled_est$scaled_est) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
-
 
 scaled_rank = scaled_est %>% 
   dplyr::mutate(rank = row_number(-scaled_est2)) 
@@ -597,7 +596,7 @@ scaled_rank2$colname = factor(scaled_rank2$colname,
        levels = c("Insectivore","Insectivore/\nOmnivore","Omnivore","Granivore","Herbivore"),ordered = TRUE)
 
 ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=15, size = 5, col = "dark blue") + 
-  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("Competitor R"^"2")) + xlab("Trophic Group") + theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + ylim(0,0.5) + 
+  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("Competitor R"^"2")) + xlab("Trophic Group") + theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + ylim(-.05,0.5) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("C:/Git/Biotic-Interactions/Figures/traitestimateplot.pdf", height = 8, width = 12)
@@ -608,7 +607,7 @@ ggsave("C:/Git/Biotic-Interactions/Figures/traitestimateplot.pdf", height = 8, w
 #### mig mod ####
 #column names to manipulate in plot
 colname = c("Neotropical", "Resident" ,  "Short-distance")
-trait_mod_scale = lm(COMPSC ~ migclass, data = comp_cont4)
+trait_mod_scale = lm(COMPSC ~ migclass, data = comp_cont4, weights = n)
 scaled_est1 = summary(trait_mod_scale)$coef[,"Estimate"]
 scaled_est2 = c(scaled_est1[1], scaled_est1[2:3] + scaled_est1[1])
 scaled_est = data.frame(colname, scaled_est2)
