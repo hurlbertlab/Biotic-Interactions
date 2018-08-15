@@ -1,0 +1,1484 @@
+Focal Common Name,Focal Scientific Name,Focal AOU,Competitor Common Name,Competitor Scientific Name,Competitor AOU,Main Competitor (1)
+Ruffed Grouse,Bonasa umbellus,3000,Gray Partridge,Perdix perdix,2881,0
+Ruffed Grouse,Bonasa umbellus,3000,Spruce Grouse,Falcipennis canadensis,2980,1
+Scaled Quail,Callipepla squamata,2930,Northern Bobwhite,Colinus virginianus,2890,1
+Scaled Quail,Callipepla squamata,2930,Gambel's Quail,Callipepla gambelii,2950,0
+Scaled Quail,Callipepla squamata,2930,Montezuma Quail,Cyrtonyx montezumae,2960,0
+California Quail,Callipepla californica,2940,Mountain Quail,Oreortyx pictus,2920,1
+Northern Bobwhite,Colinus virginianus,2890,Scaled Quail,Callipepla squamata,2930,1
+Gambel's Quail,Callipepla gambelii,2950,Scaled Quail,Callipepla squamata,2930,1
+Gambel's Quail,Callipepla gambelii,2950,Montezuma Quail,Cyrtonyx montezumae,2960,0
+Mountain Quail,Oreortyx pictus,2920,California Quail,Callipepla californica,2940,1
+Gray Partridge,Perdix perdix,2881,Spruce Grouse,Falcipennis canadensis,2980,0
+Gray Partridge,Perdix perdix,2881,Ruffed Grouse,Bonasa umbellus,3000,1
+White-winged Dove,Zenaida asiatica,3190,Mourning Dove,Zenaida macroura,3160,1
+Mourning Dove,Zenaida macroura,3160,White-winged Dove,Zenaida asiatica,3190,1
+Inca Dove,Columbina inca,3210,Common Ground-Dove,Columbina passerina,3200,1
+Common Ground-Dove,Columbina passerina,3200,Inca Dove,Columbina inca,3210,1
+Black-billed Cuckoo,Coccyzus erythropthalmus,3880,Yellow-billed Cuckoo,Coccyzus americanus,3870,1
+Yellow-billed Cuckoo,Coccyzus americanus,3870,Black-billed Cuckoo,Coccyzus erythropthalmus,3880,1
+Gila Woodpecker,Melanerpes uropygialis,4110,Hairy Woodpecker,Leuconotopicus villosus,3930,0
+Gila Woodpecker,Melanerpes uropygialis,4110,Red-naped Sapsucker,Sphyrapicus nuchalis,4021,0
+Gila Woodpecker,Melanerpes uropygialis,4110,Acorn Woodpecker,Melanerpes formicivorus,4070,0
+Gila Woodpecker,Melanerpes uropygialis,4110,Gilded Flicker,Colaptes chrysoides,4140,1
+Northern Flicker,Colaptes auratus,4120,Hairy Woodpecker,Leuconotopicus villosus,3930,1
+Northern Flicker,Colaptes auratus,4120,Black-backed Woodpecker,Picoides arcticus,4000,0
+Northern Flicker,Colaptes auratus,4120,Red-headed Woodpecker,Melanerpes erythrocephalus,4060,0
+Northern Flicker,Colaptes auratus,4120,Lewis's Woodpecker,Melanerpes lewis,4080,0
+Northern Flicker,Colaptes auratus,4120,Red-bellied Woodpecker,Melanerpes carolinus,4090,0
+Northern Flicker,Colaptes auratus,4120,Golden-fronted Woodpecker,Melanerpes aurifrons,4100,0
+Yellow-bellied Sapsucker,Sphyrapicus varius,4020,Hairy Woodpecker,Leuconotopicus villosus,3930,1
+Yellow-bellied Sapsucker,Sphyrapicus varius,4020,Downy Woodpecker,Dryobates pubescens,3940,0
+Yellow-bellied Sapsucker,Sphyrapicus varius,4020,Black-backed Woodpecker,Picoides arcticus,4000,0
+Yellow-bellied Sapsucker,Sphyrapicus varius,4020,Eurasian three-toed woodpecker,Picoides tridactylus,4010,0
+Yellow-bellied Sapsucker,Sphyrapicus varius,4020,Red-headed Woodpecker,Melanerpes erythrocephalus,4060,0
+Yellow-bellied Sapsucker,Sphyrapicus varius,4020,Red-bellied Woodpecker,Melanerpes carolinus,4090,0
+Nuttall's Woodpecker,Dryobates nuttallii,3970,Hairy Woodpecker,Leuconotopicus villosus,3930,1
+Nuttall's Woodpecker,Dryobates nuttallii,3970,Downy Woodpecker,Dryobates pubescens,3940,0
+Nuttall's Woodpecker,Dryobates nuttallii,3970,Ladder-backed Woodpecker,Dryobates scalaris,3960,0
+Nuttall's Woodpecker,Dryobates nuttallii,3970,White-headed Woodpecker,Leuconotopicus albolarvatus,3990,0
+Nuttall's Woodpecker,Dryobates nuttallii,3970,Black-backed Woodpecker,Picoides arcticus,4000,0
+Nuttall's Woodpecker,Dryobates nuttallii,3970,Red-breasted Sapsucker,Sphyrapicus ruber,4030,0
+Nuttall's Woodpecker,Dryobates nuttallii,3970,Williamson's Sapsucker,Sphyrapicus thyroideus,4040,0
+Red-bellied Woodpecker,Melanerpes carolinus,4090,Hairy Woodpecker,Leuconotopicus villosus,3930,0
+Red-bellied Woodpecker,Melanerpes carolinus,4090,Red-cockaded Woodpecker,Leuconotopicus borealis,3950,0
+Red-bellied Woodpecker,Melanerpes carolinus,4090,Black-backed Woodpecker,Picoides arcticus,4000,0
+Red-bellied Woodpecker,Melanerpes carolinus,4090,Yellow-bellied Sapsucker,Sphyrapicus varius,4020,0
+Red-bellied Woodpecker,Melanerpes carolinus,4090,Red-headed Woodpecker,Melanerpes erythrocephalus,4060,1
+Red-bellied Woodpecker,Melanerpes carolinus,4090,Golden-fronted Woodpecker,Melanerpes aurifrons,4100,0
+Red-bellied Woodpecker,Melanerpes carolinus,4090,Northern Flicker,Colaptes auratus,4120,0
+Golden-fronted Woodpecker,Melanerpes aurifrons,4100,Hairy Woodpecker,Leuconotopicus villosus,3930,0
+Golden-fronted Woodpecker,Melanerpes aurifrons,4100,Red-headed Woodpecker,Melanerpes erythrocephalus,4060,0
+Golden-fronted Woodpecker,Melanerpes aurifrons,4100,Acorn Woodpecker,Melanerpes formicivorus,4070,1
+Golden-fronted Woodpecker,Melanerpes aurifrons,4100,Red-bellied Woodpecker,Melanerpes carolinus,4090,0
+Golden-fronted Woodpecker,Melanerpes aurifrons,4100,Northern Flicker,Colaptes auratus,4120,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Hairy Woodpecker,Leuconotopicus villosus,3930,1
+Hairy Woodpecker,Leuconotopicus villosus,3930,Red-cockaded Woodpecker,Leuconotopicus borealis,3950,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Nuttall's Woodpecker,Dryobates nuttallii,3970,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,White-headed Woodpecker,Leuconotopicus albolarvatus,3990,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Black-backed Woodpecker,Picoides arcticus,4000,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Eurasian three-toed woodpecker,Picoides tridactylus,4010,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Yellow-bellied Sapsucker,Sphyrapicus varius,4020,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Red-naped Sapsucker,Sphyrapicus nuchalis,4021,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Red-breasted Sapsucker,Sphyrapicus ruber,4030,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Williamson's Sapsucker,Sphyrapicus thyroideus,4040,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Red-headed Woodpecker,Melanerpes erythrocephalus,4060,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Acorn Woodpecker,Melanerpes formicivorus,4070,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Lewis's Woodpecker,Melanerpes lewis,4080,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Red-bellied Woodpecker,Melanerpes carolinus,4090,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Golden-fronted Woodpecker,Melanerpes aurifrons,4100,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Gila Woodpecker,Melanerpes uropygialis,4110,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Northern Flicker,Colaptes auratus,4120,0
+Hairy Woodpecker,Leuconotopicus villosus,3930,Gilded Flicker,Colaptes chrysoides,4140,0
+Ladder-backed Woodpecker,Dryobates scalaris,3960,Downy Woodpecker,Dryobates pubescens,3940,1
+Ladder-backed Woodpecker,Dryobates scalaris,3960,Nuttall's Woodpecker,Dryobates nuttallii,3970,0
+Ladder-backed Woodpecker,Dryobates scalaris,3960,Red-naped Sapsucker,Sphyrapicus nuchalis,4021,0
+Downy Woodpecker,Dryobates pubescens,3940,Red-cockaded Woodpecker,Leuconotopicus borealis,3950,0
+Downy Woodpecker,Dryobates pubescens,3940,Ladder-backed Woodpecker,Dryobates scalaris,3960,0
+Downy Woodpecker,Dryobates pubescens,3940,Nuttall's Woodpecker,Dryobates nuttallii,3970,0
+Downy Woodpecker,Dryobates pubescens,3940,Yellow-bellied Sapsucker,Sphyrapicus varius,4020,1
+Downy Woodpecker,Dryobates pubescens,3940,Red-naped Sapsucker,Sphyrapicus nuchalis,4021,0
+Downy Woodpecker,Dryobates pubescens,3940,Red-breasted Sapsucker,Sphyrapicus ruber,4030,0
+Downy Woodpecker,Dryobates pubescens,3940,Williamson's Sapsucker,Sphyrapicus thyroideus,4040,0
+Red-breasted Sapsucker,Sphyrapicus ruber,4030,Nuttall's Woodpecker,Dryobates nuttallii,3970,0
+Red-breasted Sapsucker,Sphyrapicus ruber,4030,Acorn Woodpecker,Melanerpes formicivorus,4070,1
+Red-naped Sapsucker,Sphyrapicus nuchalis,4021,Williamson's Sapsucker,Sphyrapicus thyroideus,4040,1
+Red-headed Woodpecker,Melanerpes erythrocephalus,4060,Red-bellied Woodpecker,Melanerpes carolinus,4090,0
+Red-headed Woodpecker,Melanerpes erythrocephalus,4060,Northern Flicker,Colaptes auratus,4120,1
+Broad-tailed Hummingbird,Selasphorus platycercus,4320,Black-chinned Hummingbird,Archilochus alexandri,4290,1
+Black-chinned Hummingbird,Archilochus alexandri,4290,Broad-tailed Hummingbird,Selasphorus platycercus,4320,1
+Calliope Hummingbird,Selasphorus calliope,4360,Rufous Hummingbird,Selasphorus rufus,4330,1
+Anna's Hummingbird,Calypte anna,4310,Allen's Hummingbird,Selasphorus sasin,4340,1
+Rufous Hummingbird,Selasphorus rufus,4330,Calliope Hummingbird,Selasphorus calliope,4360,1
+Western Kingbird,Tyrannus verticalis,4470,Rose-throated Becard,Pachyramphus aglaiae,4411,0
+Western Kingbird,Tyrannus verticalis,4470,Scissor-tailed Flycatcher,Tyrannus forficatus,4430,0
+Western Kingbird,Tyrannus verticalis,4470,Eastern Kingbird,Tyrannus tyrannus,4440,0
+Western Kingbird,Tyrannus verticalis,4470,Thick-billed Kingbird,Tyrannus crassirostris,4451,0
+Western Kingbird,Tyrannus verticalis,4470,Tropical Kingbird,Tyrannus melancholicus,4460,0
+Western Kingbird,Tyrannus verticalis,4470,Couch's Kingbird,Tyrannus couchii,4461,0
+Western Kingbird,Tyrannus verticalis,4470,Cassin's Kingbird,Tyrannus vociferans,4480,0
+Western Kingbird,Tyrannus verticalis,4470,Great Kiskadee,Pitangus sulphuratus,4490,0
+Western Kingbird,Tyrannus verticalis,4470,Sulphur-bellied Flycatcher,Myiodynastes luteiventris,4510,0
+Western Kingbird,Tyrannus verticalis,4470,Great Crested Flycatcher,Myiarchus crinitus,4520,0
+Western Kingbird,Tyrannus verticalis,4470,Brown-crested Flycatcher,Myiarchus tyrannulus,4530,0
+Western Kingbird,Tyrannus verticalis,4470,Ash-throated Flycatcher,Myiarchus cinerascens,4540,0
+Western Kingbird,Tyrannus verticalis,4470,Dusky-capped Flycatcher,Myiarchus tuberculifer,4550,0
+Western Kingbird,Tyrannus verticalis,4470,Eastern Phoebe,Sayornis phoebe,4560,0
+Western Kingbird,Tyrannus verticalis,4470,Say's Phoebe,Sayornis saya,4570,1
+Western Kingbird,Tyrannus verticalis,4470,Olive-sided Flycatcher,Contopus cooperi,4590,0
+Western Kingbird,Tyrannus verticalis,4470,Greater Pewee,Contopus pertinax,4600,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Scissor-tailed Flycatcher,Tyrannus forficatus,4430,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Eastern Kingbird,Tyrannus tyrannus,4440,1
+Great Crested Flycatcher,Myiarchus crinitus,4520,Gray Kingbird,Tyrannus dominicensis,4450,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Couch's Kingbird,Tyrannus couchii,4461,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Western Kingbird,Tyrannus verticalis,4470,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Cassin's Kingbird,Tyrannus vociferans,4480,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Great Kiskadee,Pitangus sulphuratus,4490,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Brown-crested Flycatcher,Myiarchus tyrannulus,4530,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Ash-throated Flycatcher,Myiarchus cinerascens,4540,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Eastern Phoebe,Sayornis phoebe,4560,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Say's Phoebe,Sayornis saya,4570,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Black Phoebe,Sayornis nigricans,4580,0
+Great Crested Flycatcher,Myiarchus crinitus,4520,Olive-sided Flycatcher,Contopus cooperi,4590,0
+Eastern Kingbird,Tyrannus tyrannus,4440,Scissor-tailed Flycatcher,Tyrannus forficatus,4430,0
+Eastern Kingbird,Tyrannus tyrannus,4440,Gray Kingbird,Tyrannus dominicensis,4450,0
+Eastern Kingbird,Tyrannus tyrannus,4440,Couch's Kingbird,Tyrannus couchii,4461,0
+Eastern Kingbird,Tyrannus tyrannus,4440,Western Kingbird,Tyrannus verticalis,4470,0
+Eastern Kingbird,Tyrannus tyrannus,4440,Cassin's Kingbird,Tyrannus vociferans,4480,0
+Eastern Kingbird,Tyrannus tyrannus,4440,Great Kiskadee,Pitangus sulphuratus,4490,0
+Eastern Kingbird,Tyrannus tyrannus,4440,Great Crested Flycatcher,Myiarchus crinitus,4520,1
+Eastern Kingbird,Tyrannus tyrannus,4440,Brown-crested Flycatcher,Myiarchus tyrannulus,4530,0
+Eastern Kingbird,Tyrannus tyrannus,4440,Ash-throated Flycatcher,Myiarchus cinerascens,4540,0
+Eastern Kingbird,Tyrannus tyrannus,4440,Olive-sided Flycatcher,Contopus cooperi,4590,0
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Eastern Kingbird,Tyrannus tyrannus,4440,1
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Tropical Kingbird,Tyrannus melancholicus,4460,0
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Couch's Kingbird,Tyrannus couchii,4461,0
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Western Kingbird,Tyrannus verticalis,4470,0
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Cassin's Kingbird,Tyrannus vociferans,4480,0
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Great Kiskadee,Pitangus sulphuratus,4490,0
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Great Crested Flycatcher,Myiarchus crinitus,4520,0
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Brown-crested Flycatcher,Myiarchus tyrannulus,4530,0
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Ash-throated Flycatcher,Myiarchus cinerascens,4540,0
+Scissor-tailed Flycatcher,Tyrannus forficatus,4430,Olive-sided Flycatcher,Contopus cooperi,4590,0
+Eastern Phoebe,Sayornis phoebe,4560,Western Kingbird,Tyrannus verticalis,4470,0
+Eastern Phoebe,Sayornis phoebe,4560,Great Crested Flycatcher,Myiarchus crinitus,4520,1
+Eastern Phoebe,Sayornis phoebe,4560,Ash-throated Flycatcher,Myiarchus cinerascens,4540,0
+Eastern Phoebe,Sayornis phoebe,4560,Say's Phoebe,Sayornis saya,4570,0
+Eastern Phoebe,Sayornis phoebe,4560,Olive-sided Flycatcher,Contopus cooperi,4590,0
+Eastern Phoebe,Sayornis phoebe,4560,Eastern Wood-Pewee,Contopus virens,4610,0
+Eastern Phoebe,Sayornis phoebe,4560,Western Wood-Pewee,Contopus sordidulus,4620,0
+Eastern Phoebe,Sayornis phoebe,4560,Yellow-bellied Flycatcher,Empidonax flaviventris,4630,0
+Eastern Phoebe,Sayornis phoebe,4560,Cordilleran Flycatcher,Empidonax occidentalis,4640,0
+Eastern Phoebe,Sayornis phoebe,4560,Acadian Flycatcher,Empidonax virescens,4650,0
+Eastern Phoebe,Sayornis phoebe,4560,Willow Flycatcher,Empidonax traillii,4660,0
+Eastern Phoebe,Sayornis phoebe,4560,Alder Flycatcher,Empidonax alnorum,4661,0
+Eastern Phoebe,Sayornis phoebe,4560,Least Flycatcher,Empidonax minimus,4670,0
+Eastern Phoebe,Sayornis phoebe,4560,Hammond's Flycatcher,Empidonax hammondii,4680,0
+Eastern Phoebe,Sayornis phoebe,4560,Vermilion Flycatcher,Pyrocephalus rubinus,4710,0
+Say's Phoebe,Sayornis saya,4570,Western Kingbird,Tyrannus verticalis,4470,1
+Say's Phoebe,Sayornis saya,4570,Ash-throated Flycatcher,Myiarchus cinerascens,4540,0
+Olive-sided Flycatcher,Contopus cooperi,4590,Western Kingbird,Tyrannus verticalis,4470,1
+Ash-throated Flycatcher,Myiarchus cinerascens,4540,Cassin's Kingbird,Tyrannus vociferans,4480,0
+Ash-throated Flycatcher,Myiarchus cinerascens,4540,Say's Phoebe,Sayornis saya,4570,1
+Eastern Wood-Pewee,Contopus virens,4610,Ash-throated Flycatcher,Myiarchus cinerascens,4540,0
+Eastern Wood-Pewee,Contopus virens,4610,Eastern Phoebe,Sayornis phoebe,4560,1
+Eastern Wood-Pewee,Contopus virens,4610,Say's Phoebe,Sayornis saya,4570,0
+Eastern Wood-Pewee,Contopus virens,4610,Western Wood-Pewee,Contopus sordidulus,4620,0
+Eastern Wood-Pewee,Contopus virens,4610,Yellow-bellied Flycatcher,Empidonax flaviventris,4630,0
+Eastern Wood-Pewee,Contopus virens,4610,Acadian Flycatcher,Empidonax virescens,4650,0
+Eastern Wood-Pewee,Contopus virens,4610,Willow Flycatcher,Empidonax traillii,4660,0
+Eastern Wood-Pewee,Contopus virens,4610,Alder Flycatcher,Empidonax alnorum,4661,0
+Eastern Wood-Pewee,Contopus virens,4610,Least Flycatcher,Empidonax minimus,4670,0
+Eastern Wood-Pewee,Contopus virens,4610,Vermilion Flycatcher,Pyrocephalus rubinus,4710,0
+Cassin's Kingbird,Tyrannus vociferans,4480,Ash-throated Flycatcher,Myiarchus cinerascens,4540,1
+Western Wood-Pewee,Contopus sordidulus,4620,Dusky-capped Flycatcher,Myiarchus tuberculifer,4550,0
+Western Wood-Pewee,Contopus sordidulus,4620,Eastern Phoebe,Sayornis phoebe,4560,0
+Western Wood-Pewee,Contopus sordidulus,4620,Say's Phoebe,Sayornis saya,4570,1
+Western Wood-Pewee,Contopus sordidulus,4620,Black Phoebe,Sayornis nigricans,4580,0
+Western Wood-Pewee,Contopus sordidulus,4620,Eastern Wood-Pewee,Contopus virens,4610,0
+Western Wood-Pewee,Contopus sordidulus,4620,Yellow-bellied Flycatcher,Empidonax flaviventris,4630,0
+Western Wood-Pewee,Contopus sordidulus,4620,Cordilleran Flycatcher,Empidonax occidentalis,4640,0
+Western Wood-Pewee,Contopus sordidulus,4620,Pacific-slope Flycatcher,Empidonax difficilis,4641,0
+Western Wood-Pewee,Contopus sordidulus,4620,Willow Flycatcher,Empidonax traillii,4660,0
+Western Wood-Pewee,Contopus sordidulus,4620,Alder Flycatcher,Empidonax alnorum,4661,0
+Western Wood-Pewee,Contopus sordidulus,4620,Least Flycatcher,Empidonax minimus,4670,0
+Western Wood-Pewee,Contopus sordidulus,4620,Hammond's Flycatcher,Empidonax hammondii,4680,0
+Western Wood-Pewee,Contopus sordidulus,4620,Dusky Flycatcher,Empidonax oberholseri,4690,0
+Western Wood-Pewee,Contopus sordidulus,4620,Gray Flycatcher,Empidonax wrightii,4691,0
+Western Wood-Pewee,Contopus sordidulus,4620,Buff-breasted Flycatcher,Empidonax fulvifrons,4700,0
+Western Wood-Pewee,Contopus sordidulus,4620,Vermilion Flycatcher,Pyrocephalus rubinus,4710,0
+Western Wood-Pewee,Contopus sordidulus,4620,Northern beardless tyrannulet,Camptostoma imberbe,4720,0
+Least Flycatcher,Empidonax minimus,4670,Eastern Phoebe,Sayornis phoebe,4560,0
+Least Flycatcher,Empidonax minimus,4670,Eastern Wood-Pewee,Contopus virens,4610,0
+Least Flycatcher,Empidonax minimus,4670,Western Wood-Pewee,Contopus sordidulus,4620,0
+Least Flycatcher,Empidonax minimus,4670,Yellow-bellied Flycatcher,Empidonax flaviventris,4630,0
+Least Flycatcher,Empidonax minimus,4670,Cordilleran Flycatcher,Empidonax occidentalis,4640,0
+Least Flycatcher,Empidonax minimus,4670,Pacific-slope Flycatcher,Empidonax difficilis,4641,0
+Least Flycatcher,Empidonax minimus,4670,Acadian Flycatcher,Empidonax virescens,4650,0
+Least Flycatcher,Empidonax minimus,4670,Willow Flycatcher,Empidonax traillii,4660,0
+Least Flycatcher,Empidonax minimus,4670,Alder Flycatcher,Empidonax alnorum,4661,1
+Least Flycatcher,Empidonax minimus,4670,Hammond's Flycatcher,Empidonax hammondii,4680,0
+Least Flycatcher,Empidonax minimus,4670,Dusky Flycatcher,Empidonax oberholseri,4690,0
+Vermilion Flycatcher,Pyrocephalus rubinus,4710,Black Phoebe,Sayornis nigricans,4580,1
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Black Phoebe,Sayornis nigricans,4580,0
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Western Wood-Pewee,Contopus sordidulus,4620,1
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Yellow-bellied Flycatcher,Empidonax flaviventris,4630,0
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Cordilleran Flycatcher,Empidonax occidentalis,4640,0
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Willow Flycatcher,Empidonax traillii,4660,0
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Alder Flycatcher,Empidonax alnorum,4661,0
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Least Flycatcher,Empidonax minimus,4670,0
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Hammond's Flycatcher,Empidonax hammondii,4680,0
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Dusky Flycatcher,Empidonax oberholseri,4690,0
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Gray Flycatcher,Empidonax wrightii,4691,0
+Pacific-slope Flycatcher,Empidonax difficilis,4641,Vermilion Flycatcher,Pyrocephalus rubinus,4710,0
+Acadian Flycatcher,Empidonax virescens,4650,Eastern Wood-Pewee,Contopus virens,4610,1
+Acadian Flycatcher,Empidonax virescens,4650,Yellow-bellied Flycatcher,Empidonax flaviventris,4630,0
+Acadian Flycatcher,Empidonax virescens,4650,Willow Flycatcher,Empidonax traillii,4660,0
+Acadian Flycatcher,Empidonax virescens,4650,Alder Flycatcher,Empidonax alnorum,4661,0
+Acadian Flycatcher,Empidonax virescens,4650,Least Flycatcher,Empidonax minimus,4670,0
+Alder Flycatcher,Empidonax alnorum,4661,Western Wood-Pewee,Contopus sordidulus,4620,0
+Alder Flycatcher,Empidonax alnorum,4661,Yellow-bellied Flycatcher,Empidonax flaviventris,4630,1
+Alder Flycatcher,Empidonax alnorum,4661,Acadian Flycatcher,Empidonax virescens,4650,0
+Alder Flycatcher,Empidonax alnorum,4661,Willow Flycatcher,Empidonax traillii,4660,0
+Alder Flycatcher,Empidonax alnorum,4661,Least Flycatcher,Empidonax minimus,4670,0
+Hammond's Flycatcher,Empidonax hammondii,4680,Cordilleran Flycatcher,Empidonax occidentalis,4640,0
+Hammond's Flycatcher,Empidonax hammondii,4680,Dusky Flycatcher,Empidonax oberholseri,4690,1
+Gray Flycatcher,Empidonax wrightii,4691,Cordilleran Flycatcher,Empidonax occidentalis,4640,0
+Gray Flycatcher,Empidonax wrightii,4691,Dusky Flycatcher,Empidonax oberholseri,4690,1
+Willow Flycatcher,Empidonax traillii,4660,Alder Flycatcher,Empidonax alnorum,4661,1
+American Redstart,Setophaga ruticilla,6870,Least Flycatcher,Empidonax minimus,4670,1
+American Redstart,Setophaga ruticilla,6870,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+American Redstart,Setophaga ruticilla,6870,Magnolia Warbler,Dendroica magnolia,6570,0
+American Redstart,Setophaga ruticilla,6870,Canada Warbler,Wilsonia canadensis,6860,0
+Dusky Flycatcher,Empidonax oberholseri,4690,Hammond's Flycatcher,Empidonax hammondii,4680,1
+Dusky Flycatcher,Empidonax oberholseri,4690,Gray Flycatcher,Empidonax wrightii,4691,0
+Cordilleran Flycatcher,Empidonax occidentalis,4640,Hammond's Flycatcher,Empidonax hammondii,4680,1
+Cordilleran Flycatcher,Empidonax occidentalis,4640,Gray Flycatcher,Empidonax wrightii,4691,0
+Black Phoebe,Sayornis nigricans,4580,Vermilion Flycatcher,Pyrocephalus rubinus,4710,1
+Pinyon Jay,Gymnorhinus cyanocephalus,4920,Black-billed Magpie,Pica pica,4750,1
+Black-billed Magpie,Pica pica,4750,Yellow-billed Magpie,Pica nuttalli,4760,0
+Black-billed Magpie,Pica pica,4750,Steller's Jay,Cyanocitta stelleri,4780,1
+Black-billed Magpie,Pica pica,4750,Western Scrub-Jay,Aphelocoma californica,4812,0
+Black-billed Magpie,Pica pica,4750,Clark's Nutcracker,Nucifraga columbiana,4910,0
+Black-billed Magpie,Pica pica,4750,Pinyon Jay,Gymnorhinus cyanocephalus,4920,0
+Gray Jay,Perisoreus canadensis,4840,Steller's Jay,Cyanocitta stelleri,4780,1
+Gray Jay,Perisoreus canadensis,4840,Clark's Nutcracker,Nucifraga columbiana,4910,0
+Western Scrub-Jay,Aphelocoma californica,4812,Steller's Jay,Cyanocitta stelleri,4780,1
+Western Scrub-Jay,Aphelocoma californica,4812,Gray Jay,Perisoreus canadensis,4840,0
+Western Scrub-Jay,Aphelocoma californica,4812,Clark's Nutcracker,Nucifraga columbiana,4910,0
+Blue Jay,Cyanocitta cristata,4770,Florida Scrub-Jay,Aphelocoma coerulescens,4790,0
+Blue Jay,Cyanocitta cristata,4770,Western Scrub-Jay,Aphelocoma californica,4812,0
+Blue Jay,Cyanocitta cristata,4770,Gray Jay,Perisoreus canadensis,4840,1
+Blue Jay,Cyanocitta cristata,4770,Clark's Nutcracker,Nucifraga columbiana,4910,0
+Blue Jay,Cyanocitta cristata,4770,Pinyon Jay,Gymnorhinus cyanocephalus,4920,0
+Steller's Jay,Cyanocitta stelleri,4780,Western Scrub-Jay,Aphelocoma californica,4812,0
+Steller's Jay,Cyanocitta stelleri,4780,Gray Jay,Perisoreus canadensis,4840,0
+Steller's Jay,Cyanocitta stelleri,4780,Clark's Nutcracker,Nucifraga columbiana,4910,1
+Clark's Nutcracker,Nucifraga columbiana,4910,Gray Jay,Perisoreus canadensis,4840,1
+American Crow,Corvus brachyrhynchos,4880,Chihuahuan Raven,Corvus cryptoleucus,4870,0
+American Crow,Corvus brachyrhynchos,4880,Fish Crow,Corvus ossifragus,4900,1
+Fish Crow,Corvus ossifragus,4900,American Crow,Corvus brachyrhynchos,4880,1
+Red-winged Blackbird,Agelaius phoeniceus,4980,Bobolink,Dolichonyx oryzivorus,4940,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Brown-headed Cowbird,Molothrus ater,4950,1
+Red-winged Blackbird,Agelaius phoeniceus,4980,Bronzed Cowbird,Molothrus aeneus,4960,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Shiny Cowbird,Molothrus bonariensis,4961,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Tricolored Blackbird,Agelaius tricolor,5000,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Eastern Meadowlark,Sturnella magna,5010,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Altamira Oriole,Icterus gularis,5031,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Spot-breasted Oriole,Icterus pectoralis,5032,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Scott's Oriole,Icterus parisorum,5040,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Baltimore Oriole,Icterus galbula,5070,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Bullock's Oriole,Icterus bullockii,5080,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Rusty Blackbird,Euphagus carolinus,5090,0
+Red-winged Blackbird,Agelaius phoeniceus,4980,Brewer's Blackbird,Euphagus cyanocephalus,5100,0
+Baltimore Oriole,Icterus galbula,5070,Bobolink,Dolichonyx oryzivorus,4940,0
+Baltimore Oriole,Icterus galbula,5070,Brown-headed Cowbird,Molothrus ater,4950,1
+Baltimore Oriole,Icterus galbula,5070,Bronzed Cowbird,Molothrus aeneus,4960,0
+Baltimore Oriole,Icterus galbula,5070,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,0
+Baltimore Oriole,Icterus galbula,5070,Red-winged Blackbird,Agelaius phoeniceus,4980,0
+Baltimore Oriole,Icterus galbula,5070,Tricolored Blackbird,Agelaius tricolor,5000,0
+Baltimore Oriole,Icterus galbula,5070,Altamira Oriole,Icterus gularis,5031,0
+Baltimore Oriole,Icterus galbula,5070,Scott's Oriole,Icterus parisorum,5040,0
+Baltimore Oriole,Icterus galbula,5070,Hooded Oriole,Icterus cucullatus,5050,0
+Baltimore Oriole,Icterus galbula,5070,Orchard Oriole,Icterus spurius,5060,0
+Baltimore Oriole,Icterus galbula,5070,Bullock's Oriole,Icterus bullockii,5080,0
+Baltimore Oriole,Icterus galbula,5070,Rusty Blackbird,Euphagus carolinus,5090,0
+Baltimore Oriole,Icterus galbula,5070,Brewer's Blackbird,Euphagus cyanocephalus,5100,0
+Brown-headed Cowbird,Molothrus ater,4950,Bobolink,Dolichonyx oryzivorus,4940,0
+Brown-headed Cowbird,Molothrus ater,4950,Bronzed Cowbird,Molothrus aeneus,4960,0
+Brown-headed Cowbird,Molothrus ater,4950,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,0
+Brown-headed Cowbird,Molothrus ater,4950,Red-winged Blackbird,Agelaius phoeniceus,4980,1
+Brown-headed Cowbird,Molothrus ater,4950,Tricolored Blackbird,Agelaius tricolor,5000,0
+Brown-headed Cowbird,Molothrus ater,4950,Altamira Oriole,Icterus gularis,5031,0
+Brown-headed Cowbird,Molothrus ater,4950,Scott's Oriole,Icterus parisorum,5040,0
+Brown-headed Cowbird,Molothrus ater,4950,Hooded Oriole,Icterus cucullatus,5050,0
+Brown-headed Cowbird,Molothrus ater,4950,Baltimore Oriole,Icterus galbula,5070,0
+Brown-headed Cowbird,Molothrus ater,4950,Bullock's Oriole,Icterus bullockii,5080,0
+Brown-headed Cowbird,Molothrus ater,4950,Rusty Blackbird,Euphagus carolinus,5090,0
+Brown-headed Cowbird,Molothrus ater,4950,Brewer's Blackbird,Euphagus cyanocephalus,5100,0
+Bullock's Oriole,Icterus bullockii,5080,Bobolink,Dolichonyx oryzivorus,4940,0
+Bullock's Oriole,Icterus bullockii,5080,Brown-headed Cowbird,Molothrus ater,4950,0
+Bullock's Oriole,Icterus bullockii,5080,Bronzed Cowbird,Molothrus aeneus,4960,0
+Bullock's Oriole,Icterus bullockii,5080,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,0
+Bullock's Oriole,Icterus bullockii,5080,Red-winged Blackbird,Agelaius phoeniceus,4980,0
+Bullock's Oriole,Icterus bullockii,5080,Tricolored Blackbird,Agelaius tricolor,5000,0
+Bullock's Oriole,Icterus bullockii,5080,Altamira Oriole,Icterus gularis,5031,0
+Bullock's Oriole,Icterus bullockii,5080,Scott's Oriole,Icterus parisorum,5040,0
+Bullock's Oriole,Icterus bullockii,5080,Hooded Oriole,Icterus cucullatus,5050,0
+Bullock's Oriole,Icterus bullockii,5080,Orchard Oriole,Icterus spurius,5060,0
+Bullock's Oriole,Icterus bullockii,5080,Baltimore Oriole,Icterus galbula,5070,1
+Bullock's Oriole,Icterus bullockii,5080,Brewer's Blackbird,Euphagus cyanocephalus,5100,0
+Orchard Oriole,Icterus spurius,5060,Bobolink,Dolichonyx oryzivorus,4940,0
+Orchard Oriole,Icterus spurius,5060,Scott's Oriole,Icterus parisorum,5040,0
+Orchard Oriole,Icterus spurius,5060,Hooded Oriole,Icterus cucullatus,5050,0
+Orchard Oriole,Icterus spurius,5060,Baltimore Oriole,Icterus galbula,5070,1
+Orchard Oriole,Icterus spurius,5060,Bullock's Oriole,Icterus bullockii,5080,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Brown-headed Cowbird,Molothrus ater,4950,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Bronzed Cowbird,Molothrus aeneus,4960,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Red-winged Blackbird,Agelaius phoeniceus,4980,1
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Tricolored Blackbird,Agelaius tricolor,5000,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Eastern Meadowlark,Sturnella magna,5010,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Western Meadowlark,Sturnella neglecta,5011,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Altamira Oriole,Icterus gularis,5031,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Spot-breasted Oriole,Icterus pectoralis,5032,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Scott's Oriole,Icterus parisorum,5040,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Baltimore Oriole,Icterus galbula,5070,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Bullock's Oriole,Icterus bullockii,5080,0
+Brewer's Blackbird,Euphagus cyanocephalus,5100,Rusty Blackbird,Euphagus carolinus,5090,0
+Bronzed Cowbird,Molothrus aeneus,4960,Brown-headed Cowbird,Molothrus ater,4950,0
+Bronzed Cowbird,Molothrus aeneus,4960,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,0
+Bronzed Cowbird,Molothrus aeneus,4960,Red-winged Blackbird,Agelaius phoeniceus,4980,1
+Bronzed Cowbird,Molothrus aeneus,4960,Eastern Meadowlark,Sturnella magna,5010,0
+Bronzed Cowbird,Molothrus aeneus,4960,Western Meadowlark,Sturnella neglecta,5011,0
+Bronzed Cowbird,Molothrus aeneus,4960,Altamira Oriole,Icterus gularis,5031,0
+Bronzed Cowbird,Molothrus aeneus,4960,Scott's Oriole,Icterus parisorum,5040,0
+Bronzed Cowbird,Molothrus aeneus,4960,Baltimore Oriole,Icterus galbula,5070,0
+Bronzed Cowbird,Molothrus aeneus,4960,Bullock's Oriole,Icterus bullockii,5080,0
+Bronzed Cowbird,Molothrus aeneus,4960,Brewer's Blackbird,Euphagus cyanocephalus,5100,0
+Bobolink,Dolichonyx oryzivorus,4940,Brown-headed Cowbird,Molothrus ater,4950,0
+Bobolink,Dolichonyx oryzivorus,4940,Red-winged Blackbird,Agelaius phoeniceus,4980,1
+Bobolink,Dolichonyx oryzivorus,4940,Scott's Oriole,Icterus parisorum,5040,0
+Bobolink,Dolichonyx oryzivorus,4940,Orchard Oriole,Icterus spurius,5060,0
+Bobolink,Dolichonyx oryzivorus,4940,Baltimore Oriole,Icterus galbula,5070,0
+Bobolink,Dolichonyx oryzivorus,4940,Bullock's Oriole,Icterus bullockii,5080,0
+Western Meadowlark,Sturnella neglecta,5011,Bronzed Cowbird,Molothrus aeneus,4960,0
+Western Meadowlark,Sturnella neglecta,5011,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,0
+Western Meadowlark,Sturnella neglecta,5011,Tricolored Blackbird,Agelaius tricolor,5000,0
+Western Meadowlark,Sturnella neglecta,5011,Eastern Meadowlark,Sturnella magna,5010,0
+Western Meadowlark,Sturnella neglecta,5011,Rusty Blackbird,Euphagus carolinus,5090,0
+Western Meadowlark,Sturnella neglecta,5011,Brewer's Blackbird,Euphagus cyanocephalus,5100,1
+Western Meadowlark,Sturnella neglecta,5011,Common Grackle,Quiscalus quiscula,5110,0
+Western Meadowlark,Sturnella neglecta,5011,Great-tailed Grackle,Quiscalus mexicanus,5120,0
+Eastern Meadowlark,Sturnella magna,5010,Bronzed Cowbird,Molothrus aeneus,4960,0
+Eastern Meadowlark,Sturnella magna,5010,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,0
+Eastern Meadowlark,Sturnella magna,5010,Red-winged Blackbird,Agelaius phoeniceus,4980,1
+Eastern Meadowlark,Sturnella magna,5010,Western Meadowlark,Sturnella neglecta,5011,0
+Eastern Meadowlark,Sturnella magna,5010,Altamira Oriole,Icterus gularis,5031,0
+Eastern Meadowlark,Sturnella magna,5010,Rusty Blackbird,Euphagus carolinus,5090,0
+Eastern Meadowlark,Sturnella magna,5010,Brewer's Blackbird,Euphagus cyanocephalus,5100,0
+Eastern Meadowlark,Sturnella magna,5010,Common Grackle,Quiscalus quiscula,5110,0
+Eastern Meadowlark,Sturnella magna,5010,Great-tailed Grackle,Quiscalus mexicanus,5120,0
+Eastern Meadowlark,Sturnella magna,5010,Boat-tailed Grackle,Quiscalus major,5130,0
+Common Grackle,Quiscalus quiscula,5110,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,0
+Common Grackle,Quiscalus quiscula,5110,Eastern Meadowlark,Sturnella magna,5010,1
+Common Grackle,Quiscalus quiscula,5110,Western Meadowlark,Sturnella neglecta,5011,0
+Common Grackle,Quiscalus quiscula,5110,Great-tailed Grackle,Quiscalus mexicanus,5120,0
+Common Grackle,Quiscalus quiscula,5110,Boat-tailed Grackle,Quiscalus major,5130,0
+Yellow-headed Blackbird,Xanthocephalus xanthocephalus,4970,Red-winged Blackbird,Agelaius phoeniceus,4980,1
+Boat-tailed Grackle,Quiscalus major,5130,Eastern Meadowlark,Sturnella magna,5010,0
+Boat-tailed Grackle,Quiscalus major,5130,Common Grackle,Quiscalus quiscula,5110,1
+Hooded Oriole,Icterus cucullatus,5050,Scott's Oriole,Icterus parisorum,5040,0
+Hooded Oriole,Icterus cucullatus,5050,Bullock's Oriole,Icterus bullockii,5080,1
+Scott's Oriole,Icterus parisorum,5040,Hooded Oriole,Icterus cucullatus,5050,0
+Scott's Oriole,Icterus parisorum,5040,Bullock's Oriole,Icterus bullockii,5080,1
+White-winged Crossbill,Loxia leucoptera,5220,Purple Finch,Carpodacus purpureus,5170,0
+White-winged Crossbill,Loxia leucoptera,5220,Red Crossbill,Loxia curvirostra,5210,1
+House Finch,Carpodacus mexicanus,5190,Purple Finch,Carpodacus purpureus,5170,0
+House Finch,Carpodacus mexicanus,5190,Cassin's Finch,Carpodacus cassinii,5180,0
+House Finch,Carpodacus mexicanus,5190,Red Crossbill,Loxia curvirostra,5210,0
+House Finch,Carpodacus mexicanus,5190,White-winged Crossbill,Loxia leucoptera,5220,0
+House Finch,Carpodacus mexicanus,5190,Gray-crowned Rosy-Finch,Leucosticte tephrocotis,5240,0
+House Finch,Carpodacus mexicanus,5190,Black Rosy-Finch,Leucosticte atrata,5250,0
+House Finch,Carpodacus mexicanus,5190,Hoary Redpoll,Carduelis flammea,5270,1
+House Finch,Carpodacus mexicanus,5190,Hoary Redpoll,Carduelis flammea,5270,1
+House Finch,Carpodacus mexicanus,5190,American Goldfinch,Carduelis tristis,5290,0
+House Finch,Carpodacus mexicanus,5190,Lawrence's Goldfinch,Carduelis lawrencei,5310,0
+House Finch,Carpodacus mexicanus,5190,Pine Siskin,Carduelis pinus,5330,0
+American Goldfinch,Carduelis tristis,5290,Purple Finch,Carpodacus purpureus,5170,0
+American Goldfinch,Carduelis tristis,5290,House Finch,Carpodacus mexicanus,5190,0
+American Goldfinch,Carduelis tristis,5290,Gray-crowned Rosy-Finch,Leucosticte tephrocotis,5240,0
+American Goldfinch,Carduelis tristis,5290,Black Rosy-Finch,Leucosticte atrata,5250,0
+American Goldfinch,Carduelis tristis,5290,Hoary Redpoll,Carduelis flammea,5270,1
+American Goldfinch,Carduelis tristis,5290,Hoary Redpoll,Carduelis flammea,5270,1
+American Goldfinch,Carduelis tristis,5290,Lesser Goldfinch,Carduelis psaltria,5300,0
+American Goldfinch,Carduelis tristis,5290,Lawrence's Goldfinch,Carduelis lawrencei,5310,0
+American Goldfinch,Carduelis tristis,5290,Pine Siskin,Carduelis pinus,5330,0
+Red Crossbill,Loxia curvirostra,5210,Purple Finch,Carpodacus purpureus,5170,0
+Red Crossbill,Loxia curvirostra,5210,White-winged Crossbill,Loxia leucoptera,5220,1
+Common Redpoll,Carduelis flammea,5280,Purple Finch,Carpodacus purpureus,5170,0
+Common Redpoll,Carduelis flammea,5280,Hoary Redpoll,Carduelis flammea,5270,1
+Common Redpoll,Carduelis flammea,5280,Pine Siskin,Carduelis pinus,5330,0
+Purple Finch,Carpodacus purpureus,5170,Cassin's Finch,Carpodacus cassinii,5180,0
+Purple Finch,Carpodacus purpureus,5170,House Finch,Carpodacus mexicanus,5190,0
+Purple Finch,Carpodacus purpureus,5170,Red Crossbill,Loxia curvirostra,5210,0
+Purple Finch,Carpodacus purpureus,5170,White-winged Crossbill,Loxia leucoptera,5220,0
+Purple Finch,Carpodacus purpureus,5170,Gray-crowned Rosy-Finch,Leucosticte tephrocotis,5240,0
+Purple Finch,Carpodacus purpureus,5170,Hoary Redpoll,Carduelis flammea,5270,1
+Purple Finch,Carpodacus purpureus,5170,Hoary Redpoll,Carduelis flammea,5270,1
+Purple Finch,Carpodacus purpureus,5170,American Goldfinch,Carduelis tristis,5290,0
+Purple Finch,Carpodacus purpureus,5170,Pine Siskin,Carduelis pinus,5330,0
+Cassin's Finch,Carpodacus cassinii,5180,House Finch,Carpodacus mexicanus,5190,1
+Pine Siskin,Carduelis pinus,5330,Lesser Goldfinch,Carduelis psaltria,5300,1
+Lesser Goldfinch,Carduelis psaltria,5300,Pine Siskin,Carduelis pinus,5330,1
+Savannah Sparrow,Passerculus sandwichensis,5420,Snow Bunting,Plectrophenax nivalis,5340,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Lapland Longspur,Calcarius lapponicus,5360,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Smith's Longspur,Calcarius pictus,5370,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Chestnut-collared Longspur,Calcarius ornatus,5380,0
+Savannah Sparrow,Passerculus sandwichensis,5420,McCown's Longspur,Rhynchophanes mccownii,5390,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Vesper Sparrow,Pooecetes gramineus,5400,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Baird's Sparrow,Ammodramus bairdii,5450,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Grasshopper Sparrow,Ammodramus savannarum,5460,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Henslow's Sparrow,Ammodramus henslowii,5470,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Le Conte's Sparrow,Ammodramus leconteii,5480,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Saltmarsh Sharp-tailed Sparrow,Ammodramus caudacutus,5490,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Nelson's Sharp-tailed Sparrow,Ammodramus nelsoni,5491,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Seaside Sparrow,Ammodramus maritimus,5500,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Lark Sparrow,Chondestes grammacus,5520,0
+Savannah Sparrow,Passerculus sandwichensis,5420,White-crowned Sparrow,Zonotrichia leucophrys,5540,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Golden-crowned Sparrow,Zonotrichia atricapilla,5570,0
+Savannah Sparrow,Passerculus sandwichensis,5420,White-throated Sparrow,Zonotrichia albicollis,5580,0
+Savannah Sparrow,Passerculus sandwichensis,5420,American Tree Sparrow,Spizella arborea,5590,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Chipping Sparrow,Spizella passerina,5600,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Clay-colored Sparrow,Spizella pallida,5610,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Brewer's Sparrow,Spizella breweri,5620,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Field Sparrow,Spizella pusilla,5630,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Black-chinned Sparrow,Spizella atrogularis,5650,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Dark-eyed Junco,Junco hyemalis,5677,1
+Savannah Sparrow,Passerculus sandwichensis,5420,Black-throated Sparrow,Amphispiza bilineata,5730,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Sage Sparrow,Amphispiza belli,5740,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Botteri's Sparrow,Peucaea botterii,5760,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Cassin's Sparrow,Peucaea cassinii,5780,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Rufous-winged Sparrow,Peucaea carpalis,5790,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Rufous-crowned Sparrow,Aimophila ruficeps,5800,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Song Sparrow,Melospiza melodia,5810,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Swamp Sparrow,Melospiza georgiana,5840,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Fox Sparrow,Passerella iliaca,5850,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Olive Sparrow,Arremonops rufivirgatus,5860,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Eastern Towhee,Pipilo erythrophthalmus,5870,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Spotted Towhee,Pipilo maculatus,5880,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Green-tailed Towhee,Pipilo chlorurus,5900,0
+Savannah Sparrow,Passerculus sandwichensis,5420,Lark Bunting,Calamospiza melanocorys,6050,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Snow Bunting,Plectrophenax nivalis,5340,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Lapland Longspur,Calcarius lapponicus,5360,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Smith's Longspur,Calcarius pictus,5370,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Chestnut-collared Longspur,Calcarius ornatus,5380,0
+White-throated Sparrow,Zonotrichia albicollis,5580,McCown's Longspur,Rhynchophanes mccownii,5390,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Vesper Sparrow,Pooecetes gramineus,5400,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Savannah Sparrow,Passerculus sandwichensis,5420,1
+White-throated Sparrow,Zonotrichia albicollis,5580,Baird's Sparrow,Ammodramus bairdii,5450,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Grasshopper Sparrow,Ammodramus savannarum,5460,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Henslow's Sparrow,Ammodramus henslowii,5470,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Le Conte's Sparrow,Ammodramus leconteii,5480,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Saltmarsh Sharp-tailed Sparrow,Ammodramus caudacutus,5490,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Nelson's Sharp-tailed Sparrow,Ammodramus nelsoni,5491,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Seaside Sparrow,Ammodramus maritimus,5500,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Lark Sparrow,Chondestes grammacus,5520,0
+White-throated Sparrow,Zonotrichia albicollis,5580,White-crowned Sparrow,Zonotrichia leucophrys,5540,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Golden-crowned Sparrow,Zonotrichia atricapilla,5570,0
+White-throated Sparrow,Zonotrichia albicollis,5580,American Tree Sparrow,Spizella arborea,5590,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Field Sparrow,Spizella pusilla,5630,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Dark-eyed Junco,Junco hyemalis,5677,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Song Sparrow,Melospiza melodia,5810,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Swamp Sparrow,Melospiza georgiana,5840,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Fox Sparrow,Passerella iliaca,5850,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Eastern Towhee,Pipilo erythrophthalmus,5870,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Spotted Towhee,Pipilo maculatus,5880,0
+White-throated Sparrow,Zonotrichia albicollis,5580,Lark Bunting,Calamospiza melanocorys,6050,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,McCown's Longspur,Rhynchophanes mccownii,5390,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,Vesper Sparrow,Pooecetes gramineus,5400,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,Savannah Sparrow,Passerculus sandwichensis,5420,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,Seaside Sparrow,Ammodramus maritimus,5500,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,Lark Sparrow,Chondestes grammacus,5520,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,White-crowned Sparrow,Zonotrichia leucophrys,5540,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,White-throated Sparrow,Zonotrichia albicollis,5580,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,Song Sparrow,Melospiza melodia,5810,1
+Eastern Towhee,Pipilo erythrophthalmus,5870,Fox Sparrow,Passerella iliaca,5850,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,Spotted Towhee,Pipilo maculatus,5880,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,Canyon Towhee,Melozone fuscus,5910,0
+Eastern Towhee,Pipilo erythrophthalmus,5870,Lark Bunting,Calamospiza melanocorys,6050,0
+Song Sparrow,Melospiza melodia,5810,Lapland Longspur,Calcarius lapponicus,5360,0
+Song Sparrow,Melospiza melodia,5810,Smith's Longspur,Calcarius pictus,5370,0
+Song Sparrow,Melospiza melodia,5810,Chestnut-collared Longspur,Calcarius ornatus,5380,0
+Song Sparrow,Melospiza melodia,5810,McCown's Longspur,Rhynchophanes mccownii,5390,0
+Song Sparrow,Melospiza melodia,5810,Vesper Sparrow,Pooecetes gramineus,5400,0
+Song Sparrow,Melospiza melodia,5810,Savannah Sparrow,Passerculus sandwichensis,5420,0
+Song Sparrow,Melospiza melodia,5810,Baird's Sparrow,Ammodramus bairdii,5450,0
+Song Sparrow,Melospiza melodia,5810,Grasshopper Sparrow,Ammodramus savannarum,5460,0
+Song Sparrow,Melospiza melodia,5810,Henslow's Sparrow,Ammodramus henslowii,5470,0
+Song Sparrow,Melospiza melodia,5810,Le Conte's Sparrow,Ammodramus leconteii,5480,0
+Song Sparrow,Melospiza melodia,5810,Saltmarsh Sharp-tailed Sparrow,Ammodramus caudacutus,5490,0
+Song Sparrow,Melospiza melodia,5810,Nelson's Sharp-tailed Sparrow,Ammodramus nelsoni,5491,0
+Song Sparrow,Melospiza melodia,5810,Seaside Sparrow,Ammodramus maritimus,5500,0
+Song Sparrow,Melospiza melodia,5810,Lark Sparrow,Chondestes grammacus,5520,0
+Song Sparrow,Melospiza melodia,5810,White-crowned Sparrow,Zonotrichia leucophrys,5540,0
+Song Sparrow,Melospiza melodia,5810,Golden-crowned Sparrow,Zonotrichia atricapilla,5570,0
+Song Sparrow,Melospiza melodia,5810,White-throated Sparrow,Zonotrichia albicollis,5580,0
+Song Sparrow,Melospiza melodia,5810,American Tree Sparrow,Spizella arborea,5590,0
+Song Sparrow,Melospiza melodia,5810,Chipping Sparrow,Spizella passerina,5600,1
+Song Sparrow,Melospiza melodia,5810,Clay-colored Sparrow,Spizella pallida,5610,0
+Song Sparrow,Melospiza melodia,5810,Brewer's Sparrow,Spizella breweri,5620,0
+Song Sparrow,Melospiza melodia,5810,Field Sparrow,Spizella pusilla,5630,0
+Song Sparrow,Melospiza melodia,5810,Black-chinned Sparrow,Spizella atrogularis,5650,0
+Song Sparrow,Melospiza melodia,5810,Dark-eyed Junco,Junco hyemalis,5677,0
+Song Sparrow,Melospiza melodia,5810,Yellow-eyed Junco,Junco phaeonotus,5700,0
+Song Sparrow,Melospiza melodia,5810,Black-throated Sparrow,Amphispiza bilineata,5730,0
+Song Sparrow,Melospiza melodia,5810,Sage Sparrow,Amphispiza belli,5740,0
+Song Sparrow,Melospiza melodia,5810,Bachman's Sparrow,Peucaea aestivalis,5750,0
+Song Sparrow,Melospiza melodia,5810,Botteri's Sparrow,Peucaea botterii,5760,0
+Song Sparrow,Melospiza melodia,5810,Cassin's Sparrow,Peucaea cassinii,5780,0
+Song Sparrow,Melospiza melodia,5810,Rufous-winged Sparrow,Peucaea carpalis,5790,0
+Song Sparrow,Melospiza melodia,5810,Rufous-crowned Sparrow,Aimophila ruficeps,5800,0
+Song Sparrow,Melospiza melodia,5810,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+Song Sparrow,Melospiza melodia,5810,Swamp Sparrow,Melospiza georgiana,5840,0
+Song Sparrow,Melospiza melodia,5810,Fox Sparrow,Passerella iliaca,5850,0
+Song Sparrow,Melospiza melodia,5810,Olive Sparrow,Arremonops rufivirgatus,5860,0
+Song Sparrow,Melospiza melodia,5810,Eastern Towhee,Pipilo erythrophthalmus,5870,0
+Song Sparrow,Melospiza melodia,5810,Spotted Towhee,Pipilo maculatus,5880,0
+Song Sparrow,Melospiza melodia,5810,Green-tailed Towhee,Pipilo chlorurus,5900,0
+Song Sparrow,Melospiza melodia,5810,Lark Bunting,Calamospiza melanocorys,6050,0
+American Tree Sparrow,Spizella arborea,5590,Lapland Longspur,Calcarius lapponicus,5360,0
+American Tree Sparrow,Spizella arborea,5590,Smith's Longspur,Calcarius pictus,5370,0
+American Tree Sparrow,Spizella arborea,5590,Vesper Sparrow,Pooecetes gramineus,5400,0
+American Tree Sparrow,Spizella arborea,5590,Savannah Sparrow,Passerculus sandwichensis,5420,1
+American Tree Sparrow,Spizella arborea,5590,Le Conte's Sparrow,Ammodramus leconteii,5480,0
+American Tree Sparrow,Spizella arborea,5590,Nelson's Sharp-tailed Sparrow,Ammodramus nelsoni,5491,0
+American Tree Sparrow,Spizella arborea,5590,White-crowned Sparrow,Zonotrichia leucophrys,5540,0
+American Tree Sparrow,Spizella arborea,5590,Golden-crowned Sparrow,Zonotrichia atricapilla,5570,0
+American Tree Sparrow,Spizella arborea,5590,White-throated Sparrow,Zonotrichia albicollis,5580,0
+American Tree Sparrow,Spizella arborea,5590,Chipping Sparrow,Spizella passerina,5600,0
+American Tree Sparrow,Spizella arborea,5590,Dark-eyed Junco,Junco hyemalis,5677,0
+American Tree Sparrow,Spizella arborea,5590,Song Sparrow,Melospiza melodia,5810,0
+American Tree Sparrow,Spizella arborea,5590,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+American Tree Sparrow,Spizella arborea,5590,Swamp Sparrow,Melospiza georgiana,5840,0
+American Tree Sparrow,Spizella arborea,5590,Fox Sparrow,Passerella iliaca,5850,0
+Field Sparrow,Spizella pusilla,5630,Chestnut-collared Longspur,Calcarius ornatus,5380,0
+Field Sparrow,Spizella pusilla,5630,McCown's Longspur,Rhynchophanes mccownii,5390,0
+Field Sparrow,Spizella pusilla,5630,Savannah Sparrow,Passerculus sandwichensis,5420,0
+Field Sparrow,Spizella pusilla,5630,Baird's Sparrow,Ammodramus bairdii,5450,0
+Field Sparrow,Spizella pusilla,5630,Grasshopper Sparrow,Ammodramus savannarum,5460,0
+Field Sparrow,Spizella pusilla,5630,Henslow's Sparrow,Ammodramus henslowii,5470,0
+Field Sparrow,Spizella pusilla,5630,Le Conte's Sparrow,Ammodramus leconteii,5480,0
+Field Sparrow,Spizella pusilla,5630,Saltmarsh Sharp-tailed Sparrow,Ammodramus caudacutus,5490,0
+Field Sparrow,Spizella pusilla,5630,Nelson's Sharp-tailed Sparrow,Ammodramus nelsoni,5491,0
+Field Sparrow,Spizella pusilla,5630,Seaside Sparrow,Ammodramus maritimus,5500,0
+Field Sparrow,Spizella pusilla,5630,White-throated Sparrow,Zonotrichia albicollis,5580,0
+Field Sparrow,Spizella pusilla,5630,Chipping Sparrow,Spizella passerina,5600,1
+Field Sparrow,Spizella pusilla,5630,Clay-colored Sparrow,Spizella pallida,5610,0
+Field Sparrow,Spizella pusilla,5630,Brewer's Sparrow,Spizella breweri,5620,0
+Field Sparrow,Spizella pusilla,5630,Dark-eyed Junco,Junco hyemalis,5677,0
+Field Sparrow,Spizella pusilla,5630,Black-throated Sparrow,Amphispiza bilineata,5730,0
+Field Sparrow,Spizella pusilla,5630,Bachman's Sparrow,Peucaea aestivalis,5750,0
+Field Sparrow,Spizella pusilla,5630,Cassin's Sparrow,Peucaea cassinii,5780,0
+Field Sparrow,Spizella pusilla,5630,Rufous-crowned Sparrow,Aimophila ruficeps,5800,0
+Field Sparrow,Spizella pusilla,5630,Song Sparrow,Melospiza melodia,5810,0
+Field Sparrow,Spizella pusilla,5630,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+Field Sparrow,Spizella pusilla,5630,Swamp Sparrow,Melospiza georgiana,5840,0
+Clay-colored Sparrow,Spizella pallida,5610,Chestnut-collared Longspur,Calcarius ornatus,5380,0
+Clay-colored Sparrow,Spizella pallida,5610,McCown's Longspur,Rhynchophanes mccownii,5390,0
+Clay-colored Sparrow,Spizella pallida,5610,Savannah Sparrow,Passerculus sandwichensis,5420,1
+Clay-colored Sparrow,Spizella pallida,5610,Baird's Sparrow,Ammodramus bairdii,5450,0
+Clay-colored Sparrow,Spizella pallida,5610,Grasshopper Sparrow,Ammodramus savannarum,5460,0
+Clay-colored Sparrow,Spizella pallida,5610,Henslow's Sparrow,Ammodramus henslowii,5470,0
+Clay-colored Sparrow,Spizella pallida,5610,Le Conte's Sparrow,Ammodramus leconteii,5480,0
+Clay-colored Sparrow,Spizella pallida,5610,Nelson's Sharp-tailed Sparrow,Ammodramus nelsoni,5491,0
+Clay-colored Sparrow,Spizella pallida,5610,Chipping Sparrow,Spizella passerina,5600,0
+Clay-colored Sparrow,Spizella pallida,5610,Brewer's Sparrow,Spizella breweri,5620,0
+Clay-colored Sparrow,Spizella pallida,5610,Field Sparrow,Spizella pusilla,5630,0
+Clay-colored Sparrow,Spizella pallida,5610,Dark-eyed Junco,Junco hyemalis,5677,0
+Clay-colored Sparrow,Spizella pallida,5610,Sage Sparrow,Amphispiza belli,5740,0
+Clay-colored Sparrow,Spizella pallida,5610,Song Sparrow,Melospiza melodia,5810,0
+Clay-colored Sparrow,Spizella pallida,5610,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+Clay-colored Sparrow,Spizella pallida,5610,Swamp Sparrow,Melospiza georgiana,5840,0
+Lark Bunting,Calamospiza melanocorys,6050,Chestnut-collared Longspur,Calcarius ornatus,5380,0
+Lark Bunting,Calamospiza melanocorys,6050,Lark Sparrow,Chondestes grammacus,5520,1
+Chipping Sparrow,Spizella passerina,5600,Chestnut-collared Longspur,Calcarius ornatus,5380,0
+Chipping Sparrow,Spizella passerina,5600,McCown's Longspur,Rhynchophanes mccownii,5390,0
+Chipping Sparrow,Spizella passerina,5600,Savannah Sparrow,Passerculus sandwichensis,5420,1
+Chipping Sparrow,Spizella passerina,5600,Baird's Sparrow,Ammodramus bairdii,5450,0
+Chipping Sparrow,Spizella passerina,5600,Grasshopper Sparrow,Ammodramus savannarum,5460,0
+Chipping Sparrow,Spizella passerina,5600,Henslow's Sparrow,Ammodramus henslowii,5470,0
+Chipping Sparrow,Spizella passerina,5600,Le Conte's Sparrow,Ammodramus leconteii,5480,0
+Chipping Sparrow,Spizella passerina,5600,Saltmarsh Sharp-tailed Sparrow,Ammodramus caudacutus,5490,0
+Chipping Sparrow,Spizella passerina,5600,Nelson's Sharp-tailed Sparrow,Ammodramus nelsoni,5491,0
+Chipping Sparrow,Spizella passerina,5600,Seaside Sparrow,Ammodramus maritimus,5500,0
+Chipping Sparrow,Spizella passerina,5600,American Tree Sparrow,Spizella arborea,5590,0
+Chipping Sparrow,Spizella passerina,5600,Clay-colored Sparrow,Spizella pallida,5610,0
+Chipping Sparrow,Spizella passerina,5600,Brewer's Sparrow,Spizella breweri,5620,0
+Chipping Sparrow,Spizella passerina,5600,Field Sparrow,Spizella pusilla,5630,0
+Chipping Sparrow,Spizella passerina,5600,Black-chinned Sparrow,Spizella atrogularis,5650,0
+Chipping Sparrow,Spizella passerina,5600,Dark-eyed Junco,Junco hyemalis,5677,0
+Chipping Sparrow,Spizella passerina,5600,Yellow-eyed Junco,Junco phaeonotus,5700,0
+Chipping Sparrow,Spizella passerina,5600,Black-throated Sparrow,Amphispiza bilineata,5730,0
+Chipping Sparrow,Spizella passerina,5600,Sage Sparrow,Amphispiza belli,5740,0
+Chipping Sparrow,Spizella passerina,5600,Bachman's Sparrow,Peucaea aestivalis,5750,0
+Chipping Sparrow,Spizella passerina,5600,Botteri's Sparrow,Peucaea botterii,5760,0
+Chipping Sparrow,Spizella passerina,5600,Cassin's Sparrow,Peucaea cassinii,5780,0
+Chipping Sparrow,Spizella passerina,5600,Rufous-winged Sparrow,Peucaea carpalis,5790,0
+Chipping Sparrow,Spizella passerina,5600,Rufous-crowned Sparrow,Aimophila ruficeps,5800,0
+Chipping Sparrow,Spizella passerina,5600,Song Sparrow,Melospiza melodia,5810,0
+Chipping Sparrow,Spizella passerina,5600,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+Chipping Sparrow,Spizella passerina,5600,Swamp Sparrow,Melospiza georgiana,5840,0
+Chipping Sparrow,Spizella passerina,5600,Olive Sparrow,Arremonops rufivirgatus,5860,0
+Chestnut-collared Longspur,Calcarius ornatus,5380,McCown's Longspur,Rhynchophanes mccownii,5390,0
+Chestnut-collared Longspur,Calcarius ornatus,5380,Lark Bunting,Calamospiza melanocorys,6050,1
+Canyon Towhee,Melozone fuscus,5910,Vesper Sparrow,Pooecetes gramineus,5400,0
+Canyon Towhee,Melozone fuscus,5910,Lark Sparrow,Chondestes grammacus,5520,1
+Canyon Towhee,Melozone fuscus,5910,White-crowned Sparrow,Zonotrichia leucophrys,5540,0
+Canyon Towhee,Melozone fuscus,5910,Fox Sparrow,Passerella iliaca,5850,0
+Canyon Towhee,Melozone fuscus,5910,Olive Sparrow,Arremonops rufivirgatus,5860,0
+Canyon Towhee,Melozone fuscus,5910,Eastern Towhee,Pipilo erythrophthalmus,5870,0
+Canyon Towhee,Melozone fuscus,5910,Spotted Towhee,Pipilo maculatus,5880,0
+Canyon Towhee,Melozone fuscus,5910,Green-tailed Towhee,Pipilo chlorurus,5900,0
+Canyon Towhee,Melozone fuscus,5910,Abert's Towhee,Melozone aberti,5920,0
+Canyon Towhee,Melozone fuscus,5910,Lark Bunting,Calamospiza melanocorys,6050,0
+Cassin's Sparrow,Peucaea cassinii,5780,McCown's Longspur,Rhynchophanes mccownii,5390,0
+Cassin's Sparrow,Peucaea cassinii,5780,Vesper Sparrow,Pooecetes gramineus,5400,0
+Cassin's Sparrow,Peucaea cassinii,5780,Savannah Sparrow,Passerculus sandwichensis,5420,0
+Cassin's Sparrow,Peucaea cassinii,5780,Grasshopper Sparrow,Ammodramus savannarum,5460,0
+Cassin's Sparrow,Peucaea cassinii,5780,Lark Sparrow,Chondestes grammacus,5520,1
+Cassin's Sparrow,Peucaea cassinii,5780,White-crowned Sparrow,Zonotrichia leucophrys,5540,0
+Cassin's Sparrow,Peucaea cassinii,5780,Chipping Sparrow,Spizella passerina,5600,0
+Cassin's Sparrow,Peucaea cassinii,5780,Brewer's Sparrow,Spizella breweri,5620,0
+Cassin's Sparrow,Peucaea cassinii,5780,Field Sparrow,Spizella pusilla,5630,0
+Cassin's Sparrow,Peucaea cassinii,5780,Black-chinned Sparrow,Spizella atrogularis,5650,0
+Cassin's Sparrow,Peucaea cassinii,5780,Dark-eyed Junco,Junco hyemalis,5677,0
+Cassin's Sparrow,Peucaea cassinii,5780,Yellow-eyed Junco,Junco phaeonotus,5700,0
+Cassin's Sparrow,Peucaea cassinii,5780,Black-throated Sparrow,Amphispiza bilineata,5730,0
+Cassin's Sparrow,Peucaea cassinii,5780,Sage Sparrow,Amphispiza belli,5740,0
+Cassin's Sparrow,Peucaea cassinii,5780,Botteri's Sparrow,Peucaea botterii,5760,0
+Cassin's Sparrow,Peucaea cassinii,5780,Rufous-winged Sparrow,Peucaea carpalis,5790,0
+Cassin's Sparrow,Peucaea cassinii,5780,Rufous-crowned Sparrow,Aimophila ruficeps,5800,0
+Cassin's Sparrow,Peucaea cassinii,5780,Song Sparrow,Melospiza melodia,5810,0
+Cassin's Sparrow,Peucaea cassinii,5780,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+Cassin's Sparrow,Peucaea cassinii,5780,Fox Sparrow,Passerella iliaca,5850,0
+Cassin's Sparrow,Peucaea cassinii,5780,Olive Sparrow,Arremonops rufivirgatus,5860,0
+Cassin's Sparrow,Peucaea cassinii,5780,Green-tailed Towhee,Pipilo chlorurus,5900,0
+Cassin's Sparrow,Peucaea cassinii,5780,Lark Bunting,Calamospiza melanocorys,6050,0
+Abert's Towhee,Melozone aberti,5920,Vesper Sparrow,Pooecetes gramineus,5400,0
+Abert's Towhee,Melozone aberti,5920,Lark Sparrow,Chondestes grammacus,5520,0
+Abert's Towhee,Melozone aberti,5920,Spotted Towhee,Pipilo maculatus,5880,0
+Abert's Towhee,Melozone aberti,5920,Green-tailed Towhee,Pipilo chlorurus,5900,0
+Abert's Towhee,Melozone aberti,5920,Canyon Towhee,Melozone fuscus,5910,1
+Sprague's Pipit,Anthus spragueii,7000,Vesper Sparrow,Pooecetes gramineus,5400,1
+Dark-eyed Junco,Junco hyemalis,5677,Savannah Sparrow,Passerculus sandwichensis,5420,1
+Dark-eyed Junco,Junco hyemalis,5677,Song Sparrow,Melospiza melodia,5810,0
+Le Conte's Sparrow,Ammodramus leconteii,5480,Savannah Sparrow,Passerculus sandwichensis,5420,1
+Le Conte's Sparrow,Ammodramus leconteii,5480,Chipping Sparrow,Spizella passerina,5600,0
+Lark Sparrow,Chondestes grammacus,5520,Baird's Sparrow,Ammodramus bairdii,5450,1
+Grasshopper Sparrow,Ammodramus savannarum,5460,Baird's Sparrow,Ammodramus bairdii,5450,0
+Grasshopper Sparrow,Ammodramus savannarum,5460,Chipping Sparrow,Spizella passerina,5600,1
+Baird's Sparrow,Ammodramus bairdii,5450,Grasshopper Sparrow,Ammodramus savannarum,5460,1
+Baird's Sparrow,Ammodramus bairdii,5450,Lark Sparrow,Chondestes grammacus,5520,0
+Nelson's Sharp-tailed Sparrow,Ammodramus nelsoni,5491,Le Conte's Sparrow,Ammodramus leconteii,5480,0
+Nelson's Sharp-tailed Sparrow,Ammodramus nelsoni,5491,Chipping Sparrow,Spizella passerina,5600,1
+Lincoln's Sparrow,Melospiza lincolnii,5830,White-crowned Sparrow,Zonotrichia leucophrys,5540,0
+Lincoln's Sparrow,Melospiza lincolnii,5830,Swamp Sparrow,Melospiza georgiana,5840,0
+Lincoln's Sparrow,Melospiza lincolnii,5830,Fox Sparrow,Passerella iliaca,5850,1
+Fox Sparrow,Passerella iliaca,5850,White-crowned Sparrow,Zonotrichia leucophrys,5540,1
+Fox Sparrow,Passerella iliaca,5850,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+White-crowned Sparrow,Zonotrichia leucophrys,5540,Golden-crowned Sparrow,Zonotrichia atricapilla,5570,0
+White-crowned Sparrow,Zonotrichia leucophrys,5540,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+White-crowned Sparrow,Zonotrichia leucophrys,5540,Fox Sparrow,Passerella iliaca,5850,1
+Swamp Sparrow,Melospiza georgiana,5840,White-throated Sparrow,Zonotrichia albicollis,5580,1
+Swamp Sparrow,Melospiza georgiana,5840,Lincoln's Sparrow,Melospiza lincolnii,5830,0
+Rufous-crowned Sparrow,Aimophila ruficeps,5800,Black-chinned Sparrow,Spizella atrogularis,5650,1
+Black-throated Sparrow,Amphispiza bilineata,5730,Black-chinned Sparrow,Spizella atrogularis,5650,1
+Black-throated Sparrow,Amphispiza bilineata,5730,Rufous-crowned Sparrow,Aimophila ruficeps,5800,0
+Black-chinned Sparrow,Spizella atrogularis,5650,Black-throated Sparrow,Amphispiza bilineata,5730,1
+Black-chinned Sparrow,Spizella atrogularis,5650,Rufous-crowned Sparrow,Aimophila ruficeps,5800,0
+Vesper Sparrow,Pooecetes gramineus,5400,Song Sparrow,Melospiza melodia,5810,1
+Vesper Sparrow,Pooecetes gramineus,5400,Sprague's Pipit,Anthus spragueii,7000,0
+Sage Sparrow,Amphispiza belli,5740,Song Sparrow,Melospiza melodia,5810,1
+Green-tailed Towhee,Pipilo chlorurus,5900,Spotted Towhee,Pipilo maculatus,5880,1
+California Towhee,Melozone crissalis,5911,Spotted Towhee,Pipilo maculatus,5880,1
+Spotted Towhee,Pipilo maculatus,5880,Green-tailed Towhee,Pipilo chlorurus,5900,1
+Rose-breasted Grosbeak,Pheucticus ludovicianus,5950,Northern Cardinal,Cardinalis cardinalis,5930,1
+Rose-breasted Grosbeak,Pheucticus ludovicianus,5950,Black-headed Grosbeak,Pheucticus melanocephalus,5960,0
+Rose-breasted Grosbeak,Pheucticus ludovicianus,5950,Blue Grosbeak,Passerina caerulea,5970,0
+Rose-breasted Grosbeak,Pheucticus ludovicianus,5950,Dickcissel,Spiza americana,6040,0
+Blue Grosbeak,Passerina caerulea,5970,Northern Cardinal,Cardinalis cardinalis,5930,1
+Blue Grosbeak,Passerina caerulea,5970,Pyrrhuloxia,Cardinalis sinuatus,5940,0
+Blue Grosbeak,Passerina caerulea,5970,Rose-breasted Grosbeak,Pheucticus ludovicianus,5950,0
+Blue Grosbeak,Passerina caerulea,5970,Black-headed Grosbeak,Pheucticus melanocephalus,5960,0
+Blue Grosbeak,Passerina caerulea,5970,Indigo Bunting,Passerina cyanea,5980,0
+Blue Grosbeak,Passerina caerulea,5970,Lazuli Bunting,Passerina amoena,5990,0
+Blue Grosbeak,Passerina caerulea,5970,Painted Bunting,Passerina ciris,6010,0
+Blue Grosbeak,Passerina caerulea,5970,Dickcissel,Spiza americana,6040,0
+Pyrrhuloxia,Cardinalis sinuatus,5940,Northern Cardinal,Cardinalis cardinalis,5930,1
+Pyrrhuloxia,Cardinalis sinuatus,5940,Blue Grosbeak,Passerina caerulea,5970,0
+Black-headed Grosbeak,Pheucticus melanocephalus,5960,Northern Cardinal,Cardinalis cardinalis,5930,0
+Black-headed Grosbeak,Pheucticus melanocephalus,5960,Pyrrhuloxia,Cardinalis sinuatus,5940,0
+Black-headed Grosbeak,Pheucticus melanocephalus,5960,Rose-breasted Grosbeak,Pheucticus ludovicianus,5950,0
+Black-headed Grosbeak,Pheucticus melanocephalus,5960,Blue Grosbeak,Passerina caerulea,5970,1
+Black-headed Grosbeak,Pheucticus melanocephalus,5960,Dickcissel,Spiza americana,6040,0
+Dickcissel,Spiza americana,6040,Northern Cardinal,Cardinalis cardinalis,5930,0
+Dickcissel,Spiza americana,6040,Pyrrhuloxia,Cardinalis sinuatus,5940,0
+Dickcissel,Spiza americana,6040,Rose-breasted Grosbeak,Pheucticus ludovicianus,5950,0
+Dickcissel,Spiza americana,6040,Black-headed Grosbeak,Pheucticus melanocephalus,5960,0
+Dickcissel,Spiza americana,6040,Blue Grosbeak,Passerina caerulea,5970,0
+Dickcissel,Spiza americana,6040,Indigo Bunting,Passerina cyanea,5980,1
+Dickcissel,Spiza americana,6040,Lazuli Bunting,Passerina amoena,5990,0
+Dickcissel,Spiza americana,6040,Painted Bunting,Passerina ciris,6010,0
+Northern Cardinal,Cardinalis cardinalis,5930,Rose-breasted Grosbeak,Pheucticus ludovicianus,5950,0
+Northern Cardinal,Cardinalis cardinalis,5930,Black-headed Grosbeak,Pheucticus melanocephalus,5960,0
+Northern Cardinal,Cardinalis cardinalis,5930,Blue Grosbeak,Passerina caerulea,5970,1
+Northern Cardinal,Cardinalis cardinalis,5930,Dickcissel,Spiza americana,6040,0
+Painted Bunting,Passerina ciris,6010,Blue Grosbeak,Passerina caerulea,5970,1
+Painted Bunting,Passerina ciris,6010,Indigo Bunting,Passerina cyanea,5980,0
+Painted Bunting,Passerina ciris,6010,Varied Bunting,Passerina versicolor,6000,0
+Painted Bunting,Passerina ciris,6010,Dickcissel,Spiza americana,6040,0
+Indigo Bunting,Passerina cyanea,5980,Blue Grosbeak,Passerina caerulea,5970,1
+Indigo Bunting,Passerina cyanea,5980,Lazuli Bunting,Passerina amoena,5990,0
+Indigo Bunting,Passerina cyanea,5980,Varied Bunting,Passerina versicolor,6000,0
+Indigo Bunting,Passerina cyanea,5980,Painted Bunting,Passerina ciris,6010,0
+Indigo Bunting,Passerina cyanea,5980,Dickcissel,Spiza americana,6040,0
+Summer Tanager,Piranga rubra,6100,Western Tanager,Piranga ludoviciana,6070,0
+Summer Tanager,Piranga rubra,6100,Hepatic Tanager,Piranga flava,6090,1
+Western Tanager,Piranga ludoviciana,6070,Hepatic Tanager,Piranga flava,6090,1
+Scarlet Tanager,Piranga olivacea,6080,Summer Tanager,Piranga rubra,6100,1
+Bank Swallow,Riparia riparia,6160,Cliff Swallow,Petrochelidon pyrrhonota,6120,0
+Bank Swallow,Riparia riparia,6160,Tree Swallow,Tachycineta bicolor,6140,1
+Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,Cliff Swallow,Petrochelidon pyrrhonota,6120,0
+Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,Cave Swallow,Petrochelidon fulva,6121,0
+Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,Barn Swallow,Hirundo rustica,6130,1
+Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,Tree Swallow,Tachycineta bicolor,6140,0
+Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,Violet-green Swallow,Tachycineta thalassina,6150,0
+Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,Bank Swallow,Riparia riparia,6160,0
+Barn Swallow,Hirundo rustica,6130,Cliff Swallow,Petrochelidon pyrrhonota,6120,0
+Barn Swallow,Hirundo rustica,6130,Cave Swallow,Petrochelidon fulva,6121,0
+Barn Swallow,Hirundo rustica,6130,Tree Swallow,Tachycineta bicolor,6140,0
+Barn Swallow,Hirundo rustica,6130,Violet-green Swallow,Tachycineta thalassina,6150,0
+Barn Swallow,Hirundo rustica,6130,Bank Swallow,Riparia riparia,6160,1
+Barn Swallow,Hirundo rustica,6130,Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,0
+Tree Swallow,Tachycineta bicolor,6140,Cliff Swallow,Petrochelidon pyrrhonota,6120,0
+Tree Swallow,Tachycineta bicolor,6140,Barn Swallow,Hirundo rustica,6130,0
+Tree Swallow,Tachycineta bicolor,6140,Violet-green Swallow,Tachycineta thalassina,6150,0
+Tree Swallow,Tachycineta bicolor,6140,Bank Swallow,Riparia riparia,6160,1
+Tree Swallow,Tachycineta bicolor,6140,Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,0
+Cliff Swallow,Petrochelidon pyrrhonota,6120,Cave Swallow,Petrochelidon fulva,6121,0
+Cliff Swallow,Petrochelidon pyrrhonota,6120,Barn Swallow,Hirundo rustica,6130,1
+Cliff Swallow,Petrochelidon pyrrhonota,6120,Tree Swallow,Tachycineta bicolor,6140,0
+Cliff Swallow,Petrochelidon pyrrhonota,6120,Violet-green Swallow,Tachycineta thalassina,6150,0
+Cliff Swallow,Petrochelidon pyrrhonota,6120,Bank Swallow,Riparia riparia,6160,0
+Cliff Swallow,Petrochelidon pyrrhonota,6120,Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,0
+Violet-green Swallow,Tachycineta thalassina,6150,Barn Swallow,Hirundo rustica,6130,1
+Violet-green Swallow,Tachycineta thalassina,6150,Northern Rough-winged Swallow,Stelgidopteryx serripennis,6170,0
+Cedar Waxwing,Bombycilla cedrorum,6190,Bohemian Waxwing,Bombycilla garrulus,6180,1
+Northern Mockingbird,Mimus polyglottos,7030,Loggerhead Shrike,Lanius ludovicianus,6220,1
+Northern Mockingbird,Mimus polyglottos,7030,Sage Thrasher,Oreoscoptes montanus,7020,0
+Northern Mockingbird,Mimus polyglottos,7030,Gray Catbird,Dumetella carolinensis,7040,0
+Northern Mockingbird,Mimus polyglottos,7030,Brown Thrasher,Toxostoma rufum,7050,0
+Northern Mockingbird,Mimus polyglottos,7030,Bendire's Thrasher,Toxostoma bendirei,7080,0
+Northern Mockingbird,Mimus polyglottos,7030,California Thrasher,Toxostoma redivivum,7100,0
+Yellow-throated Vireo,Vireo flavifrons,6280,Black-whiskered Vireo,Vireo altiloquus,6230,0
+Yellow-throated Vireo,Vireo flavifrons,6280,Red-eyed Vireo,Vireo olivaceus,6240,1
+Yellow-throated Vireo,Vireo flavifrons,6280,Philadelphia Vireo,Vireo philadelphicus,6260,0
+Yellow-throated Vireo,Vireo flavifrons,6280,Warbling Vireo,Vireo gilvus,6270,0
+Yellow-throated Vireo,Vireo flavifrons,6280,Blue-headed Vireo,Vireo solitarius,6290,0
+Yellow-throated Vireo,Vireo flavifrons,6280,Black-capped Vireo,Vireo atricapilla,6300,0
+Yellow-throated Vireo,Vireo flavifrons,6280,White-eyed Vireo,Vireo griseus,6310,0
+Yellow-throated Vireo,Vireo flavifrons,6280,Bell's Vireo,Vireo bellii,6330,0
+Blue-headed Vireo,Vireo solitarius,6290,Red-eyed Vireo,Vireo olivaceus,6240,1
+Blue-headed Vireo,Vireo solitarius,6290,Philadelphia Vireo,Vireo philadelphicus,6260,0
+Blue-headed Vireo,Vireo solitarius,6290,Warbling Vireo,Vireo gilvus,6270,0
+Blue-headed Vireo,Vireo solitarius,6290,Yellow-throated Vireo,Vireo flavifrons,6280,0
+Blue-headed Vireo,Vireo solitarius,6290,White-eyed Vireo,Vireo griseus,6310,0
+White-eyed Vireo,Vireo griseus,6310,Black-whiskered Vireo,Vireo altiloquus,6230,0
+White-eyed Vireo,Vireo griseus,6310,Red-eyed Vireo,Vireo olivaceus,6240,1
+White-eyed Vireo,Vireo griseus,6310,Warbling Vireo,Vireo gilvus,6270,0
+White-eyed Vireo,Vireo griseus,6310,Yellow-throated Vireo,Vireo flavifrons,6280,0
+White-eyed Vireo,Vireo griseus,6310,Blue-headed Vireo,Vireo solitarius,6290,0
+White-eyed Vireo,Vireo griseus,6310,Black-capped Vireo,Vireo atricapilla,6300,0
+White-eyed Vireo,Vireo griseus,6310,Bell's Vireo,Vireo bellii,6330,0
+Philadelphia Vireo,Vireo philadelphicus,6260,Red-eyed Vireo,Vireo olivaceus,6240,1
+Philadelphia Vireo,Vireo philadelphicus,6260,Blue-headed Vireo,Vireo solitarius,6290,0
+Warbling Vireo,Vireo gilvus,6270,Red-eyed Vireo,Vireo olivaceus,6240,1
+Warbling Vireo,Vireo gilvus,6270,Philadelphia Vireo,Vireo philadelphicus,6260,0
+Warbling Vireo,Vireo gilvus,6270,Yellow-throated Vireo,Vireo flavifrons,6280,0
+Warbling Vireo,Vireo gilvus,6270,Blue-headed Vireo,Vireo solitarius,6290,0
+Warbling Vireo,Vireo gilvus,6270,Plumbeous Vireo,Vireo plumbeus,6291,0
+Warbling Vireo,Vireo gilvus,6270,Cassin's Vireo,Vireo cassinii,6292,0
+Warbling Vireo,Vireo gilvus,6270,White-eyed Vireo,Vireo griseus,6310,0
+Warbling Vireo,Vireo gilvus,6270,Hutton's Vireo,Vireo huttoni,6320,0
+Warbling Vireo,Vireo gilvus,6270,Bell's Vireo,Vireo bellii,6330,0
+Warbling Vireo,Vireo gilvus,6270,Gray Vireo,Vireo vicinior,6340,0
+Red-eyed Vireo,Vireo olivaceus,6240,Philadelphia Vireo,Vireo philadelphicus,6260,0
+Red-eyed Vireo,Vireo olivaceus,6240,Warbling Vireo,Vireo gilvus,6270,1
+Red-eyed Vireo,Vireo olivaceus,6240,Yellow-throated Vireo,Vireo flavifrons,6280,0
+Red-eyed Vireo,Vireo olivaceus,6240,Blue-headed Vireo,Vireo solitarius,6290,0
+Red-eyed Vireo,Vireo olivaceus,6240,White-eyed Vireo,Vireo griseus,6310,0
+Red-eyed Vireo,Vireo olivaceus,6240,Bell's Vireo,Vireo bellii,6330,0
+Hutton's Vireo,Vireo huttoni,6320,Warbling Vireo,Vireo gilvus,6270,1
+Hutton's Vireo,Vireo huttoni,6320,Cassin's Vireo,Vireo cassinii,6292,0
+Cassin's Vireo,Vireo cassinii,6292,Warbling Vireo,Vireo gilvus,6270,1
+Cassin's Vireo,Vireo cassinii,6292,Hutton's Vireo,Vireo huttoni,6320,0
+Bell's Vireo,Vireo bellii,6330,Warbling Vireo,Vireo gilvus,6270,1
+Bell's Vireo,Vireo bellii,6330,Yellow-throated Vireo,Vireo flavifrons,6280,0
+Plumbeous Vireo,Vireo plumbeus,6291,Warbling Vireo,Vireo gilvus,6270,1
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Black-and-white Warbler,Mniotilta varia,6360,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Prothonotary Warbler,Protonotaria citrea,6370,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Swainson's Warbler,Limnothlypis swainsonii,6380,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Blue-winged Warbler,Vermivora cyanoptera,6410,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Nashville Warbler,Vermivora ruficapilla,6450,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Orange-crowned Warbler,Vermivora celata,6460,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Tennessee Warbler,Vermivora peregrina,6470,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Northern Parula,Parula americana,6480,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Cape May Warbler,Dendroica tigrina,6500,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Yellow Warbler,Dendroica petechia,6520,1
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Magnolia Warbler,Dendroica magnolia,6570,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Cerulean Warbler,Dendroica cerulea,6580,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Bay-breasted Warbler,Dendroica castanea,6600,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Blackpoll Warbler,Dendroica striata,6610,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Blackburnian Warbler,Dendroica fusca,6620,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Yellow-throated Warbler,Dendroica dominica,6630,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Black-throated Green Warbler,Dendroica virens,6670,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Kirtland's Warbler,Dendroica kirtlandii,6700,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Pine Warbler,Dendroica pinus,6710,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Palm Warbler,Dendroica palmarum,6720,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Prairie Warbler,Dendroica discolor,6730,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Ovenbird,Seiurus aurocapilla,6740,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Kentucky Warbler,Oporornis formosus,6770,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Connecticut Warbler,Oporornis agilis,6780,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Mourning Warbler,Oporornis philadelphia,6790,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Common Yellowthroat,Geothlypis trichas,6810,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Hooded Warbler,Wilsonia citrina,6840,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Wilson's Warbler,Wilsonia pusilla,6850,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,Canada Warbler,Wilsonia canadensis,6860,0
+Chestnut-sided Warbler,Dendroica pensylvanica,6590,American Redstart,Setophaga ruticilla,6870,0
+Yellow Warbler,Dendroica petechia,6520,Black-and-white Warbler,Mniotilta varia,6360,0
+Yellow Warbler,Dendroica petechia,6520,Prothonotary Warbler,Protonotaria citrea,6370,0
+Yellow Warbler,Dendroica petechia,6520,Swainson's Warbler,Limnothlypis swainsonii,6380,0
+Yellow Warbler,Dendroica petechia,6520,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Yellow Warbler,Dendroica petechia,6520,Blue-winged Warbler,Vermivora cyanoptera,6410,0
+Yellow Warbler,Dendroica petechia,6520,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Yellow Warbler,Dendroica petechia,6520,Lucy's Warbler,Vermivora luciae,6430,0
+Yellow Warbler,Dendroica petechia,6520,Virginia's Warbler,Vermivora virginiae,6440,0
+Yellow Warbler,Dendroica petechia,6520,Nashville Warbler,Vermivora ruficapilla,6450,0
+Yellow Warbler,Dendroica petechia,6520,Orange-crowned Warbler,Vermivora celata,6460,0
+Yellow Warbler,Dendroica petechia,6520,Tennessee Warbler,Vermivora peregrina,6470,0
+Yellow Warbler,Dendroica petechia,6520,Northern Parula,Parula americana,6480,0
+Yellow Warbler,Dendroica petechia,6520,Cape May Warbler,Dendroica tigrina,6500,0
+Yellow Warbler,Dendroica petechia,6520,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Yellow Warbler,Dendroica petechia,6520,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Yellow Warbler,Dendroica petechia,6520,Magnolia Warbler,Dendroica magnolia,6570,0
+Yellow Warbler,Dendroica petechia,6520,Cerulean Warbler,Dendroica cerulea,6580,0
+Yellow Warbler,Dendroica petechia,6520,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Yellow Warbler,Dendroica petechia,6520,Bay-breasted Warbler,Dendroica castanea,6600,0
+Yellow Warbler,Dendroica petechia,6520,Blackpoll Warbler,Dendroica striata,6610,0
+Yellow Warbler,Dendroica petechia,6520,Blackburnian Warbler,Dendroica fusca,6620,0
+Yellow Warbler,Dendroica petechia,6520,Yellow-throated Warbler,Dendroica dominica,6630,0
+Yellow Warbler,Dendroica petechia,6520,Grace's Warbler,Dendroica graciae,6640,0
+Yellow Warbler,Dendroica petechia,6520,Black-throated Gray Warbler,Dendroica nigrescens,6650,0
+Yellow Warbler,Dendroica petechia,6520,Black-throated Green Warbler,Dendroica virens,6670,0
+Yellow Warbler,Dendroica petechia,6520,Townsend's Warbler,Dendroica townsendi,6680,0
+Yellow Warbler,Dendroica petechia,6520,Hermit Warbler,Dendroica occidentalis,6690,0
+Yellow Warbler,Dendroica petechia,6520,Kirtland's Warbler,Dendroica kirtlandii,6700,0
+Yellow Warbler,Dendroica petechia,6520,Pine Warbler,Dendroica pinus,6710,0
+Yellow Warbler,Dendroica petechia,6520,Palm Warbler,Dendroica palmarum,6720,0
+Yellow Warbler,Dendroica petechia,6520,Prairie Warbler,Dendroica discolor,6730,0
+Yellow Warbler,Dendroica petechia,6520,Ovenbird,Seiurus aurocapilla,6740,0
+Yellow Warbler,Dendroica petechia,6520,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Yellow Warbler,Dendroica petechia,6520,Louisiana Waterthrush,Parkesia motacilla,6760,0
+Yellow Warbler,Dendroica petechia,6520,Kentucky Warbler,Oporornis formosus,6770,0
+Yellow Warbler,Dendroica petechia,6520,Connecticut Warbler,Oporornis agilis,6780,0
+Yellow Warbler,Dendroica petechia,6520,Mourning Warbler,Oporornis philadelphia,6790,0
+Yellow Warbler,Dendroica petechia,6520,MacGillivray's Warbler,Oporornis tolmiei,6800,0
+Yellow Warbler,Dendroica petechia,6520,Common Yellowthroat,Geothlypis trichas,6810,1
+Yellow Warbler,Dendroica petechia,6520,Hooded Warbler,Wilsonia citrina,6840,0
+Yellow Warbler,Dendroica petechia,6520,Wilson's Warbler,Wilsonia pusilla,6850,0
+Yellow Warbler,Dendroica petechia,6520,Canada Warbler,Wilsonia canadensis,6860,0
+Yellow Warbler,Dendroica petechia,6520,American Redstart,Setophaga ruticilla,6870,0
+Yellow Warbler,Dendroica petechia,6520,Painted Redstart,Myioborus pictus,6880,0
+Yellow Warbler,Dendroica petechia,6520,Red-faced Warbler,Cardellina rubrifrons,6900,0
+Prothonotary Warbler,Protonotaria citrea,6370,Black-and-white Warbler,Mniotilta varia,6360,0
+Prothonotary Warbler,Protonotaria citrea,6370,Yellow-throated Warbler,Dendroica dominica,6630,1
+Prothonotary Warbler,Protonotaria citrea,6370,Pine Warbler,Dendroica pinus,6710,0
+Prairie Warbler,Dendroica discolor,6730,Black-and-white Warbler,Mniotilta varia,6360,0
+Prairie Warbler,Dendroica discolor,6730,Prothonotary Warbler,Protonotaria citrea,6370,0
+Prairie Warbler,Dendroica discolor,6730,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Prairie Warbler,Dendroica discolor,6730,Blue-winged Warbler,Vermivora cyanoptera,6410,0
+Prairie Warbler,Dendroica discolor,6730,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Prairie Warbler,Dendroica discolor,6730,Nashville Warbler,Vermivora ruficapilla,6450,0
+Prairie Warbler,Dendroica discolor,6730,Northern Parula,Parula americana,6480,0
+Prairie Warbler,Dendroica discolor,6730,Yellow Warbler,Dendroica petechia,6520,0
+Prairie Warbler,Dendroica discolor,6730,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Prairie Warbler,Dendroica discolor,6730,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Prairie Warbler,Dendroica discolor,6730,Magnolia Warbler,Dendroica magnolia,6570,0
+Prairie Warbler,Dendroica discolor,6730,Cerulean Warbler,Dendroica cerulea,6580,0
+Prairie Warbler,Dendroica discolor,6730,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Prairie Warbler,Dendroica discolor,6730,Bay-breasted Warbler,Dendroica castanea,6600,0
+Prairie Warbler,Dendroica discolor,6730,Blackpoll Warbler,Dendroica striata,6610,0
+Prairie Warbler,Dendroica discolor,6730,Blackburnian Warbler,Dendroica fusca,6620,0
+Prairie Warbler,Dendroica discolor,6730,Yellow-throated Warbler,Dendroica dominica,6630,0
+Prairie Warbler,Dendroica discolor,6730,Black-throated Green Warbler,Dendroica virens,6670,0
+Prairie Warbler,Dendroica discolor,6730,Pine Warbler,Dendroica pinus,6710,0
+Prairie Warbler,Dendroica discolor,6730,Kentucky Warbler,Oporornis formosus,6770,0
+Prairie Warbler,Dendroica discolor,6730,Mourning Warbler,Oporornis philadelphia,6790,0
+Prairie Warbler,Dendroica discolor,6730,Common Yellowthroat,Geothlypis trichas,6810,1
+Prairie Warbler,Dendroica discolor,6730,Hooded Warbler,Wilsonia citrina,6840,0
+Prairie Warbler,Dendroica discolor,6730,Wilson's Warbler,Wilsonia pusilla,6850,0
+Prairie Warbler,Dendroica discolor,6730,Canada Warbler,Wilsonia canadensis,6860,0
+Prairie Warbler,Dendroica discolor,6730,American Redstart,Setophaga ruticilla,6870,0
+Black-throated Green Warbler,Dendroica virens,6670,Black-and-white Warbler,Mniotilta varia,6360,0
+Black-throated Green Warbler,Dendroica virens,6670,Prothonotary Warbler,Protonotaria citrea,6370,0
+Black-throated Green Warbler,Dendroica virens,6670,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Black-throated Green Warbler,Dendroica virens,6670,Blue-winged Warbler,Vermivora cyanoptera,6410,0
+Black-throated Green Warbler,Dendroica virens,6670,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Black-throated Green Warbler,Dendroica virens,6670,Nashville Warbler,Vermivora ruficapilla,6450,0
+Black-throated Green Warbler,Dendroica virens,6670,Orange-crowned Warbler,Vermivora celata,6460,0
+Black-throated Green Warbler,Dendroica virens,6670,Tennessee Warbler,Vermivora peregrina,6470,0
+Black-throated Green Warbler,Dendroica virens,6670,Northern Parula,Parula americana,6480,0
+Black-throated Green Warbler,Dendroica virens,6670,Cape May Warbler,Dendroica tigrina,6500,0
+Black-throated Green Warbler,Dendroica virens,6670,Yellow Warbler,Dendroica petechia,6520,1
+Black-throated Green Warbler,Dendroica virens,6670,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Black-throated Green Warbler,Dendroica virens,6670,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Black-throated Green Warbler,Dendroica virens,6670,Magnolia Warbler,Dendroica magnolia,6570,0
+Black-throated Green Warbler,Dendroica virens,6670,Cerulean Warbler,Dendroica cerulea,6580,0
+Black-throated Green Warbler,Dendroica virens,6670,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Black-throated Green Warbler,Dendroica virens,6670,Bay-breasted Warbler,Dendroica castanea,6600,0
+Black-throated Green Warbler,Dendroica virens,6670,Blackpoll Warbler,Dendroica striata,6610,0
+Black-throated Green Warbler,Dendroica virens,6670,Blackburnian Warbler,Dendroica fusca,6620,0
+Black-throated Green Warbler,Dendroica virens,6670,Yellow-throated Warbler,Dendroica dominica,6630,0
+Black-throated Green Warbler,Dendroica virens,6670,Kirtland's Warbler,Dendroica kirtlandii,6700,0
+Black-throated Green Warbler,Dendroica virens,6670,Pine Warbler,Dendroica pinus,6710,0
+Black-throated Green Warbler,Dendroica virens,6670,Palm Warbler,Dendroica palmarum,6720,0
+Black-throated Green Warbler,Dendroica virens,6670,Prairie Warbler,Dendroica discolor,6730,0
+Black-throated Green Warbler,Dendroica virens,6670,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Black-throated Green Warbler,Dendroica virens,6670,Kentucky Warbler,Oporornis formosus,6770,0
+Black-throated Green Warbler,Dendroica virens,6670,Connecticut Warbler,Oporornis agilis,6780,0
+Black-throated Green Warbler,Dendroica virens,6670,Mourning Warbler,Oporornis philadelphia,6790,0
+Black-throated Green Warbler,Dendroica virens,6670,Common Yellowthroat,Geothlypis trichas,6810,0
+Black-throated Green Warbler,Dendroica virens,6670,Hooded Warbler,Wilsonia citrina,6840,0
+Black-throated Green Warbler,Dendroica virens,6670,Wilson's Warbler,Wilsonia pusilla,6850,0
+Black-throated Green Warbler,Dendroica virens,6670,Canada Warbler,Wilsonia canadensis,6860,0
+Black-throated Green Warbler,Dendroica virens,6670,American Redstart,Setophaga ruticilla,6870,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Black-and-white Warbler,Mniotilta varia,6360,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Prothonotary Warbler,Protonotaria citrea,6370,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Blue-winged Warbler,Vermivora cyanoptera,6410,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Lucy's Warbler,Vermivora luciae,6430,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Virginia's Warbler,Vermivora virginiae,6440,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Nashville Warbler,Vermivora ruficapilla,6450,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Orange-crowned Warbler,Vermivora celata,6460,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Tennessee Warbler,Vermivora peregrina,6470,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Northern Parula,Parula americana,6480,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Tropical Parula,Parula pitiayumi,6490,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Cape May Warbler,Dendroica tigrina,6500,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Yellow Warbler,Dendroica petechia,6520,1
+Yellow-rumped Warbler,Dendroica coronata,6550,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Magnolia Warbler,Dendroica magnolia,6570,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Cerulean Warbler,Dendroica cerulea,6580,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Bay-breasted Warbler,Dendroica castanea,6600,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Blackpoll Warbler,Dendroica striata,6610,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Blackburnian Warbler,Dendroica fusca,6620,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Yellow-throated Warbler,Dendroica dominica,6630,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Grace's Warbler,Dendroica graciae,6640,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Black-throated Gray Warbler,Dendroica nigrescens,6650,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Black-throated Green Warbler,Dendroica virens,6670,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Townsend's Warbler,Dendroica townsendi,6680,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Hermit Warbler,Dendroica occidentalis,6690,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Kirtland's Warbler,Dendroica kirtlandii,6700,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Pine Warbler,Dendroica pinus,6710,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Palm Warbler,Dendroica palmarum,6720,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Prairie Warbler,Dendroica discolor,6730,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Ovenbird,Seiurus aurocapilla,6740,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Louisiana Waterthrush,Parkesia motacilla,6760,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Kentucky Warbler,Oporornis formosus,6770,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Connecticut Warbler,Oporornis agilis,6780,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Mourning Warbler,Oporornis philadelphia,6790,0
+Yellow-rumped Warbler,Dendroica coronata,6550,MacGillivray's Warbler,Oporornis tolmiei,6800,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Common Yellowthroat,Geothlypis trichas,6810,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Hooded Warbler,Wilsonia citrina,6840,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Wilson's Warbler,Wilsonia pusilla,6850,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Canada Warbler,Wilsonia canadensis,6860,0
+Yellow-rumped Warbler,Dendroica coronata,6550,American Redstart,Setophaga ruticilla,6870,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Painted Redstart,Myioborus pictus,6880,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Fan-tailed Warbler,Euthlypis lachrymosa,6881,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Slate-throated Redstart,Myioborus miniatus,6890,0
+Yellow-rumped Warbler,Dendroica coronata,6550,Red-faced Warbler,Cardellina rubrifrons,6900,0
+Common Yellowthroat,Geothlypis trichas,6810,Black-and-white Warbler,Mniotilta varia,6360,0
+Common Yellowthroat,Geothlypis trichas,6810,Prothonotary Warbler,Protonotaria citrea,6370,0
+Common Yellowthroat,Geothlypis trichas,6810,Swainson's Warbler,Limnothlypis swainsonii,6380,0
+Common Yellowthroat,Geothlypis trichas,6810,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Common Yellowthroat,Geothlypis trichas,6810,Blue-winged Warbler,Vermivora cyanoptera,6410,0
+Common Yellowthroat,Geothlypis trichas,6810,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Common Yellowthroat,Geothlypis trichas,6810,Lucy's Warbler,Vermivora luciae,6430,0
+Common Yellowthroat,Geothlypis trichas,6810,Virginia's Warbler,Vermivora virginiae,6440,0
+Common Yellowthroat,Geothlypis trichas,6810,Nashville Warbler,Vermivora ruficapilla,6450,0
+Common Yellowthroat,Geothlypis trichas,6810,Orange-crowned Warbler,Vermivora celata,6460,0
+Common Yellowthroat,Geothlypis trichas,6810,Tennessee Warbler,Vermivora peregrina,6470,0
+Common Yellowthroat,Geothlypis trichas,6810,Colima Warbler,Vermivora crissalis,6471,0
+Common Yellowthroat,Geothlypis trichas,6810,Northern Parula,Parula americana,6480,0
+Common Yellowthroat,Geothlypis trichas,6810,Tropical Parula,Parula pitiayumi,6490,0
+Common Yellowthroat,Geothlypis trichas,6810,Cape May Warbler,Dendroica tigrina,6500,0
+Common Yellowthroat,Geothlypis trichas,6810,Yellow Warbler,Dendroica petechia,6520,1
+Common Yellowthroat,Geothlypis trichas,6810,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Common Yellowthroat,Geothlypis trichas,6810,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Common Yellowthroat,Geothlypis trichas,6810,Magnolia Warbler,Dendroica magnolia,6570,0
+Common Yellowthroat,Geothlypis trichas,6810,Cerulean Warbler,Dendroica cerulea,6580,0
+Common Yellowthroat,Geothlypis trichas,6810,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Common Yellowthroat,Geothlypis trichas,6810,Bay-breasted Warbler,Dendroica castanea,6600,0
+Common Yellowthroat,Geothlypis trichas,6810,Blackpoll Warbler,Dendroica striata,6610,0
+Common Yellowthroat,Geothlypis trichas,6810,Blackburnian Warbler,Dendroica fusca,6620,0
+Common Yellowthroat,Geothlypis trichas,6810,Yellow-throated Warbler,Dendroica dominica,6630,0
+Common Yellowthroat,Geothlypis trichas,6810,Grace's Warbler,Dendroica graciae,6640,0
+Common Yellowthroat,Geothlypis trichas,6810,Black-throated Gray Warbler,Dendroica nigrescens,6650,0
+Common Yellowthroat,Geothlypis trichas,6810,Golden-cheeked Warbler,Dendroica chrysoparia,6660,0
+Common Yellowthroat,Geothlypis trichas,6810,Black-throated Green Warbler,Dendroica virens,6670,0
+Common Yellowthroat,Geothlypis trichas,6810,Townsend's Warbler,Dendroica townsendi,6680,0
+Common Yellowthroat,Geothlypis trichas,6810,Hermit Warbler,Dendroica occidentalis,6690,0
+Common Yellowthroat,Geothlypis trichas,6810,Kirtland's Warbler,Dendroica kirtlandii,6700,0
+Common Yellowthroat,Geothlypis trichas,6810,Pine Warbler,Dendroica pinus,6710,0
+Common Yellowthroat,Geothlypis trichas,6810,Palm Warbler,Dendroica palmarum,6720,0
+Common Yellowthroat,Geothlypis trichas,6810,Prairie Warbler,Dendroica discolor,6730,0
+Common Yellowthroat,Geothlypis trichas,6810,Ovenbird,Seiurus aurocapilla,6740,0
+Common Yellowthroat,Geothlypis trichas,6810,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Common Yellowthroat,Geothlypis trichas,6810,Louisiana Waterthrush,Parkesia motacilla,6760,0
+Common Yellowthroat,Geothlypis trichas,6810,Kentucky Warbler,Oporornis formosus,6770,0
+Common Yellowthroat,Geothlypis trichas,6810,Connecticut Warbler,Oporornis agilis,6780,0
+Common Yellowthroat,Geothlypis trichas,6810,Mourning Warbler,Oporornis philadelphia,6790,0
+Common Yellowthroat,Geothlypis trichas,6810,MacGillivray's Warbler,Oporornis tolmiei,6800,0
+Common Yellowthroat,Geothlypis trichas,6810,Hooded Warbler,Wilsonia citrina,6840,0
+Common Yellowthroat,Geothlypis trichas,6810,Wilson's Warbler,Wilsonia pusilla,6850,0
+Common Yellowthroat,Geothlypis trichas,6810,Canada Warbler,Wilsonia canadensis,6860,0
+Common Yellowthroat,Geothlypis trichas,6810,American Redstart,Setophaga ruticilla,6870,0
+Common Yellowthroat,Geothlypis trichas,6810,Painted Redstart,Myioborus pictus,6880,0
+Common Yellowthroat,Geothlypis trichas,6810,Red-faced Warbler,Cardellina rubrifrons,6900,0
+Pine Warbler,Dendroica pinus,6710,Black-and-white Warbler,Mniotilta varia,6360,0
+Pine Warbler,Dendroica pinus,6710,Prothonotary Warbler,Protonotaria citrea,6370,0
+Pine Warbler,Dendroica pinus,6710,Swainson's Warbler,Limnothlypis swainsonii,6380,0
+Pine Warbler,Dendroica pinus,6710,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Pine Warbler,Dendroica pinus,6710,Blue-winged Warbler,Vermivora cyanoptera,6410,0
+Pine Warbler,Dendroica pinus,6710,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Pine Warbler,Dendroica pinus,6710,Nashville Warbler,Vermivora ruficapilla,6450,0
+Pine Warbler,Dendroica pinus,6710,Orange-crowned Warbler,Vermivora celata,6460,0
+Pine Warbler,Dendroica pinus,6710,Tennessee Warbler,Vermivora peregrina,6470,0
+Pine Warbler,Dendroica pinus,6710,Northern Parula,Parula americana,6480,0
+Pine Warbler,Dendroica pinus,6710,Cape May Warbler,Dendroica tigrina,6500,0
+Pine Warbler,Dendroica pinus,6710,Yellow Warbler,Dendroica petechia,6520,0
+Pine Warbler,Dendroica pinus,6710,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Pine Warbler,Dendroica pinus,6710,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Pine Warbler,Dendroica pinus,6710,Magnolia Warbler,Dendroica magnolia,6570,0
+Pine Warbler,Dendroica pinus,6710,Cerulean Warbler,Dendroica cerulea,6580,0
+Pine Warbler,Dendroica pinus,6710,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Pine Warbler,Dendroica pinus,6710,Bay-breasted Warbler,Dendroica castanea,6600,0
+Pine Warbler,Dendroica pinus,6710,Blackpoll Warbler,Dendroica striata,6610,0
+Pine Warbler,Dendroica pinus,6710,Blackburnian Warbler,Dendroica fusca,6620,0
+Pine Warbler,Dendroica pinus,6710,Yellow-throated Warbler,Dendroica dominica,6630,0
+Pine Warbler,Dendroica pinus,6710,Black-throated Green Warbler,Dendroica virens,6670,0
+Pine Warbler,Dendroica pinus,6710,Palm Warbler,Dendroica palmarum,6720,0
+Pine Warbler,Dendroica pinus,6710,Prairie Warbler,Dendroica discolor,6730,0
+Pine Warbler,Dendroica pinus,6710,Ovenbird,Seiurus aurocapilla,6740,0
+Pine Warbler,Dendroica pinus,6710,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Pine Warbler,Dendroica pinus,6710,Louisiana Waterthrush,Parkesia motacilla,6760,0
+Pine Warbler,Dendroica pinus,6710,Kentucky Warbler,Oporornis formosus,6770,0
+Pine Warbler,Dendroica pinus,6710,Connecticut Warbler,Oporornis agilis,6780,0
+Pine Warbler,Dendroica pinus,6710,Mourning Warbler,Oporornis philadelphia,6790,0
+Pine Warbler,Dendroica pinus,6710,Common Yellowthroat,Geothlypis trichas,6810,1
+Pine Warbler,Dendroica pinus,6710,Hooded Warbler,Wilsonia citrina,6840,0
+Pine Warbler,Dendroica pinus,6710,Wilson's Warbler,Wilsonia pusilla,6850,0
+Pine Warbler,Dendroica pinus,6710,Canada Warbler,Wilsonia canadensis,6860,0
+Pine Warbler,Dendroica pinus,6710,American Redstart,Setophaga ruticilla,6870,0
+Wilson's Warbler,Wilsonia pusilla,6850,Black-and-white Warbler,Mniotilta varia,6360,0
+Wilson's Warbler,Wilsonia pusilla,6850,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Wilson's Warbler,Wilsonia pusilla,6850,Virginia's Warbler,Vermivora virginiae,6440,0
+Wilson's Warbler,Wilsonia pusilla,6850,Nashville Warbler,Vermivora ruficapilla,6450,0
+Wilson's Warbler,Wilsonia pusilla,6850,Orange-crowned Warbler,Vermivora celata,6460,0
+Wilson's Warbler,Wilsonia pusilla,6850,Tennessee Warbler,Vermivora peregrina,6470,0
+Wilson's Warbler,Wilsonia pusilla,6850,Northern Parula,Parula americana,6480,0
+Wilson's Warbler,Wilsonia pusilla,6850,Cape May Warbler,Dendroica tigrina,6500,0
+Wilson's Warbler,Wilsonia pusilla,6850,Yellow Warbler,Dendroica petechia,6520,1
+Wilson's Warbler,Wilsonia pusilla,6850,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Wilson's Warbler,Wilsonia pusilla,6850,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Wilson's Warbler,Wilsonia pusilla,6850,Magnolia Warbler,Dendroica magnolia,6570,0
+Wilson's Warbler,Wilsonia pusilla,6850,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Wilson's Warbler,Wilsonia pusilla,6850,Bay-breasted Warbler,Dendroica castanea,6600,0
+Wilson's Warbler,Wilsonia pusilla,6850,Blackpoll Warbler,Dendroica striata,6610,0
+Wilson's Warbler,Wilsonia pusilla,6850,Blackburnian Warbler,Dendroica fusca,6620,0
+Wilson's Warbler,Wilsonia pusilla,6850,Grace's Warbler,Dendroica graciae,6640,0
+Wilson's Warbler,Wilsonia pusilla,6850,Black-throated Gray Warbler,Dendroica nigrescens,6650,0
+Wilson's Warbler,Wilsonia pusilla,6850,Black-throated Green Warbler,Dendroica virens,6670,0
+Wilson's Warbler,Wilsonia pusilla,6850,Townsend's Warbler,Dendroica townsendi,6680,0
+Wilson's Warbler,Wilsonia pusilla,6850,Hermit Warbler,Dendroica occidentalis,6690,0
+Wilson's Warbler,Wilsonia pusilla,6850,Pine Warbler,Dendroica pinus,6710,0
+Wilson's Warbler,Wilsonia pusilla,6850,Palm Warbler,Dendroica palmarum,6720,0
+Wilson's Warbler,Wilsonia pusilla,6850,Prairie Warbler,Dendroica discolor,6730,0
+Wilson's Warbler,Wilsonia pusilla,6850,Connecticut Warbler,Oporornis agilis,6780,0
+Wilson's Warbler,Wilsonia pusilla,6850,Mourning Warbler,Oporornis philadelphia,6790,0
+Wilson's Warbler,Wilsonia pusilla,6850,MacGillivray's Warbler,Oporornis tolmiei,6800,0
+Wilson's Warbler,Wilsonia pusilla,6850,Common Yellowthroat,Geothlypis trichas,6810,0
+Wilson's Warbler,Wilsonia pusilla,6850,Canada Warbler,Wilsonia canadensis,6860,0
+Wilson's Warbler,Wilsonia pusilla,6850,American Redstart,Setophaga ruticilla,6870,0
+Northern Parula,Parula americana,6480,Black-and-white Warbler,Mniotilta varia,6360,0
+Northern Parula,Parula americana,6480,Prothonotary Warbler,Protonotaria citrea,6370,0
+Northern Parula,Parula americana,6480,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Northern Parula,Parula americana,6480,Blue-winged Warbler,Vermivora cyanoptera,6410,0
+Northern Parula,Parula americana,6480,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Northern Parula,Parula americana,6480,Nashville Warbler,Vermivora ruficapilla,6450,0
+Northern Parula,Parula americana,6480,Orange-crowned Warbler,Vermivora celata,6460,0
+Northern Parula,Parula americana,6480,Tennessee Warbler,Vermivora peregrina,6470,0
+Northern Parula,Parula americana,6480,Tropical Parula,Parula pitiayumi,6490,0
+Northern Parula,Parula americana,6480,Cape May Warbler,Dendroica tigrina,6500,0
+Northern Parula,Parula americana,6480,Yellow Warbler,Dendroica petechia,6520,0
+Northern Parula,Parula americana,6480,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Northern Parula,Parula americana,6480,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Northern Parula,Parula americana,6480,Magnolia Warbler,Dendroica magnolia,6570,0
+Northern Parula,Parula americana,6480,Cerulean Warbler,Dendroica cerulea,6580,0
+Northern Parula,Parula americana,6480,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Northern Parula,Parula americana,6480,Bay-breasted Warbler,Dendroica castanea,6600,0
+Northern Parula,Parula americana,6480,Blackpoll Warbler,Dendroica striata,6610,0
+Northern Parula,Parula americana,6480,Blackburnian Warbler,Dendroica fusca,6620,0
+Northern Parula,Parula americana,6480,Yellow-throated Warbler,Dendroica dominica,6630,0
+Northern Parula,Parula americana,6480,Black-throated Green Warbler,Dendroica virens,6670,0
+Northern Parula,Parula americana,6480,Kirtland's Warbler,Dendroica kirtlandii,6700,0
+Northern Parula,Parula americana,6480,Pine Warbler,Dendroica pinus,6710,0
+Northern Parula,Parula americana,6480,Palm Warbler,Dendroica palmarum,6720,0
+Northern Parula,Parula americana,6480,Prairie Warbler,Dendroica discolor,6730,0
+Northern Parula,Parula americana,6480,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Northern Parula,Parula americana,6480,Kentucky Warbler,Oporornis formosus,6770,0
+Northern Parula,Parula americana,6480,Connecticut Warbler,Oporornis agilis,6780,0
+Northern Parula,Parula americana,6480,Mourning Warbler,Oporornis philadelphia,6790,0
+Northern Parula,Parula americana,6480,Common Yellowthroat,Geothlypis trichas,6810,1
+Northern Parula,Parula americana,6480,Hooded Warbler,Wilsonia citrina,6840,0
+Northern Parula,Parula americana,6480,Wilson's Warbler,Wilsonia pusilla,6850,0
+Northern Parula,Parula americana,6480,Canada Warbler,Wilsonia canadensis,6860,0
+Northern Parula,Parula americana,6480,American Redstart,Setophaga ruticilla,6870,0
+Yellow-throated Warbler,Dendroica dominica,6630,Black-and-white Warbler,Mniotilta varia,6360,0
+Yellow-throated Warbler,Dendroica dominica,6630,Prothonotary Warbler,Protonotaria citrea,6370,1
+Yellow-throated Warbler,Dendroica dominica,6630,Pine Warbler,Dendroica pinus,6710,0
+Ovenbird,Seiurus aurocapilla,6740,Black-and-white Warbler,Mniotilta varia,6360,0
+Ovenbird,Seiurus aurocapilla,6740,Prothonotary Warbler,Protonotaria citrea,6370,0
+Ovenbird,Seiurus aurocapilla,6740,Swainson's Warbler,Limnothlypis swainsonii,6380,0
+Ovenbird,Seiurus aurocapilla,6740,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Ovenbird,Seiurus aurocapilla,6740,Golden-winged Warbler,Vermivora chrysoptera,6420,0
+Ovenbird,Seiurus aurocapilla,6740,Tennessee Warbler,Vermivora peregrina,6470,0
+Ovenbird,Seiurus aurocapilla,6740,Cape May Warbler,Dendroica tigrina,6500,0
+Ovenbird,Seiurus aurocapilla,6740,Yellow Warbler,Dendroica petechia,6520,0
+Ovenbird,Seiurus aurocapilla,6740,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Ovenbird,Seiurus aurocapilla,6740,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Ovenbird,Seiurus aurocapilla,6740,Magnolia Warbler,Dendroica magnolia,6570,0
+Ovenbird,Seiurus aurocapilla,6740,Cerulean Warbler,Dendroica cerulea,6580,0
+Ovenbird,Seiurus aurocapilla,6740,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Ovenbird,Seiurus aurocapilla,6740,Bay-breasted Warbler,Dendroica castanea,6600,0
+Ovenbird,Seiurus aurocapilla,6740,Blackpoll Warbler,Dendroica striata,6610,0
+Ovenbird,Seiurus aurocapilla,6740,Blackburnian Warbler,Dendroica fusca,6620,0
+Ovenbird,Seiurus aurocapilla,6740,Kirtland's Warbler,Dendroica kirtlandii,6700,0
+Ovenbird,Seiurus aurocapilla,6740,Pine Warbler,Dendroica pinus,6710,0
+Ovenbird,Seiurus aurocapilla,6740,Palm Warbler,Dendroica palmarum,6720,0
+Ovenbird,Seiurus aurocapilla,6740,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Ovenbird,Seiurus aurocapilla,6740,Louisiana Waterthrush,Parkesia motacilla,6760,0
+Ovenbird,Seiurus aurocapilla,6740,Kentucky Warbler,Oporornis formosus,6770,0
+Ovenbird,Seiurus aurocapilla,6740,Connecticut Warbler,Oporornis agilis,6780,0
+Ovenbird,Seiurus aurocapilla,6740,Mourning Warbler,Oporornis philadelphia,6790,0
+Ovenbird,Seiurus aurocapilla,6740,Common Yellowthroat,Geothlypis trichas,6810,1
+Ovenbird,Seiurus aurocapilla,6740,Yellow-breasted Chat,Icteria virens,6830,0
+Ovenbird,Seiurus aurocapilla,6740,Hooded Warbler,Wilsonia citrina,6840,0
+Ovenbird,Seiurus aurocapilla,6740,Canada Warbler,Wilsonia canadensis,6860,0
+Black-and-white Warbler,Mniotilta varia,6360,Prothonotary Warbler,Protonotaria citrea,6370,0
+Black-and-white Warbler,Mniotilta varia,6360,Yellow-throated Warbler,Dendroica dominica,6630,0
+Black-and-white Warbler,Mniotilta varia,6360,Pine Warbler,Dendroica pinus,6710,1
+Louisiana Waterthrush,Parkesia motacilla,6760,Swainson's Warbler,Limnothlypis swainsonii,6380,0
+Louisiana Waterthrush,Parkesia motacilla,6760,Ovenbird,Seiurus aurocapilla,6740,0
+Louisiana Waterthrush,Parkesia motacilla,6760,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Louisiana Waterthrush,Parkesia motacilla,6760,Kentucky Warbler,Oporornis formosus,6770,1
+Louisiana Waterthrush,Parkesia motacilla,6760,Connecticut Warbler,Oporornis agilis,6780,0
+Northern Waterthrush,Parkesia noveboracensis,6750,Swainson's Warbler,Limnothlypis swainsonii,6380,0
+Northern Waterthrush,Parkesia noveboracensis,6750,Palm Warbler,Dendroica palmarum,6720,1
+Northern Waterthrush,Parkesia noveboracensis,6750,Ovenbird,Seiurus aurocapilla,6740,0
+Northern Waterthrush,Parkesia noveboracensis,6750,Louisiana Waterthrush,Parkesia motacilla,6760,0
+Northern Waterthrush,Parkesia noveboracensis,6750,Kentucky Warbler,Oporornis formosus,6770,0
+Northern Waterthrush,Parkesia noveboracensis,6750,Connecticut Warbler,Oporornis agilis,6780,0
+Kentucky Warbler,Oporornis formosus,6770,Swainson's Warbler,Limnothlypis swainsonii,6380,0
+Kentucky Warbler,Oporornis formosus,6770,Ovenbird,Seiurus aurocapilla,6740,0
+Kentucky Warbler,Oporornis formosus,6770,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Kentucky Warbler,Oporornis formosus,6770,Louisiana Waterthrush,Parkesia motacilla,6760,1
+Blue-winged Warbler,Vermivora cyanoptera,6410,Worm-eating Warbler,Helmitheros vermivorum,6390,0
+Blue-winged Warbler,Vermivora cyanoptera,6410,Northern Parula,Parula americana,6480,0
+Blue-winged Warbler,Vermivora cyanoptera,6410,Yellow Warbler,Dendroica petechia,6520,0
+Blue-winged Warbler,Vermivora cyanoptera,6410,Pine Warbler,Dendroica pinus,6710,0
+Blue-winged Warbler,Vermivora cyanoptera,6410,Prairie Warbler,Dendroica discolor,6730,0
+Blue-winged Warbler,Vermivora cyanoptera,6410,Common Yellowthroat,Geothlypis trichas,6810,1
+Blue-winged Warbler,Vermivora cyanoptera,6410,Hooded Warbler,Wilsonia citrina,6840,0
+Worm-eating Warbler,Helmitheros vermivorum,6390,Blue-winged Warbler,Vermivora cyanoptera,6410,0
+Worm-eating Warbler,Helmitheros vermivorum,6390,Northern Parula,Parula americana,6480,0
+Worm-eating Warbler,Helmitheros vermivorum,6390,Yellow Warbler,Dendroica petechia,6520,0
+Worm-eating Warbler,Helmitheros vermivorum,6390,Pine Warbler,Dendroica pinus,6710,0
+Worm-eating Warbler,Helmitheros vermivorum,6390,Prairie Warbler,Dendroica discolor,6730,0
+Worm-eating Warbler,Helmitheros vermivorum,6390,Common Yellowthroat,Geothlypis trichas,6810,1
+Worm-eating Warbler,Helmitheros vermivorum,6390,Hooded Warbler,Wilsonia citrina,6840,0
+Black-throated Gray Warbler,Dendroica nigrescens,6650,Lucy's Warbler,Vermivora luciae,6430,0
+Black-throated Gray Warbler,Dendroica nigrescens,6650,Yellow Warbler,Dendroica petechia,6520,1
+Black-throated Gray Warbler,Dendroica nigrescens,6650,Grace's Warbler,Dendroica graciae,6640,0
+Black-throated Gray Warbler,Dendroica nigrescens,6650,Painted Redstart,Myioborus pictus,6880,0
+Red-faced Warbler,Cardellina rubrifrons,6900,Lucy's Warbler,Vermivora luciae,6430,0
+Red-faced Warbler,Cardellina rubrifrons,6900,Grace's Warbler,Dendroica graciae,6640,0
+Red-faced Warbler,Cardellina rubrifrons,6900,Painted Redstart,Myioborus pictus,6880,1
+Orange-crowned Warbler,Vermivora celata,6460,Virginia's Warbler,Vermivora virginiae,6440,0
+Orange-crowned Warbler,Vermivora celata,6460,Tennessee Warbler,Vermivora peregrina,6470,0
+Orange-crowned Warbler,Vermivora celata,6460,Cape May Warbler,Dendroica tigrina,6500,0
+Orange-crowned Warbler,Vermivora celata,6460,Yellow Warbler,Dendroica petechia,6520,1
+Orange-crowned Warbler,Vermivora celata,6460,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Orange-crowned Warbler,Vermivora celata,6460,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Orange-crowned Warbler,Vermivora celata,6460,Bay-breasted Warbler,Dendroica castanea,6600,0
+Orange-crowned Warbler,Vermivora celata,6460,Blackpoll Warbler,Dendroica striata,6610,0
+Orange-crowned Warbler,Vermivora celata,6460,Blackburnian Warbler,Dendroica fusca,6620,0
+Orange-crowned Warbler,Vermivora celata,6460,Black-throated Green Warbler,Dendroica virens,6670,0
+Orange-crowned Warbler,Vermivora celata,6460,Townsend's Warbler,Dendroica townsendi,6680,0
+Orange-crowned Warbler,Vermivora celata,6460,Mourning Warbler,Oporornis philadelphia,6790,0
+Orange-crowned Warbler,Vermivora celata,6460,Common Yellowthroat,Geothlypis trichas,6810,0
+Orange-crowned Warbler,Vermivora celata,6460,Wilson's Warbler,Wilsonia pusilla,6850,0
+Townsend's Warbler,Dendroica townsendi,6680,Virginia's Warbler,Vermivora virginiae,6440,0
+Townsend's Warbler,Dendroica townsendi,6680,Nashville Warbler,Vermivora ruficapilla,6450,0
+Townsend's Warbler,Dendroica townsendi,6680,Orange-crowned Warbler,Vermivora celata,6460,0
+Townsend's Warbler,Dendroica townsendi,6680,Tennessee Warbler,Vermivora peregrina,6470,0
+Townsend's Warbler,Dendroica townsendi,6680,Yellow Warbler,Dendroica petechia,6520,1
+Townsend's Warbler,Dendroica townsendi,6680,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Townsend's Warbler,Dendroica townsendi,6680,Blackpoll Warbler,Dendroica striata,6610,0
+Townsend's Warbler,Dendroica townsendi,6680,Black-throated Gray Warbler,Dendroica nigrescens,6650,0
+Townsend's Warbler,Dendroica townsendi,6680,Hermit Warbler,Dendroica occidentalis,6690,0
+Townsend's Warbler,Dendroica townsendi,6680,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Townsend's Warbler,Dendroica townsendi,6680,Connecticut Warbler,Oporornis agilis,6780,0
+Townsend's Warbler,Dendroica townsendi,6680,MacGillivray's Warbler,Oporornis tolmiei,6800,0
+Townsend's Warbler,Dendroica townsendi,6680,Common Yellowthroat,Geothlypis trichas,6810,0
+Townsend's Warbler,Dendroica townsendi,6680,Wilson's Warbler,Wilsonia pusilla,6850,0
+Townsend's Warbler,Dendroica townsendi,6680,American Redstart,Setophaga ruticilla,6870,0
+Blackpoll Warbler,Dendroica striata,6610,Nashville Warbler,Vermivora ruficapilla,6450,0
+Blackpoll Warbler,Dendroica striata,6610,Orange-crowned Warbler,Vermivora celata,6460,0
+Blackpoll Warbler,Dendroica striata,6610,Tennessee Warbler,Vermivora peregrina,6470,0
+Blackpoll Warbler,Dendroica striata,6610,Cape May Warbler,Dendroica tigrina,6500,0
+Blackpoll Warbler,Dendroica striata,6610,Yellow Warbler,Dendroica petechia,6520,1
+Blackpoll Warbler,Dendroica striata,6610,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Blackpoll Warbler,Dendroica striata,6610,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Blackpoll Warbler,Dendroica striata,6610,Bay-breasted Warbler,Dendroica castanea,6600,0
+Blackpoll Warbler,Dendroica striata,6610,Blackburnian Warbler,Dendroica fusca,6620,0
+Blackpoll Warbler,Dendroica striata,6610,Black-throated Green Warbler,Dendroica virens,6670,0
+Blackpoll Warbler,Dendroica striata,6610,Townsend's Warbler,Dendroica townsendi,6680,0
+Blackpoll Warbler,Dendroica striata,6610,Mourning Warbler,Oporornis philadelphia,6790,0
+Blackpoll Warbler,Dendroica striata,6610,Common Yellowthroat,Geothlypis trichas,6810,0
+Blackpoll Warbler,Dendroica striata,6610,Wilson's Warbler,Wilsonia pusilla,6850,0
+Tennessee Warbler,Vermivora peregrina,6470,Nashville Warbler,Vermivora ruficapilla,6450,0
+Tennessee Warbler,Vermivora peregrina,6470,Orange-crowned Warbler,Vermivora celata,6460,0
+Tennessee Warbler,Vermivora peregrina,6470,Cape May Warbler,Dendroica tigrina,6500,0
+Tennessee Warbler,Vermivora peregrina,6470,Yellow Warbler,Dendroica petechia,6520,1
+Tennessee Warbler,Vermivora peregrina,6470,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Tennessee Warbler,Vermivora peregrina,6470,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Tennessee Warbler,Vermivora peregrina,6470,Bay-breasted Warbler,Dendroica castanea,6600,0
+Tennessee Warbler,Vermivora peregrina,6470,Blackpoll Warbler,Dendroica striata,6610,0
+Tennessee Warbler,Vermivora peregrina,6470,Blackburnian Warbler,Dendroica fusca,6620,0
+Tennessee Warbler,Vermivora peregrina,6470,Black-throated Green Warbler,Dendroica virens,6670,0
+Tennessee Warbler,Vermivora peregrina,6470,Townsend's Warbler,Dendroica townsendi,6680,0
+Tennessee Warbler,Vermivora peregrina,6470,Mourning Warbler,Oporornis philadelphia,6790,0
+Tennessee Warbler,Vermivora peregrina,6470,Common Yellowthroat,Geothlypis trichas,6810,0
+Tennessee Warbler,Vermivora peregrina,6470,Wilson's Warbler,Wilsonia pusilla,6850,0
+Blackburnian Warbler,Dendroica fusca,6620,Nashville Warbler,Vermivora ruficapilla,6450,0
+Blackburnian Warbler,Dendroica fusca,6620,Orange-crowned Warbler,Vermivora celata,6460,0
+Blackburnian Warbler,Dendroica fusca,6620,Tennessee Warbler,Vermivora peregrina,6470,0
+Blackburnian Warbler,Dendroica fusca,6620,Cape May Warbler,Dendroica tigrina,6500,0
+Blackburnian Warbler,Dendroica fusca,6620,Yellow Warbler,Dendroica petechia,6520,1
+Blackburnian Warbler,Dendroica fusca,6620,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Blackburnian Warbler,Dendroica fusca,6620,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Blackburnian Warbler,Dendroica fusca,6620,Bay-breasted Warbler,Dendroica castanea,6600,0
+Blackburnian Warbler,Dendroica fusca,6620,Blackpoll Warbler,Dendroica striata,6610,0
+Blackburnian Warbler,Dendroica fusca,6620,Black-throated Green Warbler,Dendroica virens,6670,0
+Blackburnian Warbler,Dendroica fusca,6620,Mourning Warbler,Oporornis philadelphia,6790,0
+Blackburnian Warbler,Dendroica fusca,6620,Common Yellowthroat,Geothlypis trichas,6810,0
+Blackburnian Warbler,Dendroica fusca,6620,Wilson's Warbler,Wilsonia pusilla,6850,0
+Bay-breasted Warbler,Dendroica castanea,6600,Nashville Warbler,Vermivora ruficapilla,6450,0
+Bay-breasted Warbler,Dendroica castanea,6600,Orange-crowned Warbler,Vermivora celata,6460,0
+Bay-breasted Warbler,Dendroica castanea,6600,Tennessee Warbler,Vermivora peregrina,6470,0
+Bay-breasted Warbler,Dendroica castanea,6600,Cape May Warbler,Dendroica tigrina,6500,0
+Bay-breasted Warbler,Dendroica castanea,6600,Yellow Warbler,Dendroica petechia,6520,1
+Bay-breasted Warbler,Dendroica castanea,6600,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Bay-breasted Warbler,Dendroica castanea,6600,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Bay-breasted Warbler,Dendroica castanea,6600,Blackpoll Warbler,Dendroica striata,6610,0
+Bay-breasted Warbler,Dendroica castanea,6600,Blackburnian Warbler,Dendroica fusca,6620,0
+Bay-breasted Warbler,Dendroica castanea,6600,Black-throated Green Warbler,Dendroica virens,6670,0
+Bay-breasted Warbler,Dendroica castanea,6600,Mourning Warbler,Oporornis philadelphia,6790,0
+Bay-breasted Warbler,Dendroica castanea,6600,Common Yellowthroat,Geothlypis trichas,6810,0
+Bay-breasted Warbler,Dendroica castanea,6600,Wilson's Warbler,Wilsonia pusilla,6850,0
+Cape May Warbler,Dendroica tigrina,6500,Nashville Warbler,Vermivora ruficapilla,6450,0
+Cape May Warbler,Dendroica tigrina,6500,Orange-crowned Warbler,Vermivora celata,6460,0
+Cape May Warbler,Dendroica tigrina,6500,Tennessee Warbler,Vermivora peregrina,6470,0
+Cape May Warbler,Dendroica tigrina,6500,Yellow Warbler,Dendroica petechia,6520,1
+Cape May Warbler,Dendroica tigrina,6500,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Cape May Warbler,Dendroica tigrina,6500,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Cape May Warbler,Dendroica tigrina,6500,Bay-breasted Warbler,Dendroica castanea,6600,0
+Cape May Warbler,Dendroica tigrina,6500,Blackpoll Warbler,Dendroica striata,6610,0
+Cape May Warbler,Dendroica tigrina,6500,Blackburnian Warbler,Dendroica fusca,6620,0
+Cape May Warbler,Dendroica tigrina,6500,Black-throated Green Warbler,Dendroica virens,6670,0
+Cape May Warbler,Dendroica tigrina,6500,Mourning Warbler,Oporornis philadelphia,6790,0
+Cape May Warbler,Dendroica tigrina,6500,Common Yellowthroat,Geothlypis trichas,6810,0
+Cape May Warbler,Dendroica tigrina,6500,Wilson's Warbler,Wilsonia pusilla,6850,0
+Mourning Warbler,Oporornis philadelphia,6790,Nashville Warbler,Vermivora ruficapilla,6450,0
+Mourning Warbler,Oporornis philadelphia,6790,Orange-crowned Warbler,Vermivora celata,6460,0
+Mourning Warbler,Oporornis philadelphia,6790,Tennessee Warbler,Vermivora peregrina,6470,0
+Mourning Warbler,Oporornis philadelphia,6790,Cape May Warbler,Dendroica tigrina,6500,0
+Mourning Warbler,Oporornis philadelphia,6790,Yellow Warbler,Dendroica petechia,6520,1
+Mourning Warbler,Oporornis philadelphia,6790,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Mourning Warbler,Oporornis philadelphia,6790,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Mourning Warbler,Oporornis philadelphia,6790,Bay-breasted Warbler,Dendroica castanea,6600,0
+Mourning Warbler,Oporornis philadelphia,6790,Blackpoll Warbler,Dendroica striata,6610,0
+Mourning Warbler,Oporornis philadelphia,6790,Blackburnian Warbler,Dendroica fusca,6620,0
+Mourning Warbler,Oporornis philadelphia,6790,Black-throated Green Warbler,Dendroica virens,6670,0
+Mourning Warbler,Oporornis philadelphia,6790,Common Yellowthroat,Geothlypis trichas,6810,0
+Mourning Warbler,Oporornis philadelphia,6790,Wilson's Warbler,Wilsonia pusilla,6850,0
+Virginia's Warbler,Vermivora virginiae,6440,Orange-crowned Warbler,Vermivora celata,6460,1
+Nashville Warbler,Vermivora ruficapilla,6450,Orange-crowned Warbler,Vermivora celata,6460,0
+Nashville Warbler,Vermivora ruficapilla,6450,Tennessee Warbler,Vermivora peregrina,6470,0
+Nashville Warbler,Vermivora ruficapilla,6450,Cape May Warbler,Dendroica tigrina,6500,0
+Nashville Warbler,Vermivora ruficapilla,6450,Yellow Warbler,Dendroica petechia,6520,1
+Nashville Warbler,Vermivora ruficapilla,6450,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Nashville Warbler,Vermivora ruficapilla,6450,Chestnut-sided Warbler,Dendroica pensylvanica,6590,0
+Nashville Warbler,Vermivora ruficapilla,6450,Bay-breasted Warbler,Dendroica castanea,6600,0
+Nashville Warbler,Vermivora ruficapilla,6450,Blackpoll Warbler,Dendroica striata,6610,0
+Nashville Warbler,Vermivora ruficapilla,6450,Blackburnian Warbler,Dendroica fusca,6620,0
+Nashville Warbler,Vermivora ruficapilla,6450,Black-throated Green Warbler,Dendroica virens,6670,0
+Nashville Warbler,Vermivora ruficapilla,6450,Townsend's Warbler,Dendroica townsendi,6680,0
+Nashville Warbler,Vermivora ruficapilla,6450,Mourning Warbler,Oporornis philadelphia,6790,0
+Nashville Warbler,Vermivora ruficapilla,6450,Common Yellowthroat,Geothlypis trichas,6810,0
+Nashville Warbler,Vermivora ruficapilla,6450,Wilson's Warbler,Wilsonia pusilla,6850,0
+Lucy's Warbler,Vermivora luciae,6430,Yellow Warbler,Dendroica petechia,6520,1
+Lucy's Warbler,Vermivora luciae,6430,Grace's Warbler,Dendroica graciae,6640,0
+Lucy's Warbler,Vermivora luciae,6430,Black-throated Gray Warbler,Dendroica nigrescens,6650,0
+Lucy's Warbler,Vermivora luciae,6430,Painted Redstart,Myioborus pictus,6880,0
+Lucy's Warbler,Vermivora luciae,6430,Red-faced Warbler,Cardellina rubrifrons,6900,0
+MacGillivray's Warbler,Oporornis tolmiei,6800,Yellow Warbler,Dendroica petechia,6520,1
+MacGillivray's Warbler,Oporornis tolmiei,6800,Yellow-rumped Warbler,Dendroica coronata,6550,0
+MacGillivray's Warbler,Oporornis tolmiei,6800,Black-throated Gray Warbler,Dendroica nigrescens,6650,0
+MacGillivray's Warbler,Oporornis tolmiei,6800,Townsend's Warbler,Dendroica townsendi,6680,0
+MacGillivray's Warbler,Oporornis tolmiei,6800,Hermit Warbler,Dendroica occidentalis,6690,0
+MacGillivray's Warbler,Oporornis tolmiei,6800,Common Yellowthroat,Geothlypis trichas,6810,0
+Hermit Warbler,Dendroica occidentalis,6690,Yellow Warbler,Dendroica petechia,6520,1
+Hermit Warbler,Dendroica occidentalis,6690,Yellow-rumped Warbler,Dendroica coronata,6550,0
+Hermit Warbler,Dendroica occidentalis,6690,Black-throated Gray Warbler,Dendroica nigrescens,6650,0
+Hermit Warbler,Dendroica occidentalis,6690,MacGillivray's Warbler,Oporornis tolmiei,6800,0
+Hermit Warbler,Dendroica occidentalis,6690,Common Yellowthroat,Geothlypis trichas,6810,0
+Canada Warbler,Wilsonia canadensis,6860,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Canada Warbler,Wilsonia canadensis,6860,Magnolia Warbler,Dendroica magnolia,6570,1
+Canada Warbler,Wilsonia canadensis,6860,American Redstart,Setophaga ruticilla,6870,0
+Magnolia Warbler,Dendroica magnolia,6570,Black-throated Blue Warbler,Dendroica caerulescens,6540,0
+Magnolia Warbler,Dendroica magnolia,6570,Canada Warbler,Wilsonia canadensis,6860,0
+Magnolia Warbler,Dendroica magnolia,6570,American Redstart,Setophaga ruticilla,6870,1
+Black-throated Blue Warbler,Dendroica caerulescens,6540,Magnolia Warbler,Dendroica magnolia,6570,0
+Black-throated Blue Warbler,Dendroica caerulescens,6540,Canada Warbler,Wilsonia canadensis,6860,0
+Black-throated Blue Warbler,Dendroica caerulescens,6540,American Redstart,Setophaga ruticilla,6870,1
+Hooded Warbler,Wilsonia citrina,6840,Prairie Warbler,Dendroica discolor,6730,0
+Hooded Warbler,Wilsonia citrina,6840,Common Yellowthroat,Geothlypis trichas,6810,1
+Palm Warbler,Dendroica palmarum,6720,Ovenbird,Seiurus aurocapilla,6740,0
+Palm Warbler,Dendroica palmarum,6720,Northern Waterthrush,Parkesia noveboracensis,6750,1
+Swainson's Warbler,Limnothlypis swainsonii,6380,Ovenbird,Seiurus aurocapilla,6740,0
+Swainson's Warbler,Limnothlypis swainsonii,6380,Northern Waterthrush,Parkesia noveboracensis,6750,0
+Swainson's Warbler,Limnothlypis swainsonii,6380,Louisiana Waterthrush,Parkesia motacilla,6760,0
+Swainson's Warbler,Limnothlypis swainsonii,6380,Kentucky Warbler,Oporornis formosus,6770,1
+Connecticut Warbler,Oporornis agilis,6780,Ovenbird,Seiurus aurocapilla,6740,0
+Connecticut Warbler,Oporornis agilis,6780,Northern Waterthrush,Parkesia noveboracensis,6750,1
+Connecticut Warbler,Oporornis agilis,6780,Louisiana Waterthrush,Parkesia motacilla,6760,0
+Eurasian Tree Sparrow,Passer montanus,6883,House Sparrow,Passer domesticus,6882,1
+House Sparrow,Passer domesticus,6882,Eurasian Tree Sparrow,Passer montanus,6883,1
+Brown Thrasher,Toxostoma rufum,7050,Sage Thrasher,Oreoscoptes montanus,7020,0
+Brown Thrasher,Toxostoma rufum,7050,Northern Mockingbird,Mimus polyglottos,7030,0
+Brown Thrasher,Toxostoma rufum,7050,Gray Catbird,Dumetella carolinensis,7040,1
+Curve-billed Thrasher,Toxostoma curvirostre,7070,Northern Mockingbird,Mimus polyglottos,7030,1
+Curve-billed Thrasher,Toxostoma curvirostre,7070,Long-billed Thrasher,Toxostoma longirostre,7060,0
+Curve-billed Thrasher,Toxostoma curvirostre,7070,Bendire's Thrasher,Toxostoma bendirei,7080,0
+Curve-billed Thrasher,Toxostoma curvirostre,7070,Crissal Thrasher,Toxostoma crissale,7120,0
+Gray Catbird,Dumetella carolinensis,7040,Sage Thrasher,Oreoscoptes montanus,7020,0
+Gray Catbird,Dumetella carolinensis,7040,Northern Mockingbird,Mimus polyglottos,7030,1
+Gray Catbird,Dumetella carolinensis,7040,Brown Thrasher,Toxostoma rufum,7050,0
+Crissal Thrasher,Toxostoma crissale,7120,Sage Thrasher,Oreoscoptes montanus,7020,0
+Crissal Thrasher,Toxostoma crissale,7120,Northern Mockingbird,Mimus polyglottos,7030,1
+Crissal Thrasher,Toxostoma crissale,7120,Curve-billed Thrasher,Toxostoma curvirostre,7070,0
+Crissal Thrasher,Toxostoma crissale,7120,Bendire's Thrasher,Toxostoma bendirei,7080,0
+Crissal Thrasher,Toxostoma crissale,7120,Le Conte's Thrasher,Toxostoma lecontei,7110,0
+Sage Thrasher,Oreoscoptes montanus,7020,Northern Mockingbird,Mimus polyglottos,7030,1
+Sage Thrasher,Oreoscoptes montanus,7020,Bendire's Thrasher,Toxostoma bendirei,7080,0
+California Thrasher,Toxostoma redivivum,7100,Northern Mockingbird,Mimus polyglottos,7030,1
+Bendire's Thrasher,Toxostoma bendirei,7080,Northern Mockingbird,Mimus polyglottos,7030,1
+Bendire's Thrasher,Toxostoma bendirei,7080,Crissal Thrasher,Toxostoma crissale,7120,0
+House Wren,Troglodytes aedon,7210,Rock Wren,Salpinctes obsoletus,7150,0
+House Wren,Troglodytes aedon,7210,Canyon Wren,Catherpes mexicanus,7170,0
+House Wren,Troglodytes aedon,7210,Carolina Wren,Thryothorus ludovicianus,7180,0
+House Wren,Troglodytes aedon,7210,Bewick's Wren,Thryomanes bewickii,7190,0
+House Wren,Troglodytes aedon,7210,Pacific Wren,Troglodytes pacificus,7221,0
+House Wren,Troglodytes aedon,7210,Winter Wren,Troglodytes hiemalis,7222,0
+House Wren,Troglodytes aedon,7210,Sedge Wren,Cistothorus platensis,7240,1
+House Wren,Troglodytes aedon,7210,Marsh Wren,Cistothorus palustris,7250,0
+Carolina Wren,Thryothorus ludovicianus,7180,Rock Wren,Salpinctes obsoletus,7150,0
+Carolina Wren,Thryothorus ludovicianus,7180,Canyon Wren,Catherpes mexicanus,7170,0
+Carolina Wren,Thryothorus ludovicianus,7180,Bewick's Wren,Thryomanes bewickii,7190,0
+Carolina Wren,Thryothorus ludovicianus,7180,House Wren,Troglodytes aedon,7210,1
+Carolina Wren,Thryothorus ludovicianus,7180,Winter Wren,Troglodytes hiemalis,7222,0
+Carolina Wren,Thryothorus ludovicianus,7180,Marsh Wren,Cistothorus palustris,7250,0
+Bewick's Wren,Thryomanes bewickii,7190,Rock Wren,Salpinctes obsoletus,7150,1
+Bewick's Wren,Thryomanes bewickii,7190,House Wren,Troglodytes aedon,7210,0
+Rock Wren,Salpinctes obsoletus,7150,Bewick's Wren,Thryomanes bewickii,7190,0
+Rock Wren,Salpinctes obsoletus,7150,House Wren,Troglodytes aedon,7210,1
+Winter Wren,Troglodytes hiemalis,7222,House Wren,Troglodytes aedon,7210,1
+Winter Wren,Troglodytes hiemalis,7222,Sedge Wren,Cistothorus platensis,7240,0
+Winter Wren,Troglodytes hiemalis,7222,Marsh Wren,Cistothorus palustris,7250,0
+Pacific Wren,Troglodytes pacificus,7221,House Wren,Troglodytes aedon,7210,1
+Pacific Wren,Troglodytes pacificus,7221,Marsh Wren,Cistothorus palustris,7250,0
+Sedge Wren,Cistothorus platensis,7240,House Wren,Troglodytes aedon,7210,1
+Sedge Wren,Cistothorus platensis,7240,Winter Wren,Troglodytes hiemalis,7222,0
+Red-breasted Nuthatch,Sitta canadensis,7280,Brown Creeper,Certhia americana,7260,1
+Brown Creeper,Certhia americana,7260,Red-breasted Nuthatch,Sitta canadensis,7280,1
+Brown-headed Nuthatch,Sitta pusilla,7290,Red-breasted Nuthatch,Sitta canadensis,7280,1
+White-breasted Nuthatch,Sitta carolinensis,7270,Pygmy Nuthatch,Sitta pygmaea,7300,1
+Carolina Chickadee,Parus carolinensis,7360,Tufted Titmouse,Baeolophus bicolor,7310,1
+Carolina Chickadee,Parus carolinensis,7360,Black-crested Titmouse,Baeolophus atricristatus,7320,0
+Carolina Chickadee,Parus carolinensis,7360,Black-capped Chickadee,Parus atricapillus,7350,0
+Black-capped Chickadee,Parus atricapillus,7350,Tufted Titmouse,Baeolophus bicolor,7310,0
+Black-capped Chickadee,Parus atricapillus,7350,Carolina Chickadee,Parus carolinensis,7360,0
+Black-capped Chickadee,Parus atricapillus,7350,Mountain Chickadee,Parus gambeli,7380,0
+Black-capped Chickadee,Parus atricapillus,7350,Boreal Chickadee,Parus hudsonicus,7400,1
+Black-capped Chickadee,Parus atricapillus,7350,Chestnut-backed Chickadee,Parus rufescens,7410,0
+Tufted Titmouse,Baeolophus bicolor,7310,Black-capped Chickadee,Parus atricapillus,7350,0
+Tufted Titmouse,Baeolophus bicolor,7310,Carolina Chickadee,Parus carolinensis,7360,1
+Wrentit,Chamaea fasciata,7420,Oak Titmouse,Baeolophus inornatus,7330,1
+Chestnut-backed Chickadee,Parus rufescens,7410,Oak Titmouse,Baeolophus inornatus,7330,0
+Chestnut-backed Chickadee,Parus rufescens,7410,Bushtit,Psaltriparus minimus,7430,1
+Mountain Chickadee,Parus gambeli,7380,Juniper Titmouse,Baeolophus ridgwayi,7331,1
+Boreal Chickadee,Parus hudsonicus,7400,Black-capped Chickadee,Parus atricapillus,7350,1
+Juniper Titmouse,Baeolophus ridgwayi,7331,Mountain Chickadee,Parus gambeli,7380,1
+Oak Titmouse,Baeolophus inornatus,7330,Mountain Chickadee,Parus gambeli,7380,0
+Oak Titmouse,Baeolophus inornatus,7330,Chestnut-backed Chickadee,Parus rufescens,7410,1
+Bushtit,Psaltriparus minimus,7430,Chestnut-backed Chickadee,Parus rufescens,7410,1
+Ruby-crowned Kinglet,Regulus calendula,7490,Golden-crowned Kinglet,Regulus satrapa,7480,1
+Golden-crowned Kinglet,Regulus satrapa,7480,Ruby-crowned Kinglet,Regulus calendula,7490,1
+Black-tailed Gnatcatcher,Polioptila melanura,7520,Blue-gray Gnatcatcher,Polioptila caerulea,7510,1
+Blue-gray Gnatcatcher,Polioptila caerulea,7510,Black-tailed Gnatcatcher,Polioptila melanura,7520,1
+Blue-gray Gnatcatcher,Polioptila caerulea,7510,California Gnatcatcher,Polioptila californica,7530,0
+Mountain Bluebird,Sialia currucoides,7680,Townsend's Solitaire,Myadestes townsendi,7540,1
+Wood Thrush,Hylocichla mustelina,7550,Veery,Catharus fuscescens,7560,0
+Wood Thrush,Hylocichla mustelina,7550,Bicknell's Thrush,Catharus bicknelli,7571,0
+Wood Thrush,Hylocichla mustelina,7550,Swainson's Thrush,Catharus ustulatus,7580,0
+Wood Thrush,Hylocichla mustelina,7550,Hermit Thrush,Catharus guttatus,7590,0
+Wood Thrush,Hylocichla mustelina,7550,American Robin,Turdus migratorius,7610,1
+Wood Thrush,Hylocichla mustelina,7550,Eastern Bluebird,Sialia sialis,7660,0
+Gray-cheeked Thrush,Catharus minimus,7570,Townsend's Solitaire,Myadestes townsendi,7540,0
+Gray-cheeked Thrush,Catharus minimus,7570,Bicknell's Thrush,Catharus bicknelli,7571,0
+Gray-cheeked Thrush,Catharus minimus,7570,Swainson's Thrush,Catharus ustulatus,7580,1
+Gray-cheeked Thrush,Catharus minimus,7570,Hermit Thrush,Catharus guttatus,7590,0
+Gray-cheeked Thrush,Catharus minimus,7570,Mountain Bluebird,Sialia currucoides,7680,0
+Veery,Catharus fuscescens,7560,Townsend's Solitaire,Myadestes townsendi,7540,0
+Veery,Catharus fuscescens,7560,Wood Thrush,Hylocichla mustelina,7550,0
+Veery,Catharus fuscescens,7560,Bicknell's Thrush,Catharus bicknelli,7571,0
+Veery,Catharus fuscescens,7560,Swainson's Thrush,Catharus ustulatus,7580,0
+Veery,Catharus fuscescens,7560,Hermit Thrush,Catharus guttatus,7590,1
+Veery,Catharus fuscescens,7560,Eastern Bluebird,Sialia sialis,7660,0
+Veery,Catharus fuscescens,7560,Mountain Bluebird,Sialia currucoides,7680,0
+Hermit Thrush,Catharus guttatus,7590,Townsend's Solitaire,Myadestes townsendi,7540,0
+Hermit Thrush,Catharus guttatus,7590,Swainson's Thrush,Catharus ustulatus,7580,1
+American Robin,Turdus migratorius,7610,Wood Thrush,Hylocichla mustelina,7550,1
+American Robin,Turdus migratorius,7610,Varied Thrush,Zoothera naevia,7630,0
+Eastern Bluebird,Sialia sialis,7660,Wood Thrush,Hylocichla mustelina,7550,1
+Eastern Bluebird,Sialia sialis,7660,Veery,Catharus fuscescens,7560,0
+Eastern Bluebird,Sialia sialis,7660,Swainson's Thrush,Catharus ustulatus,7580,0
+Eastern Bluebird,Sialia sialis,7660,Hermit Thrush,Catharus guttatus,7590,0
+Eastern Bluebird,Sialia sialis,7660,Mountain Bluebird,Sialia currucoides,7680,0
+Swainson's Thrush,Catharus ustulatus,7580,Hermit Thrush,Catharus guttatus,7590,1
+Townsend's Solitaire,Myadestes townsendi,7540,Hermit Thrush,Catharus guttatus,7590,1
+Townsend's Solitaire,Myadestes townsendi,7540,Mountain Bluebird,Sialia currucoides,7680,0
+Western Bluebird,Sialia mexicana,7670,Hermit Thrush,Catharus guttatus,7590,1
