@@ -818,18 +818,25 @@ ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_null.pdf", height = 6, wi
 
 
 #### example non-comp dist and main R2 ######
-single_dist = subset(noncomps_output_bocc, FocalAOU == 7580)
-ggplot(single_dist) +
+single_dist = subset(noncomps_output_bocc, FocalAOU == 6450)
+n = ggplot(single_dist) +
   stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5) +
-  xlab(expression("Swainson's Thrush R"^"2")) + ylab("Density") +
+  xlab(expression("Nashville Warbler R"^"2")) + ylab("Density") +
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
 
-ggplot(single_dist) +
+o = ggplot(single_dist) +
   stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5) +
-  xlab(expression("Swainson's Thrush Estimate")) + ylab("Density") +
+  xlab(expression("Nashville Warbler Estimate")) + ylab("Density") +
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+
+plot_grid(n+ theme(legend.position="none"),
+          o + theme(legend.position="none"),
+          align = 'h',
+          labels = c("A","B"),
+          nrow = 1)
+ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_ex.pdf", height = 6, width = 12)
 
 #### non comp plots ####
 # noncomps_output = merge(noncomps_output, nsw[,c("focalAOU", "Family")], by.x = "FocalAOU", by.y = "focalAOU")
