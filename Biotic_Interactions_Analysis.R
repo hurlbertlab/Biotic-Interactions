@@ -546,7 +546,7 @@ anova(env_traits)
 # creating env traits model to compare to comp and weighted traits mods
 env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
 env_cont2 = merge(env_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by.x = "FocalAOU", by.y = "FocalAOU")
-econt = lm(logit(value) ~ FocalArea  + area_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI , data = env_cont2)
+econt = lm(COMPSC ~ FocalArea  + area_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI , data = env_cont2, weights = n)
 env_est = summary(econt)$coef[,"Estimate"]
 env = data.frame(colname, env_est)
 env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - as.vector(summary(econt)$coef[,"Std. Error"])
