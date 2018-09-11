@@ -681,12 +681,12 @@ ggplot(envoutput, aes(x = ENV, y = COMP)) +theme_classic()+ theme(axis.title.x=e
 
 #### R2 plot - glm violin plots ####
 R2violin.5 = left_join(R2plot2, envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
-R2violin = gather(R2violin.5, "type", "Rval", 13:15, 19)
+R2violin = gather(R2violin.5, "type", "Rval", 13:16)
 
 R2violin$type = factor(R2violin$type,
                               levels = c("violin_comp","violin_env", "violin_total","COMPSC"),ordered = TRUE)
 
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("Variance Explained") + ylab(bquote("R"^"2"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey", "#636363"), labels=c("Competition","Environment", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25, angle = 90),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=mean, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey", "#636363"), labels=c("Competition","Environment", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25, angle = 90),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=mean, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
 
 ggsave("Figures/violin_mains.pdf", height = 8, width = 12)
 
