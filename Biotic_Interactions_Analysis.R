@@ -198,41 +198,41 @@ occumatrix$ndvipred = inv.logit(occumatrix$abNDVI * mm_fixed$mean[6] + mm_fixed$
 tempsub = occumatrix[occumatrix$abTemp < quantile(occumatrix$abTemp, 0.95), ]
 tempsub = tempsub[,c("FocalAOU", "FocalOcc", "abTemp", "abElev", "abPrecip", "abNDVI", "temppred")]
 temp = ggplot(data = tempsub, aes(x = abTemp, y = temppred)) + scale_x_continuous(limits = c(0,2))  +
-  geom_point(data = tempsub, aes(x = abTemp, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic() + xlab("Temperature") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16))
+  geom_point(data = tempsub, aes(x = abTemp, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic() + xlab("Temperature") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 #geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abTemp + 1, ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3], data = tempsub)  
 ggsave("C:/Git/Biotic-Interactions/Figures/temp.pdf", height = 8, width = 12)
 
 elevsub = occumatrix[occumatrix$abElev < quantile(occumatrix$abElev, 0.95), ]
 elev = ggplot(data = elevsub, aes(x = abElev, y = elevpred)) + theme_classic()  +
-  geom_point(data = elevsub, aes(x = abElev, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + xlab("Elevation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16)) 
+  geom_point(data = elevsub, aes(x = abElev, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + xlab("Elevation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 ggsave("C:/Git/Biotic-Interactions/Figures/elev.pdf", height = 8, width = 12)
 
 precipsub = occumatrix[occumatrix$abPrecip < quantile(occumatrix$abPrecip, 0.95), ]
-precip = ggplot(data = precipsub, aes(x = abPrecip, y = precippred)) + scale_x_continuous(limits = c(0,2))  + geom_point(data = elevsub, aes(x = abPrecip, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic()+ xlab("Precipitation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16))  
+precip = ggplot(data = precipsub, aes(x = abPrecip, y = precippred)) + scale_x_continuous(limits = c(0,2))  + geom_point(data = elevsub, aes(x = abPrecip, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic()+ xlab("Precipitation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 ggsave("C:/Git/Biotic-Interactions/Figures/precip.pdf", height = 8, width = 12)
 
 ndvisub = occumatrix[occumatrix$abNDVI < quantile(occumatrix$abNDVI, 0.95), ]
 NDVI = ggplot(data = ndvisub, aes(x = abNDVI, y = ndvipred)) +
-  geom_point(data = ndvisub, aes(x = abNDVI, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) +theme_classic()+ xlab("NDVI") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16)) 
+  geom_point(data = ndvisub, aes(x = abNDVI, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) +theme_classic()+ xlab("NDVI") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 
 ggsave("C:/Git/Biotic-Interactions/Figures/ndvi.pdf", height = 8, width = 12)
 
 cssub = occumatrix[abs(occumatrix$comp_scaled) < quantile(abs(occumatrix$comp_scaled), 0.95), ]
 comp = ggplot(data = cssub, aes(x = comp_scaled, y = cspred)) + xlim(0,1) +
-  geom_point(data = cssub, aes(x = comp_scaled, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#dd1c77", lwd = 3) + theme_classic()+ xlab("Competitor Abundance") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=16), axis.text.y=element_text(size=16)) 
+  geom_point(data = cssub, aes(x = comp_scaled, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#dd1c77", lwd = 3) + theme_classic()+ xlab("Competitor Abundance") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 ggsave("C:/Git/Biotic-Interactions/Figures/comp.pdf", height = 8, width = 12)
 #   geom_segment(aes(x = 0, y =  inv.logit(mm_fixed$mean)[1], xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) 
 
 
-z <- plot_grid(precip + theme(legend.position="none"),
-               elev + theme(legend.position="none"),
+z <- plot_grid(comp + theme(legend.position="none"),
                temp + theme(legend.position="none"),
                NDVI + theme(legend.position="none"),
-               comp + theme(legend.position="none"),
-               align = 'h',
-               labels = c("A","B", "C", "D", "E"),
-               nrow = 1)
-ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf", height = 8, width = 30)
+               elev + theme(legend.position="none"),
+               precip + theme(legend.position="none"),
+               align = 'hv',
+               # labels = c("A","B", "C", "D", "E"),
+               nrow = 2)
+ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf", height = 20, width = 30)
 
 mm_fixed2 = mm_fixed[2:6,]
 ggplot(mm_fixed2, aes(x = X, y = mean)) + geom_point(pch=15, size = 5, col = "dark blue") + theme_classic() + geom_hline(yintercept = 0, lty = 2, color = "red") + geom_errorbar(ymin = mm_fixed2$X2.5., ymax = mm_fixed2$X97.5., width=0.2, size=1, color="black") + scale_y_continuous(limits = c(-0.6, .1)) + xlab("Parameter Estimate") + ylab("Value") +
@@ -802,7 +802,7 @@ P = ggplot(noncomps_output_bocc) +
   stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = mean(noncomps_output_bocc$Competition_P), col = "black") +
   xlab("P") + ylab("Density") +
-  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 #ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
 
 plot_grid(P+ theme(legend.position="none"),
@@ -820,13 +820,13 @@ n = ggplot(single_dist) +
   stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5) +
   xlab(expression("Nashville Warbler R"^"2")) + ylab("Density") +
-  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
 o = ggplot(single_dist) +
   stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5) +
   xlab(expression("Nashville Warbler Estimate")) + ylab("Density") +
-  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
 plot_grid(n+ theme(legend.position="none"),
           o + theme(legend.position="none"),
@@ -834,6 +834,26 @@ plot_grid(n+ theme(legend.position="none"),
           labels = c("A","B"),
           nrow = 1)
 ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_ex.pdf", height = 6, width = 12)
+
+#### 1:1 plots ####
+noncomps_points = noncomps_output_bocc %>% 
+  select(FocalAOU, R2, Competition_R2) %>%
+  group_by(FocalAOU) %>%
+  summarise(nonr2 = mean(R2)) 
+
+noncomps_1.1 = left_join(noncomps_points, noncomps_output_bocc[, c("FocalAOU", "Competition_R2")], by = "FocalAOU")
+
+ggplot(aes(Competition_R2, nonr2), data = noncomps_1.1) + geom_point() + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25) + ylab("Mean Non-competitor R2") + xlab("Main Competitor R2")
+
+
+noncomps_points_med = noncomps_output_bocc %>% 
+  select(FocalAOU, R2, Competition_R2) %>%
+  group_by(FocalAOU) %>%
+  summarise(nonr2 = median(R2)) 
+
+noncomps_med = left_join(noncomps_points_med, noncomps_output_bocc[, c("FocalAOU", "Competition_R2")], by = "FocalAOU")
+
+ggplot(aes(Competition_R2, nonr2), data = noncomps_med) + geom_point() + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25) + ylab("Median Non-competitor R2") + xlab("Main Competitor R2")
 
 #### non comp plots ####
 # noncomps_output = merge(noncomps_output, nsw[,c("focalAOU", "Family")], by.x = "FocalAOU", by.y = "focalAOU")
