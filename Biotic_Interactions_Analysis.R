@@ -549,6 +549,7 @@ env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
 env_cont2 = merge(env_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by.x = "FocalAOU", by.y = "FocalAOU")
 econt = lm(COMPSC ~ FocalArea  + area_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI , data = env_cont2, weights = n)
 env_est = summary(econt)$coef[,"Estimate"]
+colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI")
 env = data.frame(colname, env_est)
 env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - as.vector(summary(econt)$coef[,"Std. Error"])
 env$env_upper = as.vector(summary(econt)$coefficients[,"Estimate"]) + as.vector(summary(econt)$coef[,"Std. Error"])
@@ -577,6 +578,7 @@ ggplot(env_trait_rank2, aes(colname, env_est)) + geom_point(pch=15, size = 5, co
 colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Insct/Om","Insectivore","Nectarivore","Omnivore")
 # this is the trait mod scaled by comp/env. there are > 183 rows bc of the competitors (FocalArea, area_overalp)
 # trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
+comp_cont4 = comp_lm
 comp_cont4 = filter(comp_cont4, Trophic.Group != "nectarivore" & Trophic.Group != "herbivore")
 colname = c("Granivore", "Insectivore/\nOmnivore","Insectivore","Omnivore")
 trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4, weights = n)
@@ -584,6 +586,7 @@ scaled_est1 = summary(trait_mod_scale)$coef[,"Estimate"]
 scaled_est2 = c(scaled_est1[1], scaled_est1[2:4] + scaled_est1[1])
 scaled_est = data.frame(colname, scaled_est2)
 scaled_est$scaled_lower =  as.vector(scaled_est$scaled_est) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
+
 scaled_est$scaled_upper = as.vector(scaled_est$scaled_est) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
 
 scaled_rank = scaled_est %>% 
@@ -818,22 +821,29 @@ ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_null.pdf", height = 6, wi
 single_dist = subset(noncomps_output_bocc, FocalAOU == 6450)
 n = ggplot(single_dist) +
   stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5) +
-  xlab(expression("Nashville Warbler R"^"2")) + ylab("Density") +
+  geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5, lty = 2) +
+  xlab(expression("Variance Explained")) + ylab("Density") +
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
 o = ggplot(single_dist) +
   stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5) +
-  xlab(expression("Nashville Warbler Estimate")) + ylab("Density") +
+  geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5, lty = 2) +
+  xlab(expression("Competitor Estimate")) + ylab("Density") +
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
+
+p = ggplot(noncomps_output_bocc) +
+  stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_vline(xintercept = mean(na.omit(noncomps_output_bocc$Competition_P)), col = "black", lwd = 1.5, lty = 2) +
+  xlab("Competitor P-value") + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
 plot_grid(n+ theme(legend.position="none"),
           o + theme(legend.position="none"),
+          p + theme(legend.position="none"),
           align = 'h',
-          labels = c("A","B"),
+          labels = c("A","B", "C"),
           nrow = 1)
-ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_ex.pdf", height = 6, width = 12)
+ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_ex.pdf", height = 6, width = 20)
 
 #### 1:1 plots ####
 noncomps_points = noncomps_output_bocc %>% 
