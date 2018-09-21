@@ -788,24 +788,23 @@ noncomps_output_bocc$Null = "Null"
 noncomps_output_bocc$Comp = "Comp"
 
 R = ggplot(noncomps_output_bocc) +
-  stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
+  # stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
   stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
-  xlab(expression("R"^"2")) + ylab("Density") +
-  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+  xlab(expression("Competitor R"^"2")) + ylab("Density") +
+  scale_fill_manual(values=c("purple4")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 #ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
 
 E = ggplot(noncomps_output_bocc) +
-  stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
+  # stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
   stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab("Estimate") + ylab("Density") +
-  scale_fill_manual(breaks = c("Null", "Comp"), values=c("#dd1c77", "#c994c7"), labels=c("Non-Competitors","Main Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) 
+  xlab("Competitor Estimate") + ylab("Density") +
+  scale_fill_manual(values=c("purple4")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 #ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
 
 P = ggplot(noncomps_output_bocc) +
   stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = mean(noncomps_output_bocc$Competition_P), col = "black") +
-  xlab("P") + ylab("Density") +
-  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
+  xlab("Competitor P-value") + ylab("Density") +
+  scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 #ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
 
 plot_grid(P+ theme(legend.position="none"),
