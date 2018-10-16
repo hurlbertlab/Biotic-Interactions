@@ -143,12 +143,29 @@ envtable$ndvi.mean = as.numeric(envtable$ndvi.mean)
 ### Calculate metrics of interest
 ####---- Creating final data frame----####
 #For loop to calculate mean & standard dev environmental variables for each unique species
-uniq.spp = unique(occumatrix$Aou, header = "Species")
+uniq.spp = unique(occumatrix$aou, header = "Species")
+
+# calc mean spp abundance
+bbs_abun = read.csv("data/bbs_abun.csv", header = TRUE)
+bbs_abun_avg = bbs_abun %>% 
+  group_by(stateroute, aou) %>%
+  summarise(abun_mean = mean(speciestotal)) %>%
+  left_join(occumatrix, ., by = c("stateroute", "aou"))
+
+occumatrix2 = left_join(bbs_abun_avg, envtable, by = "stateroute")
+occumatrix2$tempocc = occumatrix2$occ * occumatrix2$mat.mean
+occumatrix2$elevocc = occumatrix2$occ * occumatrix2$elev.mean
+occumatrix2$mapocc = occumatrix2$occ * occumatrix2$map.mean
+occumatrix2$ndviocc = occumatrix2$occ * occumatrix2$ndvi.mean
+
 birdsoutputm = c()
 for (species in uniq.spp) {
-  spec.routes <- occumatrix[(occumatrix$Aou) == species, "stateroute"] #subset routes for each species (i) in tidybirds
-  env.sub <- envtable[envtable$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
-  envmeans = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'ndvi.mean')], 2, mean))
+  spec.routes <- occumatrix2[(occumatrix2$aou) == species, "stateroute"] #subset routes for each species (i) in tidybirds
+  env.sub <- occumatrix2[occumatrix2$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
+ # envmeans = as.vector(apply(env.sub[, c('tempocc', 'mapocc', 'elevocc', 'ndviocc')], 2, mean))
+  envmeans = env.sub %>%
+    group_by(aou) %>%
+    env.sub$tempmean = (env.sub$tempocc/env.sub$abun_sum)
   envsd = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'ndvi.mean')], 2, sd))
 
   birdsoutputm = rbind(birdsoutputm, c(species, envmeans, envsd))
