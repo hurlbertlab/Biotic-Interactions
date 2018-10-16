@@ -17,7 +17,7 @@ prj.string <- "+proj=laea +lat_0=45.235 +lon_0=-106.675 +units=km"
 
 ####################################################################################
 #### Import route locations and draw sample circles around them
-
+# setwd(C:/Git/Biotic-Interactions)
 # derived from BBS_occ script
 routes = read.csv("data/latlong_rtes.csv",header =TRUE)
 # routes = routes[row.names(unique(routes[,c('latitude', 'longitude', 'stateroute')])),]
@@ -129,6 +129,7 @@ all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, en
 ####----Creating an environmental matrix ----####
 occumatrix <- read.csv("data/2001_2015_bbs_occupancy.csv", header = T) # read in updated bbs data
 route.locs = read.csv('data/latlong_rtes.csv')
+all_env = read.csv("data/all_env.csv", header = TRUE)
 
 latlongs = subset(route.locs, select = c('stateroute', 'latitude', 'longitude'))
 latlongs$latitude = abs(latlongs$latitude)
@@ -158,17 +159,27 @@ occumatrix2$elevocc = occumatrix2$occ * occumatrix2$elev.mean
 occumatrix2$mapocc = occumatrix2$occ * occumatrix2$map.mean
 occumatrix2$ndviocc = occumatrix2$occ * occumatrix2$ndvi.mean
 
-birdsoutputm = c()
+birdsoutputm = data.frame(Mean.Temp=integer(), 
+                          Mean.Elev=integer(), 
+                          Mean.Precip=integer(), 
+                          Mean.NDVI=integer(),
+                          species=integer(), 
+                          stringsAsFactors=FALSE) 
 for (species in uniq.spp) {
+  species = as.numeric(species)
   spec.routes <- occumatrix2[(occumatrix2$aou) == species, "stateroute"] #subset routes for each species (i) in tidybirds
   env.sub <- occumatrix2[occumatrix2$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
- # envmeans = as.vector(apply(env.sub[, c('tempocc', 'mapocc', 'elevocc', 'ndviocc')], 2, mean))
-  envmeans = env.sub %>%
-    group_by(aou) %>%
-    env.sub$tempmean = (env.sub$tempocc/env.sub$abun_sum)
-  envsd = as.vector(apply(env.sub[, c('mat.mean', 'map.mean', 'elev.mean', 'ndvi.mean')], 2, sd))
-
-  birdsoutputm = rbind(birdsoutputm, c(species, envmeans, envsd))
+  env.spec <- subset(env.sub, aou == species)
+  tempmean = (env.spec$tempocc/env.spec$abun_mean)
+  mapmean = (env.spec$mapocc/env.spec$abun_mean)
+  elevmean = (env.spec$elevocc/env.spec$abun_mean)
+  ndvimean = (env.spec$ndviocc/env.spec$abun_mean)
+  envmeans = cbind(tempmean, mapmean, elevmean, ndvimean)
+  envmeans = data.frame(envmeans)
+  envmeans$species = species
+  
+    
+  birdsoutputm = rbind(birdsoutputm, c(envmeans))
   
 }
 birdsoutput = data.frame(birdsoutputm)
