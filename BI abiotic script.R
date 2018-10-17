@@ -148,46 +148,69 @@ uniq.spp = unique(occumatrix$aou, header = "Species")
 
 # calc mean spp abundance
 bbs_abun = read.csv("data/bbs_abun.csv", header = TRUE)
+
+bbs_abun_sum = bbs_abun %>% 
+  group_by(stateroute, aou) %>%
+  summarise(abun_sum = sum(speciestotal))
+
 bbs_abun_avg = bbs_abun %>% 
   group_by(stateroute, aou) %>%
   summarise(abun_mean = mean(speciestotal)) %>%
-  left_join(occumatrix, ., by = c("stateroute", "aou"))
+  left_join(occumatrix, ., by = c("stateroute", "aou")) %>%
+  left_join(., bbs_abun_sum, by = c("stateroute", "aou"))
 
 occumatrix2 = left_join(bbs_abun_avg, envtable, by = "stateroute")
-occumatrix2$tempocc = occumatrix2$occ * occumatrix2$mat.mean
-occumatrix2$elevocc = occumatrix2$occ * occumatrix2$elev.mean
-occumatrix2$mapocc = occumatrix2$occ * occumatrix2$map.mean
-occumatrix2$ndviocc = occumatrix2$occ * occumatrix2$ndvi.mean
+occumatrix2$tempabun_sum = occumatrix2$abun_sum * occumatrix2$mat.mean
+occumatrix2$elevabun_sum = occumatrix2$abun_sum * occumatrix2$elev.mean
+occumatrix2$mapabun_sum = occumatrix2$abun_sum * occumatrix2$map.mean
+occumatrix2$ndviabun_sum = occumatrix2$abun_sum * occumatrix2$ndvi.mean
 
-birdsoutputm = data.frame(Mean.Temp=integer(), 
-                          Mean.Elev=integer(), 
-                          Mean.Precip=integer(), 
-                          Mean.NDVI=integer(),
-                          species=integer(), 
-                          stringsAsFactors=FALSE) 
+birdsoutput = data.frame(Mean.Temp=integer(), 
+   Mean.Elev = integer(), 
+   Mean.Precip = integer(), 
+   Mean.NDVI = integer(),
+   SD.Temp = integer(), 
+   SD.Precip = integer(), 
+   SD.NDVI = integer(),
+   species = integer(), 
+   stringsAsFactors=FALSE) 
+
 for (species in uniq.spp) {
   species = as.numeric(species)
   spec.routes <- occumatrix2[(occumatrix2$aou) == species, "stateroute"] #subset routes for each species (i) in tidybirds
   env.sub <- occumatrix2[occumatrix2$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
   env.spec <- subset(env.sub, aou == species)
-  tempmean = (env.spec$tempocc/env.spec$abun_mean)
-  mapmean = (env.spec$mapocc/env.spec$abun_mean)
-  elevmean = (env.spec$elevocc/env.spec$abun_mean)
-  ndvimean = (env.spec$ndviocc/env.spec$abun_mean)
+  # calc weighted means
+  tempmean = (env.spec$tempabun_sum/env.spec$abun_mean)
+  mapmean = (env.spec$mapabun_sum/env.spec$abun_mean)
+  elevmean = (env.spec$elevabun_sum/env.spec$abun_mean)
+  ndvimean = (env.spec$ndviabun_sum/env.spec$abun_mean)
+  
   envmeans = cbind(tempmean, mapmean, elevmean, ndvimean)
   envmeans = data.frame(envmeans)
+  
+  envar = c()
+  for(i in 1:nrow(envmeans)){
+  # calc weighted sd
+  tempvar = sqrt(abs(sum(na.omit(envmeans[i, 1]))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$tempabun_sum)))/length(env.spec$abun_mean)))
+ #wtd.var(env.spec$tempabun_sum/env.spec$abun_mean))
+  mapvar = sqrt(abs((sum(na.omit(envmeans[i, 2])))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$mapabun_sum)))/length(env.spec$abun_mean)))
+  elevvar = sqrt(abs((sum(na.omit(envmeans[i, 3])))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$elevabun_sum)))/length(env.spec$abun_mean)))
+  ndvivar = sqrt(abs((sum(na.omit(envmeans[i, 4])))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$ndviabun_sum)))/length(env.spec$abun_mean)))
+  envar = rbind(envar, c(tempvar, mapvar, elevvar, ndvivar))
+  }
+  envar = data.frame(envar)
+  names(envar) = c("SD.Temp", "SD.Precip", "SD.Elev", "SD.NDVI")
+
   envmeans$species = species
   
-    
-  birdsoutputm = rbind(birdsoutputm, c(envmeans))
-  
+  birdsoutput = rbind(birdsoutput, c(envmeans, envar))
 }
-birdsoutput = data.frame(birdsoutputm)
 
-names(birdsoutput) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean.NDVI", "SD.Temp", "SD.Precip", "SD.Elev", "SD.NDVI")
+# names(birdsoutput) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean.NDVI", "SD.Temp", "SD.Precip", "SD.Elev", "SD.NDVI")
 ### Combine relevant information from each of your two or more datasets using merge()
 #(species/occupancy/expected env variables/observed env variables)
-occubirds <- merge(birdsoutput, occumatrix, by.x = "Species", by.y="Aou", na.rm = T)
+occubirds <- merge(birdsoutput, occumatrix, by.x = "species", by.y="aou", na.rm = T)
 occuenv <- merge(envtable, occubirds, by = "stateroute", na.rm = T)
 # occuenv <- na.omit(occuenv) got rid of too many aous
 
