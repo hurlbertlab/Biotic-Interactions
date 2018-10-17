@@ -151,15 +151,11 @@ bbs_abun = read.csv("data/bbs_abun.csv", header = TRUE)
 
 bbs_abun_sum = bbs_abun %>% 
   group_by(stateroute, aou) %>%
-  summarise(abun_sum = sum(speciestotal))
+  summarise(abun_weights = sum(speciestotal)) %>%
+  left_join(occumatrix, ., by = c("stateroute", "aou")) 
+  # left_join(., bbs_abun_sum, by = c("stateroute", "aou"))
 
-bbs_abun_avg = bbs_abun %>% 
-  group_by(stateroute, aou) %>%
-  summarise(abun_mean = mean(speciestotal)) %>%
-  left_join(occumatrix, ., by = c("stateroute", "aou")) %>%
-  left_join(., bbs_abun_sum, by = c("stateroute", "aou"))
-
-occumatrix2 = left_join(bbs_abun_avg, envtable, by = "stateroute")
+occumatrix2 = left_join(bbs_abun_sum, envtable, by = "stateroute")
 occumatrix2$tempabun_sum = occumatrix2$abun_sum * occumatrix2$mat.mean
 occumatrix2$elevabun_sum = occumatrix2$abun_sum * occumatrix2$elev.mean
 occumatrix2$mapabun_sum = occumatrix2$abun_sum * occumatrix2$map.mean
@@ -181,10 +177,10 @@ for (species in uniq.spp) {
   env.sub <- occumatrix2[occumatrix2$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
   env.spec <- subset(env.sub, aou == species)
   # calc weighted means
-  tempmean = (env.spec$tempabun_sum/env.spec$abun_mean)
-  mapmean = (env.spec$mapabun_sum/env.spec$abun_mean)
-  elevmean = (env.spec$elevabun_sum/env.spec$abun_mean)
-  ndvimean = (env.spec$ndviabun_sum/env.spec$abun_mean)
+  tempmean = (sum(na.omit(env.spec$tempabun_sum))/sum(na.omit(env.spec$abun_sum))) # na.rm = TRUE instead of omit
+  mapmean = (sum(na.omit(env.spec$mapabun_sum)/sum(na.omit(env.spec$abun_sum))))
+  elevmean = (env.spec$elevabun_sum/env.spec$abun_sum)
+  ndvimean = (env.spec$ndviabun_sum/env.spec$abun_sum)
   
   envmeans = cbind(tempmean, mapmean, elevmean, ndvimean)
   envmeans = data.frame(envmeans)
@@ -192,7 +188,11 @@ for (species in uniq.spp) {
   envar = c()
   for(i in 1:nrow(envmeans)){
   # calc weighted sd
-  tempvar = sqrt(abs(sum(na.omit(envmeans[i, 1]))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$tempabun_sum)))/length(env.spec$abun_mean)))
+    sd_num = sum(env.spec$abun_sum * (env.spec$mat.mean - tempmean)^2, na.rm = TRUE) # write a function=, input = env var, delete NAs
+    sd_denom = (sum(env.spec$abun_sum > 0) -1) * sum(env.spec$abun_sum) / sum(env.spec$abun_sum > 0) 
+    sd = sqrt(sd_num/sd_denom)
+    
+  tempvar = sqrt(abs(sum(na.omit(env.spec$mat.mean - tempmean)*env.spec$abun_sum)^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$tempabun_sum)))/length(env.spec$abun_mean)))
  #wtd.var(env.spec$tempabun_sum/env.spec$abun_mean))
   mapvar = sqrt(abs((sum(na.omit(envmeans[i, 2])))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$mapabun_sum)))/length(env.spec$abun_mean)))
   elevvar = sqrt(abs((sum(na.omit(envmeans[i, 3])))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$elevabun_sum)))/length(env.spec$abun_mean)))
