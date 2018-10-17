@@ -210,8 +210,8 @@ for (species in uniq.spp) {
 # names(birdsoutput) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean.NDVI", "SD.Temp", "SD.Precip", "SD.Elev", "SD.NDVI")
 ### Combine relevant information from each of your two or more datasets using merge()
 #(species/occupancy/expected env variables/observed env variables)
-occubirds <- merge(birdsoutput, occumatrix, by.x = "species", by.y="aou", na.rm = T)
-occuenv <- merge(envtable, occubirds, by = "stateroute", na.rm = T)
+occubirds <- left_join(birdsoutput, occumatrix[c("aou", "stateroute","occ")], by = c("species" = "aou"), na.rm = T)
+occuenv <- left_join(occubirds, envtable, by = "stateroute", na.rm = T)
 # occuenv <- na.omit(occuenv) got rid of too many aous
 
 ### Conduct analyses
