@@ -17,7 +17,7 @@ prj.string <- "+proj=laea +lat_0=45.235 +lon_0=-106.675 +units=km"
 
 ####################################################################################
 #### Import route locations and draw sample circles around them
-# setwd(C:/Git/Biotic-Interactions)
+# setwd("C:/Git/Biotic-Interactions")
 # derived from BBS_occ script
 routes = read.csv("data/latlong_rtes.csv",header =TRUE)
 # routes = routes[row.names(unique(routes[,c('latitude', 'longitude', 'stateroute')])),]
@@ -127,7 +127,14 @@ all_env = Reduce(function(x, y) merge(x, y, by = "stateroute"), list(env_mat, en
 
 # write.csv(all_env,'C:/git/Biotic-Interactions/data/all_env.csv',row.names=F)
 ####----Creating an environmental matrix ----####
-occumatrix <- read.csv("data/2001_2015_bbs_occupancy.csv", header = T) # read in updated bbs data
+occuraw <- read.csv("data/2001_2015_bbs_occupancy.csv", header = T) # read in updated bbs data
+occumatrix <- occuraw %>%
+  filter(aou > 2880) %>%
+  filter(aou < 3650 | aou > 3810) %>%
+  filter(aou < 3900 | aou > 3910) %>%
+  filter(aou < 4160 | aou > 4210) %>%
+  filter(aou != 7010)
+
 route.locs = read.csv('data/latlong_rtes.csv')
 all_env = read.csv("data/all_env.csv", header = TRUE)
 
@@ -147,7 +154,13 @@ envtable$ndvi.mean = as.numeric(envtable$ndvi.mean)
 uniq.spp = unique(occumatrix$aou, header = "Species")
 
 # calc mean spp abundance
-bbs_abun = read.csv("data/bbs_abun.csv", header = TRUE)
+bbs_raw = read.csv("data/bbs_abun.csv", header = TRUE)
+bbs_abun <- bbs_raw %>%
+   filter(aou > 2880) %>%
+   filter(aou < 3650 | aou > 3810) %>%
+   filter(aou < 3900 | aou > 3910) %>%
+   filter(aou < 4160 | aou > 4210) %>%
+   filter(aou != 7010)
 
 bbs_abun_sum = bbs_abun %>% 
   group_by(stateroute, aou) %>%
@@ -156,10 +169,12 @@ bbs_abun_sum = bbs_abun %>%
   # left_join(., bbs_abun_sum, by = c("stateroute", "aou"))
 
 occumatrix2 = left_join(bbs_abun_sum, envtable, by = "stateroute")
-occumatrix2$tempabun_sum = occumatrix2$abun_sum * occumatrix2$mat.mean
-occumatrix2$elevabun_sum = occumatrix2$abun_sum * occumatrix2$elev.mean
-occumatrix2$mapabun_sum = occumatrix2$abun_sum * occumatrix2$map.mean
-occumatrix2$ndviabun_sum = occumatrix2$abun_sum * occumatrix2$ndvi.mean
+occumatrix2$tempabun_weights = occumatrix2$abun_weights * occumatrix2$mat.mean
+occumatrix2$elevabun_weights = occumatrix2$abun_weights * occumatrix2$elev.mean
+occumatrix2$mapabun_weights = occumatrix2$abun_weights * occumatrix2$map.mean
+occumatrix2$ndviabun_weights = occumatrix2$abun_weights * occumatrix2$ndvi.mean
+# removing routes with NA, only eliminates one focal spp
+occumatrix2 = na.omit(occumatrix2)
 
 birdsoutput = data.frame(Mean.Temp=integer(), 
    Mean.Elev = integer(), 
@@ -177,18 +192,18 @@ for (species in uniq.spp) {
   env.sub <- occumatrix2[occumatrix2$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
   env.spec <- subset(env.sub, aou == species)
   # calc weighted means
-  tempmean = (sum(na.omit(env.spec$tempabun_sum))/sum(na.omit(env.spec$abun_sum))) # na.rm = TRUE instead of omit
-  mapmean = (sum(na.omit(env.spec$mapabun_sum)/sum(na.omit(env.spec$abun_sum))))
-  elevmean = (env.spec$elevabun_sum/env.spec$abun_sum)
-  ndvimean = (env.spec$ndviabun_sum/env.spec$abun_sum)
+  tempmean = (sum(env.spec$tempabun_weights)/sum(env.spec$abun_weights)) # na.rm = TRUE instead of omit
+  mapmean = sum(env.spec$mapabun_weights)/sum(env.spec$abun_weights)
+  elevmean = sum(env.spec$elevabun_weights)/sum(env.spec$abun_weights)
+  ndvimean = sum(env.spec$ndviabun_weights)/sum(env.spec$abun_weights)
   
   envmeans = cbind(tempmean, mapmean, elevmean, ndvimean)
   envmeans = data.frame(envmeans)
-  
+
   envar = c()
   for(i in 1:nrow(envmeans)){
   # calc weighted sd
-    sd_num = sum(env.spec$abun_sum * (env.spec$mat.mean - tempmean)^2, na.rm = TRUE) # write a function=, input = env var, delete NAs
+    sd_num = sum(env.spec$abun_sum * (env.spec$mat.mean - tempmean)^2) # write a function=, input = env var, delete NAs
     sd_denom = (sum(env.spec$abun_sum > 0) -1) * sum(env.spec$abun_sum) / sum(env.spec$abun_sum > 0) 
     sd = sqrt(sd_num/sd_denom)
     
