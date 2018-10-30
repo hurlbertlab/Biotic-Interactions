@@ -26,7 +26,7 @@ bsize$AOU[bsize$AOU == 4810] = 4812
 AOU$AOU_OUT[AOU$AOU_OUT == 4810] = 4812
 shapefile_areas$compAOU[shapefile_areas$compAOU == 4810] = 4812
 subsetocc$AOU[subsetocc$AOU == 4810] = 4812
-all_env$Species[all_env$Species == 4810] = 4812
+all_env$species[all_env$species == 4810] = 4812
 
 # subset temporal occupancy
 temp_occ = subset(bbs_occ, Aou %in% subsetocc$AOU)
@@ -244,7 +244,7 @@ focalcompsub$all_comp_scaled = focalcompsub$AllCompN/(focalcompsub$FocalAbundanc
 #### ---- Processing Environmental Data - Re-done from Snell_abiotic_code.R ---- ####
 # merge in ENV
 
-all_expected_pres = left_join(focalcompsub, all_env, by = c("stateroute" = "stateroute", "FocalAOU" = "Species"))
+all_expected_pres = left_join(focalcompsub, all_env, by = c("stateroute" = "stateroute", "FocalAOU" = "species"))
 all_expected_pres = na.omit(all_expected_pres)
 all_expected_pres = all_expected_pres[all_expected_pres$Focal != "Rock Pigeon",]
 

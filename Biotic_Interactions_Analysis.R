@@ -156,7 +156,6 @@ glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s +
 summary(glm_occ_rand_site)                                    
 
 
-# occumatrix = subset(occumatrix, FocalAOU == 5880)
 # mm <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
 #        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 # write.csv(summary(mm), row.names= TRUE)
@@ -397,7 +396,7 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=28, hjust = 1, vjust = 0.5), legend.position = c(0.5,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
-tt = t + annotate("text", x = 1:183, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+tt = t + annotate("text", x = 1:175, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
 # scales::pretty_breaks()(0:1)
 
@@ -486,7 +485,7 @@ e = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   theme(axis.text.x=element_text(size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
   scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=50, hjust = 1, vjust = 0.5), legend.position = c(0.5,0.9)) # + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
-ee = e + annotate("text", x = 1:183, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=1,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+ee = e + annotate("text", x = 1:175, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=1,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
 ee
 
@@ -577,7 +576,7 @@ ggplot(env_trait_rank2, aes(colname, env_est)) + geom_point(pch=15, size = 5, co
 #column names to manipulate in plot
 colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Insct/Om","Insectivore","Nectarivore","Omnivore")
 # this is the trait mod scaled by comp/env. there are > 183 rows bc of the competitors (FocalArea, area_overalp)
-# trait_mod_scale = lm(COMPSC ~ sum_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
+# trait_mod_scale = lm(COMPSC ~ log10(sum_overlap) + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
 comp_cont4 = comp_lm
 comp_cont4 = filter(comp_cont4, Trophic.Group != "nectarivore" & Trophic.Group != "herbivore")
 colname = c("Granivore", "Insectivore/\nOmnivore","Insectivore","Omnivore")
@@ -683,13 +682,14 @@ ggplot(envoutput, aes(x = ENV, y = COMP)) +theme_classic()+ theme(axis.title.x=e
 
 
 #### R2 plot - glm violin plots ####
-R2violin.5 = left_join(R2plot2, envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
+R2plot2$COMPSC = R2plot2$COMP.x/(R2plot2$COMP.x+R2plot2$ENV.x)
+R2violin.5 = left_join(R2plot2[,c("FocalAOU", "violin_env","violin_comp","violin_total", "COMPSC")], envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
 R2violin = gather(R2violin.5, "type", "Rval", 13:16)
 
 R2violin$type = factor(R2violin$type,
                               levels = c("violin_comp","violin_env", "violin_total","COMPSC"),ordered = TRUE)
 
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey", "#636363"), labels=c("Competition","Environment", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25, angle = 90),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=mean, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey", "#636363"), labels=c("Competition","Environment", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25, angle = 90),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
 
 ggsave("Figures/violin_mains.pdf", height = 8, width = 12)
 

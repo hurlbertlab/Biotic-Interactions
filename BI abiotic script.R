@@ -177,14 +177,22 @@ occumatrix2$ndviabun_weights = occumatrix2$abun_weights * occumatrix2$ndvi.mean
 occumatrix2 = na.omit(occumatrix2)
 
 birdsoutput = data.frame(Mean.Temp=integer(), 
-   Mean.Elev = integer(), 
    Mean.Precip = integer(), 
+   Mean.Elev = integer(), 
    Mean.NDVI = integer(),
    SD.Temp = integer(), 
    SD.Precip = integer(), 
+   SD.Elev = integer(),
    SD.NDVI = integer(),
    species = integer(), 
    stringsAsFactors=FALSE) 
+
+
+weight.sd = function(abun_weights, env_mean, global_env_mean){
+  sd_num = sum(abun_weights * (env_mean - global_env_mean)^2) # write a function=, input = env var, delete NAs
+  sd_denom = (sum(abun_weights > 0) -1) * sum(abun_weights) / sum(abun_weights > 0) 
+  sd = sqrt(sd_num/sd_denom)
+}
 
 for (species in uniq.spp) {
   species = as.numeric(species)
@@ -192,37 +200,25 @@ for (species in uniq.spp) {
   env.sub <- occumatrix2[occumatrix2$stateroute %in% spec.routes, ] #subset routes for each env in tidybirds
   env.spec <- subset(env.sub, aou == species)
   # calc weighted means
-  tempmean = (sum(env.spec$tempabun_weights)/sum(env.spec$abun_weights)) # na.rm = TRUE instead of omit
-  mapmean = sum(env.spec$mapabun_weights)/sum(env.spec$abun_weights)
-  elevmean = sum(env.spec$elevabun_weights)/sum(env.spec$abun_weights)
-  ndvimean = sum(env.spec$ndviabun_weights)/sum(env.spec$abun_weights)
+  Mean.Temp = (sum(env.spec$tempabun_weights)/sum(env.spec$abun_weights))
+  Mean.Precip = sum(env.spec$mapabun_weights)/sum(env.spec$abun_weights)
+  Mean.Elev = sum(env.spec$elevabun_weights)/sum(env.spec$abun_weights)
+  Mean.NDVI = sum(env.spec$ndviabun_weights)/sum(env.spec$abun_weights)
   
-  envmeans = cbind(tempmean, mapmean, elevmean, ndvimean)
+  envmeans = cbind(Mean.Temp, Mean.Precip, Mean.Elev, Mean.NDVI)
   envmeans = data.frame(envmeans)
-
-  envar = c()
-  for(i in 1:nrow(envmeans)){
-  # calc weighted sd
-    sd_num = sum(env.spec$abun_sum * (env.spec$mat.mean - tempmean)^2) # write a function=, input = env var, delete NAs
-    sd_denom = (sum(env.spec$abun_sum > 0) -1) * sum(env.spec$abun_sum) / sum(env.spec$abun_sum > 0) 
-    sd = sqrt(sd_num/sd_denom)
-    
-  tempvar = sqrt(abs(sum(na.omit(env.spec$mat.mean - tempmean)*env.spec$abun_sum)^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$tempabun_sum)))/length(env.spec$abun_mean)))
- #wtd.var(env.spec$tempabun_sum/env.spec$abun_mean))
-  mapvar = sqrt(abs((sum(na.omit(envmeans[i, 2])))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$mapabun_sum)))/length(env.spec$abun_mean)))
-  elevvar = sqrt(abs((sum(na.omit(envmeans[i, 3])))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$elevabun_sum)))/length(env.spec$abun_mean)))
-  ndvivar = sqrt(abs((sum(na.omit(envmeans[i, 4])))^2/(length(env.spec$abun_mean)-1*sum(na.omit(env.spec$ndviabun_sum)))/length(env.spec$abun_mean)))
-  envar = rbind(envar, c(tempvar, mapvar, elevvar, ndvivar))
-  }
+  SD.Temp = weight.sd(env.spec$tempabun_weights, env.spec$mat.mean, Mean.Temp)
+  SD.Precip = weight.sd(env.spec$mapabun_weights, env.spec$map.mean, Mean.Precip)
+  SD.Elev = weight.sd(env.spec$elevabun_weights, env.spec$elev.mean, Mean.Elev)
+  SD.NDVI = weight.sd(env.spec$ndviabun_weights, env.spec$ndvi.mean, Mean.NDVI)
+  envar = cbind(SD.Temp, SD.Precip, SD.Elev, SD.NDVI)
   envar = data.frame(envar)
-  names(envar) = c("SD.Temp", "SD.Precip", "SD.Elev", "SD.NDVI")
-
-  envmeans$species = species
+  
+  envar$species = species
   
   birdsoutput = rbind(birdsoutput, c(envmeans, envar))
 }
 
-# names(birdsoutput) = c("Species", "Mean.Temp", "Mean.Precip", "Mean.Elev", "Mean.NDVI", "SD.Temp", "SD.Precip", "SD.Elev", "SD.NDVI")
 ### Combine relevant information from each of your two or more datasets using merge()
 #(species/occupancy/expected env variables/observed env variables)
 occubirds <- left_join(birdsoutput, occumatrix[c("aou", "stateroute","occ")], by = c("species" = "aou"), na.rm = T)
