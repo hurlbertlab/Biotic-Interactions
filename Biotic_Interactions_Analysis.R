@@ -16,6 +16,8 @@ tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 bbs_abun = read.csv("data/bbs_abun.csv", header =TRUE)
 nsw = read.csv("data/new_spec_weights.csv", header = TRUE)
 shapefile_areas = read.csv("data/shapefile_areas.csv", header =TRUE)
+# have to omit focal/competitors with no overlap
+shapefile_areas = na.omit(shapefile_areas)
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
 bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
 #update tax_code Winter Wren
@@ -49,6 +51,7 @@ envoutputa = c()
 beta_occ = c()
 beta_abun = c()
 
+l_focalspecies = inner_join(shapefile_areas, occuenv, c("focalAOU"="FocalAOU"))
 subfocalspecies = unique(occuenv$FocalAOU) #[-99] excluding sage sparrow bc no good routes
 
 for (sp in 1:length(subfocalspecies)){
@@ -123,7 +126,7 @@ envoutputa = data.frame(envoutputa)
 names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE", "n")
 names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 
-envoutput1 = merge(envoutput, tax_code[,c('AOU_OUT', 'ALPHA.CODE')], by.x = 'FocalAOU', by.y = "AOU_OUT", all.x = TRUE) 
+envoutput1 = merge(envoutput, tax_code, by.x = 'FocalAOU', by.y = "AOU_OUT", all.x = TRUE) 
 
 envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")], by.x='FocalAOU', by.y='AOU', all.x = TRUE)
 
@@ -409,7 +412,7 @@ ggsave("Figures/barplotc.pdf", height = 35, width = 48)
 #### top 10
 maincomp = read.csv("data/shapefile_areas_w_comp.csv", header = TRUE)
 maincomp2 = subset(maincomp, mainCompetitor == 1)
-envflip_labs = subset(envflip_sub, Type == "ENV")
+envflip_labs = subset(envflip_sub, Type == "COMP")
 envflip_sub2 = left_join(envflip_labs, maincomp2, by = c("FocalAOU" = "focalAOU"))
 envflip_sub2.5 = left_join(envflip_sub2, tax_code[, c("AOU_OUT", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "AOU_OUT"))
 envflip_sub3 = unique(left_join(envflip_sub2.5, tax_code, by = c("compAOU" = "AOU_OUT")))
@@ -509,7 +512,7 @@ env_sub3 = unique(left_join(env_sub2.5, tax_code, by = c("compAOU" = "AOU_OUT"))
 
 w = ggplot(data=env_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.6)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") +ylim(0,0.8)# + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") +ylim(0,0.8)# + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 ggsave("Figures/barplote_sub.pdf", height = 18, width = 16)
 
 
