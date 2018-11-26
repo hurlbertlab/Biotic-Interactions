@@ -162,22 +162,30 @@ occumatrix$abPrecip=abs(occumatrix$zPrecip)
 occumatrix$abNDVI=abs(occumatrix$zNDVI)
 
 # using equation species sum*Focal occ to get success and failure for binomial anlaysis
-occumatrix$sp_success = 15 * occumatrix$FocalOcc
-occumatrix$sp_fail = 15 * (1 - occumatrix$FocalOcc)
+occumatrix$sp_success = as.integer(15 * occumatrix$FocalOcc)
+occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 
 #### GLM of all matrices not just subset ####
-glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s + 
-    abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix)
-summary(glm_occ_rand_site)                                    
+# glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s + 
+ #   abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix)
+# summary(glm_occ_rand_site)                                    
 
 
-# mm <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
-#        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+# mmslope <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
+#        abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 # write.csv(summary(mm), "mm_slope.csv", row.names= TRUE)
+
+mmint <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+
+# Default priors =  default_prior_test <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
+#        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, chains =1, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+# The prior_summary function provides a concise summary of the priors used: prior_summary(default_prior_test)
+
+
 mmslope = read.csv("data/mm_slope_full.csv", header = TRUE)
 mmint = read.csv("data/bayesian_sum_mod_output_full_11_14.csv", header = TRUE)
 
-mm2 = read.csv("data/mm_slope_11_19.csv", header = TRUE)
+mm2 = read.csv("data/mm_slope_full.csv", header = TRUE)
 modoutput2 = subset(mm2, mean > -2.52e+05)
 modoutput2$X = gsub("b", "", modoutput2$X) 
 modoutput2$X = gsub("(Intercept)", "", modoutput2$X) 
@@ -204,28 +212,28 @@ occumatrix$ndvipred = inv.logit(occumatrix$abNDVI * mm_fixed$mean[6] + mm_fixed$
 tempsub = occumatrix[occumatrix$abTemp < quantile(occumatrix$abTemp, 0.95), ]
 tempsub = tempsub[,c("FocalAOU", "FocalOcc", "abTemp", "abElev", "abPrecip", "abNDVI", "temppred")]
 temp = ggplot(data = tempsub, aes(x = abTemp, y = temppred)) + scale_x_continuous(limits = c(0,2))  +
-  geom_point(data = tempsub, aes(x = abTemp, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic() + xlab("Temperature") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
+  geom_point(data = tempsub, aes(x = abTemp, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic() + xlab("Temperature") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 #geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abTemp + 1, ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3], data = tempsub)  
 ggsave("C:/Git/Biotic-Interactions/Figures/temp.pdf", height = 8, width = 12)
 
 elevsub = occumatrix[occumatrix$abElev < quantile(occumatrix$abElev, 0.95), ]
 elev = ggplot(data = elevsub, aes(x = abElev, y = elevpred)) + theme_classic()  +
-  geom_point(data = elevsub, aes(x = abElev, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + xlab("Elevation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
+  geom_point(data = elevsub, aes(x = abElev, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + xlab("Elevation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 ggsave("C:/Git/Biotic-Interactions/Figures/elev.pdf", height = 8, width = 12)
 
 precipsub = occumatrix[occumatrix$abPrecip < quantile(occumatrix$abPrecip, 0.95), ]
-precip = ggplot(data = precipsub, aes(x = abPrecip, y = precippred)) + scale_x_continuous(limits = c(0,2))  + geom_point(data = elevsub, aes(x = abPrecip, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic()+ xlab("Precipitation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
+precip = ggplot(data = precipsub, aes(x = abPrecip, y = precippred)) + scale_x_continuous(limits = c(0,2))  + geom_point(data = elevsub, aes(x = abPrecip, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic()+ xlab("Precipitation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 ggsave("C:/Git/Biotic-Interactions/Figures/precip.pdf", height = 8, width = 12)
 
 ndvisub = occumatrix[occumatrix$abNDVI < quantile(occumatrix$abNDVI, 0.95), ]
 NDVI = ggplot(data = ndvisub, aes(x = abNDVI, y = ndvipred)) +
-  geom_point(data = ndvisub, aes(x = abNDVI, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) +theme_classic()+ xlab("NDVI") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
+  geom_point(data = ndvisub, aes(x = abNDVI, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) +theme_classic()+ xlab("NDVI") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 
 ggsave("C:/Git/Biotic-Interactions/Figures/ndvi.pdf", height = 8, width = 12)
 
 cssub = occumatrix[abs(occumatrix$comp_scaled) < quantile(abs(occumatrix$comp_scaled), 0.95), ]
 comp = ggplot(data = cssub, aes(x = comp_scaled, y = cspred)) + xlim(0,1) +
-  geom_point(data = cssub, aes(x = comp_scaled, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#dd1c77", lwd = 3) + theme_classic()+ xlab("Competitor Abundance") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
+  geom_point(data = cssub, aes(x = comp_scaled, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#dd1c77", lwd = 3) + theme_classic()+ xlab("Competitor Abundance") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 ggsave("C:/Git/Biotic-Interactions/Figures/comp.pdf", height = 8, width = 12)
 #   geom_segment(aes(x = 0, y =  inv.logit(mm_fixed$mean)[1], xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) 
 
