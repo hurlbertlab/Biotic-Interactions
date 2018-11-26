@@ -174,7 +174,10 @@ summary(glm_occ_rand_site)
 # mm <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
 #        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 # write.csv(summary(mm), "mm_slope.csv", row.names= TRUE)
-mm2 = read.csv("data/bayesian_sum_mod_output_full_11_14.csv", header = TRUE)
+mmslope = read.csv("data/mm_slope_full.csv", header = TRUE)
+mmint = read.csv("data/bayesian_sum_mod_output_full_11_14.csv", header = TRUE)
+
+mm2 = read.csv("data/mm_slope_11_19.csv", header = TRUE)
 modoutput2 = subset(mm2, mean > -2.52e+05)
 modoutput2$X = gsub("b", "", modoutput2$X) 
 modoutput2$X = gsub("(Intercept)", "", modoutput2$X) 
