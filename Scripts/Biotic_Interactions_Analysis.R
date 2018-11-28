@@ -183,8 +183,17 @@ mmint <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + abTemp + abElev + abPreci
 
 
 mmslope = read.csv("data/mm_slope_full.csv", header = TRUE)
-mmint = read.csv("data/bayesian_sum_mod_output_full_11_14.csv", header = TRUE)
+mm2 = subset(mmslope, mean > -2.52e+05)
+mm2$X = gsub("b", "", mm2$X) 
+mm2$X = gsub("c_s", "cs", mm2$X) 
+mm2$X = gsub("FocalAOU", "", mm2$X) 
+mm2$X = gsub(":", "_", mm2$X) 
+mm2$X = gsub("[() ]", "", mm2$X) 
+mm2$X = gsub("[[]", "", mm2$X) 
+mm2$X = gsub("[]]", "", mm2$X)
+mm2$AOU =strsplit(mm2$X,"_")
 
+mmint = read.csv("data/bayesian_sum_mod_output_full_11_14.csv", header = TRUE)
 mm2 = read.csv("data/mm_slope_full.csv", header = TRUE)
 modoutput2 = subset(mm2, mean > -2.52e+05)
 modoutput2$X = gsub("b", "", modoutput2$X) 
