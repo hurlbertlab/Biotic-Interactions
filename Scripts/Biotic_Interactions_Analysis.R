@@ -171,8 +171,8 @@ occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 # summary(glm_occ_rand_site)                                    
 
 
-# mmslope <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
-#        abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+mmslope <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
+       abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 40000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 # write.csv(summary(mm), "mm_slope.csv", row.names= TRUE)
 
 mmint <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
@@ -191,7 +191,17 @@ mm2$X = gsub(":", "_", mm2$X)
 mm2$X = gsub("[() ]", "", mm2$X) 
 mm2$X = gsub("[[]", "", mm2$X) 
 mm2$X = gsub("[]]", "", mm2$X)
+mm2 = left_join(., mm2, by = )
 mm2$AOU =strsplit(mm2$X,"_")
+
+vecAOU = 1:1078
+for(i in 1:length(mm2$AOU)){
+  vecAOU[i] <- mm2$AOU[[i]][2]
+}
+mm2 = cbind(vecAOU, mm2)
+mm2$vecAOU2 = as.numeric(as.character(mm2$vecAOU))
+mm3 = left_join(mm2[,c("vecAOU2","X","mean" ,"mcse", "sd" ,"X2.5.","X25.","X50.","X75.","X97.5.","n_eff","Rhat")], nsw[,c("focalAOU", "Focal", "Family")], by = c("vecAOU2" = "focalAOU"))
+write.csv(mm3, "data/tableS6.csv", row.names = FALSE)
 
 mmint = read.csv("data/bayesian_sum_mod_output_full_11_14.csv", header = TRUE)
 mm2 = read.csv("data/mm_slope_full.csv", header = TRUE)
