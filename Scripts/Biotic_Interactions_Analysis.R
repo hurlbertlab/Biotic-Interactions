@@ -654,6 +654,10 @@ scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$colname = factor(scaled_rank2$colname,
                               levels = c("Neotropical",  "Short-distance",  "Resident"),ordered = TRUE)
 
+tukeys = aov(lm(COMPSC ~ migclass, data = comp_cont4, weights = n))
+TukeyHSD(tukeys)
+summary(tukeys)
+
 mig = ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=15, size = 10, col = "dark blue") + 
   geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("R"["c"])) + xlab("Migratory Group") + theme_classic()+ ylim(0,0.5)+ theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
@@ -816,6 +820,17 @@ numcomps = na.omit(noncomps_output) %>%
   count(FocalAOU)
 names(numcomps) = c("FocalAOU", "Comp_count")
 
+vec = c()
+for(i in unique(noncomps_output_bocc$FocalAOU)){
+  temp = subset(noncomps_output_bocc, FocalAOU == i)
+  vec = append(vec, median(temp$R2))
+} 
+ 
+vec_meds = data.frame(FocalAOU = unique(noncomps_output_bocc$FocalAOU), Median = vec)  
+noncomps_output_ttest = left_join(noncomps_output_bocc, vec_meds, by = "FocalAOU")
+t.test(noncomps_output_ttest$Competition_R2, noncomps_output_ttest$Median, paired = TRUE, alternative= "two.sided")
+
+
 noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
 noncompsdist  = merge(none, numcomps, by = ("FocalAOU"))
 noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
@@ -841,20 +856,20 @@ noncompsdist$Null = "Null"
 R = ggplot(noncomps_output_bocc) +
   # stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
   stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
-  xlab(expression("Competitor R"^"2")) + ylab("Density") +
+  xlab(expression("Competitor R"^"2")) + ylab("Density") + theme_classic() +
   scale_fill_manual(values=c("purple4")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 #ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
 
 E = ggplot(noncomps_output_bocc) +
   # stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
   stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab("Competitor Estimate") + ylab("Density") +
+  xlab("Competitor Estimate") + ylab("Density") + theme_classic() + 
   scale_fill_manual(values=c("purple4")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 #ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
 
 P = ggplot(noncomps_output_bocc) +
   stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab("Competitor P-value") + ylab("Density") +
+  xlab("Competitor P-value") + ylab("Density") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 #ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
 
@@ -868,40 +883,41 @@ ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_null.pdf", height = 7, wi
 
 
 #### example non-comp dist and main R2 ######
-single_dist = subset(noncomps_output_bocc, FocalAOU == 6450)
+single_dist = subset(noncomps_output_bocc, FocalAOU == 3190)
 n = ggplot(single_dist) +
   geom_histogram(bins = 15, aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5, lty = 2) +
-  xlab(expression("Variance Explained")) + ylab("Frequency") +
+  xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
 o = ggplot(single_dist) +
   geom_histogram(bins = 15, aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5, lty = 2) +
-  xlab(expression("Competitor Estimate")) + ylab("Frequency") +
+  xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
 p = ggplot(noncomps_output_bocc) +
   geom_histogram(bins = 15, aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = median(na.omit(noncomps_output_bocc$Competition_R2)), col = "black", lwd = 1.5, lty = 2) +
-  xlab(expression("Variance Explained")) + ylab("Frequency") +
+  xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
-q = ggplot(noncomps_output_bocc) +
+est_plot = filter(noncomps_output_bocc, Estimate < 25)
+q = ggplot(est_plot) +
   geom_histogram(bins = 15, aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = median(na.omit(noncomps_output_bocc$Competition_Est)), col = "black", lwd = 1.5, lty = 2) +
-  xlab(expression("Competitor Estimate")) + ylab("Frequency") +
+  geom_vline(xintercept = median(na.omit(est_plot$Competition_Est)), col = "black", lwd = 1.5, lty = 2) +
+  xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
-
-plot_grid(n+ theme(legend.position="none"),
+plot_grid(n + theme(legend.position="none"),
           o + theme(legend.position="none"),
           p + theme(legend.position="none"),
           q + theme(legend.position="none"),
           align = 'hv',
           labels = c("A","B", "C", "D"),
-          nrow = 2)
-ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_ex.pdf", height = 8, width = 12)
+          label_size = 20,
+          nrow = 2) 
+ggsave("Figures/Figure6_null.pdf", height = 8, width = 12)
 
 #### 1:1 plots ####
 noncomps_points = noncomps_output_bocc %>% 
