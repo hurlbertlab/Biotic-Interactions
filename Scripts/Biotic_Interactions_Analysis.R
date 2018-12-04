@@ -896,15 +896,14 @@ o = ggplot(single_dist) +
   xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
-p = ggplot(noncomps_output_bocc) +
-  geom_histogram(bins = 15, aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+p = ggplot(noncompsdist) +
+  geom_histogram(bins = 20, aes(nullp, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = median(na.omit(noncomps_output_bocc$Competition_R2)), col = "black", lwd = 1.5, lty = 2) +
   xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
-est_plot = filter(noncomps_output_bocc, Estimate < 25)
-q = ggplot(est_plot) +
-  geom_histogram(bins = 15, aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+q = ggplot(noncompsdist) +
+  geom_histogram(bins = 20, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = median(na.omit(est_plot$Competition_Est)), col = "black", lwd = 1.5, lty = 2) +
   xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
