@@ -127,6 +127,7 @@ for (sp in 1:length(subfocalspecies)){
   beta_occ = rbind(beta_occ, c(sp1, occ_comp_est, occ_comp_p, occ_comp_r,occ_env_r, occ_b_p, occ_b_r))
   beta_abun = rbind(beta_abun, c(sp1, abun_comp_est, abun_comp_p, abun_comp_r, abun_env_r, abun_both_p , abun_both_r))
   } 
+  else{print(FALSE)}
 }         
 
 
@@ -628,7 +629,7 @@ scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$colname = factor(scaled_rank2$colname,
        levels = c("Insectivore","Insectivore/\nOmnivore","Omnivore","Granivore","Herbivore"),ordered = TRUE)
 
-troph = ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=15, size = 10, col = "dark blue") + 
+troph = ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=16, size = 10, col = "dark blue") + 
   geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("R"["c"])) + xlab("Trophic Group") + theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + ylim(-.05,0.5) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
@@ -658,7 +659,7 @@ tukeys = aov(lm(COMPSC ~ migclass, data = comp_cont4, weights = n))
 TukeyHSD(tukeys)
 summary(tukeys)
 
-mig = ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=15, size = 10, col = "dark blue") + 
+mig = ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=16, size = 10, col = "dark blue") + 
   geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("R"["c"])) + xlab("Migratory Group") + theme_classic()+ ylim(0,0.5)+ theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
@@ -699,9 +700,9 @@ R2plot2$violin_total = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 # need to change the slopes
 cols = c("Competition" ="#dd1c77","Environment" = "#2ca25f","Total" = "dark gray")
 r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y, col = "Competition")) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab(bquote("Occupancy R"^"2")) + ylab(bquote("Abundance R"^"2"))+
-  geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.5) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash", lwd =2) +
-      geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash", lwd = 2) +
-      geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash", lwd =2) +ylim(c(0, 0.8))+ xlim(c(0, 0.8))+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20), legend.position = c(0.2,0.9))
+  geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.5) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash", lwd =2.5) +
+      geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash", lwd = 2.5) +
+      geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash", lwd =2.5) +ylim(c(0, 0.8))+ xlim(c(0, 0.8))+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=24), legend.position = c(0.2,0.9))
 ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.pdf", height = 8, width = 12)
 
 R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
@@ -805,6 +806,7 @@ names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
 
 # write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
+noncomps_output = read.csv("data/noncomps_output.csv", header = TRUE)
 noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
@@ -896,15 +898,14 @@ o = ggplot(single_dist) +
   xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
-p = ggplot(noncompsdist) +
-  geom_histogram(bins = 20, aes(nullp, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = median(na.omit(noncomps_output_bocc$Competition_R2)), col = "black", lwd = 1.5, lty = 2) +
+p = ggplot(noncomps_output_bocc) +
+  geom_histogram(bins = 20, aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
-q = ggplot(noncompsdist) +
-  geom_histogram(bins = 20, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = median(na.omit(est_plot$Competition_Est)), col = "black", lwd = 1.5, lty = 2) +
+noncomps_eplot = filter(noncomps_output_bocc, Estimate < 50)
+q = ggplot(noncomps_eplot) +
+  geom_histogram(bins = 25, aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
@@ -1064,4 +1065,10 @@ ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) +
   stat_function(fun=inverselogit, color = "blue") + 
   geom_point(colour="black", shape=18, alpha = 0.02,position=position_jitter(width=0,height=.02))+ theme_classic()
 
-
+tableS1 = read.csv("//bioark/HurlbertLab/Snell/2018 BI MS/Tables/Table S1.csv", header = TRUE)
+tableS1 = tableS1 %>%
+  group_by(focalAOU) %>%
+  arrange(desc(mainCompetitor), .by_group = TRUE) %>%
+  group_by(CompAOU)
+tableS1 = left_join(tableS1, subsetocc[,c("AOU", "migclass", "Foraging", "Trophic.Group")], by = c("focalAOU" ="AOU"))
+# write.csv(tableS1, "data/Table S1.csv", row.names = FALSE)
