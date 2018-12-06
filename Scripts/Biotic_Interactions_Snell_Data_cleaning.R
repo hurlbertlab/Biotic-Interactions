@@ -160,6 +160,7 @@ for (s in unique(shapefile_areas$focalAOU)) {
   maxOverlap = max(shapefile_areas$PropOverlap[shapefile_areas$focalAOU == s], na.rm = TRUE) #largest area of proportion overlap
   shapefile_areas$mainCompetitor[shapefile_areas$focalAOU == s & shapefile_areas$PropOverlap == maxOverlap] = 1 # 1 assigns main competitor
 }
+# write.csv(shapefile_areas, "data/shapefileareas_w_comp.csv", row.names = FALSE)
 
 #### ---- Gathering Occupancy and Abundance Data for Biotic Comparisons ---- ####
 # pull out stateroutes that have been continuously sampled 2001-2015

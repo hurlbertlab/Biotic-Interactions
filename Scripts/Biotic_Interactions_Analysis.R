@@ -16,21 +16,24 @@ tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 bbs_abun = read.csv("data/bbs_abun.csv", header =TRUE)
 nsw = read.csv("data/new_spec_weights.csv", header = TRUE)
 shapefile_areas = read.csv("data/shapefile_areas.csv", header =TRUE)
-# have to omit focal/competitors with no overlap
-shapefile_areas = na.omit(shapefile_areas)
-AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
-bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
-maincomp = read.csv("data/shapefile_areas_w_comp.csv", header = TRUE)
-maincomp1 = subset(maincomp, mainCompetitor == 1)
-maincomp1.5 = left_join(maincomp1, tax_code, by = c("focalAOU" = "AOU_OUT"))
-maincomp1.5$Focal_Common_Name = maincomp1.5$PRIMARY_COM_NAME
-maincomp2 = left_join(maincomp1.5[,c("Focal", "focalAOU","Competitor", "compAOU", "FocalArea", "CompArea", "area_overlap", "PropOverlap", "Focal_Common_Name")], tax_code, by = c("compAOU" = "AOU_OUT"))
+
 #update tax_code Winter Wren
 tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
 subsetocc$AOU[subsetocc$AOU == 4810] = 4812
 temp_occ$Aou[temp_occ$Aou == 4810] = 4812
 tax_code$AOU_OUT[tax_code$AOU_OUT == 4810] = 4812
 tax_code$AOU_OUT[tax_code$AOU_OUT == 4123] = 4120
+
+# have to omit focal/competitors with no overlap
+shapefile_areas = na.omit(shapefile_areas)
+AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
+bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
+maincomp = read.csv("data/shapefileareas_w_comp.csv", header = TRUE)
+maincomp1 = subset(maincomp, mainCompetitor == 1)
+maincomp1.5 = left_join(maincomp1, tax_code, by = c("focalAOU" = "AOU_OUT"))
+maincomp1.5$Focal_Common_Name = maincomp1.5$PRIMARY_COM_NAME
+maincomp2 = left_join(maincomp1.5[,c("Focal", "focalAOU","Competitor", "compAOU", "FocalArea", "CompArea", "area_overlap", "PropOverlap", "Focal_Common_Name")], tax_code, by = c("compAOU" = "AOU_OUT"))
+
 
 # make Table S1 #
 focalspp = read.csv("data/focal spp.csv", header = TRUE)
@@ -150,6 +153,12 @@ beta_occ_comp = left_join(beta_occ, maincomp2[,c("focalAOU","Focal_Common_Name",
 beta_abun = data.frame(beta_abun)
 names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
 beta_abun_comp = left_join(beta_abun, maincomp2[,c("focalAOU","Focal_Common_Name", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "focalAOU"))
+
+beta_TableS4 = left_join(beta_occ, beta_abun_comp, by = "FocalAOU")
+
+leftover_birds = left_join(envoutput, maincomp2[,c("focalAOU","Focal_Common_Name", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "focalAOU"))
+
+# write.csv(beta_TableS4, "data/beta_TableS4.csv", row.names = FALSE)
 
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
