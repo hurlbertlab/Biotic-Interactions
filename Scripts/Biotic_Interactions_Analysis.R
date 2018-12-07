@@ -71,18 +71,18 @@ for (sp in 1:length(subfocalspecies)){
   print(sp)
   temp = subset(occuenv, FocalAOU == subfocalspecies[sp])
   
-  competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
+  competition <- lm(temp$occ_logit ~  temp$all_comp_scaled)  # changes between main and all comps
   # z scores separated out for env effects (as opposed to multivariate variable)
   env_z = lm(temp$occ_logit ~ abs(zTemp) + abs(zElev) + abs(zPrecip) + abs(zNDVI), data = temp)
   # z scores separated out for env effects
-  both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
+  both_z = lm(temp$occ_logit ~  temp$all_comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
   
   # abundance, not temp occ - same results?
-  competition_abun <- lm(temp$FocalAbundance ~  temp$comp_scaled) 
+  competition_abun <- lm(temp$FocalAbundance ~  temp$all_comp_scaled) 
   # z scores separated out for env effects - abundance
   env_abun = lm(temp$FocalAbundance ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   # z scores separated out for env effects - abundance
-  both_abun = lm(temp$FocalAbundance ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
+  both_abun = lm(temp$FocalAbundance ~  all_comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
   
   #variance_partitioning 
   ENV = summary(both_z)$r.squared - summary(competition)$r.squared #env only
@@ -182,7 +182,7 @@ occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 
 
 mmslope <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
-       abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 40000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+       abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 # write.csv(summary(mm), "mm_slope.csv", row.names= TRUE)
 
 mmint <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
