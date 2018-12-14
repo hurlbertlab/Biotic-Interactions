@@ -7,6 +7,8 @@ library(ggExtra)
 library(rstanarm)
 library(boot)
 
+# We can flip back and forth between comp_scaled and all_comp_scaled with the find and replace buttons. There should be 26 occurrences
+
 # read in files created in data cleaning script
 temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS occ script
 centroid=read.csv("data/centroid.csv", header=TRUE) # GIS script
@@ -105,7 +107,7 @@ for (sp in 1:length(subfocalspecies)){
   
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
   
-  if(length(unique(temp$comp_scaled[!is.na(temp$comp_scaled)])) > 2){
+  if(length(unique(temp$all_comp_scaled[!is.na(temp$all_comp_scaled)])) > 2){
   # saving model output into separate data frames
   occ_comp_est = summary(competition)$coef[2,"Estimate"]
   occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
@@ -165,7 +167,7 @@ leftover_birds = left_join(envoutput, maincomp2[,c("focalAOU","Focal_Common_Name
 # and # of sites birds were not found from original bbs data
 # occumatrix = merge(temp_occ, occuenv, by.x=c("Aou", "stateroute"),by.y=c("Species", "stateroute"))
 occumatrix=occuenv
-occumatrix$c_s = scale(occumatrix$comp_scaled, scale = T, center = T)
+occumatrix$c_s = scale(occumatrix$all_comp_scaled, scale = T, center = T)
 occumatrix$abTemp=abs(occumatrix$zTemp)
 occumatrix$abElev=abs(occumatrix$zElev)
 occumatrix$abPrecip=abs(occumatrix$zPrecip)
@@ -181,11 +183,13 @@ occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 # summary(glm_occ_rand_site)                                    
 
 
-mmslope <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
-       abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+options(mc.cores = parallel::detectCores())
+# mmslope <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
+                        abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix,warmup=5000,iter=10000, chains = 4, cores = 4, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+save(mmslope, filename ="mmslope.rda")
 # write.csv(summary(mm), "mm_slope.csv", row.names= TRUE)
 
-mmint <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
+# mmint <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 
 # Default priors =  default_prior_test <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
 #        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, chains =1, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
@@ -211,7 +215,7 @@ for(i in 1:length(mm2$AOU)){
 mm2 = cbind(vecAOU, mm2)
 mm2$vecAOU2 = as.numeric(as.character(mm2$vecAOU))
 mm3 = left_join(mm2[,c("vecAOU2","X","mean" ,"mcse", "sd" ,"X2.5.","X25.","X50.","X75.","X97.5.","n_eff","Rhat")], nsw[,c("focalAOU", "Focal", "Family")], by = c("vecAOU2" = "focalAOU"))
-write.csv(mm3, "data/tableS6.csv", row.names = FALSE)
+# write.csv(mm3, "data/tableS6.csv", row.names = FALSE)
 
 mmint = read.csv("data/bayesian_sum_mod_output_full_11_14.csv", header = TRUE)
 mm2 = read.csv("data/mm_slope_full.csv", header = TRUE)
@@ -231,7 +235,7 @@ stat_density(aes(mm3$mean))
 
 mm_fixed = modoutput2[1:6,]
 
-occumatrix$cspred = inv.logit(occumatrix$comp_scaled * mm_fixed$mean[2] + mm_fixed$mean[1])
+occumatrix$cspred = inv.logit(occumatrix$all_comp_scaled * mm_fixed$mean[2] + mm_fixed$mean[1])
 occumatrix$temppred = inv.logit(occumatrix$abTemp * mm_fixed$mean[3] + mm_fixed$mean[1])
 occumatrix$elevpred = inv.logit(occumatrix$abElev * mm_fixed$mean[4] + mm_fixed$mean[1])
 occumatrix$precippred = inv.logit(occumatrix$abPrecip * mm_fixed$mean[5] + mm_fixed$mean[1])
@@ -260,9 +264,9 @@ NDVI = ggplot(data = ndvisub, aes(x = abNDVI, y = ndvipred)) +
 
 ggsave("C:/Git/Biotic-Interactions/Figures/ndvi.pdf", height = 8, width = 12)
 
-cssub = occumatrix[abs(occumatrix$comp_scaled) < quantile(abs(occumatrix$comp_scaled), 0.95), ]
-comp = ggplot(data = cssub, aes(x = comp_scaled, y = cspred)) + xlim(0,1) +
-  geom_point(data = cssub, aes(x = comp_scaled, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#dd1c77", lwd = 3) + theme_classic()+ xlab("Competitor Abundance") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
+cssub = occumatrix[abs(occumatrix$all_comp_scaled) < quantile(abs(occumatrix$all_comp_scaled), 0.95), ]
+comp = ggplot(data = cssub, aes(x = all_comp_scaled, y = cspred)) + xlim(0,1) +
+  geom_point(data = cssub, aes(x = all_comp_scaled, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#dd1c77", lwd = 3) + theme_classic()+ xlab("Competitor Abundance") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
 ggsave("C:/Git/Biotic-Interactions/Figures/comp.pdf", height = 8, width = 12)
 #   geom_segment(aes(x = 0, y =  inv.logit(mm_fixed$mean)[1], xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) 
 
@@ -462,7 +466,7 @@ envflip_sub3 = unique(left_join(envflip_sub2.5, tax_code, by = c("compAOU" = "AO
 envflip_sub = envflip[1:60,]
 c = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24))   + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=8,vjust=0.5,hjust = 1.4, color = "white", fontface = "bold") + ylim(0, 0.8) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") #+ scale_y_continuous(breaks = c(0,0.52,0.5,0.75, 1))
+  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.9,.9)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="")+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24))  + ylim(0, 0.8) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") # + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=8,vjust=0.5,hjust = 1.4, color = "white", fontface = "bold") 
 ggsave("Figures/barplotc_sub.pdf", height = 18, width = 16)
 
 geom_histogram(envoutput$ENV + envoutput$SHARED)
@@ -527,7 +531,7 @@ envflip$value = abs(envflip$value)
 e = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + 
   geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=50, hjust = 1, vjust = 0.5), legend.position = c(0.5,0.9)) # + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
+  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=60, hjust = 1, vjust = 1), legend.position = c(0.7,0.9))+ guides(fill = guide_legend(keywidth = 2, keyheight = 4, legend.key.size = unit(5,"line")),title="")
 
 ee = e + annotate("text", x = 1:175, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=1,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
@@ -553,7 +557,7 @@ env_sub3 = unique(left_join(env_sub2.5, tax_code, by = c("compAOU" = "AOU_OUT"))
 
 w = ggplot(data=env_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") +ylim(0,0.8)# + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
+  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") +ylim(0,0.8)+ guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="")
 ggsave("Figures/barplote_sub.pdf", height = 18, width = 16)
 
 
@@ -737,7 +741,7 @@ ggplot(envoutput, aes(x = ENV, y = COMP)) +theme_classic()+ theme(axis.title.x=e
 
 
 #### Figure 1 violin plots ####
-# need to chance comp_scaled to all_comp scaled in envouputput loop for Fig 1B
+# need to chance all_comp_scaled to all_comp scaled in envouputput loop for Fig 1B
 R2plot2$COMPSC = R2plot2$COMP.x/(R2plot2$COMP.x+R2plot2$ENV.x)
 R2violin.5 = left_join(R2plot2[,c("FocalAOU", "violin_env","violin_comp","violin_total")], envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
 R2violin = gather(R2violin.5, "type", "Rval", 2:5)
@@ -794,11 +798,11 @@ for (sp in subfocspecies){
         right_join(temp, by = "stateroute")
       
       # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) 
-      mergespp$comp_scaled = mergespp$meancomp/(mergespp$FocalAbundance + mergespp$meancomp) 
-      mergespp$comp_scaled[is.na(mergespp$comp_scaled)] = 0
+      mergespp$all_comp_scaled = mergespp$meancomp/(mergespp$FocalAbundance + mergespp$meancomp) 
+      mergespp$all_comp_scaled[is.na(mergespp$all_comp_scaled)] = 0
       
-      if(length(unique(mergespp$comp_scaled[!is.na(mergespp$comp_scaled)])) > 2){ 
-        lms <- lm(mergespp$occ_logit ~  mergespp$comp_scaled) 
+      if(length(unique(mergespp$all_comp_scaled[!is.na(mergespp$all_comp_scaled)])) > 2){ 
+        lms <- lm(mergespp$occ_logit ~  mergespp$all_comp_scaled) 
         lms_est = summary(lms)$coef[2,"Estimate"]
         lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
         lms_r = summary(lms)$r.squared
@@ -993,13 +997,13 @@ par(mfrow = c(3, 4))
 for(sp in subfocalspecies){ 
   print(sp)
   psub = occuenv[occuenv$Species == sp,]
-  competition <- lm(psub$occ_logit ~  psub$comp_scaled) 
+  competition <- lm(psub$occ_logit ~  psub$all_comp_scaled) 
   # z scores separated out for env effects (as opposed to multivariate variable)
   env_z = lm(psub$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = psub)
   # z scores separated out for env effects
-  both_z = lm(psub$occ_logit ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = psub)
+  both_z = lm(psub$occ_logit ~  all_comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = psub)
   
-  tes = ggplot(data = psub, aes(x =  psub$comp_scaled, y = psub$occ_logit)) +stat_smooth(data=env_z, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
+  tes = ggplot(data = psub, aes(x =  psub$all_comp_scaled, y = psub$occ_logit)) +stat_smooth(data=env_z, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
   plot(tes)
 }
 dev.off()
@@ -1022,15 +1026,15 @@ par(mfrow = c(3, 4))
 for(sp in subfocalspecies){ 
   print(sp)
   psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
+  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ all_comp_scaled + 
                               abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
   
-  tes = ggplot(data = psub, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +theme_bw()
+  tes = ggplot(data = psub, aes(x = all_comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +theme_bw()
   plot(tes)
 }
 dev.off()
 
-pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,comp_scaled,zPrecip,zElev,zNDVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
+pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,all_comp_scaled,zPrecip,zElev,zNDVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
 
 inverselogit <- function(p) {exp(p)/(1+exp(p))} 
 newintercept <- function(p) {mean(exp(p)/(1+exp(p)))} 
@@ -1070,7 +1074,7 @@ p2 = plot_grid(elev + theme(legend.position="none"),
 plot_grid(z, p2, ncol = 1, rel_heights = c(1, 1))
 ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf")
 
-ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) + 
+ggplot(data = occumatrix, aes(x = all_comp_scaled, y = FocalOcc)) + 
   stat_function(fun=inverselogit, color = "blue") + 
   geom_point(colour="black", shape=18, alpha = 0.02,position=position_jitter(width=0,height=.02))+ theme_classic()
 

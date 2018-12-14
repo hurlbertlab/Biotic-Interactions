@@ -137,8 +137,11 @@ continent2 = spTransform(continent2, CRS("+proj=laea +lat_0=40 +lon_0=-100 +unit
 plot(continent2)
 
 centroid = c()
-new_spec_weights$focalcat = as.character(new_spec_weights$focalcat)
-if(FALSE) {for (sp in focal_spp){
+new_spec_weights$focalcat = as.character(shapefile_areas$focalcat)
+focal_centroid = new_spec_weights[new_spec_weights$focalcat != "Columba_livia" & new_spec_weights$focalcat != "Carduelis_flammea",] 
+focal_c_spp = unique(focal_centroid$focalcat)
+
+if(FALSE) {for (sp in focal_c_spp){
   print(sp)
   t1 = all_spp_list[grep(sp, all_spp_list)]
   t2 = t1[grep('.shp', t1)]
@@ -207,7 +210,7 @@ expect_pres = dplyr::select(expect_pres, -optional)
 # write.csv(expect_pres,"C:/Git/Biotic-Interactions/data/expect_pres.csv",row.names=FALSE)
 
 ######## PDF of each species BBS occurrences ########
-focalcompsub = read.csv("data/focalcompsub.csv", header=TRUE)
+focalcompsub = read.csv("data/all_expected_pres.csv", header=TRUE)
 # merge in lat/long
 latlongs = read.csv('data/routes 1996-2010 consecutive.csv', header = T)
 plotdata_all = merge(focalcompsub, latlongs, by = "stateroute") 
@@ -220,7 +223,7 @@ par(mfrow = c(3, 4))
 for(sp in subfocalspecies){ 
   print(sp)
   plotsub = plotdata_all[plotdata_all$FocalAOU == sp,]
-  map("state") 
+  map("North America") 
   points(plotsub$Longi, plotsub$Lati, col = 3,  pch = 20)
   title(main = (unique(plotdata_all$FocalSciName[plotdata_all$FocalAOU == sp])))
 }
@@ -231,7 +234,7 @@ dev.off()
 
 ###### Talk plot 
 
-sp = "Pipilo_maculatus"
+sp = "Pipilo_chlorurus"
 
 focalAOU = subset(new_spec_weights, focalcat == sp)
 spAOU = unique(focalAOU$focalAOU)
@@ -253,11 +256,11 @@ routes_inside <- bbs_routes[!is.na(sp::over(bbs_routes,as(sporigin,"SpatialPolyg
 # plot(routes_inside, add = T)
 
 setwd("C:/git/Biotic-Interactions")
-r = read.csv("C:/git/Biotic-Interactions/all_expected_pres.csv", header =TRUE)
-r = subset(r,Focal == "Spotted Towhee")
+r = read.csv("data/all_expected_pres.csv", header =TRUE)
+r = subset(r,FocalAOU == 5900)
 
-occ_loc = merge(r[,c("stateroute", "FocalOcc", "FocalAbundance","Focal")],routes_inside, by = "stateroute")
-occ_sub = subset(occ_loc, Focal = "Spotted Towhee")
+occ_loc = merge(r[,c("stateroute", "FocalOcc", "FocalAbundance","Focal")],bbs_routes, by = "stateroute")
+occ_sub = subset(occ_loc, Focal = "Green-tailed Towhee")
 
 colfunc <- colorRampPalette(c("blue","red"))
 colfunc(16)
@@ -272,7 +275,8 @@ usa = readShapePoly("Z:/GIS/geography/continent.shp")
 proj4string(usa) <- intl_proj
 usa = spTransform(usa, CRS("+proj=longlat +datum=WGS84"))
 
-pdf('Figures/spottedtow_plot.pdf', height = 8, width = 11)
+setwd("C:/git/Biotic-Interactions")
+pdf('Figures/GTtow_plot.pdf', height = 8, width = 11)
 par(mfrow = c(1, 1), mar = c(6, 6, 1, 1), mgp = c(4, 1, 0), 
     cex.axis = 1.5, cex.lab = 2, las = 1)
 
