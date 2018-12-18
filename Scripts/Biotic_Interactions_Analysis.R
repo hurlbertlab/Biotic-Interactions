@@ -818,8 +818,9 @@ names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 # have to remove pairing of American REdstart/least flycatcher, non-familial pairing based on lit
 noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
 
-# write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
+# write.csv(noncomps_output, "data/noncomps_output_all.csv", row.names = FALSE)
 noncomps_output = read.csv("data/noncomps_output.csv", header = TRUE)
+noncomps_output_all = read.csv("data/noncomps_output_all.csv", header = TRUE)
 noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
@@ -916,7 +917,12 @@ p = ggplot(noncomps_output_bocc) +
   xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
-noncomps_eplot = filter(noncomps_output_bocc, Estimate < 50)
+p2 = ggplot(noncomps_output_all) +
+  geom_histogram(bins = 20, aes(P), alpha = 0.9, fill="#330066") +
+  xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
+  scale_fill_manual(breaks = c("Null"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
+
+noncomps_eplot = filter(noncomps_output_bocc, Estimate < 100)
 q = ggplot(noncomps_eplot) +
   geom_histogram(bins = 25, aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
@@ -930,7 +936,7 @@ plot_grid(n + theme(legend.position="none"),
           labels = c("A","B", "C", "D"),
           label_size = 20,
           nrow = 2) 
-#ggsave("Figures/Figure6_null_all.pdf", height = 8, width = 12)
+ggsave("Figures/Figure6_null_all.pdf", height = 8, width = 12)
 
 #### 1:1 plots ####
 noncomps_points = noncomps_output_bocc %>% 

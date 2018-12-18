@@ -638,7 +638,7 @@ scaled_rank = scaled_est %>%
   dplyr::mutate(rank = row_number(-scaled_est2)) 
 scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$colname = factor(scaled_rank2$colname,
-       levels = c("Insectivore","Insectivore/\nOmnivore","Omnivore","Granivore","Herbivore"),ordered = TRUE)
+       levels = c("Insectivore","Insectivore/\nOmnivore","Granivore","Omnivore","Herbivore"),ordered = TRUE)
 
 troph = ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=16, size = 10, col = "dark blue") + 
   geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("R"["c"])) + xlab("Trophic Group") + theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + ylim(-.05,0.5) + 
@@ -684,7 +684,7 @@ cor.test(envoutput$ENV, envoutputa$ENV)
 plot_grid(troph + theme(legend.position="none"),
           mig + theme(legend.position="none"),
           align = 'hv')
-ggsave("C:/Git/Biotic-Interactions/Figures/est_mods.pdf", height = 8, width = 18)
+ggsave("C:/Git/Biotic-Interactions/Figures/est_mods_main.pdf", height = 8, width = 18)
 
 ###### Figure 4 #####
 # R2 plot - lm in ggplot
