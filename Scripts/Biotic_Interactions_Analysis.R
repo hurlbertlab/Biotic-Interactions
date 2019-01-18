@@ -99,7 +99,7 @@ for (sp in 1:length(subfocalspecies)){
   #variance_partitioning 
   ENVa = summary(both_abun)$r.squared - summary(competition_abun)$r.squared
   COMPa = summary(both_abun)$r.squared - summary(env_abun)$r.squared
-  SHAREDa = summary(competition_abun)$r.squared - COMP
+  SHAREDa = summary(competition_abun)$r.squared - COMPa
   NONEa = 1 - summary(both_abun)$r.squared
   
   sp1 = unique(temp$FocalAOU)
@@ -715,8 +715,9 @@ cols = c("Competition" ="#dd1c77","Environment" = "#2ca25f","Total" = "dark gray
 r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y, col = "Competition")) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab(bquote("Occupancy R"^"2")) + ylab(bquote("Abundance R"^"2"))+
   geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.5) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash", lwd =2.5) +
       geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash", lwd = 2.5) + 
-      geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash", lwd =2.5) + xlim(c(0, 0.8))+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=24), legend.position = c(0.2,0.9)) + scale_y_continuous(limits = c(0, 1.2), breaks = c(0,0.2, 0.4, 0.6, 0.8, 1, 1.2))
+      geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash", lwd =2.5) + xlim(c(0, 0.8))+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=24), legend.position = c(0.8,0.2)) + scale_y_continuous(limits = c(0, 0.8), breaks = c(0,0.2, 0.4, 0.6, 0.8, 1))
 ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.pdf", height = 8, width = 12)
+# geom_label(data = R2plot2, aes(Total.x,Total.y, label = FocalAOU)
 
 R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
 R2plot2$abundiff = R2plot2$COMP.y - R2plot2$ENV.y
