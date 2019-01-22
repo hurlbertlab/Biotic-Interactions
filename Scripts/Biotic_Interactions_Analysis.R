@@ -149,6 +149,7 @@ envoutput2 = merge(envoutput, subsetocc[,c("AOU", "CommonName", "migclass", "Tro
 envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU', all.x = TRUE)
 
 #write.csv(envoutputa, "data/envoutputa.csv", row.names = FALSE)
+
 beta_occ = data.frame(beta_occ)
 names(beta_occ) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
 beta_occ_comp = left_join(beta_occ, maincomp2[,c("focalAOU","Focal_Common_Name", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "focalAOU"))
@@ -183,7 +184,7 @@ occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 # summary(glm_occ_rand_site)                                    
 
 
-options(mc.cores = parallel::detectCores())
+# options(mc.cores = parallel::detectCores())
 # mmslope <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
                         abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix,warmup=5000,iter=10000, chains = 4, cores = 4, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 save(mmslope, filename ="mmslope.rda")
@@ -442,7 +443,7 @@ envflip$value = abs(envflip$value)
 t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + 
   geom_bar(stat = "identity") + theme_classic() +
   theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30, angle=90),legend.title=element_blank(), legend.text=element_text(size=28, hjust = 1, vjust = 0.5), legend.position = c(0.5,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
+  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30),legend.title=element_blank(), legend.text=element_text(size=28, hjust = 1, vjust = 0.5), legend.position = c(0.5,.9)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
 tt = t + annotate("text", x = 1:175, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
 
@@ -464,10 +465,9 @@ envflip_sub3 = unique(left_join(envflip_sub2.5, tax_code, by = c("compAOU" = "AO
 
 
 envflip_sub = envflip[1:60,]
-c = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + geom_bar(stat = "identity") + theme_classic() +
-  theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.9,.9)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="")+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24))  + ylim(0, 0.8) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") # + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=8,vjust=0.5,hjust = 1.4, color = "white", fontface = "bold") 
-ggsave("Figures/barplotc_sub.pdf", height = 18, width = 16)
+c = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + geom_bar(stat = "identity") + theme_classic() + xlab("Focal Species") + ylab("Percent Variance Explained") +
+  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.86,.9)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 30,color= "black"))  + scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black")# + scale_y_continuous(sec.axis = sec_axis(~ . *1/1, name = "Percent Variance Explained")) # + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=8,vjust=0.5,hjust = 1.4, color = "white", fontface = "bold") + theme(legend.background = element_rect(color = "black"))
+ggsave("Figures/barplotc_sub.pdf", width = 14, height = 11)
 
 geom_histogram(envoutput$ENV + envoutput$SHARED)
 ggplot(envoutput, aes(x = ENV+SHARED)) + geom_histogram(binwidth = 0.05, fill = "#2ca25f") + xlab("Environment and Shared Variance Explained") + ylab("Frequency")
@@ -555,10 +555,11 @@ env_sub2 = left_join(env_labs, maincomp2, by = c("FocalAOU" = "focalAOU"))
 env_sub2.5 = left_join(env_sub2, tax_code[, c("AOU_OUT", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "AOU_OUT"))
 env_sub3 = unique(left_join(env_sub2.5, tax_code, by = c("compAOU" = "AOU_OUT")))
 
-w = ggplot(data=env_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + geom_bar(stat = "identity") + theme_classic() +
-  theme(axis.text.x=element_text(angle=90,size=10,vjust=0.5),axis.text.y=element_text(angle=90,size=10)) + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared Variance", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), legend.text=element_text(size=22, hjust = 1, vjust = 0.5), legend.position = c(.8,.8)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))+ theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 24)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") +ylim(0,0.8)+ guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="")
-ggsave("Figures/barplote_sub.pdf", height = 18, width = 16)
+w = ggplot(data=env_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + geom_bar(stat = "identity") + theme_classic() + xlab("Focal Species") + ylab("Percent Variance Explained") +
+  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.8,.9)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 30,color= "black")) + scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="")
+  
+ 
+ggsave("Figures/barplote_sub.pdf", height = 11, width = 14)
 
 
 plot_grid(c+ theme(legend.position="none"),
@@ -742,17 +743,25 @@ ggplot(envoutput, aes(x = ENV, y = COMP)) +theme_classic()+ theme(axis.title.x=e
 
 
 #### Figure 1 violin plots ####
-# need to chance all_comp_scaled to all_comp scaled in envouputput loop for Fig 1B
+# Figure 1B is in suppl script
 R2plot2$COMPSC = R2plot2$COMP.x/(R2plot2$COMP.x+R2plot2$ENV.x)
-R2violin.5 = left_join(R2plot2[,c("FocalAOU", "violin_env","violin_comp","violin_total")], envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
+# R2violin.5 = left_join(R2plot2[,c("FocalAOU", "violin_env","violin_comp","violin_total")], envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
+
+# create Table S3
+Table_S3 = left_join(R2plot2, tax_code, by =c ("FocalAOU" = "AOU_OUT"))
+# write.csv(Table_S3, "data/Table_s3.csv", row.names = FALSE) 
+
+R2plot2$Total.x = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
+R2violin.5 = left_join(R2plot2[,c("FocalAOU", "ENV.x","COMP.x","Total.x")], envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
+
 R2violin = gather(R2violin.5, "type", "Rval", 2:5)
 
 R2violin$type = factor(R2violin$type,
-                              levels = c("violin_comp","violin_env", "violin_total","COMPSC"),ordered = TRUE)
+                              levels = c("ENV.x","COMP.x","Total.x","COMPSC" ),ordered = TRUE)
 
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#dd1c77","#2ca25f", "grey", "#636363"), labels=c("Competition","Environment", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30, vjust = 4))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25, angle = 90),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", scale ="count", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey", "#636363"), labels=c("Environment","Competition", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30, vjust = 4))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) +  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
 # , sec.axis = sec_axis(~ . *1/1, name = "Variance Ratio")
-ggsave("Figures/violin_mains.pdf", height = 8, width = 12)
+ggsave("Figures/violin_all.pdf", height = 8, width = 12)
 
 # r2 plot for main vs all competitors
 # envall = read.csv("data/envoutput_all.csv", header = TRUE) NEEDS TO BE CHANGED
@@ -821,7 +830,6 @@ noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_
 
 # write.csv(noncomps_output, "data/noncomps_output_all.csv", row.names = FALSE)
 noncomps_output = read.csv("data/noncomps_output.csv", header = TRUE)
-noncomps_output_all = read.csv("data/noncomps_output_all.csv", header = TRUE)
 noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
@@ -848,17 +856,13 @@ noncomps_output_ttest = left_join(noncomps_output_bocc, vec_meds, by = "FocalAOU
 t.test(noncomps_output_ttest$Competition_R2, noncomps_output_ttest$Median, paired = TRUE, alternative= "two.sided")
 
 
-noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
-noncompsdist  = merge(none, numcomps, by = ("FocalAOU"))
-noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
-noncompsdist$nulle = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
-nullpsub = filter(noncompsdist, nullp < 0.05) %>% 
-  left_join(., envoutput1, by = "FocalAOU")
+noncompsdistp  = merge(nonps, numcomps, by = ("FocalAOU"))
+noncompsdiste  = merge(none, numcomps, by = ("FocalAOU"))
+noncompsdistp$nullp = (noncompsdistp$main_g_non + 1)/(noncompsdistp$Comp_count + 1)
+noncompsdiste$nulle = (noncompsdiste$main_g_non + 1)/(noncompsdiste$Comp_count + 1)
 
-noncompsdist_trait = merge(noncompsdist, envoutput2[,c("FocalAOU", "migclass", "Trophic.Group")], by = "FocalAOU")
-
-hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
-abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
+hist(noncompsdistp$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
+abline(v=mean(noncompsdistp$nullp), col = "blue", lwd = 2)
 
 hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", xlab = expression('R'^2))
 abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
@@ -868,66 +872,33 @@ abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
 
 noncomps_output_bocc$Null = "Null"
 noncomps_output_bocc$Comp = "Comp"
-noncompsdist$Null = "Null"
+noncompsdistp$Null = "Null"
+noncompsdiste$Null = "Null"
 
-R = ggplot(noncomps_output_bocc) +
-  # stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
-  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
-  xlab(expression("Competitor R"^"2")) + ylab("Density") + theme_classic() +
-  scale_fill_manual(values=c("purple4")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
-#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
-
-E = ggplot(noncomps_output_bocc) +
-  # stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
-  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab("Competitor Estimate") + ylab("Density") + theme_classic() + 
-  scale_fill_manual(values=c("purple4")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
-#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
-
-P = ggplot(noncomps_output_bocc) +
-  stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab("Competitor P-value") + ylab("Density") + theme_classic() + 
-  scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
-#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
-
-plot_grid(P+ theme(legend.position="none"),
-          R + theme(legend.position="none"),
-          E + theme(legend.position="none"),
-          align = 'h',
-          labels = c("A","B", "C"),
-          nrow = 1)
-ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_null.pdf", height = 7, width = 12)
-
-
-#### example non-comp dist and main R2 ######
-single_dist = subset(noncomps_output_bocc, FocalAOU == 3190)
+#### Figure 6 example non-comp dist and main R2 ######
+single_dist = subset(noncomps_output_bocc, FocalAOU == 4020)
 n = ggplot(single_dist) +
   geom_histogram(bins = 15, aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competition_R2, col = "black", lwd = 1.5, lty = 2) +
   xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
-  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
 o = ggplot(single_dist) +
   geom_histogram(bins = 15, aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competition_Est, col = "black", lwd = 1.5, lty = 2) +
   xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
-  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
+  scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
-p = ggplot(noncomps_output_bocc) +
-  geom_histogram(bins = 20, aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
-  scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
+p = ggplot(noncompsdistp) +
+  geom_histogram(bins = 20, aes(nullp), alpha = 0.9, fill="#330066") +
+  xlab(expression('Proportion of non-competitors R'^2)) + ylab("Frequency") + theme_classic() + 
+  scale_fill_manual(breaks = c("Null"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
-p2 = ggplot(noncomps_output_all) +
-  geom_histogram(bins = 20, aes(P), alpha = 0.9, fill="#330066") +
-  xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
-  scale_fill_manual(breaks = c("Null"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
 
-noncomps_eplot = filter(noncomps_output_bocc, Estimate < 100)
-q = ggplot(noncomps_eplot) +
-  geom_histogram(bins = 25, aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
-  scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
+q = ggplot(noncompsdiste) +
+  geom_histogram(bins = 20, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  xlab(expression("Proportion of non-competitors outperforming main competitor Estimate")) + ylab("Frequency") + theme_classic() + 
+  scale_fill_manual(breaks = c("Null"), values=c("#330066"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
 plot_grid(n + theme(legend.position="none"),
           o + theme(legend.position="none"),
