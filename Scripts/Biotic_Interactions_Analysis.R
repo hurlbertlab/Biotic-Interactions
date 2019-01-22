@@ -849,9 +849,9 @@ t.test(noncomps_output_ttest$Competition_R2, noncomps_output_ttest$Median, paire
 
 
 noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
-noncompsdist  = merge(none, numcomps, by = ("FocalAOU"))
+noncompsdiste  = merge(none, numcomps, by = ("FocalAOU"))
 noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
-noncompsdist$nulle = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
+noncompsdiste$nulle = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
 nullpsub = filter(noncompsdist, nullp < 0.05) %>% 
   left_join(., envoutput1, by = "FocalAOU")
 
