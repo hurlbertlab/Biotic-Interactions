@@ -178,16 +178,10 @@ occumatrix$abNDVI=abs(occumatrix$zNDVI)
 occumatrix$sp_success = as.integer(15 * occumatrix$FocalOcc)
 occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 
-#### GLM of all matrices not just subset ####
-# glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ c_s + 
- #   abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix)
-# summary(glm_occ_rand_site)                                    
+#### Bayesian of all matrices not just subset ####
+library(brms)
+mmslope <- brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix , cores = 2, chains=4, iter=500,warmup=200,control = list(max_treedepth = 15),set_prior("lkj(1)", class = "cor"))
 
-
-# options(mc.cores = parallel::detectCores())
-# mmslope <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
-                        abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix,warmup=5000,iter=10000, chains = 4, cores = 4, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
-save(mmslope, filename ="mmslope.rda")
 # write.csv(summary(mm), "mm_slope.csv", row.names= TRUE)
 
 # mmint <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
