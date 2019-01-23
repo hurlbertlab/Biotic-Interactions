@@ -461,8 +461,8 @@ envflip_sub3 = unique(left_join(envflip_sub2.5, tax_code, by = c("compAOU" = "AO
 
 envflip_sub = envflip[1:60,]
 c = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + geom_bar(stat = "identity") + theme_classic() + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, vjust = 4),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.88,.9)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_text(size = 30,color= "black")) + scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8),limits = c(0, 0.8)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") + scale_y_continuous(sec.axis = sec_axis(~ . *1/1)) # + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=8,vjust=0.5,hjust = 1.4, color = "white", fontface = "bold") + theme(legend.background = element_rect(color = "black"))
-ggsave("Figures/barplotc_sub.pdf", width = 14, height = 11)
+  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, vjust = 3),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.88,.9)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_text(size = 30,color= "black")) + scale_y_continuous(breaks = c(0, 0.2,  0.4,  0.6,  0.8),limits = c(0, 0.8),sec.axis = sec_axis(~ . *1)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") # + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=8,vjust=0.5,hjust = 1.4, color = "white", fontface = "bold") + theme(legend.background = element_rect(color = "black"))
+ggsave("Figures/barplotc_sub.pdf", width = 16, height = 11)
 
 geom_histogram(envoutput$ENV + envoutput$SHARED)
 ggplot(envoutput, aes(x = ENV+SHARED)) + geom_histogram(binwidth = 0.05, fill = "#2ca25f") + xlab("Environment and Shared Variance Explained") + ylab("Frequency")
@@ -551,10 +551,10 @@ env_sub2.5 = left_join(env_sub2, tax_code[, c("AOU_OUT", "PRIMARY_COM_NAME")], b
 env_sub3 = unique(left_join(env_sub2.5, tax_code, by = c("compAOU" = "AOU_OUT")))
 
 w = ggplot(data=env_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + geom_bar(stat = "identity") + theme_classic() + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.8,.9)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 30,color= "black")) + scale_y_continuous(breaks = c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6), limit = c(0, 0.6)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="")
+  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, vjust =3),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.8,.9)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 30,color= "black")) +scale_y_continuous(breaks = c(0,   0.2,  0.4, 0.6),limits = c(0, 0.6),sec.axis = sec_axis(~ . *1/1)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="")
   
  
-ggsave("Figures/barplote_sub.pdf", height = 11, width = 14)
+ggsave("Figures/barplote_sub.pdf", height = 11, width = 16)
 
 
 plot_grid(c+ theme(legend.position="none"),
@@ -586,6 +586,8 @@ summary(total_traits)
 env_traits = lm(logit(value) ~ EW, data = env_lm)
 anova(env_traits)
 
+table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("FocalAOU" = "focalAOU"))
+# write.csv(table_s2, "data/table_s2.csv", row.names = FALSE)
 
 # creating env traits model to compare to comp and weighted traits mods
 env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
@@ -615,7 +617,31 @@ ggplot(env_trait_rank2, aes(colname, env_est)) + geom_point(pch=15, size = 5, co
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
+# rc as a fct of range size, ndvi, temp, precip
+rcarea = ggplot(env_cont2, aes(FocalArea, COMPSC))  + geom_point(pch=15, size = 3, col = "dark blue")+ theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))  + 
+  theme(axis.text.x=element_text(size=25),axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
+  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 
+rcndvi = ggplot(env_cont2, aes(Mean.NDVI, COMPSC))  + geom_point(pch=15, size = 3, col = "dark blue")+ theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))  + 
+  theme(axis.text.x=element_text(size=25),axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
+  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+
+rctemp = ggplot(env_cont2, aes(Mean.Temp, COMPSC))  + geom_point(pch=15, size = 3, col = "dark blue")+ theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))  + 
+  theme(axis.text.x=element_text(size=25),axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
+  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+
+rcpre = ggplot(env_cont2, aes(Mean.Precip, COMPSC))  + geom_point(pch=15, size = 3, col = "dark blue")+ theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))  + 
+  theme(axis.text.x=element_text(size=25),axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
+  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
+
+z <- plot_grid(rcarea+ theme(legend.position="none"),
+               rcndvi + theme(legend.position="none"),
+               rctemp + theme(legend.position="none"),
+               rcpre + theme(legend.position="none"),
+               align = 'hv',
+               labels = c("A","B", "C", "D"),
+               nrow = 2)
+ggsave("Figures/Rc_grid.pdf", height = 12, width = 16)
 
 #column names to manipulate in plot
 colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Insct/Om","Insectivore","Nectarivore","Omnivore")
@@ -708,7 +734,7 @@ R2plot2$violin_total = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 
 # need to change the slopes
 cols = c("Competition" ="#dd1c77","Environment" = "#2ca25f","Total" = "dark gray")
-r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y, col = "Competition")) +theme_classic()+ theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, angle=90)) + xlab(bquote("Occupancy R"^"2")) + ylab(bquote("Abundance R"^"2"))+
+r1 = ggplot(R2plot2, aes(x = COMP.x, y = COMP.y, col = "Competition")) +theme_classic()+ theme(axis.title.x=element_text(size=36, vjust = 2),axis.title.y=element_text(size=36, angle=90, vjust = 2)) + xlab(bquote("Occupancy R"^"2")) + ylab(bquote("Abundance R"^"2"))+
   geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.5) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash", lwd =2.5) +
       geom_point(data = R2plot2, aes(x = ENV.x, y = ENV.y, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = ENV.x, y = ENV.y), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash", lwd = 2.5) + 
       geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash", lwd =2.5) + xlim(c(0, 0.8))+ theme(axis.text.x=element_text(size = 32),axis.ticks=element_blank(), axis.text.y=element_text(size=32))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=36), legend.position = c(0.8,0.2), legend.key.width=unit(2, "lines"), legend.key.height =unit(3, "lines")) + scale_y_continuous(limits = c(0, 0.8), breaks = c(0,0.2, 0.4, 0.6, 0.8, 1))
@@ -754,7 +780,7 @@ R2violin = gather(R2violin.5, "type", "Rval", 2:5)
 R2violin$type = factor(R2violin$type,
                               levels = c("ENV.x","COMP.x","Total.x","COMPSC" ),ordered = TRUE)
 
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", scale ="count", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey", "#636363"), labels=c("Environment","Competition", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30, vjust = 4))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) +  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=21, size=3, position = position_dodge(width = .9)) 
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank", scale ="count", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey", "#636363"), labels=c("Environment","Competition", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30, vjust = 4))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) +  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=3, size=4,position = position_dodge(width = .9)) 
 # , sec.axis = sec_axis(~ . *1/1, name = "Variance Ratio")
 ggsave("Figures/violin_all.pdf", height = 8, width = 12)
 
@@ -773,9 +799,6 @@ ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) + geom_point(col = mainvall, shape
 
 foo = merge(mainvall, focal_competitor_table, by = "FocalAOU")
 foo$difference = foo$COMP.y - foo$COMP.x ### y = all competitors, x = occupancy
-
-
-
 
 
 ##### Figure 6 non-competitor comparison ######
