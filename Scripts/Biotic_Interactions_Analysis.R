@@ -592,7 +592,17 @@ table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("
 # creating env traits model to compare to comp and weighted traits mods
 env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
 env_cont2 = merge(env_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by.x = "FocalAOU", by.y = "FocalAOU")
-econt = lm(COMPSC ~ FocalArea  + area_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI , data = env_cont2, weights = n)
+
+# rescaling all occupancy values  - odds ratio
+# need to get rid of ones in order to not have infinity values 
+edge_adjust = .005 
+env_cont2$COMPSC_sc = env_cont2$COMPSC * (1 - 2*edge_adjust) + edge_adjust
+# create logit transformation function, did on rescaled vals
+env_cont2$COMPSC_logit =  log(env_cont2$COMPSC_sc/(1-env_cont2$COMPSC_sc)) 
+
+
+
+econt = lm(COMPSC_logit ~ log10(FocalArea)  + log10(area_overlap) + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI , data = env_cont2, weights = n)
 env_est = summary(econt)$coef[,"Estimate"]
 colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI")
 env = data.frame(colname, env_est)
