@@ -28,6 +28,13 @@ tax_code$AOU_OUT[tax_code$AOU_OUT == 4123] = 4120
 
 # have to omit focal/competitors with no overlap
 shapefile_areas = na.omit(shapefile_areas)
+# sum all comps for each focal, divide by focal range
+shapefile_overlap = shapefile_areas %>%
+  group_by(focalAOU) %>%
+  summarise(all_overlap = sum(area_overlap))
+shapefile_overlap = left_join(shapefile_overlap, shapefile_areas[,c("Focal", "focalAOU", "FocalArea")], by = "focalAOU")
+shapefile_overlap$prop_overlap = shapefile_overlap$all_overlap/shapefile_overlap$FocalArea
+
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
 bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
 maincomp = read.csv("data/shapefileareas_w_comp.csv", header = TRUE)
@@ -339,8 +346,6 @@ envflip = tidyr::gather(nrank, "Type", "value", 2:5)
 envflip$rank <- factor(envflip$rank, levels = envflip$rank[order(envflip$rank)])
 envflip = dplyr::arrange(envflip,rank)
 
-# envflip = merge(envflip, envloc[,c("FocalAOU", "EW")], by = "FocalAOU")
-
 envrank = envflip %>% 
   dplyr::group_by(Type == 'COMP') %>% # change here for comp
   dplyr::mutate(rank = row_number(-value)) # need to get just the envs to rank, then plot
@@ -348,88 +353,6 @@ envrank <- envrank[order(envrank$rank),]
 
 envrank <- subset(envrank,Type == "COMP") # change here for comp
 
-### CREATE LABEL OF FAMilY ########
-envrank$Fam_abbrev = envrank$Family
-envrank$Fam_abbrev = gsub('Emberizidae','E', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Turdidae','Tu', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Fringillidae','F', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Tyrannidae','Ty', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Mimidae','M', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Vireonidae','V', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Aegithalidae','A', envrank$Fam_abbrev)                        
-envrank$Fam_abbrev = gsub('Corvidae','Co', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Timaliidae','Ti', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Troglodytidae','T', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Cuculidae','Cu', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Icteridae','I', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Picidae','Pi', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Motacillidae','M', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Columbidae','Cl', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Trochilidae','Tr', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Cardinalidae','Ca', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Paridae','Pa', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Sylviidae','Sy', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Parulidae','P', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Sittidae','Si', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Regulidae','R', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Hirundinidae','H', envrank$Fam_abbrev)
-envrank$Fam_abbrev = gsub('Certhiidae','Ce', envrank$Fam_abbrev)
-
-
-envrank$Fam_abbrevf = as.factor(as.character(envrank$Fam_abbrev))
-envrank$Fam_abbrevf = gsub('E','#000000', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Tu','#a6bddb', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('F','#67a9cf', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Tr','#048691', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Ty','#9ecae1', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Ti','#02818a', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('V','#016c59', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('A','#014636', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Co','#081d58', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Cu','#253494', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('I','#225ea8', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Pi','#1d91c0', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('M','#41b6c4', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('O','#7f7fff', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Cl','#0000ff', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Ca','#016c59', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Pa','#02818a', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('Sy','#014636', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('P','#3690c0', envrank$Fam_abbrevf)
-envrank$Fam_abbrevf = gsub('T','#0080ff', envrank$Fam_abbrevf) 
-famlabel= envrank$Fam_abbrev
-####### OTHER LABEL ######
-envrank$mig_abbrev = envrank$migclass
-envrank$mig_abbrev = gsub("neotrop", 'L', envrank$mig_abbrev)
-envrank$mig_abbrev = gsub("resid", 'R', envrank$mig_abbrev)
-envrank$mig_abbrev = gsub("short", 'S', envrank$mig_abbrev)
-envrank$mig_abbrevf = as.factor(as.character(envrank$mig_abbrev))
-
-envrank$mig_abbrevf = gsub('L','#bae4b3', envrank$mig_abbrevf)
-envrank$mig_abbrevf = gsub('R','#31a354', envrank$mig_abbrevf)
-envrank$mig_abbrevf = gsub('S','#006d2c', envrank$mig_abbrevf)
-miglabel= envrank$mig_abbrev
-
-envrank$trophlabel = envrank$Trophic.Group
-envrank$trophlabel = gsub("frugivore", 'F', envrank$trophlabel)
-envrank$trophlabel = gsub("granivore", 'G', envrank$trophlabel)
-envrank$trophlabel = gsub("herbivore", 'H', envrank$trophlabel)
-envrank$trophlabel = gsub("insct/om", 'X', envrank$trophlabel)
-envrank$trophlabel = gsub("insectivore", 'I', envrank$trophlabel)
-envrank$trophlabel = gsub("nectarivore", 'N', envrank$trophlabel)
-envrank$trophlabel = gsub("omnivore", 'O', envrank$trophlabel)
-envrank$trophlabelf = as.factor(as.character(envrank$trophlabel))
-
-envrank$trophlabelf = gsub('F','#fbb4b9', envrank$trophlabelf)
-envrank$trophlabelf = gsub('G','#f768a1', envrank$trophlabelf)
-envrank$trophlabelf = gsub('H','#c51b8a', envrank$trophlabelf)
-envrank$trophlabelf = gsub('X','#7a0177', envrank$trophlabelf)
-envrank$trophlabelf = gsub('I','#dd1c77', envrank$trophlabelf)
-envrank$trophlabelf = gsub('N','#ce1256', envrank$trophlabelf)
-envrank$trophlabelf = gsub('O','#67001f', envrank$trophlabelf)
-
-envrank$EW[envrank$EW == 1] <- "E"
-envrank$EW[envrank$EW == 0] <- "W" 
 ###### PLOTTING #####
 envflip$Type = factor(envflip$Type,
                       levels = c("NONE","SHARED", "ENV","COMP"),ordered = TRUE)
@@ -441,10 +364,6 @@ t = ggplot(data=envflip, aes(factor(rank), y=value, fill=factor(Type, levels = c
   scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared Variance","Environment", "Competition")) +theme(axis.title.x=element_text(size=40),axis.title.y=element_text(size=30),legend.title=element_blank(), legend.text=element_text(size=28, hjust = 1, vjust = 0.5), legend.position = c(0.5,.9)) + guides(fill=guide_legend(fill = guide_legend(keywidth = 1, keyheight = 1),title=""))
 
 tt = t + annotate("text", x = 1:175, y = -.03, label = envrank$ALPHA.CODE, angle=90,size=6,vjust=0.5,hjust = 0.8, color = "black") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 40)) + scale_y_continuous(breaks = c(0,0.2,0.4,0.6, 0.8))
-
-# scales::pretty_breaks()(0:1)
-
-#+ annotate("text", x = 1:104, y = -.08, label = envrank$mig_abbrev, size=6,vjust=0.5, color = envrank$mig_abbrevf, fontface =2) + annotate("text", x = 1:104, y = -.1, label = envrank$trophlabel, size=6,vjust=0.5, color = envrank$trophlabelf, fontface =2) + annotate("text", x = 1:104, y = -.12, label = envrank$EW, angle=90,size=6,vjust=0.5, color = "black", fontface =2)+ annotate("text", x = 1:104, y = -.06, label = envrank$Fam_abbrev, size=6,vjust=0.5, color = "black", fontface =2) 
 
 plot(tt)
 
@@ -476,8 +395,6 @@ envflip = tidyr::gather(nrank, "Type", "value", 2:5)
 envflip$rank <- factor(envflip$rank, levels = envflip$rank[order(envflip$rank)])
 envflip = dplyr::arrange(envflip,rank)
 
-# envflip = merge(envflip, envloc[,c("FocalAOU", "EW")], by = "FocalAOU")
-
 envrank = envflip %>% 
   dplyr::group_by(Type == 'ENV') %>% # change here for comp
   dplyr::mutate(rank = row_number(-value)) # need to get just the envs to rank, then plot
@@ -485,39 +402,6 @@ envrank <- envrank[order(envrank$rank),]
 
 envrank <- subset(envrank,Type == "ENV") # change here for comp
 
-# CREATE LABEL DF FAMilY 
-# OTHER LABEL #
-envrank$mig_abbrev = envrank$migclass
-envrank$mig_abbrev = gsub("neotrop", 'L', envrank$mig_abbrev)
-envrank$mig_abbrev = gsub("resid", 'R', envrank$mig_abbrev)
-envrank$mig_abbrev = gsub("short", 'S', envrank$mig_abbrev)
-envrank$mig_abbrevf = as.factor(as.character(envrank$mig_abbrev))
-
-envrank$mig_abbrevf = gsub('L','#bae4b3', envrank$mig_abbrevf)
-envrank$mig_abbrevf = gsub('R','#31a354', envrank$mig_abbrevf)
-envrank$mig_abbrevf = gsub('S','#006d2c', envrank$mig_abbrevf)
-miglabel= envrank$mig_abbrev
-
-envrank$trophlabel = envrank$Trophic.Group
-envrank$trophlabel = gsub("frugivore", 'F', envrank$trophlabel)
-envrank$trophlabel = gsub("granivore", 'G', envrank$trophlabel)
-envrank$trophlabel = gsub("herbivore", 'H', envrank$trophlabel)
-envrank$trophlabel = gsub("insct/om", 'X', envrank$trophlabel)
-envrank$trophlabel = gsub("insectivore", 'I', envrank$trophlabel)
-envrank$trophlabel = gsub("nectarivore", 'N', envrank$trophlabel)
-envrank$trophlabel = gsub("omnivore", 'O', envrank$trophlabel)
-envrank$trophlabelf = as.factor(as.character(envrank$trophlabel))
-
-envrank$trophlabelf = gsub('F','#fbb4b9', envrank$trophlabelf)
-envrank$trophlabelf = gsub('G','#f768a1', envrank$trophlabelf)
-envrank$trophlabelf = gsub('H','#c51b8a', envrank$trophlabelf)
-envrank$trophlabelf = gsub('X','#7a0177', envrank$trophlabelf)
-envrank$trophlabelf = gsub('I','#dd1c77', envrank$trophlabelf)
-envrank$trophlabelf = gsub('N','#ce1256', envrank$trophlabelf)
-envrank$trophlabelf = gsub('O','#67001f', envrank$trophlabelf)
-
-envrank$EW[envrank$EW == 1] <- "E"
-envrank$EW[envrank$EW == 0] <- "W" 
 ###### PLOTTING #####
 envflip$Type = factor(envflip$Type,
                       levels = c("NONE", "SHARED","COMP","ENV"),ordered = TRUE)
@@ -565,32 +449,21 @@ ggsave("C:/Git/Biotic-Interactions/Figures/subbarplotboth.pdf", height = 10, wid
 logit = function(x) log(x/(1-x))
 
 env_lm = subset(envflip, Type == 'ENV')
-
-# env_traits = lm(logit(value) ~ Trophic.Group + migclass + EW, data = env_lm)
-# summary(env_traits) 
-
 comp_lm = subset(envflip, Type == 'COMP')
-
-comp_traits = lm(COMPSC ~ Trophic.Group + migclass + Lat + Long, data = comp_lm, weights = n)
-summary(comp_traits) 
 
 env_sum = subset(envflip, Type != 'NONE')
 total = env_sum %>% 
   dplyr::group_by(FocalAOU) %>%
   summarise(sum(value))
 
-env_sum$edgeval = (env_sum$value * (1 - 2*edge_adjust)) + edge_adjust
-total_traits = lm(logit(edgeval) ~ Trophic.Group + migclass + EW, data = env_sum)
-summary(total_traits)
+table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("FocalAOU" = "focalAOU")) %>%
+  left_join(., unique(shapefile_overlap), by = c("FocalAOU" = "focalAOU")) %>%
+  left_join(., unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU")
 
-env_traits = lm(logit(value) ~ EW, data = env_lm)
-anova(env_traits)
-
-table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("FocalAOU" = "focalAOU"))
 # write.csv(table_s2, "data/table_s2.csv", row.names = FALSE)
 
 # creating env traits model to compare to comp and weighted traits mods
-env_cont = merge(env_lm, shapefile_areas, by.x = "FocalAOU",by.y = "focalAOU")
+env_cont = merge(env_lm, shapefile_overlap, by.x = "FocalAOU",by.y = "focalAOU")
 env_cont2 = merge(env_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by.x = "FocalAOU", by.y = "FocalAOU")
 
 # rescaling all occupancy values  - odds ratio
@@ -602,7 +475,7 @@ env_cont2$COMPSC_logit =  log(env_cont2$COMPSC_sc/(1-env_cont2$COMPSC_sc))
 
 
 
-econt = lm(COMPSC_logit ~ log10(FocalArea)  + log10(area_overlap) + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI , data = env_cont2, weights = n)
+econt = lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI , data = env_cont2, weights = n)
 env_est = summary(econt)$coef[,"Estimate"]
 colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI")
 env = data.frame(colname, env_est)
