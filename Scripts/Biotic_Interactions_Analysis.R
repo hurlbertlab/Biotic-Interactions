@@ -190,7 +190,7 @@ library(brms)
 library(rstudioapi)
 mmslope <- brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix , cores = 2, chains=4, iter=500,warmup=200,control = list(max_treedepth = 15),set_prior("lkj(1)", class = "cor"))
 mm_summ = data.frame(mmslope)
-
+save(mmslope, filename ="mmslope.rda")
 # write.csv(mm_summ, "data/mm_slope_brms.csv", row.names= FALSE)
 mod2 <- readRDS("mmslope_brms")
 # mmint <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
