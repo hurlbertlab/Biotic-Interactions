@@ -762,10 +762,14 @@ noncomps_output_ttest = left_join(noncomps_output_bocc, vec_meds, by = "FocalAOU
 t.test(noncomps_output_ttest$Competition_R2, noncomps_output_ttest$Median, paired = TRUE, alternative= "two.sided")
 
 
-noncompsdistp  = merge(nonps, numcomps, by = ("FocalAOU"))
+noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
 noncompsdiste  = merge(none, numcomps, by = ("FocalAOU"))
-noncompsdistp$nullp = (noncompsdistp$main_g_non + 1)/(noncompsdistp$Comp_count + 1)
-noncompsdiste$nulle = (noncompsdiste$main_g_non + 1)/(noncompsdiste$Comp_count + 1)
+noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
+noncompsdiste$nulle = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
+nullpsub = filter(noncompsdist, nullp < 0.05) %>% 
+  left_join(., envoutput1, by = "FocalAOU")
+
+noncompsdist_trait = merge(noncompsdist, envoutput2[,c("FocalAOU", "migclass", "Trophic.Group")], by = "FocalAOU")
 
 hist(noncompsdistp$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
 abline(v=mean(noncompsdistp$nullp), col = "blue", lwd = 2)
