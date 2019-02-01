@@ -761,15 +761,10 @@ vec_meds = data.frame(FocalAOU = unique(noncomps_output_bocc$FocalAOU), Median =
 noncomps_output_ttest = left_join(noncomps_output_bocc, vec_meds, by = "FocalAOU")
 t.test(noncomps_output_ttest$Competition_R2, noncomps_output_ttest$Median, paired = TRUE, alternative= "two.sided")
 
-
-noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
+noncompsdistp  = merge(nonps, numcomps, by = ("FocalAOU"))
 noncompsdiste  = merge(none, numcomps, by = ("FocalAOU"))
-noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
-noncompsdiste$nulle = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
-nullpsub = filter(noncompsdist, nullp < 0.05) %>% 
-  left_join(., envoutput1, by = "FocalAOU")
-
-noncompsdist_trait = merge(noncompsdist, envoutput2[,c("FocalAOU", "migclass", "Trophic.Group")], by = "FocalAOU")
+noncompsdistp$nullp = (noncompsdistp$main_g_non)/(noncompsdistp$Comp_count + 1)
+noncompsdiste$nulle = (noncompsdiste$main_g_non)/(noncompsdiste$Comp_count + 1)
 
 hist(noncompsdistp$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
 abline(v=mean(noncompsdistp$nullp), col = "blue", lwd = 2)
@@ -778,7 +773,6 @@ hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", 
 abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
 hist(na.omit(noncomps_output$Estimate), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate', xlim = c(-40, 40))
 abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
-
 
 noncomps_output_bocc$Null = "Null"
 noncomps_output_bocc$Comp = "Comp"
@@ -801,12 +795,12 @@ o = ggplot(single_dist) +
 
 p = ggplot(noncompsdistp) +
   geom_histogram(bins = 20, aes(nullp), alpha = 0.9, fill="#330066") +
-  xlab(expression('Proportion of non-competitors R'^2)) + ylab("Frequency") + theme_classic() + 
+  xlab(expression('Proportion of non-competitors R'^2)) + ylab("Frequency") + theme_classic() + ylim(c(0, 30)) +
   scale_fill_manual(breaks = c("Null"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
 
 q = ggplot(noncompsdiste) +
-  geom_histogram(bins = 20, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
+  geom_histogram(bins = 20, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + ylim(c(0, 15))+
   xlab(expression("Proportion of non-competitors outperforming main competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#330066"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
