@@ -188,7 +188,7 @@ occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 #### Bayesian of all matrices not just subset ####
 library(brms)
 library(rstudioapi)
-# get_prior(brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix))
+# get_prior(brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix, cores = 2, chains=4, iter=500,warmup=200))
 
 # mmslope <- brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix , cores = 2, chains=4, iter=500,warmup=200,control = list(max_treedepth = 15),set_prior("lkj(1)", class = "cor"))
 
@@ -205,7 +205,7 @@ Table8 = mod2[["fit"]]
 mod2sum = summary(mod2)
 
 
-mmslope5000 = read.csv("data/TableS13.csv", header = TRUE)
+mmslope5000 = read.csv("data/TableS12.csv", header = TRUE)
 mmslope5000$X = gsub("r_", "", mmslope5000$X) 
 mmslope5000$X = gsub("(Intercept)", "", mmslope5000$X) 
 mmslope5000$X = gsub("FocalAOU", "", mmslope5000$X) 
@@ -215,9 +215,10 @@ mmslope5000 = mmslope5000 %>% separate(X, c("AOU", "Var"), ",", remove= TRUE)
 mmslope5000$AOU = as.factor(mmslope5000$AOU)
 mmslope5000 = mmslope5000[,c("AOU", "Var", "Estimate", "Q2.5", "Q97.5")]
 
+# mmslope5000$AOU = as.integer(mmslope5000$AOU)
 # mm3 = left_join(mmslope5000, nsw[,c("focalAOU", "Focal", "Family")], by = c("AOU" = "focalAOU"))
 mm3 = unique(mm3) %>% group_by(Family)
-# write.csv(mm3, "data/tableS13.csv", row.names = FALSE)
+# write.csv(mm3, "data/tableS12.csv", row.names = FALSE)
 
 occumatrix$cspred = inv.logit(occumatrix$all_comp_scaled * mm_fixed$mean[2] + mm_fixed$mean[1])
 occumatrix$temppred = inv.logit(occumatrix$abTemp * mm_fixed$mean[3] + mm_fixed$mean[1])
