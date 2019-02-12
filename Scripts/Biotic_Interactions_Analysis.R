@@ -188,56 +188,33 @@ occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 #### Bayesian of all matrices not just subset ####
 library(brms)
 library(rstudioapi)
-mmslope <- brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix , cores = 2, chains=4, iter=500,warmup=200,control = list(max_treedepth = 15),set_prior("lkj(1)", class = "cor"))
+get_prior(brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix))
+
+# mmslope <- brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix , cores = 2, chains=4, iter=500,warmup=200,control = list(max_treedepth = 15),set_prior("lkj(1)", class = "cor"))
 mm_summ = data.frame(mmslope)
 save(mmslope, filename ="mmslope.rda")
-# write.csv(mm_summ, "data/mm_slope_brms.csv", row.names= FALSE)
-mod2 <- readRDS("mmslope_brms")
-# mmint <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
 
-# Default priors =  default_prior_test <- stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
-#        abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, chains =1, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1))
-# The prior_summary function provides a concise summary of the priors used: prior_summary(default_prior_test)
+mod2 <- readRDS("data/mmslope_all_5000.rds")
+samples1 <- posterior_summary(mod2)
+samples2 <- posterior_samples(mod2)
+# write.csv(samples1, "data/TableS8.csv", row.names = TRUE)
 
-
-mmslope = read.csv("data/mm_slope_full.csv", header = TRUE)
-mm2 = subset(mmslope, mean > -2.52e+05)
-mm2$X = gsub("b", "", mm2$X) 
-mm2$X = gsub("c_s", "cs", mm2$X) 
-mm2$X = gsub("FocalAOU", "", mm2$X) 
-mm2$X = gsub(":", "_", mm2$X) 
-mm2$X = gsub("[() ]", "", mm2$X) 
-mm2$X = gsub("[[]", "", mm2$X) 
-mm2$X = gsub("[]]", "", mm2$X)
-mm2 = left_join(., mm2, by = )
-mm2$AOU =strsplit(mm2$X,"_")
-
-vecAOU = 1:1078
-for(i in 1:length(mm2$AOU)){
-  vecAOU[i] <- mm2$AOU[[i]][2]
-}
-mm2 = cbind(vecAOU, mm2)
-mm2$vecAOU2 = as.numeric(as.character(mm2$vecAOU))
-mm3 = left_join(mm2[,c("vecAOU2","X","mean" ,"mcse", "sd" ,"X2.5.","X25.","X50.","X75.","X97.5.","n_eff","Rhat")], nsw[,c("focalAOU", "Focal", "Family")], by = c("vecAOU2" = "focalAOU"))
-# write.csv(mm3, "data/tableS6.csv", row.names = FALSE)
-
-mmint = read.csv("data/bayesian_sum_mod_output_full_11_14.csv", header = TRUE)
-mm2 = read.csv("data/mm_slope_full.csv", header = TRUE)
-modoutput2 = subset(mm2, mean > -2.52e+05)
-modoutput2$X = gsub("b", "", modoutput2$X) 
-modoutput2$X = gsub("(Intercept)", "", modoutput2$X) 
-modoutput2$X = gsub("FocalAOU", "", modoutput2$X) 
-modoutput2$X = gsub(":", "", modoutput2$X) 
-modoutput2$X = gsub("", "", modoutput2$X) 
+Table8 = mod2[["fit"]]
+mod2sum = summary(mod2)
 
 
-hist(modoutput2$mean, breaks = 20)
+mmslope5000 = read.csv("data/tableS8.csv", header = TRUE)
+mmslope5000$X = gsub("r_", "", mmslope5000$X) 
+mmslope5000$X = gsub("(Intercept)", "", mmslope5000$X) 
+mmslope5000$X = gsub("FocalAOU", "", mmslope5000$X) 
+mmslope5000$X = gsub("[[]", "", mmslope5000$X) 
+mmslope5000$X = gsub("[]]", "", mmslope5000$X)
+mmslope5000 = mmslope5000 %>% separate(X, c("AOU", "Var"), ",", remove= TRUE)
+mmslope5000$AOU = as.factor(mmslope5000$AOU)
+mmslope5000 = mmslope5000[,c("AOU", "Var", "Estimate", "Q2.5", "Q97.5")]
+# write.csv(mmslope5000, "data/tableS8.csv", row.names = TRUE)
+# mm3 = left_join(mmslope5000, nsw[,c("focalAOU", "Focal", "Family")], by = c("AOU" = "focalAOU"))
 
-mm3 = modoutput2[7:181,] #removed global vals, only have ind spp
-ggplot(data = mm3) + #geom_point() + geom_ribbon(aes(ymin = X2.5., ymax = X97.5.))
-stat_density(aes(mm3$mean))
-
-mm_fixed = modoutput2[1:6,]
 
 occumatrix$cspred = inv.logit(occumatrix$all_comp_scaled * mm_fixed$mean[2] + mm_fixed$mean[1])
 occumatrix$temppred = inv.logit(occumatrix$abTemp * mm_fixed$mean[3] + mm_fixed$mean[1])
@@ -622,9 +599,9 @@ R2plot2$comp_a = R2plot2$COMP.y + R2plot2$SHARED.y
 # need to change the slopes
 cols = c("Competition" ="#dd1c77","Environment" = "#2ca25f","Total" = "dark gray")
 r1 = ggplot(R2plot2, aes(x = comp_o, y = comp_a, col = "Competition")) +theme_classic()+ theme(axis.title.x=element_text(size=36, vjust = 2),axis.title.y=element_text(size=36, angle=90, vjust = 2)) + xlab(bquote("Occupancy R"^"2")) + ylab(bquote("Abundance R"^"2"))+
-  geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.5) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash", lwd =2.5) +
-      geom_point(data = R2plot2, aes(x = env_o, y = env_a, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = env_o, y = env_a), method='lm', se=FALSE, col="#2ca25f",linetype="dotdash", lwd = 2.5) + 
-      geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="dotdash", lwd =2.5) + xlim(c(0, 0.8))+ theme(axis.text.x=element_text(size = 32),axis.ticks=element_blank(), axis.text.y=element_text(size=32))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=36), legend.position = c(0.8,0.2), legend.key.width=unit(2, "lines"), legend.key.height =unit(3, "lines")) + scale_y_continuous(limits = c(0, 0.8), breaks = c(0,0.2, 0.4, 0.6, 0.8, 1)) +geom_label(data = R2plot2, aes(Total.x,Total.y, label = FocalAOU))
+  geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.5) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="longdash", lwd =2.5) +
+      geom_point(data = R2plot2, aes(x = env_o, y = env_a, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = env_o, y = env_a), method='lm', se=FALSE, col="#2ca25f",linetype="longdash", lwd = 2.5) + 
+      geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="longdash", lwd =2.5) + xlim(c(0, 0.8))+ theme(axis.text.x=element_text(size = 32),axis.ticks=element_blank(), axis.text.y=element_text(size=32))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=36), legend.position = c(0.8,0.2), legend.key.width=unit(2, "lines"), legend.key.height =unit(3, "lines")) + scale_y_continuous(limits = c(0, 0.8), breaks = c(0,0.2, 0.4, 0.6, 0.8, 1)) #+geom_label(data = R2plot2, aes(Total.x,Total.y, label = FocalAOU))
 ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.pdf", height = 8, width = 12)
 # 
 
@@ -632,7 +609,7 @@ R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
 R2plot2$abundiff = R2plot2$COMP.y - R2plot2$ENV.y
 R2plot2$totaldiff = R2plot2$abundiff - R2plot2$occdiff
 
-r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "dashed")+ylim(c(-0.4, 0.6)) + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "dashed")+ geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26)) + xlab("")+ ylab("") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20)) 
+r2 = ggplot(R2plot2, aes(x = occdiff, y = abundiff)) +theme_classic()+ geom_abline(intercept = 0, slope = 0, col = "black", lwd = 1.25, lty = "longdash")+ylim(c(-0.4, 0.6)) + geom_vline(xintercept = 0, col = "black", lwd = 1.25, lty = "longdash")+ geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26)) + xlab("")+ ylab("") + geom_point(col = "black", shape=16, size = 3)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20)) 
 #+ annotate("text", x = -.3, y = 0.5, label = "Abundance predicts \nmore competition") + annotate("text", x = 0.4, y = -0.3, label = "Occupancy predicts \nmore environment")
 smooth_vals = predict(loess(COMP.x~COMP.y,R2plot2), R2plot2$COMP.y)
 summary(lm(ENV.x~ENV.y,data = R2plot2))
@@ -735,8 +712,15 @@ names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_output$CompetitorAOU == 4670),]
 
 # write.csv(noncomps_output, "data/noncomps_output_all.csv", row.names = FALSE)
+
 noncomps_output = read.csv("data/noncomps_output.csv", header = TRUE)
-noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
+# filtering to species where p <0.05
+noncomps_sub = filter(beta_occ, Competition_R2 > 0.1)
+noncomps_plot = subset(noncomps_output, FocalAOU %in% noncomps_sub$FocalAOU)
+
+noncomps_output_bocc = left_join(noncomps_plot, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
+noncomps_out
+
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
   tally(R2 >= Competition_R2)
@@ -747,7 +731,7 @@ none = na.omit(noncomps_output_bocc) %>%
   tally(Estimate <= Competition_Est)
 names(none) = c("FocalAOU", "main_g_non_e")
 
-numcomps = na.omit(noncomps_output) %>% 
+numcomps = na.omit(noncomps_output_bocc) %>% 
   count(FocalAOU)
 names(numcomps) = c("FocalAOU", "Comp_count")
 
@@ -764,10 +748,8 @@ t.test(noncomps_output_ttest$Competition_R2, noncomps_output_ttest$Median, paire
 noncompsdistp  = merge(nonps, numcomps, by = ("FocalAOU"))
 noncompsdiste  = merge(none, numcomps, by = ("FocalAOU"))
 noncompsdistp$nullp = (noncompsdistp$main_g_non)/(noncompsdistp$Comp_count + 1)
-noncompsdiste$nulle = (noncompsdiste$main_g_non)/(noncompsdiste$Comp_count + 1)
+noncompsdiste$nulle = (noncompsdiste$main_g_non_e)/(noncompsdiste$Comp_count + 1)
 
-hist(noncompsdistp$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
-abline(v=mean(noncompsdistp$nullp), col = "blue", lwd = 2)
 
 hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", xlab = expression('R'^2))
 abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
@@ -795,15 +777,16 @@ o = ggplot(single_dist) +
 
 p = ggplot(noncompsdistp) +
   geom_histogram(bins = 20, aes(nullp), alpha = 0.9, fill="#330066") +
-  xlab(expression('Proportion of non-competitors R'^2)) + ylab("Frequency") + theme_classic() + ylim(c(0, 30)) +
+  xlab(expression('Proportion of non-competitors R'^2)) + ylab("Frequency") + theme_classic()  + ylim(c(0, 20)) +
   scale_fill_manual(breaks = c("Null"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
 
 q = ggplot(noncompsdiste) +
-  geom_histogram(bins = 20, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + ylim(c(0, 15))+
+  geom_histogram(bins = 20, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + ylim(c(0, 40))+ 
   xlab(expression("Proportion of non-competitors outperforming main competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#330066"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
+theme_set(theme_cowplot(font_size=20,font_family = "URWHelvetica"))
 plot_grid(n + theme(legend.position="none"),
           o + theme(legend.position="none"),
           p + theme(legend.position="none"),
@@ -812,6 +795,7 @@ plot_grid(n + theme(legend.position="none"),
           labels = c("A","B", "C", "D"),
           label_size = 20,
           nrow = 2) 
+
 ggsave("Figures/Figure6_null_all.pdf", height = 8, width = 12)
 
 #### 1:1 plots ####
@@ -873,35 +857,6 @@ ggplot(noncompsdist, aes(type, nullp)) + geom_violin(linetype = "blank", aes(fil
 
 #### ---- Plotting GLMs ---- ####
 # Making pdf of ranges for each focal spp
-pdf('precip_Reg.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-# Plotting basic lms to understand relationships
-for(sp in subfocalspecies){ 
-  print(sp)
-  psub = occuenv[occuenv$Species == sp,]
-  competition <- lm(psub$occ_logit ~  psub$all_comp_scaled) 
-  # z scores separated out for env effects (as opposed to multivariate variable)
-  env_z = lm(psub$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = psub)
-  # z scores separated out for env effects
-  both_z = lm(psub$occ_logit ~  all_comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = psub)
-  
-  tes = ggplot(data = psub, aes(x =  psub$all_comp_scaled, y = psub$occ_logit)) +stat_smooth(data=env_z, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
-  plot(tes)
-}
-dev.off()
-# Making pdf of ranges for each focal spp
-pdf('Figures/allspp_Reg.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-# Plotting basic lms to understand relationships
-for(sp in subfocalspecies){ 
-  temp = occumatrix[occumatrix$Species == sp,]
-  lm = lm(temp$occ_logit ~  abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
-  
-  tes = ggplot(data = temp, aes(x = zTemp, y = FocalOcc)) +stat_smooth(method = "lm", lwd = 1.5,se = FALSE) +xlab(temp$Species) +ylim(0,1) +theme_bw()
-  plot(tes)
-}
-dev.off()
-# Making pdf of ranges for each focal spp
 pdf('rangmaps.pdf', height = 8, width = 10)
 par(mfrow = c(3, 4))
 # Plotting basic lms to understand relationships
@@ -921,44 +876,6 @@ pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,al
 inverselogit <- function(p) {exp(p)/(1+exp(p))} 
 newintercept <- function(p) {mean(exp(p)/(1+exp(p)))} 
 
-# this relationship should be negative
-temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zTemp)), yend = 0), col = "dark green", lwd=2) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logittemp.png")
-
-ndvi = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zNDVI)), yend = 0), col = "dark green", lwd=2) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logitndvi.png")
-
-elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zElev)), yend = 0), col = "dark green", lwd=2)  + 
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logitelev.png")
-
-precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zPrecip)), yend = 0), col = "dark green", lwd=2) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logitprecip.png")
-
-z <- plot_grid(precip+ theme(legend.position="none"),
-               ndvi + theme(legend.position="none"),
-               align = 'h',
-               labels = c("A","B"),
-               nrow = 1)
-p2 = plot_grid(elev + theme(legend.position="none"),
-               temp + theme(legend.position="none"), 
-               labels = c("C","D"),
-               align = 'h', 
-               rel_widths = c(1, 1.3))
-
-plot_grid(z, p2, ncol = 1, rel_heights = c(1, 1))
-ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf")
-
-ggplot(data = occumatrix, aes(x = all_comp_scaled, y = FocalOcc)) + 
-  stat_function(fun=inverselogit, color = "blue") + 
-  geom_point(colour="black", shape=18, alpha = 0.02,position=position_jitter(width=0,height=.02))+ theme_classic()
 
 tableS1 = read.csv("//bioark/HurlbertLab/Snell/2018 BI MS/Tables/Table S1.csv", header = TRUE)
 tableS1 = tableS1 %>%
