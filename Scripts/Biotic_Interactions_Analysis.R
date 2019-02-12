@@ -188,22 +188,24 @@ occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 #### Bayesian of all matrices not just subset ####
 library(brms)
 library(rstudioapi)
-get_prior(brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix))
+# get_prior(brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix))
 
 # mmslope <- brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix , cores = 2, chains=4, iter=500,warmup=200,control = list(max_treedepth = 15),set_prior("lkj(1)", class = "cor"))
-mm_summ = data.frame(mmslope)
-save(mmslope, filename ="mmslope.rda")
 
-mod2 <- readRDS("data/mmslope_all_5000.rds")
+# save(mmslope, filename ="mmslope.rda")
+
+mod2 <- readRDS("Z:/Snell/2018 BI MS/mmslope_all_5000.rds")
+TableS13 <- readRDS("Z:/Snell/2018 BI MS/mmslope_main_5000.rds")
 samples1 <- posterior_summary(mod2)
+sample_13 = posterior_summary(TableS13)
 samples2 <- posterior_samples(mod2)
-# write.csv(samples1, "data/TableS8.csv", row.names = TRUE)
+# write.csv(sample_13, "data/TableS13.csv", row.names = TRUE)
 
 Table8 = mod2[["fit"]]
 mod2sum = summary(mod2)
 
 
-mmslope5000 = read.csv("data/tableS8.csv", header = TRUE)
+mmslope5000 = read.csv("data/TableS13.csv", header = TRUE)
 mmslope5000$X = gsub("r_", "", mmslope5000$X) 
 mmslope5000$X = gsub("(Intercept)", "", mmslope5000$X) 
 mmslope5000$X = gsub("FocalAOU", "", mmslope5000$X) 
@@ -212,9 +214,10 @@ mmslope5000$X = gsub("[]]", "", mmslope5000$X)
 mmslope5000 = mmslope5000 %>% separate(X, c("AOU", "Var"), ",", remove= TRUE)
 mmslope5000$AOU = as.factor(mmslope5000$AOU)
 mmslope5000 = mmslope5000[,c("AOU", "Var", "Estimate", "Q2.5", "Q97.5")]
-# write.csv(mmslope5000, "data/tableS8.csv", row.names = TRUE)
-# mm3 = left_join(mmslope5000, nsw[,c("focalAOU", "Focal", "Family")], by = c("AOU" = "focalAOU"))
 
+# mm3 = left_join(mmslope5000, nsw[,c("focalAOU", "Focal", "Family")], by = c("AOU" = "focalAOU"))
+mm3 = unique(mm3) %>% group_by(Family)
+# write.csv(mm3, "data/tableS13.csv", row.names = FALSE)
 
 occumatrix$cspred = inv.logit(occumatrix$all_comp_scaled * mm_fixed$mean[2] + mm_fixed$mean[1])
 occumatrix$temppred = inv.logit(occumatrix$abTemp * mm_fixed$mean[3] + mm_fixed$mean[1])
@@ -715,8 +718,11 @@ noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_
 
 noncomps_output = read.csv("data/noncomps_output.csv", header = TRUE)
 # filtering to species where p <0.05
-noncomps_sub = filter(beta_occ, Competition_R2 > 0.1)
-noncomps_plot = subset(noncomps_output, FocalAOU %in% noncomps_sub$FocalAOU)
+beta_occ_main = read.csv("Z:/Snell/2018 BI MS/Tables/Table S7 beta occupancy main.csv", header = TRUE)
+noncomps_sub = left_join(noncomps_sub, nsw[,c("Focal", "focalAOU")], by = c("Focal.Common.Name" = "Focal"))
+noncomps_sub2 = filter(noncomps_sub, Competition.R2 > 0.1) 
+noncomps_sub3 = unique(noncomps_sub2)
+noncomps_plot = subset(noncomps_output, FocalAOU %in% noncomps_sub3$focalAOU)
 
 noncomps_output_bocc = left_join(noncomps_plot, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
 noncomps_out
@@ -776,13 +782,13 @@ o = ggplot(single_dist) +
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
 p = ggplot(noncompsdistp) +
-  geom_histogram(bins = 20, aes(nullp), alpha = 0.9, fill="#330066") +
+  geom_histogram(bins = 10, aes(nullp), alpha = 0.9, fill="#330066") +
   xlab(expression('Proportion of non-competitors R'^2)) + ylab("Frequency") + theme_classic()  + ylim(c(0, 20)) +
   scale_fill_manual(breaks = c("Null"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
 
 q = ggplot(noncompsdiste) +
-  geom_histogram(bins = 20, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + ylim(c(0, 40))+ 
+  geom_histogram(bins = 10, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + ylim(c(0, 30))+ 
   xlab(expression("Proportion of non-competitors outperforming main competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#330066"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
