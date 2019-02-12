@@ -361,7 +361,7 @@ envflip_sub3 = unique(left_join(envflip_sub2.5, tax_code, by = c("compAOU" = "AO
 
 envflip_sub = envflip[1:60,]
 c = ggplot(data=envflip_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED", "ENV","COMP")))) + geom_bar(stat = "identity") + theme_classic() + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=30, vjust = 3),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.31,.92)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_text(size = 30,color= "black")) + scale_y_continuous(breaks = c(0, 0.2,  0.4,  0.6,  0.8),limits = c(0, 0.8),sec.axis = sec_axis(~ . *1)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") # + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=8,vjust=0.5,hjust = 1.4, color = "white", fontface = "bold") + theme(legend.background = element_rect(color = "black"))
+  scale_fill_manual(values=c("white","lightskyblue","#2ca25f","#dd1c77"), labels=c("","Shared","Environment", "Competition")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=30, vjust = 3),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.3,.92)) +theme(legend.title=element_blank(), legend.text=element_text(size=36), legend.key.width=unit(4, "point"), legend.key.height =unit(3, "lines")) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(),axis.text.y=element_text(size = 30,color= "black")) + scale_y_continuous(breaks = c(0, 0.2,  0.4,  0.6,  0.8),limits = c(0, 0.8),sec.axis = sec_axis(~ . *1)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black")  # + annotate("text", x = 1:15, y = 0.3, label = envflip_sub3$PRIMARY_COM_NAME.y, angle=90,size=8,vjust=0.5,hjust = 1.4, color = "white", fontface = "bold") + theme(legend.background = element_rect(color = "black"))
 ggsave("Figures/barplotc_sub.pdf", width = 16, height = 11)
 
 geom_histogram(envoutput$ENV + envoutput$SHARED)
@@ -416,7 +416,7 @@ env_sub2.5 = left_join(env_sub2, tax_code[, c("AOU_OUT", "PRIMARY_COM_NAME")], b
 env_sub3 = unique(left_join(env_sub2.5, tax_code, by = c("compAOU" = "AOU_OUT")))
 
 w = ggplot(data=env_sub, aes(factor(rank), y=abs(value), fill=factor(Type, levels = c("NONE","SHARED","COMP", "ENV")))) + geom_bar(stat = "identity") + theme_classic() + xlab("Focal Species") + ylab("Percent Variance Explained") +
-  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=30, vjust =3),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.8,.9)) + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="") + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 30,color= "black")) +scale_y_continuous(breaks = c(0,   0.2,  0.4, 0.6),limits = c(0, 0.6),sec.axis = sec_axis(~ . *1/1)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black") + guides(fill = guide_legend(keywidth = 2, keyheight = 2, legend.key.size = unit(5,"line")),title="")
+  scale_fill_manual(values=c("white","lightskyblue","#dd1c77","#2ca25f"), labels=c("","Shared", "Competition","Environment")) +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=30, vjust =3),legend.title=element_blank(), legend.text=element_text(size=34, hjust = 1, vjust = 0.5), legend.position = c(.8,.9)) +theme(legend.title=element_blank(), legend.text=element_text(size=36), legend.key.width=unit(4, "point"), legend.key.height =unit(3, "lines")) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size = 30,color= "black")) +scale_y_continuous(breaks = c(0,   0.2,  0.4, 0.6),limits = c(0, 0.6),sec.axis = sec_axis(~ . *1/1)) + annotate("text", x = 1:15, y = -.01, label = envrank$ALPHA.CODE[1:15], angle=90,size=6,vjust=0.5,hjust = 1, color = "black")
   
  
 ggsave("Figures/barplote_sub.pdf", height = 11, width = 16)
@@ -719,10 +719,10 @@ noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_
 noncomps_output = read.csv("data/noncomps_output.csv", header = TRUE)
 # filtering to species where p <0.05
 beta_occ_main = read.csv("Z:/Snell/2018 BI MS/Tables/Table S7 beta occupancy main.csv", header = TRUE)
-noncomps_sub = left_join(noncomps_sub, nsw[,c("Focal", "focalAOU")], by = c("Focal.Common.Name" = "Focal"))
-noncomps_sub2 = filter(noncomps_sub, Competition.R2 > 0.1) 
+noncomps_sub = left_join(beta_occ_main, tax_code, by = c("Focal.Common.Name" = "PRIMARY_COM_NAME"))
+noncomps_sub2 = filter(noncomps_sub, Competition.R2 >= 0.1) 
 noncomps_sub3 = unique(noncomps_sub2)
-noncomps_plot = subset(noncomps_output, FocalAOU %in% noncomps_sub3$focalAOU)
+noncomps_plot = subset(noncomps_output, FocalAOU %in% noncomps_sub3$AOU_OUT)
 
 noncomps_output_bocc = left_join(noncomps_plot, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
 noncomps_out
