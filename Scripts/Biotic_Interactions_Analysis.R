@@ -188,8 +188,6 @@ occumatrix$sp_fail = as.integer(15 * (1 - occumatrix$FocalOcc))
 #### Bayesian of all matrices not just subset ####
 library(brms)
 library(rstudioapi)
-# get_prior(brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix, cores = 2, chains=4, iter=500,warmup=200))
-
 # mmslope <- brm(sp_success | trials(sp_success+sp_fail) ~ c_s +  abTemp + abElev + abPrecip + abNDVI + (c_s + abTemp + abElev + abPrecip + abNDVI|FocalAOU), family = binomial(link = logit), data = occumatrix , cores = 2, chains=4, iter=500,warmup=200,control = list(max_treedepth = 15),set_prior("lkj(1)", class = "cor"))
 
 # save(mmslope, filename ="mmslope.rda")
@@ -799,7 +797,7 @@ plot_grid(n + theme(legend.position="none"),
           p + theme(legend.position="none"),
           q + theme(legend.position="none"),
           align = 'hv',
-          labels = c("A","B", "C", "D"),
+          labels = c("a","b", "c", "d"),
           label_size = 20,
           nrow = 2) 
 
