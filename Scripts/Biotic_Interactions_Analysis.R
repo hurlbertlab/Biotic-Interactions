@@ -451,9 +451,9 @@ names(tomerge) = c("FocalAOU","Total.x", "Total.y")
 
 # R2 plot
 R2plot2 = merge(R2plot, tomerge, by = "FocalAOU")
-R2plot2$env_o = R2plot2$ENV.x + R2plot2$SHARED.x
-R2plot2$comp_o = R2plot2$COMP.x + R2plot2$SHARED.x
-R2plot2$total_o = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
+R2plot2$Environment = R2plot2$ENV.x + R2plot2$SHARED.x
+R2plot2$Competition = R2plot2$COMP.x + R2plot2$SHARED.x
+R2plot2$Total = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 
 R2plot2$env_a = R2plot2$ENV.y + R2plot2$SHARED.y
 R2plot2$comp_a = R2plot2$COMP.y + R2plot2$SHARED.y
@@ -465,6 +465,9 @@ r1 = ggplot(R2plot2, aes(x = comp_o, y = comp_a, col = "Competition")) +theme_cl
       geom_point(data = R2plot2, aes(x = env_o, y = env_a, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = env_o, y = env_a), method='lm', se=FALSE, col="#2ca25f",linetype="longdash", lwd = 2.5) + 
       geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="longdash", lwd =2.5) + xlim(c(0, 0.8))+ theme(axis.text.x=element_text(size = 32),axis.ticks=element_blank(), axis.text.y=element_text(size=32))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=36), legend.position = c(0.8,0.2), legend.key.width=unit(2, "lines"), legend.key.height =unit(3, "lines")) + scale_y_continuous(limits = c(0, 0.8), breaks = c(0,0.2, 0.4, 0.6, 0.8, 1)) #+geom_label(data = R2plot2, aes(Total.x,Total.y, label = FocalAOU))
 ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines.pdf", height = 8, width = 12)
+
+leg4 <- gather(R2plot2, "Occ", "val", c(Environment,Competition,Total))
+ggplot(leg4, aes(x = Occ, y = val, shape = Occ, color = Occ)) + geom_point() + theme_classic() + scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray")) + scale_shape_manual("", values = c(24, 16, 3))+theme(legend.title=element_blank(), legend.text=element_text(size=36), legend.position = c(0.5,0.8), legend.key.width=unit(2, "lines"), legend.key.height =unit(3, "lines")) + guides(shape = guide_legend(override.aes = list(size = 7)))
 
 R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
 R2plot2$abundiff = R2plot2$COMP.y - R2plot2$ENV.y
@@ -554,46 +557,59 @@ comp_abun_data$FocalOcc_scale = (comp_abun_data$occ * (1 - 2*edge_adjust)) + edg
 # create logit transformation function, did on rescaled vals
 comp_abun_data$occ_logit =  log(comp_abun_data$FocalOcc_scale/(1-comp_abun_data$FocalOcc_scale)) 
 
-beta_occ_abun = data.frame(FocalAOU = c(), FocalSciName = c(), CompAOU = c(), CompSciName = c(), Estimate = c(), P = c(), R2 = c()) # make this a data frame and match col names
-
+beta_occ_abun = data.frame(FocalAOU = c(), FocalSciName = c(), CompAOU = c(), CompSciName = c(), Estimate = c(), P = c(), R2 = c()) 
 for(i in unique(comp_abun_data$focalAOU)){
   print(i)
   temp = subset(comp_abun_data, focalAOU == i) 
   for(j in unique(temp$CompAOU)){
-   # print(j)
     ctemp = subset(temp, CompAOU == j)
     com <- unique(ctemp$CompSciName)
     foc <- unique(ctemp$FocalSciName)
-
      if(is.na(sum(ctemp$comp_abun)) ==FALSE & sum(ctemp$comp_abun) > 2){
       competition <- lm(ctemp$occ_logit ~  ctemp$comp_abun)  # changes between main and all comps
-
       occ_comp_est = summary(competition)$coef[2,"Estimate"]
       occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
       occ_comp_r = summary(competition)$r.squared
-      beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, FocalSciName = foc, CompAOU = j, CompSciName = com, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r))
-      
-    }
+     }
+    beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, FocalSciName = foc, CompAOU = j, CompSciName = com, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r))
   }
- 
 }
+# write.csv(beta_occ_abun, "data/beta_occ_abun.csv", row.names = FALSE)
+
+noncomps_output_bocc = left_join(beta_occ_abun, noncomps_sub[,c("AOU_OUT", "Competition.R2", "Competition.Estimate", "Competition.P.value")], by = c("FocalAOU" = "AOU_OUT")) %>% na.omit(.)
+
+nonps = na.omit(noncomps_output_bocc) %>% 
+  group_by(FocalAOU) %>%
+  tally(R2 >= Competition.R2)
+names(nonps) = c("FocalAOU", "main_g_non")
+
+none = na.omit(noncomps_output_bocc) %>% 
+  group_by(FocalAOU) %>%
+  tally(Estimate <= Competition.Estimate)
+names(none) = c("FocalAOU", "main_g_non_e")
+
+numcomps = na.omit(noncomps_output_bocc) %>% 
+  count(FocalAOU)
+names(numcomps) = c("FocalAOU", "Comp_count")
+
+vec = c()
+for(i in unique(noncomps_output_bocc$FocalAOU)){
+  temp = subset(noncomps_output_bocc, FocalAOU == i)
+  vec = append(vec, median(temp$R2))
+} 
+
+vec_meds = data.frame(FocalAOU = unique(noncomps_output_bocc$FocalAOU), Median = vec)  
+noncomps_output_ttest = left_join(noncomps_output_bocc, vec_meds, by = "FocalAOU")
+t.test(noncomps_output_ttest$Competition.R2, noncomps_output_ttest$Median, paired = TRUE, alternative= "two.sided")
+
+noncompsdistp  = merge(nonps, numcomps, by = ("FocalAOU"))
+noncompsdiste  = merge(none, numcomps, by = ("FocalAOU"))
+noncompsdistp$nullp = (noncompsdistp$main_g_non)/(noncompsdistp$Comp_count + 1)
+noncompsdiste$nulle = (noncompsdiste$main_g_non_e)/(noncompsdiste$Comp_count + 1)
 
 
 
-
-
-compsub <- filter(comp_abun_data, focalAOU %in% c(2881, 6750))
-testdf <- compsub %>%
-  group_by(focalAOU, CompAOU) %>%
-  nest() %>%
-  mutate(occ_comp_est =  purrr::map(data, ~{
-    data <- .
-    competition <- lm(occ_logit ~  comp_abun)
-  }))
-  
-
-
-
+##### for main comp analysis #####
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
   tally(R2 >= Competition.R2)
