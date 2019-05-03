@@ -19,7 +19,7 @@ prj.string <- "+proj=laea +lat_0=45.235 +lon_0=-106.675 +units=km"
 #### Import route locations and draw sample circles around them
 # setwd("C:/Git/Biotic-Interactions")
 # derived from BBS_occ script
-routes = read.csv("data/latlong_rtes.csv",header =TRUE)
+routes = read.csv("data/latlongs.csv",header =TRUE)
 # routes = routes[row.names(unique(routes[,c('latitude', 'longitude', 'stateroute')])),]
 routes$latitude = abs(routes$latitude)
 # Makes routes into a spatialPointsDataframe

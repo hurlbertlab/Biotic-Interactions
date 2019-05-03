@@ -541,18 +541,62 @@ noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_
 
 noncomps_output = read.csv("data/noncomps_output.csv", header = TRUE)
 # filtering to species where p <0.05
-beta_occ_main = read.csv("Z:/Snell/2018 BI MS/Tables/Table S7 beta occupancy main.csv", header = TRUE)
-noncomps_sub = left_join(beta_occ_main, tax_code, by = c("Focal.Common.Name" = "PRIMARY_COM_NAME"))
+beta_occ_all = read.csv("Z:/Snell/2019 BI MS/Tables/Table S5 beta occupancy all.csv", header = TRUE)
+comp_abun_data <- read.csv("Z:/Snell/2019 BI MS/comp_abun_data.csv", header = TRUE)
+noncomps_sub = left_join(beta_occ_all, tax_code, by = c("Focal.Common.Name" = "PRIMARY_COM_NAME"))
 noncomps_sub2 = filter(noncomps_sub, Competition.R2 >= 0.1) 
 noncomps_sub3 = unique(noncomps_sub2)
 noncomps_plot = subset(noncomps_output, FocalAOU %in% noncomps_sub3$AOU_OUT)
 
-noncomps_output_bocc = left_join(noncomps_plot, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
-noncomps_out
+noncomps_output_bocc = left_join(noncomps_plot, noncomps_sub[,c("AOU_OUT", "Competition.R2", "Competition.Estimate", "Competition.P.value")], by = c("FocalAOU" = "AOU_OUT"))
+
+comp_abun_data$FocalOcc_scale = (comp_abun_data$occ * (1 - 2*edge_adjust)) + edge_adjust
+# create logit transformation function, did on rescaled vals
+comp_abun_data$occ_logit =  log(comp_abun_data$FocalOcc_scale/(1-comp_abun_data$FocalOcc_scale)) 
+
+beta_occ_abun = data.frame(FocalAOU = c(), FocalSciName = c(), CompAOU = c(), CompSciName = c(), Estimate = c(), P = c(), R2 = c()) # make this a data frame and match col names
+
+for(i in unique(comp_abun_data$focalAOU)){
+  print(i)
+  temp = subset(comp_abun_data, focalAOU == i) 
+  for(j in unique(temp$CompAOU)){
+   # print(j)
+    ctemp = subset(temp, CompAOU == j)
+    com <- unique(ctemp$CompSciName)
+    foc <- unique(ctemp$FocalSciName)
+
+     if(is.na(sum(ctemp$comp_abun)) ==FALSE & sum(ctemp$comp_abun) > 2){
+      competition <- lm(ctemp$occ_logit ~  ctemp$comp_abun)  # changes between main and all comps
+
+      occ_comp_est = summary(competition)$coef[2,"Estimate"]
+      occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
+      occ_comp_r = summary(competition)$r.squared
+      beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, FocalSciName = foc, CompAOU = j, CompSciName = com, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r))
+      
+    }
+  }
+ 
+}
+
+
+
+
+
+compsub <- filter(comp_abun_data, focalAOU %in% c(2881, 6750))
+testdf <- compsub %>%
+  group_by(focalAOU, CompAOU) %>%
+  nest() %>%
+  mutate(occ_comp_est =  purrr::map(data, ~{
+    data <- .
+    competition <- lm(occ_logit ~  comp_abun)
+  }))
+  
+
+
 
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
-  tally(R2 >= Competition_R2)
+  tally(R2 >= Competition.R2)
 names(nonps) = c("FocalAOU", "main_g_non")
 
 none = na.omit(noncomps_output_bocc) %>% 
