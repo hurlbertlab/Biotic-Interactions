@@ -81,7 +81,7 @@ for (sp in 1:length(subfocalspecies)){
   temp = subset(occuenv, FocalAOU == subfocalspecies[sp])
   
   competition <- lm(temp$occ_logit ~  temp$all_comp_scaled)  # changes between main and all comps
-  # z scores separated out for env effects (as opposed to multivariate variable)
+  # z scores separated out for env effects 
   env_z = lm(temp$occ_logit ~ abs(zTemp) + abs(zElev) + abs(zPrecip) + abs(zNDVI), data = temp)
   # z scores separated out for env effects
   both_z = lm(temp$occ_logit ~  temp$all_comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
@@ -119,7 +119,7 @@ for (sp in 1:length(subfocalspecies)){
   occ_comp_est = summary(competition)$coef[2,"Estimate"]
   occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
   occ_comp_r = summary(competition)$r.squared
-  #occ_env_est = mean(summary(env_z)$coef[,"Estimate"])
+  occ_env_est = mean(summary(env_z)$coef[,"Estimate"])
   #occ_env_p = summary(env_z)$coef[2,"Pr(>|t|)"]
   occ_env_r = summary(env_z)$r.squared 
   #occ_b_est = summary(both_z)$coef[2,"Estimate"]
@@ -170,6 +170,8 @@ leftover_birds = left_join(envoutput, maincomp2[,c("focalAOU","Focal_Common_Name
 
 # write.csv(beta_TableS4, "data/beta_TableS4.csv", row.names = FALSE)
 
+beta_plot <- left_join(beta_occ, occuenv, by = "FocalAOU")
+ggplot(beta_plot, aes(x = NDVI_est, y = occ)) + geom_point()
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
 # and # of sites birds were not found from original bbs data
