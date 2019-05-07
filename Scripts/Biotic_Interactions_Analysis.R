@@ -10,14 +10,15 @@ library(boot)
 # We can flip back and forth between comp_scaled and all_comp_scaled with the find and replace buttons. There should be 26 occurrences
 
 # read in files created in data cleaning script
-temp_occ = read.csv("data/bbs_sub1.csv", header=TRUE) # BBS occ script
-centroid=read.csv("data/centroid.csv", header=TRUE) # GIS script
-occuenv= read.csv("data/all_expected_pres.csv", header = TRUE) # Data cleaning script
-subsetocc = read.csv('data/subsetocc.csv', header = T) # Hurlbert Lab
-tax_code = read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
-bbs_abun = read.csv("data/bbs_abun.csv", header =TRUE)
-nsw = read.csv("data/new_spec_weights.csv", header = TRUE)
-shapefile_areas = read.csv("data/shapefile_areas.csv", header =TRUE)
+temp_occ <- read.csv("data/bbs_sub1.csv", header=TRUE) # BBS occ script
+centroid<-read.csv("data/centroid.csv", header=TRUE) # GIS script
+occuenv <- read.csv("data/all_expected_pres.csv", header = TRUE) # Data cleaning script
+subsetocc <- read.csv('data/subsetocc.csv', header = T) # Hurlbert Lab
+tax_code <- read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
+bbs_abun <- read.csv("data/bbs_abun.csv", header =TRUE)
+nsw <- read.csv("data/new_spec_weights.csv", header = TRUE)
+shapefile_areas <- read.csv("data/shapefile_areas.csv", header =TRUE)
+sppGT50rtes <- read.csv("data/sppGT50rtes.csv", header = TRUE)
 
 #update tax_code Winter Wren
 tax_code$AOU_OUT[tax_code$AOU_OUT == 7220] <- 7222
@@ -351,10 +352,13 @@ total = env_sum %>%
 
 table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("FocalAOU" = "focalAOU")) %>%
   left_join(., unique(shapefile_overlap), by = c("FocalAOU" = "focalAOU")) %>%
-  left_join(., unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU")
+  left_join(., unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU") %>% left_join(., sppGT50rtes, by = "FocalAOU")
 
 # write.csv(table_s2, "data/table_s2.csv", row.names = FALSE)
-
+TableS2 <- read.csv("Z:/Snell/2019 BI MS/Tables/Table S2 Traits.csv", header = TRUE) %>%
+  left_join(., sppGT50rtes, by = c("Focal.Common.Name" = "Focal"))
+# write.csv(TableS2, "data/TableS2.csv", row.names = FALSE) 
+ 
 # creating env traits model to compare to comp and weighted traits mods
 env_cont = merge(env_lm, shapefile_overlap, by.x = "FocalAOU",by.y = "focalAOU")
 env_cont2 = merge(env_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by.x = "FocalAOU", by.y = "FocalAOU")
@@ -367,10 +371,10 @@ env_cont2$COMPSC_sc = env_cont2$COMPSC * (1 - 2*edge_adjust) + edge_adjust
 env_cont2$COMPSC_logit =  log(env_cont2$COMPSC_sc/(1-env_cont2$COMPSC_sc)) 
 
 
-
-econt = lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI , data = env_cont2, weights = n)
+#### 5/7 CHANGED to be one big model incl trophic and mig
+econt = lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = env_cont2, weights = n)
 env_est = summary(econt)$coef[,"Estimate"]
-colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI")
+colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI", "Trophic.Groupherbivore", "Trophic.Groupinsct/om","Trophic.Groupinsectivore", "Trophic.Groupnectarivore", "Trophic.Groupomnivore", "migclassresid", "migclassshort")
 env = data.frame(colname, env_est)
 env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - as.vector(summary(econt)$coef[,"Std. Error"])
 env$env_upper = as.vector(summary(econt)$coefficients[,"Estimate"]) + as.vector(summary(econt)$coef[,"Std. Error"])
@@ -426,7 +430,7 @@ scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$colname = factor(scaled_rank2$colname,
                               levels = c("Neotropical",  "Short-distance",  "Resident"),ordered = TRUE)
 
-tukeys = aov(lm(COMPSC ~ migclass, data = comp_cont4, weights = n))
+tukeys = aov(lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = env_cont2, weights = n))
 TukeyHSD(tukeys)
 summary(tukeys)
 
@@ -578,6 +582,7 @@ for(i in unique(comp_abun_data$focalAOU)){
 }
 # write.csv(beta_occ_abun, "data/beta_occ_abun.csv", row.names = FALSE)
 
+beta_occ_abun <- read.csv("data/beta_occ_abun.csv", header = TRUE)
 noncomps_output_bocc = left_join(beta_occ_abun, noncomps_sub[,c("AOU_OUT", "Competition.R2", "Competition.Estimate", "Competition.P.value")], by = c("FocalAOU" = "AOU_OUT")) %>% na.omit(.)
 
 nonps = na.omit(noncomps_output_bocc) %>% 

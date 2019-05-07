@@ -237,6 +237,7 @@ sppGT50rtes = focalcompoutput %>%
   summarise(n = n_distinct(stateroute)) %>%
   filter(n>=50) %>% 
   dplyr::select(FocalAOU)
+# write.csv(sppGT50rtes, "Data/sppGT50rtes.csv", row.names = FALSE)
 
 # Merge with focalcompoutput data table, new # of focal spp is 171 with route filters applied
 focalcompsub = filter(focalcompoutput, FocalAOU %in% sppGT50rtes$FocalAOU)
