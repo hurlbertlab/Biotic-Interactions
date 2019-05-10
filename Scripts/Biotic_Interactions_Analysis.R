@@ -173,6 +173,51 @@ leftover_birds = left_join(envoutput, maincomp2[,c("focalAOU","Focal_Common_Name
 
 beta_plot <- left_join(beta_occ, occuenv, by = "FocalAOU")
 ggplot(beta_plot, aes(x = NDVI_est, y = occ)) + geom_point()
+
+##### occupancy model ######
+library(unmarked)
+bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
+expect_pres = read.csv('data/expect_pres.csv', header = T) %>%
+  mutate(
+    Y.2001 = 0,
+    Y.2002 = 0,
+    Y.2003 = 0,
+    Y.2004 = 0,
+    Y.2005 = 0,
+    Y.2006 = 0,
+    Y.2007 = 0,
+    Y.2008 = 0,
+    Y.2009 = 0,
+    Y.2010 = 0,
+    Y.2011 = 0,
+    Y.2012 = 0,
+    Y.2013 = 0,
+    Y.2014 = 0,
+    Y.2015 = 0)
+
+bbs_ep_long <- gather(expect_pres, "Year", "Presence", Y.2001:Y.2015)
+bbs_ep_long$Year <- gsub("Y.", "", bbs_ep_long$Year)
+bbs_ep_long$Year <- as.numeric(bbs_ep_long$Year)
+
+# red-eyed vireo
+rev <- left_join(bbs_ep_long, bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
+  mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
+  filter(spAOU == 6240) %>% # mutate(Year = sprintf("Y", Year)) %>%
+  select(stateroute, presence, Year) %>% 
+  mutate(i = row_number()) %>%
+  spread(Year, presence) # rows are overly duplicated
+
+y <- wt[,2:4] # just occ data (can do abun?)
+siteCovs <- wt[,c("elev", "forest", "length")] # covariates at the site level
+obsCovs <- list(date=wt[,c("date.1", "date.2", "date.3")], # covariates that date, ivel?
+           ivel=wt[,c("ivel.1", "ivel.2", "ivel.3")])
+wt <- unmarkedFrameOccu(y = y, siteCovs = siteCovs, obsCovs = obsCovs)
+summary(wt)
+
+
+
+
+
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
 # and # of sites birds were not found from original bbs data
