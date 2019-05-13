@@ -206,13 +206,9 @@ rev <- filter(bbs_ep_long, spAOU == 6240) %>%
   mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
   mutate(Year_cat = paste0("Y", Year)) %>%
   select(stateroute, presence, Year_cat) %>% # , zNDVI
-  mutate(i = row_number()) %>%
-  spread(Year_cat, presence) %>%
-  select(-i) %>%
   group_by(stateroute) %>%
-  summarise_at(vars(c("Y2001", "Y2002")), sum, na.rm = TRUE)
-
-rev2 <- aggregate(., by = c("stateroute", "spAOU"), FUN = sum)
+  distinct() %>%
+  spread(Year_cat, presence) 
 
 
 y <- rev[,4:18] # just occ data (can do abun?)
