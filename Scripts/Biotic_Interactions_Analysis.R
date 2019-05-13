@@ -200,22 +200,42 @@ bbs_ep_long$Year <- gsub("Y.", "", bbs_ep_long$Year)
 bbs_ep_long$Year <- as.numeric(bbs_ep_long$Year)
 
 # red-eyed vireo
-rev <- left_join(bbs_ep_long, bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
+rev <- filter(bbs_ep_long, spAOU == 6240) %>%
+  left_join(., bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
+ # left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
   mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
-  filter(spAOU == 6240) %>% # mutate(Year = sprintf("Y", Year)) %>%
-  select(stateroute, presence, Year) %>% 
+  mutate(Year_cat = paste0("Y", Year)) %>%
+  select(stateroute, presence, Year_cat) %>% # , zNDVI
   mutate(i = row_number()) %>%
-  spread(Year, presence) # rows are overly duplicated
+  spread(Year_cat, presence) %>%
+  select(-i) %>%
+  group_by(stateroute) %>%
+  summarise_at(vars(c("Y2001", "Y2002")), sum, na.rm = TRUE)
 
-y <- wt[,2:4] # just occ data (can do abun?)
-siteCovs <- wt[,c("elev", "forest", "length")] # covariates at the site level
-obsCovs <- list(date=wt[,c("date.1", "date.2", "date.3")], # covariates that date, ivel?
-           ivel=wt[,c("ivel.1", "ivel.2", "ivel.3")])
-wt <- unmarkedFrameOccu(y = y, siteCovs = siteCovs, obsCovs = obsCovs)
-summary(wt)
+rev2 <- aggregate(., by = c("stateroute", "spAOU"), FUN = sum)
 
 
+y <- rev[,4:18] # just occ data (can do abun?)
+siteCovs <- rev[,3] # covariates at the site level
+# obsCovs <- list(date=c(2001:2015))
+rev_mod <- unmarkedFrameOccu(y = y, siteCovs = data.frame(siteCovs), obsCovs = NULL)
+summary(rev_mod)
+#run mod
+fm1 <- occu(~ 1 ~ 1,rev_mod)
+# get estimates for detection
+backTransform(fm1['det'])
+# get est for occ
+backTransform(fm1['state'])
 
+
+fm2 <- occu(~ 1 ~siteCovs,rev_mod )
+fm2 #look at the output
+#interpret bqi parameter
+#Get the estimates for detection
+backTransform(fm2['det'])
+#Get the estimates for occupancy
+lc <- linearComb(fm2, c(1, 0), type="state")
+backTransform(fm2['state'])
 
 
 #### ---- GLM fitting  ---- ####
