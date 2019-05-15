@@ -213,22 +213,21 @@ rev <- filter(bbs_ep_long, spAOU == 6240) %>%
 
 y <- rev[,3:17] # just occ data
 siteCovs <- rev[,2] # covariates at the site level
-# obsCovs <- list(rev[,2])
+obsCovs <- rev[,1]
 rev_mod <- unmarkedFrameOccu(y = y, siteCovs = data.frame(siteCovs), obsCovs = NULL)
 summary(rev_mod)
 #run mod
-fm1 <- occu(~ 1 ~ 1,rev_mod)
+fm1 <- occu(~data.frame(siteCovs) ~1,rev_mod)
 # get estimates for detection
 backTransform(fm1['det'])
 # get est for occ
 backTransform(fm1['state'])
 
 (rev_naive <- sum(apply(y, 1, sum) > 0) / nrow(y))
-
 # 1 minus detection probability ^ num surveys
 (1-.834)^15
 
-fm2 <- occu(~ 1 ~siteCovs, rev_mod)
+fm2 <- occu(~ 1 ~stateroute, rev_mod)
 fm2 #look at the output
 #interpret bqi parameter
 #Get the estimates for detection
