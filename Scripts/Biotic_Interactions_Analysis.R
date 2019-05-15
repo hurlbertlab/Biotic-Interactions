@@ -202,18 +202,18 @@ bbs_ep_long$Year <- as.numeric(bbs_ep_long$Year)
 # red-eyed vireo
 rev <- filter(bbs_ep_long, spAOU == 6240) %>%
   left_join(., bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
- # left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
+  left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
   mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
   mutate(Year_cat = paste0("Y", Year)) %>%
-  select(stateroute, presence, Year_cat) %>% # , zNDVI
+  select(stateroute, presence, Year_cat, zNDVI) %>% 
   group_by(stateroute) %>%
   distinct() %>%
   spread(Year_cat, presence) 
 
 
-y <- rev[,4:18] # just occ data (can do abun?)
-siteCovs <- rev[,3] # covariates at the site level
-# obsCovs <- list(date=c(2001:2015))
+y <- rev[,3:17] # just occ data
+siteCovs <- rev[,2] # covariates at the site level
+# obsCovs <- list(rev[,2])
 rev_mod <- unmarkedFrameOccu(y = y, siteCovs = data.frame(siteCovs), obsCovs = NULL)
 summary(rev_mod)
 #run mod
@@ -223,8 +223,46 @@ backTransform(fm1['det'])
 # get est for occ
 backTransform(fm1['state'])
 
+(rev_naive <- sum(apply(y, 1, sum) > 0) / nrow(y))
 
-fm2 <- occu(~ 1 ~siteCovs,rev_mod )
+# 1 minus detection probability ^ num surveys
+(1-.834)^15
+
+fm2 <- occu(~ 1 ~siteCovs, rev_mod)
+fm2 #look at the output
+#interpret bqi parameter
+#Get the estimates for detection
+backTransform(fm2['det'])
+#Get the estimates for occupancy
+lc <- linearComb(fm2, c(1, 0), type="state")
+backTransform(lc)
+
+
+# yellow-billed cuckoo
+ybc <- filter(bbs_ep_long, spAOU == 3870) %>%
+  left_join(., bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
+  left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
+  mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
+  mutate(Year_cat = paste0("Y", Year)) %>%
+  select(stateroute, presence, Year_cat, zNDVI) %>% 
+  group_by(stateroute) %>%
+  distinct() %>%
+  spread(Year_cat, presence) 
+
+y <- ybc[,3:17] # just occ data 
+siteCovs <- ybc[,2] # covariates at the site level
+ybc_mod <- unmarkedFrameOccu(y = y, siteCovs = data.frame(siteCovs), obsCovs = NULL)
+summary(ybc_mod)
+#run mod
+fm1 <- occu(~ 1 ~ 1,ybc_mod)
+# get estimates for detection
+backTransform(fm1['det'])
+# get est for occ
+backTransform(fm1['state'])
+
+(ybc_naive <- sum(apply(y, 1, sum) > 0) / nrow(y))
+
+fm2 <- occu(~ 1 ~siteCovs, rev_mod)
 fm2 #look at the output
 #interpret bqi parameter
 #Get the estimates for detection
@@ -232,6 +270,32 @@ backTransform(fm2['det'])
 #Get the estimates for occupancy
 lc <- linearComb(fm2, c(1, 0), type="state")
 backTransform(fm2['state'])
+
+
+# Ruffed Grouse
+rug <- filter(bbs_ep_long, spAOU == 3000) %>%
+  left_join(., bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
+  left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
+  mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
+  mutate(Year_cat = paste0("Y", Year)) %>%
+  select(stateroute, presence, Year_cat, zNDVI) %>% 
+  group_by(stateroute) %>%
+  distinct() %>%
+  spread(Year_cat, presence) 
+
+y <- rug[,3:17] # just occ data
+siteCovs <- rug[,2] # covariates at the site level
+# obsCovs <- list(rev[,2])
+rug_mod <- unmarkedFrameOccu(y = y, siteCovs = data.frame(siteCovs), obsCovs = NULL)
+summary(rug_mod)
+#run mod
+fm1 <- occu(~ 1 ~ 1,rug_mod)
+# get estimates for detection
+backTransform(fm1['det'])
+# get est for occ
+backTransform(fm1['state'])
+
+(rug_naive <- sum(apply(y, 1, sum) > 0) / nrow(y))
 
 
 #### ---- GLM fitting  ---- ####
