@@ -200,28 +200,40 @@ bbs_ep_long$Year <- gsub("Y.", "", bbs_ep_long$Year)
 bbs_ep_long$Year <- as.numeric(bbs_ep_long$Year)
 
 # red-eyed vireo
-rev <- filter(bbs_ep_long, spAOU == 6240) %>%
+rev_full <- filter(bbs_ep_long, spAOU == 6240) %>%
   left_join(., bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
-  left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
+  left_join(., occuenv[,c("stateroute","FocalAOU", "FocalOcc","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
   mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
   mutate(Year_cat = paste0("Y", Year)) %>%
-  select(stateroute, presence, Year_cat, zNDVI) %>% 
+  select(stateroute, presence, Year_cat,FocalOcc, zNDVI) %>% 
   group_by(stateroute) %>%
   distinct() %>%
   spread(Year_cat, presence) 
 
-
-y <- rev[,3:17] # just occ data
-siteCovs <- rev[,2] # covariates at the site level
-obsCovs <- rev[,1]
-rev_mod <- unmarkedFrameOccu(y = y, siteCovs = data.frame(siteCovs), obsCovs = NULL)
+rev_det <- c()
+for(i in rev_full$stateroute){
+rev <- filter(rev_full, stateroute == i) 
+y <- rev[,4:18] # just occ data
+siteCovs <- rev$stateroute # covariates at the site level
+# obsCovs <- rev[,1]
+rev_mod <- unmarkedFrameOccu(y = y, siteCovs = NULL, obsCovs = NULL)
 summary(rev_mod)
 #run mod
-fm1 <- occu(~data.frame(siteCovs) ~1,rev_mod)
+fm1 <- occu(~1 ~1,rev_mod,se = FALSE) #### detection ~ occ
 # get estimates for detection
-backTransform(fm1['det'])
+det <- backTransform(fm1['det'])
 # get est for occ
-backTransform(fm1['state'])
+occ <- backTransform(fm1['state'])
+rev_det <- rbind(rev_det, c(det@estimate, occ@estimate,i))
+}
+rev_det <- data.frame(rev_det)
+colnames(rev_det) <- c("det", "occ","stateroute")
+
+corr_df <- left_join(rev_det, rev_full[,c("stateroute", "FocalOcc")], by = "stateroute") %>%
+  # filter(!is.na(FocalOcc) == TRUE)
+  mutate(FocalOcc = if_else(is.na(FocalOcc), 0, FocalOcc))
+corr(data.frame(corr_df$FocalOcc, corr_df$det))
+
 
 (rev_naive <- sum(apply(y, 1, sum) > 0) / nrow(y))
 # 1 minus detection probability ^ num surveys
@@ -272,17 +284,17 @@ backTransform(fm2['state'])
 
 
 # Ruffed Grouse
-rug <- filter(bbs_ep_long, spAOU == 3000) %>%
+rug_full <- filter(bbs_ep_long, spAOU == 3000) %>%
   left_join(., bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
-  left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
+  left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI", "FocalOcc")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
   mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
   mutate(Year_cat = paste0("Y", Year)) %>%
-  select(stateroute, presence, Year_cat, zNDVI) %>% 
+  select(stateroute, presence, Year_cat, zNDVI, FocalOcc) %>% 
   group_by(stateroute) %>%
   distinct() %>%
   spread(Year_cat, presence) 
 
-y <- rug[,3:17] # just occ data
+y <- rug[,4:18] # just occ data
 siteCovs <- rug[,2] # covariates at the site level
 # obsCovs <- list(rev[,2])
 rug_mod <- unmarkedFrameOccu(y = y, siteCovs = data.frame(siteCovs), obsCovs = NULL)
@@ -296,6 +308,29 @@ backTransform(fm1['state'])
 
 (rug_naive <- sum(apply(y, 1, sum) > 0) / nrow(y))
 
+rug_det <- c()
+for(i in rug_full$stateroute){
+  rug <- filter(rug_full, stateroute == i) 
+  y <- rug[,3:17] # just occ data
+  siteCovs <- rug$stateroute # covariates at the site level
+  # obsCovs <- rug[,1]
+  rug_mod <- unmarkedFrameOccu(y = y, siteCovs = NULL, obsCovs = NULL)
+  summary(rug_mod)
+  #run mod
+  fm1 <- occu(~1 ~1,rug_mod,se = FALSE) #### detection ~ occ
+  # get estimates for detection
+  det <- backTransform(fm1['det'])
+  # get est for occ
+  occ <- backTransform(fm1['state'])
+  rug_det <- rbind(rug_det, c(det@estimate, occ@estimate,i))
+}
+rug_det <- data.frame(rug_det)
+colnames(rug_det) <- c("det", "occ","stateroute")
+
+corr_df <- left_join(rug_det, rug_full[,c("stateroute", "FocalOcc")], by = "stateroute") %>%
+  # filter(!is.na(FocalOcc) == TRUE)
+  mutate(FocalOcc = if_else(is.na(FocalOcc), 0, FocalOcc)) 
+corr(data.frame(corr_df$FocalOcc, corr_df$det))
 
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
