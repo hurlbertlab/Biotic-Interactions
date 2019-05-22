@@ -744,27 +744,6 @@ for(i in unique(envoutput$FocalAOU)){
 }
 # write.csv(beta_occ_abun, "data/beta_occ_abun.csv", row.names = FALSE)
 
-beta_occ_abun <- read.csv("data/beta_occ_abun.csv", header = TRUE)
-noncomps_output_bocc = left_join(beta_occ_abun, noncomps_sub[,c("AOU_OUT", "Competition.R2", "Competition.Estimate", "Competition.P.value")], by = c("FocalAOU" = "AOU_OUT")) %>% na.omit(.)
-
-highestR2 <- left_join(beta_occ_abun, maincomp1[,c("focalAOU", "compAOU", "mainCompetitor")], by = c("FocalAOU" = "focalAOU", "CompAOU" = "compAOU")) %>%
-  group_by(FocalAOU) %>%
-  arrange(desc(R2)) %>% 
-  # Pick the top 1 value
-  slice(1) %>%
-  # Remember to ungroup in case you want to do further work without grouping.
-  ungroup()
-
-highestR2 %>%
-  count(mainCompetitor)
-highestR2$post_hoc_main <- 1
-
-colnames(envoutput_posthoc) = c("FocalAOU", "postE", "postComp", "postShared", "postNone", "postn")
-envcomp <- left_join(envoutput, envoutput_posthoc, by = "FocalAOU")
-
-greater_posthoc_comp <- envcomp %>%
-  count(postComp > COMP)
-
 
 
 nonps = na.omit(noncomps_output_bocc) %>% 
