@@ -721,28 +721,51 @@ noncomps_output_bocc = left_join(noncomps_plot, noncomps_sub[,c("AOU_OUT", "Comp
 comp_abun_data$FocalOcc_scale = (comp_abun_data$occ * (1 - 2*edge_adjust)) + edge_adjust
 # create logit transformation function, did on rescaled vals
 comp_abun_data$occ_logit =  log(comp_abun_data$FocalOcc_scale/(1-comp_abun_data$FocalOcc_scale)) 
+comp_abun_data$comp_abun[is.na(comp_abun_data$comp_abun)] <- 0
+comp_abun_data$occ_logit[is.na(comp_abun_data$occ_logit)] <- 0
 
 beta_occ_abun = data.frame(FocalAOU = c(), FocalSciName = c(), CompAOU = c(), CompSciName = c(), Estimate = c(), P = c(), R2 = c()) 
-for(i in unique(comp_abun_data$focalAOU)){
+for(i in unique(envoutput$FocalAOU)){
   print(i)
   temp = subset(comp_abun_data, focalAOU == i) 
   for(j in unique(temp$CompAOU)){
     ctemp = subset(temp, CompAOU == j)
     com <- unique(ctemp$CompSciName)
     foc <- unique(ctemp$FocalSciName)
-     if(is.na(sum(ctemp$comp_abun)) ==FALSE & sum(ctemp$comp_abun) > 2){
+    length(na.omit(ctemp$abundance.y))
+    if(sum(ctemp$comp_abun) > 2){
       competition <- lm(ctemp$occ_logit ~  ctemp$comp_abun)  # changes between main and all comps
       occ_comp_est = summary(competition)$coef[2,"Estimate"]
       occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
       occ_comp_r = summary(competition)$r.squared
-     }
-    beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, FocalSciName = foc, CompAOU = j, CompSciName = com, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r))
+     beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, FocalSciName = foc, CompAOU = j, CompSciName = com, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r))
+    } 
   }
 }
 # write.csv(beta_occ_abun, "data/beta_occ_abun.csv", row.names = FALSE)
 
 beta_occ_abun <- read.csv("data/beta_occ_abun.csv", header = TRUE)
 noncomps_output_bocc = left_join(beta_occ_abun, noncomps_sub[,c("AOU_OUT", "Competition.R2", "Competition.Estimate", "Competition.P.value")], by = c("FocalAOU" = "AOU_OUT")) %>% na.omit(.)
+
+highestR2 <- left_join(beta_occ_abun, maincomp1[,c("focalAOU", "compAOU", "mainCompetitor")], by = c("FocalAOU" = "focalAOU", "CompAOU" = "compAOU")) %>%
+  group_by(FocalAOU) %>%
+  arrange(desc(R2)) %>% 
+  # Pick the top 1 value
+  slice(1) %>%
+  # Remember to ungroup in case you want to do further work without grouping.
+  ungroup()
+
+highestR2 %>%
+  count(mainCompetitor)
+highestR2$post_hoc_main <- 1
+
+colnames(envoutput_posthoc) = c("FocalAOU", "postE", "postComp", "postShared", "postNone", "postn")
+envcomp <- left_join(envoutput, envoutput_posthoc, by = "FocalAOU")
+
+greater_posthoc_comp <- envcomp %>%
+  count(postComp > COMP)
+
+
 
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%

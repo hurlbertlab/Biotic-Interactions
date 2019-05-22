@@ -161,6 +161,7 @@ for (s in unique(shapefile_areas$focalAOU)) {
   shapefile_areas$mainCompetitor[shapefile_areas$focalAOU == s & shapefile_areas$PropOverlap == maxOverlap] = 1 # 1 assigns main competitor
 }
 # write.csv(shapefile_areas, "data/shapefileareas_w_comp.csv", row.names = FALSE)
+shapefile_areas <- left_join(shapefile_areas, highestR2[,c("FocalAOU", "CompAOU", "post_hoc_main")], by = c("focalAOU" = "FocalAOU", "compAOU" = "CompAOU"))
 
 #### ---- Gathering Occupancy and Abundance Data for Biotic Comparisons ---- ####
 # pull out stateroutes that have been continuously sampled 2001-2015
@@ -206,8 +207,8 @@ prefull_data2 = data.frame(prefull_data2)
 # prefull_data with focal/comp/stroute/abundance/occ/summed abundance
 focalcompoutput.5 = bbs_ep %>%    
   dplyr::select(stateroute, spAOU) %>%
-  left_join(subset(shapefile_areas, mainCompetitor == 1, 
-                   select = c('focalAOU', 'compAOU', 'mainCompetitor')), 
+  left_join(subset(shapefile_areas, post_hoc_main == 1, 
+                   select = c('focalAOU', 'compAOU', 'post_hoc_main')), 
             by = c('spAOU' = 'focalAOU')) %>%
   left_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
   left_join(prefull_data, by = c('spAOU' = 'focalAOU', 'stateroute' = 'stateroute')) %>%
