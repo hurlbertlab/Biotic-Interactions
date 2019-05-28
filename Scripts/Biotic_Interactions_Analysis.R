@@ -332,6 +332,26 @@ corr_df <- left_join(rug_det, rug_full[,c("stateroute", "FocalOcc")], by = "stat
   mutate(FocalOcc = if_else(is.na(FocalOcc), 0, FocalOcc)) 
 corr(data.frame(corr_df$FocalOcc, corr_df$det))
 
+
+#### NDVI detection loop ####
+spp_ndvi <- data.frame(FocalAOU = c(), lower_est = c(), lower_p= c(), lower_r= c(), upper_est= c(), upper_p= c(), upper_r= c())
+for(sp in subfocalspecies){
+  df = filter(occuenv, FocalAOU == sp)
+  lower = filter(df, ndvi.mean <= df$Mean.NDVI)
+  upper = filter(df, ndvi.mean > df$Mean.NDVI)
+  lm_lower = lm(occ_logit ~ ndvi.mean, data = lower)
+  lm_upper = lm(occ_logit ~ ndvi.mean, data = upper)
+  lower_est = summary(lm_lower)$coef[2,"Estimate"]
+  lower_p = summary(lm_lower)$coef[2,"Pr(>|t|)"]
+  lower_r = summary(lm_lower)$r.squared
+  upper_est = summary(lm_upper)$coef[2,"Estimate"]
+  upper_p = summary(lm_upper)$coef[2,"Pr(>|t|)"]
+  upper_r = summary(lm_upper)$r.squared
+  spp_ndvi = rbind(spp_ndvi, data.frame(FocalAOU = sp, lower_est = lower_est, lower_p= lower_p, lower_r= lower_r, upper_est= upper_est, upper_p= upper_p, upper_r= upper_r))
+}
+
+ggplot(spp_ndvi, aes(lower_est, (upper_est + lower_est))) + geom_point() + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.5)
+
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
 # and # of sites birds were not found from original bbs data
