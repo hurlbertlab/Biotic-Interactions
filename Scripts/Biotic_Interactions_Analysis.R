@@ -334,23 +334,36 @@ corr(data.frame(corr_df$FocalOcc, corr_df$det))
 
 
 #### NDVI detection loop ####
-spp_ndvi <- data.frame(FocalAOU = c(), lower_est = c(), lower_p= c(), lower_r= c(), upper_est= c(), upper_p= c(), upper_r= c())
+spp_ndvi <- data.frame(FocalAOU = c(), lower_est = c(), lower_p= c(), lower_r= c(), upper_est= c(), upper_p= c(), upper_r= c(), full_est = c(), full_p = c(), full_r = c())
 for(sp in subfocalspecies){
   df = filter(occuenv, FocalAOU == sp)
   lower = filter(df, ndvi.mean <= df$Mean.NDVI)
   upper = filter(df, ndvi.mean > df$Mean.NDVI)
-  lm_lower = lm(occ_logit ~ ndvi.mean, data = lower)
-  lm_upper = lm(occ_logit ~ ndvi.mean, data = upper)
+  lm_lower = lm(occ_logit ~ abs(zNDVI), data = lower)
+  lm_upper = lm(occ_logit ~ abs(zNDVI), data = upper)
+  lm_full = lm(occ_logit ~ abs(zNDVI), data = df)
   lower_est = summary(lm_lower)$coef[2,"Estimate"]
   lower_p = summary(lm_lower)$coef[2,"Pr(>|t|)"]
   lower_r = summary(lm_lower)$r.squared
   upper_est = summary(lm_upper)$coef[2,"Estimate"]
   upper_p = summary(lm_upper)$coef[2,"Pr(>|t|)"]
   upper_r = summary(lm_upper)$r.squared
-  spp_ndvi = rbind(spp_ndvi, data.frame(FocalAOU = sp, lower_est = lower_est, lower_p= lower_p, lower_r= lower_r, upper_est= upper_est, upper_p= upper_p, upper_r= upper_r))
+  full_est = summary(lm_full)$coef[2,"Estimate"]
+  full_p = summary(lm_full)$coef[2,"Pr(>|t|)"]
+  full_r = summary(lm_full)$r.squared
+  spp_ndvi = rbind(spp_ndvi, data.frame(FocalAOU = sp, lower_est = lower_est, lower_p= lower_p, lower_r= lower_r, upper_est= upper_est, upper_p= upper_p, upper_r= upper_r, full_est = full_est, full_p = full_p, full_r = full_r))
 }
 
-ggplot(spp_ndvi, aes(lower_est, (upper_est + lower_est))) + geom_point() + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.5)
+# spp_zNDVI <- left_join(occuenv[,c("FocalAOU", "stateroute", "zNDVI")], spp_ndvi, by = "FocalAOU")
+
+ggplot(spp_ndvi, aes(full_est, lower_est)) + geom_point(size = 2) + geom_smooth(method = "lm", se = FALSE, col = "red", lty = "dashed", lwd = 1.5) + theme_classic() +
+  theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + xlab("Full Model NDVI Estimate") + ylab("Below Centroid NDVI Estimate") + theme(axis.text.x=element_text(size=25, color = "black"), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines"))
+cor(spp_ndvi$full_est, spp_ndvi$lower_est)
+
+
+ggplot(spp_ndvi, aes(lower_est, upper_est)) + geom_point(size = 2) + geom_abline(intercept = 0, slope = 1, col = "blue", lwd = 1.5) + theme_classic() + geom_hline(yintercept = median(upper_est), lwd = 1.5, lty = "dashed", col = "dark gray") + geom_vline(xintercept = median(lower_est), lwd = 1.5, lty = "dashed", col = "dark gray") +
+  theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + xlab("Below Centroid NDVI Estimate") + ylab("Above Centroid NDVI Estimate") + theme(axis.text.x=element_text(size=25, color = "black"), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines"))
+cor(spp_ndvi$upper_est, spp_ndvi$lower_est)
 
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
