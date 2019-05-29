@@ -561,12 +561,12 @@ edge_adjust = .005
 env_cont2$COMPSC_sc = env_cont2$COMPSC * (1 - 2*edge_adjust) + edge_adjust
 # create logit transformation function, did on rescaled vals
 env_cont2$COMPSC_logit =  log(env_cont2$COMPSC_sc/(1-env_cont2$COMPSC_sc)) 
-
+combined_mod = filter(env_cont2, Trophic.Group != "nectarivore" & Trophic.Group != "herbivore")
 
 #### 5/7 CHANGED to be one big model incl trophic and mig
-econt = lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = env_cont2, weights = n)
+econt = lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
 env_est = summary(econt)$coef[,"Estimate"]
-colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI", "Trophic.Groupherbivore", "Trophic.Groupinsct/om","Trophic.Groupinsectivore", "Trophic.Groupnectarivore", "Trophic.Groupomnivore", "migclassresid", "migclassshort")
+colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI", "Trophic.Groupinsct/om","Trophic.Groupinsectivore", "Trophic.Groupomnivore", "migclassresid", "migclassshort")
 env = data.frame(colname, env_est)
 env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - as.vector(summary(econt)$coef[,"Std. Error"])
 env$env_upper = as.vector(summary(econt)$coefficients[,"Estimate"]) + as.vector(summary(econt)$coef[,"Std. Error"])
@@ -575,15 +575,16 @@ env_trait_rank = env %>%
   dplyr::mutate(rank = row_number(-env_est)) 
 env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
 
-# making comp mod - not working.
-colname = c("Intercept","FocalArea","area_overlap", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")
-
 env_trait_rank = env %>% 
   dplyr::mutate(rank = row_number(-env_est)) 
 env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
 env_trait_rank2$colname = factor(env_trait_rank2$colname,
-                              levels = c("Mean.NDVI","Mean.Temp","Mean.Elev","FocalArea","area_overlap", "Mean.Precip","Intercept"),ordered = TRUE)
+     levels = c("Intercept","Mean.NDVI","Trophic.Groupinsct/om","Trophic.Groupinsectivore","migclassshort","area_overlap","Mean.Precip","Mean.Elev","Mean.Temp","Trophic.Groupomnivore","migclassresid", "FocalArea"),ordered = TRUE)
 
+ggplot(env_trait_rank2, aes(colname, env_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
+  geom_errorbar(data=env_trait_rank2, mapping=aes(ymin=env_lower, ymax=env_upper), width=0.2, size=1, color="black") + ylab(bquote("Competitor R"^"2")) + xlab("Env") + theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))  + 
+  theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
+  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 #column names to manipulate in plot
 colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Insct/Om","Insectivore","Nectarivore","Omnivore")
 # this is the trait mod scaled by comp/env. there are > 183 rows bc of the competitors (FocalArea, area_overalp)
@@ -622,9 +623,11 @@ scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
 scaled_rank2$colname = factor(scaled_rank2$colname,
                               levels = c("Neotropical",  "Short-distance",  "Resident"),ordered = TRUE)
 
-tukeys = aov(lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = env_cont2, weights = n))
+tukeys = aov(lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n))
 TukeyHSD(tukeys)
 summary(tukeys)
+
+
 
 suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.x = "FocalAOU", by.y = "focalAOU")
 # write.csv(suppl, "data/suppl_table.csv", row.names = FALSE)
