@@ -568,8 +568,11 @@ econt = lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Pr
 env_est = summary(econt)$coef[,"Estimate"]
 colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI", "Trophic.Groupinsct/om","Trophic.Groupinsectivore", "Trophic.Groupomnivore", "migclassresid", "migclassshort")
 env = data.frame(colname, env_est)
-env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - as.vector(summary(econt)$coef[,"Std. Error"])
-env$env_upper = as.vector(summary(econt)$coefficients[,"Estimate"]) + as.vector(summary(econt)$coef[,"Std. Error"])
+# add the constant here
+est + 1.96 *SE
+
+env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - 1.96*as.vector(summary(econt)$coef[,"Std. Error"])
+env$env_upper = as.vector(summary(econt)$coefficients[,"Estimate"]) + 1.96*as.vector(summary(econt)$coef[,"Std. Error"])
 
 env_trait_rank = env %>% 
   dplyr::mutate(rank = row_number(-env_est)) 
