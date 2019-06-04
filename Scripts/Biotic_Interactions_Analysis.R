@@ -569,8 +569,6 @@ env_est = summary(econt)$coef[,"Estimate"]
 colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI", "Trophic.Groupinsct/om","Trophic.Groupinsectivore", "Trophic.Groupomnivore", "migclassresid", "migclassshort")
 env = data.frame(colname, env_est)
 # add the constant here
-est + 1.96 *SE
-
 env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - 1.96*as.vector(summary(econt)$coef[,"Std. Error"])
 env$env_upper = as.vector(summary(econt)$coefficients[,"Estimate"]) + 1.96*as.vector(summary(econt)$coef[,"Std. Error"])
 
