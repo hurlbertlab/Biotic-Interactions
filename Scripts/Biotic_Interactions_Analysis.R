@@ -334,14 +334,16 @@ corr(data.frame(corr_df$FocalOcc, corr_df$det))
 
 
 #### NDVI detection loop ####
-spp_ndvi <- data.frame(FocalAOU = c(), lower_est = c(), lower_p= c(), lower_r= c(), upper_est= c(), upper_p= c(), upper_r= c(), full_est = c(), full_p = c(), full_r = c())
+spp_ndvi <- data.frame(FocalAOU = c(), raw = c(), lower_est = c(), lower_p= c(), lower_r= c(), upper_est= c(), upper_p= c(), upper_r= c(), full_est = c(), full_p = c(), full_r = c())
 for(sp in subfocalspecies){
   df = filter(occuenv, FocalAOU == sp)
   lower = filter(df, ndvi.mean <= df$Mean.NDVI)
   upper = filter(df, ndvi.mean > df$Mean.NDVI)
+  lower_raw = lm(occ_logit ~ ndvi.mean, data = lower)
   lm_lower = lm(occ_logit ~ abs(zNDVI), data = lower)
   lm_upper = lm(occ_logit ~ abs(zNDVI), data = upper)
   lm_full = lm(occ_logit ~ abs(zNDVI), data = df)
+  lower_raw_est = summary(lower_raw)$coef[2,"Estimate"]
   lower_est = summary(lm_lower)$coef[2,"Estimate"]
   lower_p = summary(lm_lower)$coef[2,"Pr(>|t|)"]
   lower_r = summary(lm_lower)$r.squared
@@ -351,7 +353,7 @@ for(sp in subfocalspecies){
   full_est = summary(lm_full)$coef[2,"Estimate"]
   full_p = summary(lm_full)$coef[2,"Pr(>|t|)"]
   full_r = summary(lm_full)$r.squared
-  spp_ndvi = rbind(spp_ndvi, data.frame(FocalAOU = sp, lower_est = lower_est, lower_p= lower_p, lower_r= lower_r, upper_est= upper_est, upper_p= upper_p, upper_r= upper_r, full_est = full_est, full_p = full_p, full_r = full_r))
+  spp_ndvi = rbind(spp_ndvi, data.frame(FocalAOU = sp,raw = lower_raw_est,  lower_est = lower_est, lower_p= lower_p, lower_r= lower_r, upper_est= upper_est, upper_p= upper_p, upper_r= upper_r, full_est = full_est, full_p = full_p, full_r = full_r))
 }
 
 # spp_zNDVI <- left_join(occuenv[,c("FocalAOU", "stateroute", "zNDVI")], spp_ndvi, by = "FocalAOU")
