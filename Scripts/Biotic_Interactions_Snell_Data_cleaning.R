@@ -35,6 +35,7 @@ temp_occ = subset(bbs_occ, Aou %in% subsetocc$AOU)
 focal_competitor_table = dplyr::select(focal_competitor_table, AOU, CommonName, Competitor)
 names(focal_competitor_table)= c("FocalAOU", "Focal", "Competitor")
 
+#focal_competitor_table = data.frame(post_hoc$FocalAOU, post_hoc$FocalSciName, post_hoc$CompAOU, post_hoc$CompSciName)
 # create data frame of unique focal species
 focal_unique = data.frame(unique(focal_competitor_table[, c("Focal", "FocalAOU")]))
 names(focal_unique) = c("Focal_Common","FocalAOU")
@@ -207,8 +208,8 @@ prefull_data2 = data.frame(prefull_data2)
 # prefull_data with focal/comp/stroute/abundance/occ/summed abundance
 focalcompoutput.5 = bbs_ep %>%    
   dplyr::select(stateroute, spAOU) %>%
-  left_join(subset(shapefile_areas, post_hoc_main == 1, 
-                   select = c('focalAOU', 'compAOU', 'post_hoc_main')), 
+  left_join(subset(shapefile_areas, mainCompetitor == 1, 
+                   select = c('focalAOU', 'compAOU', 'mainCompetitor')), 
             by = c('spAOU' = 'focalAOU')) %>%
   left_join(bbs_pool, by = c('stateroute' = 'stateroute', 'compAOU' = 'AOU')) %>%
   left_join(prefull_data, by = c('spAOU' = 'focalAOU', 'stateroute' = 'stateroute')) %>%

@@ -363,8 +363,9 @@ ggplot(spp_ndvi, aes(full_est, lower_est)) + geom_point(size = 2) + geom_smooth(
 cor(spp_ndvi$full_est, spp_ndvi$lower_est)
 
 
-ggplot(spp_ndvi, aes(lower_est, upper_est)) + geom_point(size = 2) + geom_abline(intercept = 0, slope = 1, col = "blue", lwd = 1.5) + theme_classic() + geom_hline(yintercept = median(upper_est), lwd = 1.5, lty = "dashed", col = "dark gray") + geom_vline(xintercept = median(lower_est), lwd = 1.5, lty = "dashed", col = "dark gray") +
+ggplot(spp_ndvi, aes(lower_est, upper_est)) + geom_point(size = 2) + geom_abline(intercept = 0, slope = 1, col = "blue", lwd = 1.5) + theme_classic() + geom_hline(yintercept = median(spp_ndvi$upper_est), lwd = 1.5, lty = "dashed", col = "dark gray") + geom_vline(xintercept = median(spp_ndvi$lower_est), lwd = 1.5, lty = "dashed", col = "dark gray") +
   theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + xlab("Below Centroid NDVI Estimate") + ylab("Above Centroid NDVI Estimate") + theme(axis.text.x=element_text(size=25, color = "black"), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines"))
+ggsave("Figures/FigureR2.pdf", height = 8, width = 12)
 cor(spp_ndvi$upper_est, spp_ndvi$lower_est)
 
 #### ---- GLM fitting  ---- ####
