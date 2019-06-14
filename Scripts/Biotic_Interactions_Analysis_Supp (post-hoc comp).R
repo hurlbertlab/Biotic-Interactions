@@ -177,7 +177,7 @@ comp_abun_data$occ_logit[is.na(comp_abun_data$occ_logit)] <- 0
 
 
 allcomps_output = c()
-for (sp in unique(tomerge$FocalAOU)){
+for (sp in subfocalspecies){
   temp = filter(comp_abun_data, focalAOU == sp) 
   if(nrow(temp) > 0){
     ncomps = temp %>%
@@ -209,13 +209,6 @@ for (sp in unique(tomerge$FocalAOU)){
 allcomps_output = data.frame(allcomps_output)
 names(allcomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
 
-allcomps_output %>%
-  filter()
-
-
-
-
-
 highestR2 <- left_join(allcomps_output, maincomp1[,c("focalAOU", "compAOU", "mainCompetitor")], by = c("FocalAOU" = "focalAOU", "CompetitorAOU" = "compAOU")) %>%
   group_by(FocalAOU) %>%
   arrange(desc(R2)) %>% 
@@ -226,7 +219,13 @@ highestR2 <- left_join(allcomps_output, maincomp1[,c("focalAOU", "compAOU", "mai
 
 highestR2$post_hoc_main <- 1
 
-
+neg_est_comps <- left_join(allcomps_output, maincomp1[,c("focalAOU", "compAOU", "mainCompetitor")], by = c("FocalAOU" = "focalAOU", "CompetitorAOU" = "compAOU")) %>%
+  group_by(FocalAOU) %>%
+  arrange(desc(R2)) %>% 
+  filter(Estimate < 0) %>%
+  slice(1) %>%
+  # Remember to ungroup in case you want to do further work without grouping.
+  ungroup()
 
 
 
