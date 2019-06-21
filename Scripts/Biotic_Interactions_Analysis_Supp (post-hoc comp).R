@@ -57,95 +57,8 @@ occuenv$FocalOcc_scale = (occuenv$FocalOcc * (1 - 2*edge_adjust)) + edge_adjust
 # create logit transformation function, did on rescaled vals
 occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale)) 
 
-##### LIN REG #######
-# for loop subsetting env data to expected occurrence for focal species
-envoutput = c()
-envoutputa = c()
-# create beta output data frame
-beta_occ = c()
-beta_abun = c()
-
 l_focalspecies = inner_join(shapefile_areas, occuenv, c("focalAOU"="FocalAOU"))
 subfocalspecies = unique(occuenv$FocalAOU) #[-99] excluding sage sparrow bc no good routes
-
-for (sp in 1:length(subfocalspecies)){
-  print(sp)
-  temp = subset(occuenv, FocalAOU == subfocalspecies[sp])
-  
-  competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
-  # z scores separated out for env effects (as opposed to multivariate variable)
-  env_z = lm(temp$occ_logit ~ abs(zTemp) + abs(zElev) + abs(zPrecip) + abs(zNDVI), data = temp)
-  # z scores separated out for env effects
-  both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
-  
-  # abundance, not temp occ - same results?
-  competition_abun <- lm(temp$FocalAbundance ~  temp$comp_scaled) 
-  # z scores separated out for env effects - abundance
-  env_abun = lm(temp$FocalAbundance ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
-  # z scores separated out for env effects - abundance
-  both_abun = lm(temp$FocalAbundance ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
-  
-  #variance_partitioning 
-  ENV = summary(both_z)$r.squared - highestR2$R2 #env only
-  COMP = summary(both_z)$r.squared - summary(env_z)$r.squared #competition only
-  SHARED = highestR2$R2 - COMP #shared variance
-  NONE = 1 - summary(both_z)$r.squared # neither variance
-  sp1 = unique(temp$FocalAOU)
-  sum = sum(ENV, COMP, SHARED)
-  n = length(temp$stateroute)
-  envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE, n)) #, sum
-  
-  #variance_partitioning 
-  ENVa = summary(both_abun)$r.squared - summary(competition_abun)$r.squared
-  COMPa = summary(both_abun)$r.squared - summary(env_abun)$r.squared
-  SHAREDa = summary(competition_abun)$r.squared - COMPa
-  NONEa = 1 - summary(both_abun)$r.squared
-  
-  sp1 = unique(temp$FocalAOU)
-  
-  
-  envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
-  
-  if(length(unique(temp$comp_scaled[!is.na(temp$comp_scaled)])) > 2){
-  # saving model output into separate data frames
-  occ_comp_est = summary(competition)$coef[2,"Estimate"]
-  occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
-  occ_comp_r = summary(competition)$r.squared
-  #occ_env_est = mean(summary(env_z)$coef[,"Estimate"])
-  #occ_env_p = summary(env_z)$coef[2,"Pr(>|t|)"]
-  occ_env_r = summary(env_z)$r.squared 
-  #occ_b_est = summary(both_z)$coef[2,"Estimate"]
-  occ_b_p = summary(both_z)$coef[2,"Pr(>|t|)"]
-  occ_b_r = summary(both_z)$r.squared 
-
-  abun_comp_est = summary(competition_abun)$coef[2,"Estimate"]
-  abun_comp_p = summary(competition_abun)$coef[2,"Pr(>|t|)"]
-  abun_comp_r = summary(competition_abun)$r.squared #using multiple rsquared
-  #abun_env_est = summary(env_abun)$coef[2,"Estimate"]
-  #abun_env_p = summary(env_abun)$coef[2,"Pr(>|t|)"]
-  abun_env_r = summary(env_abun)$r.squared 
-  #abun_both_est = summary(both_abun)$coef[2,"Estimate"]
-  abun_both_p = summary(both_abun)$coef[2,"Pr(>|t|)"]
-  abun_both_r = summary(both_abun)$r.squared
-  
-  beta_occ = rbind(beta_occ, c(sp1, occ_comp_est, occ_comp_p, occ_comp_r,occ_env_r, occ_b_p, occ_b_r))
-  beta_abun = rbind(beta_abun, c(sp1, abun_comp_est, abun_comp_p, abun_comp_r, abun_env_r, abun_both_p , abun_both_r))
-  } 
-  else{print(FALSE)}
-}         
-
-
-envoutput = data.frame(envoutput)
-envoutputa = data.frame(envoutputa)
-
-names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE", "n")
-names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
-
-envoutput1 = merge(envoutput, tax_code, by.x = 'FocalAOU', by.y = "AOU_OUT", all.x = TRUE) 
-
-envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")], by.x='FocalAOU', by.y='AOU', all.x = TRUE)
-
-envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU', all.x = TRUE)
 
 #write.csv(envoutputa, "data/envoutputa.csv", row.names = FALSE)
 beta_occ = data.frame(beta_occ)
@@ -166,7 +79,7 @@ leftover_birds = left_join(envoutput, maincomp2[,c("focalAOU","Focal_Common_Name
 noncomps_output <- read.csv("Data/noncomps_output.csv", header =TRUE)
 # filtering to species where p <0.05
 beta_occ_all = read.csv("Z:/Snell/2019 BI MS/Tables/Table S5 beta occupancy all.csv", header = TRUE)
-comp_abun_data <- read.csv("Z:/Snell/2019 BI MS/comp_abun_data.csv", header = TRUE) %>%
+comp_abun_data <- read.csv("/Snell/2019 BI MS/comp_abun_data.csv", header = TRUE) %>%
   left_join(occuenv[,c("stateroute","FocalAOU","zTemp", "zElev","zPrecip", "zNDVI")], by = c("focalAOU" = "FocalAOU", "stateroute" = "stateroute")) 
 
 comp_abun_data$FocalOcc_scale = (comp_abun_data$occ * (1 - 2*edge_adjust)) + edge_adjust
@@ -175,6 +88,7 @@ comp_abun_data$occ_logit =  log(comp_abun_data$FocalOcc_scale/(1-comp_abun_data$
 comp_abun_data$comp_abun[is.na(comp_abun_data$comp_abun)] <- 0
 comp_abun_data$occ_logit[is.na(comp_abun_data$occ_logit)] <- 0
 
+subfocalspecies = unique(occuenv$FocalAOU)
 
 allcomps_output = c()
 for (sp in subfocalspecies){
@@ -227,29 +141,25 @@ neg_est_comps <- left_join(allcomps_output, maincomp1[,c("focalAOU", "compAOU", 
   # Remember to ungroup in case you want to do further work without grouping.
   ungroup()
 
-
-
-
-
 envoutput = c()
 envoutputa = c()
 beta_occ_abun = data.frame(FocalAOU = c(), FocalSciName = c(), CompAOU = c(), Estimate = c(), P = c(), R2 = c(), EstimateA = c(), PA = c(), R2A = c()) 
-for(i in highestR2$FocalAOU){
+for(i in unique(neg_est_comps$FocalAOU)){
   print(i)
-  temp = subset(comp_abun_data, focalAOU == i) 
-  j = temp$CompAOU
+  comp = subset(neg_est_comps, FocalAOU == i)$CompetitorAOU
+  temp = subset(comp_abun_data, focalAOU == i & CompAOU == comp) 
     if(sum(temp$comp_abun) > 2){
-      competition <- lm(ctemp$occ_logit ~  ctemp$comp_abun)  # changes between main and all comps
+      competition <- lm(temp$occ_logit ~  temp$comp_abun)  # changes between main and all comps
       env_z = lm(temp$occ_logit ~ abs(zTemp) + abs(zElev) + abs(zPrecip) + abs(zNDVI), data = temp)
       # z scores separated out for env effects
       both_z = lm(temp$occ_logit ~  temp$comp_abun + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
       
       # abundance, not temp occ - same results?
-      comp_abun <- lm(ctemp$abundance.x ~  ctemp$comp_abun) 
+      comp_abun <- lm(temp$focal_abun ~  temp$comp_abun) 
       # z scores separated out for env effects - abundance
-      env_abun = lm(temp$abundance.x ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
+      env_abun = lm(temp$focal_abun  ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
       # z scores separated out for env effects - abundance
-      both_abun = lm(temp$abundance.x ~  comp_abun + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
+      both_abun = lm(temp$focal_abun  ~  comp_abun + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
       
       sp1 = i
       # variance_partitioning 
@@ -262,9 +172,9 @@ for(i in highestR2$FocalAOU){
       envoutput = rbind(envoutput, c(sp1, ENV, COMP, SHARED, NONE, n)) #, sum
       
       # variance_partitioning 
-      ENVa = summary(both_abun)$r.squared - summary(competition_abun)$r.squared
+      ENVa = summary(both_abun)$r.squared - summary(comp_abun)$r.squared
       COMPa = summary(both_abun)$r.squared - summary(env_abun)$r.squared
-      SHAREDa = summary(competition_abun)$r.squared - COMPa
+      SHAREDa = summary(comp_abun)$r.squared - COMPa
       NONEa = 1 - summary(both_abun)$r.squared
     
       envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
@@ -277,7 +187,7 @@ for(i in highestR2$FocalAOU){
       abun_comp_p = summary(comp_abun)$coef[2,"Pr(>|t|)"]
       abun_comp_r = summary(comp_abun)$r.squared
       
-      beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, FocalSciName = foc, CompAOU = j, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r, EstimateA = abun_comp_est, PA = abun_comp_p, R2A = abun_comp_r))
+      beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, FocalSciName = temp$FocalSciName, CompAOU = comp, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r, EstimateA = abun_comp_est, PA = abun_comp_p, R2A = abun_comp_r))
     } 
   }
 
@@ -315,7 +225,7 @@ R2plot2$total_o = R2plot2$ENV.x + R2plot2$COMP.x + R2plot2$SHARED.x
 
 R2plot2$env_a = R2plot2$ENV.y + R2plot2$SHARED.y
 R2plot2$comp_a = R2plot2$COMP.y + R2plot2$SHARED.y
-
+R2plot2$total_a = R2plot2$ENV.y + R2plot2$COMP.y + R2plot2$SHARED.y
 
 
 R2plot2$occdiff = R2plot2$COMP.x - R2plot2$ENV.x
@@ -332,12 +242,12 @@ Table_S2.1 = left_join(Table_S2, tax_code, by =c ("compAOU" = "AOU_OUT"))
 # write.csv(Table_S2.1, "data/Table_s2.csv", row.names = FALSE) 
 
 # R2violin.5 = left_join(R2plot2[,c("FocalAOU", "violin_env","violin_comp","violin_total")], envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
-R2plot2$Total.y = R2plot2$ENV.y + R2plot2$COMP.y + R2plot2$SHARED.y
-R2violin.5 = R2plot2[,c("FocalAOU", "ENV.y","COMP.y","Total.y", "COMPSC")]
+
+R2violin.5 = R2plot2[,c("FocalAOU", "ENV.x","COMP.x","Total.x", "COMPSC")]
 R2violin = gather(R2violin.5, "type", "Rval", 2:5)
 
 R2violin$type = factor(R2violin$type,
-                       levels = c("ENV.y","COMP.y","Total.y","COMPSC"),ordered = TRUE)
+                       levels = c("ENV.x","COMP.x","Total.x","COMPSC"),ordered = TRUE)
 
 ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank",scale = "count", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey", "#636363"), labels=c("Environment","Competition", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30, vjust = 4))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) +  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=16, size=3, position = position_dodge(width = .9)) 
 # , sec.axis = sec_axis(~ . *1/1, name = "Variance Ratio")

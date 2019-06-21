@@ -72,7 +72,7 @@ for (sp in 1:length(subfocalspecies)){
   temp = subset(occuenv, FocalAOU == subfocalspecies[sp])
   
   competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
-  # z scores separated out for env effects (as opposed to multivariate variable)
+  # z scores separated out for env effects 
   env_z = lm(temp$occ_logit ~ abs(zTemp) + abs(zElev) + abs(zPrecip) + abs(zNDVI), data = temp)
   # z scores separated out for env effects
   both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
@@ -105,12 +105,12 @@ for (sp in 1:length(subfocalspecies)){
   
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
   
-  if(length(unique(temp$comp_scaled[!is.na(temp$comp_scaled)])) > 2){
+  if(length(unique(temp$all_comp_scaled[!is.na(temp$all_comp_scaled)])) > 2){
     # saving model output into separate data frames
     occ_comp_est = summary(competition)$coef[2,"Estimate"]
     occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
     occ_comp_r = summary(competition)$r.squared
-    #occ_env_est = mean(summary(env_z)$coef[,"Estimate"])
+    occ_env_est = mean(summary(env_z)$coef[,"Estimate"])
     #occ_env_p = summary(env_z)$coef[2,"Pr(>|t|)"]
     occ_env_r = summary(env_z)$r.squared 
     #occ_b_est = summary(both_z)$coef[2,"Estimate"]
@@ -126,6 +126,7 @@ for (sp in 1:length(subfocalspecies)){
     #abun_both_est = summary(both_abun)$coef[2,"Estimate"]
     abun_both_p = summary(both_abun)$coef[2,"Pr(>|t|)"]
     abun_both_r = summary(both_abun)$r.squared
+    
     
     beta_occ = rbind(beta_occ, c(sp1, occ_comp_est, occ_comp_p, occ_comp_r,occ_env_r, occ_b_p, occ_b_r))
     beta_abun = rbind(beta_abun, c(sp1, abun_comp_est, abun_comp_p, abun_comp_r, abun_env_r, abun_both_p , abun_both_r))
