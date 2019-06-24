@@ -74,12 +74,8 @@ leftover_birds = left_join(envoutput, maincomp2[,c("focalAOU","Focal_Common_Name
 
 # write.csv(beta_TableS4, "data/beta_TableS6.csv", row.names = FALSE)
 
-
-##### Figure 6 non-competitor comparison ######
-noncomps_output <- read.csv("Data/noncomps_output.csv", header =TRUE)
-# filtering to species where p <0.05
-beta_occ_all = read.csv("Z:/Snell/2019 BI MS/Tables/Table S5 beta occupancy all.csv", header = TRUE)
-comp_abun_data <- read.csv("/Snell/2019 BI MS/comp_abun_data.csv", header = TRUE) %>%
+beta_occ_all = read.csv("Z:/hurlbertlab/Snell/2019 BI MS/Tables/Table S5 beta occupancy all.csv", header = TRUE)
+comp_abun_data <- read.csv("Z:/hurlbertlab/Snell/2019 BI MS/comp_abun_data.csv", header = TRUE) %>%
   left_join(occuenv[,c("stateroute","FocalAOU","zTemp", "zElev","zPrecip", "zNDVI")], by = c("focalAOU" = "FocalAOU", "stateroute" = "stateroute")) 
 
 comp_abun_data$FocalOcc_scale = (comp_abun_data$occ * (1 - 2*edge_adjust)) + edge_adjust
@@ -87,11 +83,17 @@ comp_abun_data$FocalOcc_scale = (comp_abun_data$occ * (1 - 2*edge_adjust)) + edg
 comp_abun_data$occ_logit =  log(comp_abun_data$FocalOcc_scale/(1-comp_abun_data$FocalOcc_scale)) 
 comp_abun_data$comp_abun[is.na(comp_abun_data$comp_abun)] <- 0
 comp_abun_data$occ_logit[is.na(comp_abun_data$occ_logit)] <- 0
+# Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) 
+comp_abun_data$comp_scaled = comp_abun_data$comp_abun/(comp_abun_data$focal_abun + comp_abun_data$comp_abun) 
+comp_abun_data$comp_scaled[is.na(comp_abun_data$comp_scaled)] = 0
+
+
 
 subfocalspecies = unique(occuenv$FocalAOU)
 
 allcomps_output = c()
 for (sp in subfocalspecies){
+  print("newspp")
   temp = filter(comp_abun_data, focalAOU == sp) 
   if(nrow(temp) > 0){
     ncomps = temp %>%
@@ -99,17 +101,14 @@ for (sp in subfocalspecies){
       unlist()
     comps = unique(ncomps)
     for(co in comps){
+      print(co)
       mergespp = subset(bbs, aou == co) %>% 
         group_by(stateroute, aou) %>%
         summarize(meancomp = mean(speciestotal)) %>%
         right_join(temp, by = "stateroute")
       
-      # Create scaled competitor column = main comp abundance/(focal abundance + main comp abundance) 
-      mergespp$all_comp_scaled = mergespp$meancomp/(mergespp$abundance.x + mergespp$meancomp) 
-      mergespp$all_comp_scaled[is.na(mergespp$all_comp_scaled)] = 0
-      
-      if(length(unique(mergespp$all_comp_scaled[!is.na(mergespp$all_comp_scaled)])) > 2){ 
-        lms <- lm(mergespp$occ_logit ~  mergespp$all_comp_scaled) 
+      if(length(unique(mergespp$comp_scaled[!is.na(mergespp$comp_scaled)])) > 2){ 
+        lms <- lm(mergespp$occ_logit ~  mergespp$comp_scaled) 
         lms_est = summary(lms)$coef[2,"Estimate"]
         lms_p = summary(lms)$coef[2,"Pr(>|t|)"]
         lms_r = summary(lms)$r.squared
@@ -148,18 +147,18 @@ for(i in unique(neg_est_comps$FocalAOU)){
   print(i)
   comp = subset(neg_est_comps, FocalAOU == i)$CompetitorAOU
   temp = subset(comp_abun_data, focalAOU == i & CompAOU == comp) 
-    if(sum(temp$comp_abun) > 2){
-      competition <- lm(temp$occ_logit ~  temp$comp_abun)  # changes between main and all comps
+    if(sum(temp$comp_abun) > 0){
+      competition <- lm(temp$occ_logit ~  temp$comp_scaled)  # changes between main and all comps
       env_z = lm(temp$occ_logit ~ abs(zTemp) + abs(zElev) + abs(zPrecip) + abs(zNDVI), data = temp)
       # z scores separated out for env effects
-      both_z = lm(temp$occ_logit ~  temp$comp_abun + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
+      both_z = lm(temp$occ_logit ~  temp$comp_scaled + abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
       
       # abundance, not temp occ - same results?
-      comp_abun <- lm(temp$focal_abun ~  temp$comp_abun) 
+      comp_abun <- lm(temp$focal_abun ~  temp$comp_scaled) 
       # z scores separated out for env effects - abundance
       env_abun = lm(temp$focal_abun  ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
       # z scores separated out for env effects - abundance
-      both_abun = lm(temp$focal_abun  ~  comp_abun + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
+      both_abun = lm(temp$focal_abun  ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = temp)
       
       sp1 = i
       # variance_partitioning 
@@ -189,7 +188,7 @@ for(i in unique(neg_est_comps$FocalAOU)){
       
       beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, FocalSciName = temp$FocalSciName, CompAOU = comp, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r, EstimateA = abun_comp_est, PA = abun_comp_p, R2A = abun_comp_r))
     } 
-  }
+ }
 
 # write.csv(beta_occ_abun, "data/beta_occ_abun_main.csv", row.names = FALSE)
 
