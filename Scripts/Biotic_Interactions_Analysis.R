@@ -174,200 +174,6 @@ leftover_birds = left_join(envoutput, maincomp2[,c("focalAOU","Focal_Common_Name
 beta_plot <- left_join(beta_occ, occuenv, by = "FocalAOU")
 ggplot(beta_plot, aes(x = NDVI_est, y = occ)) + geom_point()
 
-##### occupancy model ######
-library(unmarked)
-bbs = read.csv('data/bbs_abun.csv', header = T) # BBS abundance data - from Hurlbert Lab 
-expect_pres = read.csv('data/expect_pres.csv', header = T) %>%
-  mutate(
-    Y.2001 = 0,
-    Y.2002 = 0,
-    Y.2003 = 0,
-    Y.2004 = 0,
-    Y.2005 = 0,
-    Y.2006 = 0,
-    Y.2007 = 0,
-    Y.2008 = 0,
-    Y.2009 = 0,
-    Y.2010 = 0,
-    Y.2011 = 0,
-    Y.2012 = 0,
-    Y.2013 = 0,
-    Y.2014 = 0,
-    Y.2015 = 0)
-
-bbs_ep_long <- gather(expect_pres, "Year", "Presence", Y.2001:Y.2015)
-bbs_ep_long$Year <- gsub("Y.", "", bbs_ep_long$Year)
-bbs_ep_long$Year <- as.numeric(bbs_ep_long$Year)
-
-# red-eyed vireo
-rev_full <- filter(bbs_ep_long, spAOU == 6240) %>%
-  left_join(., bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
-  left_join(., occuenv[,c("stateroute","FocalAOU", "FocalOcc","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
-  mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
-  mutate(Year_cat = paste0("Y", Year)) %>%
-  select(stateroute, presence, Year_cat,FocalOcc, zNDVI) %>% 
-  group_by(stateroute) %>%
-  distinct() %>%
-  spread(Year_cat, presence) 
-
-rev_det <- c()
-for(i in rev_full$stateroute){
-rev <- filter(rev_full, stateroute == i) 
-y <- rev[,4:18] # just occ data
-siteCovs <- rev$stateroute # covariates at the site level
-# obsCovs <- rev[,1]
-rev_mod <- unmarkedFrameOccu(y = y, siteCovs = NULL, obsCovs = NULL)
-summary(rev_mod)
-#run mod
-fm1 <- occu(~1 ~1,rev_mod,se = FALSE) #### detection ~ occ
-# get estimates for detection
-det <- backTransform(fm1['det'])
-# get est for occ
-occ <- backTransform(fm1['state'])
-rev_det <- rbind(rev_det, c(det@estimate, occ@estimate,i))
-}
-rev_det <- data.frame(rev_det)
-colnames(rev_det) <- c("det", "occ","stateroute")
-
-corr_df <- left_join(rev_det, rev_full[,c("stateroute", "FocalOcc")], by = "stateroute") %>%
-  # filter(!is.na(FocalOcc) == TRUE)
-  mutate(FocalOcc = if_else(is.na(FocalOcc), 0, FocalOcc))
-corr(data.frame(corr_df$FocalOcc, corr_df$det))
-
-
-(rev_naive <- sum(apply(y, 1, sum) > 0) / nrow(y))
-# 1 minus detection probability ^ num surveys
-(1-.834)^15
-
-fm2 <- occu(~ 1 ~stateroute, rev_mod)
-fm2 #look at the output
-#interpret bqi parameter
-#Get the estimates for detection
-backTransform(fm2['det'])
-#Get the estimates for occupancy
-lc <- linearComb(fm2, c(1, 0), type="state")
-backTransform(lc)
-
-
-# yellow-billed cuckoo
-ybc <- filter(bbs_ep_long, spAOU == 3870) %>%
-  left_join(., bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
-  left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
-  mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
-  mutate(Year_cat = paste0("Y", Year)) %>%
-  select(stateroute, presence, Year_cat, zNDVI) %>% 
-  group_by(stateroute) %>%
-  distinct() %>%
-  spread(Year_cat, presence) 
-
-y <- ybc[,3:17] # just occ data 
-siteCovs <- ybc[,2] # covariates at the site level
-ybc_mod <- unmarkedFrameOccu(y = y, siteCovs = data.frame(siteCovs), obsCovs = NULL)
-summary(ybc_mod)
-#run mod
-fm1 <- occu(~ 1 ~ 1,ybc_mod)
-# get estimates for detection
-backTransform(fm1['det'])
-# get est for occ
-backTransform(fm1['state'])
-
-(ybc_naive <- sum(apply(y, 1, sum) > 0) / nrow(y))
-
-fm2 <- occu(~ 1 ~siteCovs, rev_mod)
-fm2 #look at the output
-#interpret bqi parameter
-#Get the estimates for detection
-backTransform(fm2['det'])
-#Get the estimates for occupancy
-lc <- linearComb(fm2, c(1, 0), type="state")
-backTransform(fm2['state'])
-
-
-# Ruffed Grouse
-rug_full <- filter(bbs_ep_long, spAOU == 3000) %>%
-  left_join(., bbs, by = c("stateroute" = "stateroute", "spAOU" ="aou", "Year" = "year")) %>%
-  left_join(., occuenv[,c("stateroute","FocalAOU","zNDVI", "FocalOcc")], by = c("stateroute" = "stateroute", "spAOU" ="FocalAOU")) %>%
-  mutate(presence = ifelse(is.na(speciestotal), 0, 1)) %>%
-  mutate(Year_cat = paste0("Y", Year)) %>%
-  select(stateroute, presence, Year_cat, zNDVI, FocalOcc) %>% 
-  group_by(stateroute) %>%
-  distinct() %>%
-  spread(Year_cat, presence) 
-
-y <- rug[,4:18] # just occ data
-siteCovs <- rug[,2] # covariates at the site level
-# obsCovs <- list(rev[,2])
-rug_mod <- unmarkedFrameOccu(y = y, siteCovs = data.frame(siteCovs), obsCovs = NULL)
-summary(rug_mod)
-#run mod
-fm1 <- occu(~ 1 ~ 1,rug_mod)
-# get estimates for detection
-backTransform(fm1['det'])
-# get est for occ
-backTransform(fm1['state'])
-
-(rug_naive <- sum(apply(y, 1, sum) > 0) / nrow(y))
-
-rug_det <- c()
-for(i in rug_full$stateroute){
-  rug <- filter(rug_full, stateroute == i) 
-  y <- rug[,3:17] # just occ data
-  siteCovs <- rug$stateroute # covariates at the site level
-  # obsCovs <- rug[,1]
-  rug_mod <- unmarkedFrameOccu(y = y, siteCovs = NULL, obsCovs = NULL)
-  summary(rug_mod)
-  #run mod
-  fm1 <- occu(~1 ~1,rug_mod,se = FALSE) #### detection ~ occ
-  # get estimates for detection
-  det <- backTransform(fm1['det'])
-  # get est for occ
-  occ <- backTransform(fm1['state'])
-  rug_det <- rbind(rug_det, c(det@estimate, occ@estimate,i))
-}
-rug_det <- data.frame(rug_det)
-colnames(rug_det) <- c("det", "occ","stateroute")
-
-corr_df <- left_join(rug_det, rug_full[,c("stateroute", "FocalOcc")], by = "stateroute") %>%
-  # filter(!is.na(FocalOcc) == TRUE)
-  mutate(FocalOcc = if_else(is.na(FocalOcc), 0, FocalOcc)) 
-corr(data.frame(corr_df$FocalOcc, corr_df$det))
-
-
-#### NDVI detection loop ####
-spp_ndvi <- data.frame(FocalAOU = c(), raw = c(), lower_est = c(), lower_p= c(), lower_r= c(), upper_est= c(), upper_p= c(), upper_r= c(), full_est = c(), full_p = c(), full_r = c())
-for(sp in subfocalspecies){
-  df = filter(occuenv, FocalAOU == sp)
-  lower = filter(df, ndvi.mean <= df$Mean.NDVI)
-  upper = filter(df, ndvi.mean > df$Mean.NDVI)
-  lower_raw = lm(occ_logit ~ ndvi.mean, data = lower)
-  lm_lower = lm(occ_logit ~ abs(zNDVI), data = lower)
-  lm_upper = lm(occ_logit ~ abs(zNDVI), data = upper)
-  lm_full = lm(occ_logit ~ abs(zNDVI), data = df)
-  lower_raw_est = summary(lower_raw)$coef[2,"Estimate"]
-  lower_est = summary(lm_lower)$coef[2,"Estimate"]
-  lower_p = summary(lm_lower)$coef[2,"Pr(>|t|)"]
-  lower_r = summary(lm_lower)$r.squared
-  upper_est = summary(lm_upper)$coef[2,"Estimate"]
-  upper_p = summary(lm_upper)$coef[2,"Pr(>|t|)"]
-  upper_r = summary(lm_upper)$r.squared
-  full_est = summary(lm_full)$coef[2,"Estimate"]
-  full_p = summary(lm_full)$coef[2,"Pr(>|t|)"]
-  full_r = summary(lm_full)$r.squared
-  spp_ndvi = rbind(spp_ndvi, data.frame(FocalAOU = sp,raw = lower_raw_est,  lower_est = lower_est, lower_p= lower_p, lower_r= lower_r, upper_est= upper_est, upper_p= upper_p, upper_r= upper_r, full_est = full_est, full_p = full_p, full_r = full_r))
-}
-
-# spp_zNDVI <- left_join(occuenv[,c("FocalAOU", "stateroute", "zNDVI")], spp_ndvi, by = "FocalAOU")
-
-ggplot(spp_ndvi, aes(full_est, lower_est)) + geom_point(size = 2) + geom_smooth(method = "lm", se = FALSE, col = "red", lty = "dashed", lwd = 1.5) + theme_classic() +
-  theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + xlab("Full Model NDVI Estimate") + ylab("Below Centroid NDVI Estimate") + theme(axis.text.x=element_text(size=25, color = "black"), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines"))
-cor(spp_ndvi$full_est, spp_ndvi$lower_est)
-
-
-ggplot(spp_ndvi, aes(lower_est, upper_est)) + geom_point(size = 2) + geom_abline(intercept = 0, slope = 1, col = "blue", lwd = 1.5) + theme_classic() + geom_hline(yintercept = median(spp_ndvi$upper_est), lwd = 1.5, lty = "dashed", col = "dark gray") + geom_vline(xintercept = median(spp_ndvi$lower_est), lwd = 1.5, lty = "dashed", col = "dark gray") +
-  theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + xlab("Below Centroid NDVI Estimate") + ylab("Above Centroid NDVI Estimate") + theme(axis.text.x=element_text(size=25, color = "black"), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines"))
-ggsave("Figures/FigureR2.pdf", height = 8, width = 12)
-cor(spp_ndvi$upper_est, spp_ndvi$lower_est)
-
 #### ---- GLM fitting  ---- ####
 # add on success and failure columns by creating # of sites where birds were found
 # and # of sites birds were not found from original bbs data
@@ -547,11 +353,21 @@ total = env_sum %>%
 
 table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("FocalAOU" = "focalAOU")) %>%
   left_join(., unique(shapefile_overlap), by = c("FocalAOU" = "focalAOU")) %>%
-  left_join(., unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU") %>% left_join(., sppGT50rtes, by = "FocalAOU")
+  left_join(., unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU") %>% left_join(., sppGT50rtes, by = "FocalAOU") 
+  
+
+table_s2_cont = occuenv %>%
+  group_by(FocalAOU, Focal) %>%
+    summarise(Median_Occ = median(FocalOcc),
+              Variance_Occ = var(FocalOcc),
+              Min_Occ = min(FocalOcc),
+              Max_Occ = max(FocalOcc))
+# write.csv(table_s2_cont, "data/table_s2_cont.csv", row.names = FALSE)
 
 # write.csv(table_s2, "data/table_s2.csv", row.names = FALSE)
 TableS2 <- read.csv("Z:/Snell/2019 BI MS/Tables/Table S2 Traits.csv", header = TRUE) %>%
-  left_join(., sppGT50rtes, by = c("Focal.Common.Name" = "Focal"))
+  left_join(., sppGT50rtes, by = c("Focal.Common.Name" = "Focal")) 
+  
 # write.csv(TableS2, "data/TableS2.csv", row.names = FALSE) 
  
 # creating env traits model to compare to comp and weighted traits mods
