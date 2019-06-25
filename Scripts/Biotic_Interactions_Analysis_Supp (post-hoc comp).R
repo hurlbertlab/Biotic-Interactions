@@ -126,7 +126,7 @@ neg_est_comps <- left_join(allcomps_output, maincomp1[,c("focalAOU", "compAOU", 
 
 envoutput = c()
 envoutputa = c()
-beta_occ_abun = data.frame(FocalAOU = c(), FocalSciName = c(), CompAOU = c(), Estimate = c(), P = c(), R2 = c(), EstimateA = c(), PA = c(), R2A = c()) 
+beta_occ_abun = data.frame(FocalAOU = c(), Focal = c(), CompAOU = c(), Comp = c(), Estimate = c(), P = c(), R2 = c(), EstimateA = c(), PA = c(), R2A = c()) 
 for(i in unique(highestR2$FocalAOU)){
   print(i)
   comp = subset(neg_est_comps, FocalAOU == i)$CompetitorAOU
@@ -170,7 +170,7 @@ for(i in unique(highestR2$FocalAOU)){
       abun_comp_p = summary(comp_abun)$coef[2,"Pr(>|t|)"]
       abun_comp_r = summary(comp_abun)$r.squared
       
-      beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, FocalSciName = temp$FocalSciName, CompAOU = comp, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r, EstimateA = abun_comp_est, PA = abun_comp_p, R2A = abun_comp_r))
+      beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, Focal = temp$Focal, CompAOU = comp, Comp = temp$Competitor, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r, EstimateA = abun_comp_est, PA = abun_comp_p, R2A = abun_comp_r))
     } 
  }
 
@@ -183,6 +183,11 @@ envoutputa = data.frame(envoutputa)
 names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE", "n")
 names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
 
+envoutput$COMPSC = envoutput$COMP/(envoutput$COMP+envoutput$ENV)
+
+suppl_table <- left_join(envoutput, beta_occ_abun[,c("FocalAOU", "Focal", "Comp")], by = "FocalAOU") %>%
+  distinct()
+# write.csv(suppl_table, "data/post_hoc_comps.csv", row.names = FALSE)
 
 ###### Figure 4 #####
 # R2 plot - lm in ggplot
@@ -217,7 +222,7 @@ R2plot2$totaldiff = R2plot2$abundiff - R2plot2$occdiff
 
 #### Figure 1 violin plots ####
 # need to chance comp_scaled to all_comp scaled in envouputput loop for Fig 1B
-R2plot2$COMPSC = R2plot2$COMP.y/(R2plot2$COMP.y+R2plot2$ENV.y)
+R2plot2$COMPSC = R2plot2$COMP.x/(R2plot2$COMP.x+R2plot2$ENV.x)
 
 # create Table S2
 Table_S2 = left_join(R2plot2, maincomp1.5, by =c ("FocalAOU" = "focalAOU"))
