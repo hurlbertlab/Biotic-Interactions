@@ -60,22 +60,9 @@ occuenv$occ_logit =  log(occuenv$FocalOcc_scale/(1-occuenv$FocalOcc_scale))
 l_focalspecies = inner_join(shapefile_areas, occuenv, c("focalAOU"="FocalAOU"))
 subfocalspecies = unique(occuenv$FocalAOU) #[-99] excluding sage sparrow bc no good routes
 
-#write.csv(envoutputa, "data/envoutputa.csv", row.names = FALSE)
-beta_occ = data.frame(beta_occ)
-names(beta_occ) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
-beta_occ_comp = left_join(beta_occ, maincomp2[,c("focalAOU","Focal_Common_Name", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "focalAOU"))
-beta_abun = data.frame(beta_abun)
-names(beta_abun) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
-beta_abun_comp = left_join(beta_abun, maincomp2[,c("focalAOU","Focal_Common_Name", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "focalAOU"))
 
-beta_TableS4 = left_join(beta_occ, beta_abun_comp, by = "FocalAOU")
-
-leftover_birds = left_join(envoutput, maincomp2[,c("focalAOU","Focal_Common_Name", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "focalAOU"))
-
-# write.csv(beta_TableS4, "data/beta_TableS6.csv", row.names = FALSE)
-
-beta_occ_all = read.csv("Z:/hurlbertlab/Snell/2019 BI MS/Tables/Table S5 beta occupancy all.csv", header = TRUE)
-comp_abun_data <- read.csv("Z:/hurlbertlab/Snell/2019 BI MS/comp_abun_data.csv", header = TRUE) %>%
+beta_occ_all = read.csv("Z:/Snell/2019 BI MS/Tables/Table S5 beta occupancy all.csv", header = TRUE)
+comp_abun_data <- read.csv("Z:/Snell/2019 BI MS/comp_abun_data.csv", header = TRUE) %>%
   left_join(occuenv[,c("stateroute","FocalAOU","zTemp", "zElev","zPrecip", "zNDVI")], by = c("focalAOU" = "FocalAOU", "stateroute" = "stateroute")) 
 
 comp_abun_data$FocalOcc_scale = (comp_abun_data$occ * (1 - 2*edge_adjust)) + edge_adjust
@@ -102,10 +89,7 @@ for (sp in subfocalspecies){
     comps = unique(ncomps)
     for(co in comps){
       print(co)
-      mergespp = subset(bbs, aou == co) %>% 
-        group_by(stateroute, aou) %>%
-        summarize(meancomp = mean(speciestotal)) %>%
-        right_join(temp, by = "stateroute")
+      mergespp = filter(temp, CompAOU == co)
       
       if(length(unique(mergespp$comp_scaled[!is.na(mergespp$comp_scaled)])) > 2){ 
         lms <- lm(mergespp$occ_logit ~  mergespp$comp_scaled) 
@@ -143,7 +127,7 @@ neg_est_comps <- left_join(allcomps_output, maincomp1[,c("focalAOU", "compAOU", 
 envoutput = c()
 envoutputa = c()
 beta_occ_abun = data.frame(FocalAOU = c(), FocalSciName = c(), CompAOU = c(), Estimate = c(), P = c(), R2 = c(), EstimateA = c(), PA = c(), R2A = c()) 
-for(i in unique(neg_est_comps$FocalAOU)){
+for(i in unique(highestR2$FocalAOU)){
   print(i)
   comp = subset(neg_est_comps, FocalAOU == i)$CompetitorAOU
   temp = subset(comp_abun_data, focalAOU == i & CompAOU == comp) 
@@ -248,9 +232,9 @@ R2violin = gather(R2violin.5, "type", "Rval", 2:5)
 R2violin$type = factor(R2violin$type,
                        levels = c("ENV.x","COMP.x","Total.x","COMPSC"),ordered = TRUE)
 
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank",scale = "count", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey", "#636363"), labels=c("Environment","Competition", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30, vjust = 4))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) +  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=16, size=3, position = position_dodge(width = .9)) 
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank",scale = "count", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey", "#636363"), labels=c("Environment","Competition", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30, vjust = 3))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) +  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=16, size=3, position = position_dodge(width = .9)) 
 # , sec.axis = sec_axis(~ . *1/1, name = "Variance Ratio")
-ggsave("Figures/violin_mains.pdf", height = 8, width = 12)
+ggsave("Figures/violin_post_hoc.pdf", height = 8, width = 12)
 
 
 
