@@ -105,6 +105,7 @@ for (sp in subfocalspecies){
 
 allcomps_output = data.frame(allcomps_output)
 names(allcomps_output) = c("FocalAOU", "CompetitorAOU", "Estimate","P", "R2")
+# write.csv(allcomps_output, "data/allcomps_output.csv", row.names = FALSE)
 
 highestR2 <- left_join(allcomps_output, maincomp1[,c("focalAOU", "compAOU", "mainCompetitor")], by = c("FocalAOU" = "focalAOU", "CompetitorAOU" = "compAOU")) %>%
   group_by(FocalAOU) %>%
@@ -123,10 +124,18 @@ neg_est_comps <- left_join(allcomps_output, maincomp1[,c("focalAOU", "compAOU", 
   slice(1) %>%
   # Remember to ungroup in case you want to do further work without grouping.
   ungroup()
+neg_est_comps$maxCompetitor <- 1
+neg_est_join <- left_join(neg_est_comps, tax_code, by = c("FocalAOU" = "AOU_OUT")) %>%
+  left_join(tax_code, by = c("CompetitorAOU" = "AOU_OUT")) %>%
+  left_join(nsw[,c("focalAOU", "CompAOU", "Family", "FocalSciName", "CompSciName")], by = c("FocalAOU" = "focalAOU", "CompetitorAOU" ="CompAOU")) %>%
+  select(FocalAOU, CompetitorAOU, maxCompetitor, PRIMARY_COM_NAME.x, PRIMARY_COM_NAME.y)
+Table_S1 <- read.csv("Z:/Snell/2019 BI MS/Tables/Table S1 Focal Competitors.csv", header = TRUE)
+TableS1 <- left_join(Table_S1, neg_est_join, by = c("Focal.Common.Name" = "PRIMARY_COM_NAME.x", "Competitor.Common.Name" = "PRIMARY_COM_NAME.y", "Focal.AOU" = "FocalAOU", "Competitor.AOU" = "CompetitorAOU"))
+# write.csv(TableS1, "data/TableS1.csv", row.names = FALSE)
 
 envoutput = c()
 envoutputa = c()
-beta_occ_abun = data.frame(FocalAOU = c(), Focal = c(), CompAOU = c(), Comp = c(), Estimate = c(), P = c(), R2 = c(), EstimateA = c(), PA = c(), R2A = c()) 
+beta_occ_abun = data.frame(FocalAOU = c(), Focal = c(), CompAOU = c(), Comp = c(), Estimate = c(), P = c(), R2 = c(), envr2 = c(), bothp = c(), bothr2 = c()) 
 for(i in unique(highestR2$FocalAOU)){
   print(i)
   comp = subset(neg_est_comps, FocalAOU == i)$CompetitorAOU
@@ -169,12 +178,17 @@ for(i in unique(highestR2$FocalAOU)){
       abun_comp_est = summary(comp_abun)$coef[2,"Estimate"]
       abun_comp_p = summary(comp_abun)$coef[2,"Pr(>|t|)"]
       abun_comp_r = summary(comp_abun)$r.squared
+      occ_env_r = summary(env_z)$r.squared 
+      occ_b_p = summary(both_z)$coef[2,"Pr(>|t|)"]
+      occ_b_r = summary(both_z)$r.squared 
       
-      beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, Focal = temp$Focal, CompAOU = comp, Comp = temp$Competitor, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r, EstimateA = abun_comp_est, PA = abun_comp_p, R2A = abun_comp_r))
+      beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, Focal = temp$Focal, CompAOU = comp, Comp = temp$Competitor, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r, envr2 = occ_env_r, bothp = occ_b_p, bothr2 = occ_b_r))
     } 
  }
 
-# write.csv(beta_occ_abun, "data/beta_occ_abun_main.csv", row.names = FALSE)
+beta_occ_abun <- beta_occ_abun %>%
+  distinct()
+# write.csv(beta_occ_abun, "data/beta_occ_abun_posthoc.csv", row.names = FALSE)
 
 
 envoutput = data.frame(envoutput)
@@ -242,46 +256,29 @@ ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank",sc
 ggsave("Figures/violin_post_hoc.pdf", height = 8, width = 12)
 
 
+# need to change the slopes
+cols = c("Competition" ="#dd1c77","Environment" = "#2ca25f","Total" = "dark gray")
+r1 = ggplot(R2plot2, aes(x = comp_o, y = comp_a, col = "Competition")) +theme_classic()+ theme(axis.title.x=element_text(size=36, vjust = 2),axis.title.y=element_text(size=36, angle=90, vjust = 2)) + xlab(bquote("Occupancy R"^"2")) + ylab(bquote("Abundance R"^"2"))+
+  geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.5) + geom_point(cex =4, shape=24)+geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="longdash", lwd =2.5) +
+  geom_point(data = R2plot2, aes(x = env_o, y = env_a, col = "Environment"), shape = 16, cex =4, stroke = 1)+geom_smooth(data = R2plot2, aes(x = env_o, y = env_a), method='lm', se=FALSE, col="#2ca25f",linetype="longdash", lwd = 2.5) + 
+  geom_point(data = R2plot2, aes(Total.x,Total.y, col = "Total"), shape = 3, cex =5, stroke = 1)+geom_smooth(data = R2plot2, aes(x =Total.x, y = Total.y), method='lm', se=FALSE, col="dark gray",linetype="longdash", lwd =2.5) + xlim(c(0, 0.8))+ theme(axis.text.x=element_text(size = 32),axis.ticks=element_blank(), axis.text.y=element_text(size=32))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=36), legend.position = c(0.8,0.2), legend.key.width=unit(2, "lines"), legend.key.height =unit(3, "lines")) + scale_y_continuous(limits = c(0, 0.8), breaks = c(0,0.2, 0.4, 0.6, 0.8, 1)) #+geom_label(data = R2plot2, aes(Total.x,Total.y, label = FocalAOU))
+ggsave("C:/Git/Biotic-Interactions/Figures/occvabun_lines_posthoc.pdf", height = 8, width = 12)
 
-
-
-
-
-
-# beta_occ_abun <- read.csv("data/beta_occ_abun_main.csv", header = TRUE)
-noncomps_output_bocc = left_join(beta_occ_abun, noncomps_sub[,c("AOU_OUT", "Competition.R2", "Competition.Estimate", "Competition.P.value")], by = c("FocalAOU" = "AOU_OUT")) %>% na.omit(.)
-
-highestR2 <- left_join(beta_occ_abun, maincomp1[,c("focalAOU", "compAOU", "mainCompetitor")], by = c("FocalAOU" = "focalAOU", "CompAOU" = "compAOU")) %>%
-  group_by(FocalAOU) %>%
-  arrange(desc(R2)) %>% 
-  # Pick the top 1 value
-  slice(1) %>%
-  # Remember to ungroup in case you want to do further work without grouping.
-  ungroup()
-
-highestR2 %>%
-  count(mainCompetitor)
-highestR2$post_hoc_main <- 1
-
-
-envcomp <- left_join(beta_occ, highestR2, by = "FocalAOU")
-
-envcomp %>%
-  count(Competition_R2 > R2)
 
 
 
 # write.csv(noncomps_output, "data/noncomps_output.csv", row.names = FALSE)
 noncomps_output = read.csv("data/noncomps_output.csv", header = TRUE)
-noncomps_output_bocc = left_join(noncomps_output, beta_occ[,c("FocalAOU", "Competition_R2", "Competition_Est", "Competition_P")], by = "FocalAOU")
+names(noncomps_output) = c("FocalAOU", "CompetitorAOU", "non_Estimate", "non_P", "non_R2")
+noncomps_output_bocc = left_join(noncomps_output, allcomps_output, by = c("FocalAOU", "CompetitorAOU"))
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
-  tally(R2 >= Competition_R2)
+  tally(non_R2 >= R2)
 names(nonps) = c("FocalAOU", "main_g_non")
 
 none = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
-  tally(Estimate >= Competition_Est)
+  tally(non_Estimate >= Estimate)
 names(none) = c("FocalAOU", "main_g_non_e")
 
 numcomps = na.omit(noncomps_output) %>% 
@@ -298,53 +295,38 @@ vec_meds = data.frame(FocalAOU = unique(noncomps_output_bocc$FocalAOU), Median =
 noncomps_output_ttest = left_join(noncomps_output_bocc, vec_meds, by = "FocalAOU")
 t.test(noncomps_output_ttest$Competition_R2, noncomps_output_ttest$Median, paired = TRUE, alternative= "two.sided")
 
-
-noncompsdist  = merge(nonps, numcomps, by = ("FocalAOU"))
-noncompsdist  = merge(none, numcomps, by = ("FocalAOU"))
-noncompsdist$nullp = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
-noncompsdist$nulle = (noncompsdist$main_g_non + 1)/(noncompsdist$Comp_count + 1)
-nullpsub = filter(noncompsdist, nullp < 0.05) %>% 
-  left_join(., envoutput1, by = "FocalAOU")
-
-noncompsdist_trait = merge(noncompsdist, envoutput2[,c("FocalAOU", "migclass", "Trophic.Group")], by = "FocalAOU")
-
-hist(noncompsdist$nullp,xlab = "", main = "Distribution of P-values of non-competitors")
-abline(v=mean(noncompsdist$nullp), col = "blue", lwd = 2)
-
-hist(noncomps_output$R2, main = "Distribution of R-squared of non-competitors", xlab = expression('R'^2))
-abline(v=mean(beta_occ$Competition_R2), col = "blue", lwd = 2)
-hist(na.omit(noncomps_output$Estimate), main = "Distribution of Estimates of non-competitors", xlab = 'Estimate', xlim = c(-40, 40))
-abline(v=mean(na.omit(beta_occ$Competition_Est)), col = "blue", lwd = 2)
-
+noncompsdistp_posthoc  = merge(nonps, numcomps, by = ("FocalAOU"))
+noncompsdiste_posthoc  = merge(none, numcomps, by = ("FocalAOU"))
+noncompsdistp_posthoc$nullp = (noncompsdistp_posthoc$main_g_non)/(noncompsdistp_posthoc$Comp_count + 1)
+noncompsdiste_posthoc$nulle = (noncompsdiste_posthoc$main_g_non_e)/(noncompsdiste_posthoc$Comp_count + 1)
 
 noncomps_output_bocc$Null = "Null"
 noncomps_output_bocc$Comp = "Comp"
-noncompsdist$Null = "Null"
+noncompsdistp_posthoc$Null = "Null"
+noncompsdiste_posthoc$Null = "Null"
 
-R = ggplot(noncomps_output_bocc) +
-  # stat_density(aes(Competition_R2, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
-  stat_density(aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
-  xlab(expression("Competitor R"^"2")) + ylab("Density") + theme_classic() +
-  scale_fill_manual(values=c("purple4")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
-#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_R2.pdf", height = 7, width = 12)
+#### Figure 6 example non-comp dist and main R2 ######
 
-E = ggplot(noncomps_output_bocc) +
-  # stat_density(aes(Competition_Est, fill=factor(Comp, levels = c("Comp"))), alpha = 0.9) +
-  stat_density(aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab("Competitor Estimate") + ylab("Density") + theme_classic() + 
-  scale_fill_manual(values=c("purple4")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
-#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_Est.pdf", height = 7, width = 12)
+p = ggplot(noncompsdistp_posthoc) +
+  geom_histogram(bins = 10, aes(nullp), alpha = 0.9, fill="#330066") +
+  xlab(expression('Proportion of non-competitors with higher R'^2)) + ylab("Frequency") + theme_classic()  +
+  scale_fill_manual(breaks = c("Null"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
-P = ggplot(noncomps_output_bocc) +
-  stat_density(aes(P, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  xlab("Competitor P-value") + ylab("Density") + theme_classic() + 
-  scale_fill_manual(breaks = c("Null"), values=c("purple4"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24), axis.text.y=element_text(size=24))
-#ggsave("C:/Git/Biotic-Interactions/Figures/null_density_plot_p.pdf", height = 7, width = 12)
 
-plot_grid(P+ theme(legend.position="none"),
-          R + theme(legend.position="none"),
-          E + theme(legend.position="none"),
-          align = 'h',
-          labels = c("A","B", "C"),
-          nrow = 1)
-ggsave("C:/Git/Biotic-Interactions/Figures/densityplot_null.pdf", height = 7, width = 12)
+q = ggplot(noncompsdiste_posthoc) +
+  geom_histogram(bins = 10, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + 
+  xlab(expression("Proportion of non-competitors with more negative slope")) + ylab("Frequency") + theme_classic() + 
+  scale_fill_manual(breaks = c("Null"), values=c("#330066"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
+
+theme_set(theme_cowplot(font_size=20,font_family = "URWHelvetica"))
+plot_grid(p + theme(legend.position="none"),
+          q + theme(legend.position="none"),
+          align = 'hv',
+          labels = c("a","b", "c", "d"),
+          label_size = 20,
+          nrow = 2) 
+
+ggsave("Figures/Figure6_null_posthoc.pdf", height = 8, width = 10)
+
+write.csv(noncompsdiste_posthoc, "data/noncompsdiste_posthoc.csv", row.names = FALSE)
+write.csv(noncompsdistp_posthoc, "data/noncompsdistp_posthoc.csv", row.names = FALSE)
