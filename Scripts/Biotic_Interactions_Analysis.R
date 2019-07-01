@@ -565,14 +565,14 @@ noncomps_output = noncomps_output[!(noncomps_output$FocalAOU == 6870 & noncomps_
 
 noncomps_output = read.csv("data/noncomps_output.csv", header = TRUE)
 # filtering to species where p <0.05
-beta_occ_all = read.csv("Z:/Snell/2019 BI MS/Tables/Table S6 beta occupancy all.csv", header = TRUE)
+beta_occ_main = read.csv("Z:/Snell/2019 BI MS/Tables/Table S8 beta occupancy widespread.csv", header = TRUE)
 comp_abun_data <- read.csv("Z:/Snell/2019 BI MS/data/comp_abun_data.csv", header = TRUE)
-noncomps_sub = left_join(beta_occ_all, tax_code, by = c("Focal.Common.Name" = "PRIMARY_COM_NAME"))
-noncomps_sub2 = filter(noncomps_sub, Competition.R2 >= 0.1) 
+noncomps_sub = left_join(beta_occ_main, tax_code, by = c("Focal.Common.Name" = "PRIMARY_COM_NAME"))
+noncomps_sub2 = filter(noncomps_sub, Competitor.R2 >= 0.1) 
 noncomps_sub3 = unique(noncomps_sub2)
 noncomps_plot = subset(noncomps_output, FocalAOU %in% noncomps_sub3$AOU_OUT)
 
-noncomps_output_bocc = left_join(noncomps_plot, noncomps_sub[,c("AOU_OUT", "Competition.R2", "Competition.Estimate", "Competition.P.value")], by = c("FocalAOU" = "AOU_OUT"))
+noncomps_output_bocc = left_join(noncomps_plot, noncomps_sub[,c("AOU_OUT", "Competitor.R2", "Competitor.Estimate", "Competitor.P.value")], by = c("FocalAOU" = "AOU_OUT"))
 
 comp_abun_data$FocalOcc_scale = (comp_abun_data$occ * (1 - 2*edge_adjust)) + edge_adjust
 # create logit transformation function, did on rescaled vals
@@ -629,19 +629,19 @@ t.test(noncomps_output_ttest$Competition.R2, noncomps_output_ttest$Median, paire
 noncompsdistp  = merge(nonps, numcomps, by = ("FocalAOU"))
 noncompsdiste  = merge(none, numcomps, by = ("FocalAOU"))
 noncompsdistp$nullp = (noncompsdistp$main_g_non)/(noncompsdistp$Comp_count + 1)
-noncompsdiste$nulle = (noncompsdiste$main_g_non_e)/(noncompsdiste$Comp_count + 1)
+noncompsdiste$Widespread_e = (noncompsdiste$main_g_non_e)/(noncompsdiste$Comp_count + 1)
 
 
 
 ##### for main comp analysis #####
 nonps = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
-  tally(R2 >= Competition.R2)
+  tally(R2 >= Competitor.R2)
 names(nonps) = c("FocalAOU", "main_g_non")
 
 none = na.omit(noncomps_output_bocc) %>% 
   group_by(FocalAOU) %>%
-  tally(Estimate <= Competition_Est)
+  tally(Estimate <= Competitor.Estimate)
 names(none) = c("FocalAOU", "main_g_non_e")
 
 numcomps = na.omit(noncomps_output_bocc) %>% 
@@ -661,7 +661,7 @@ t.test(noncomps_output_ttest$Competition_R2, noncomps_output_ttest$Median, paire
 noncompsdistp  = merge(nonps, numcomps, by = ("FocalAOU"))
 noncompsdiste  = merge(none, numcomps, by = ("FocalAOU"))
 noncompsdistp$Widespread_p = (noncompsdistp$main_g_non)/(noncompsdistp$Comp_count + 1)
-noncompsdiste$nulle = (noncompsdiste$main_g_non_e)/(noncompsdiste$Comp_count + 1)
+noncompsdiste$Widespread_e = (noncompsdiste$main_g_non_e)/(noncompsdiste$Comp_count + 1)
 
 noncomps_output_bocc$Null = "Null"
 noncomps_output_bocc$Comp = "Comp"
@@ -674,38 +674,44 @@ noncompsdistp_posthoc <- read.csv("data/noncompsdistp_posthoc.csv", header = TRU
 
 noncompdist_pcombined <- full_join(noncompsdistp[,c("FocalAOU", "Widespread_p")], noncompsdistp_posthoc[,c("FocalAOU", "nullp")], by = "FocalAOU") %>%
   gather(p_val, value, Widespread_p:nullp)
+
+noncompdist_ecombined <- full_join(noncompsdiste[,c("FocalAOU", "Widespread_e")], noncompsdiste_posthoc[,c("FocalAOU", "nulle")], by = "FocalAOU") %>%
+  gather(e_val, value, Widespread_e:nulle)
+
 #### Figure 6 example non-comp dist and main R2 ######
 single_dist = subset(noncomps_output_bocc, FocalAOU == 4020)
 n = ggplot(single_dist) +
   geom_histogram(bins = 15, aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = single_dist$Competition.R2, col = "black", lwd = 1.5, lty = 2) +
-  geom_vline(xintercept = 0.1071402, col = "black", lwd = 1.5, lty = 3) + # copied from post hoc beta occ abun df
+  geom_vline(xintercept = single_dist$Competitor.R2, col = "black", lwd = 1.5, lty = 2) +
+  geom_vline(xintercept = 0.5692096, col = "black", lwd = 1.5, lty = 3) + # copied from post hoc beta occ abun df
   xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
 o = ggplot(single_dist) +
   geom_histogram(bins = 15, aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
-  geom_vline(xintercept = single_dist$Competition.Est, col = "black", lwd = 1.5, lty = 2) +
-  geom_vline(xintercept = -4.438886, col = "black", lwd = 1.5, lty = 3) +
+  geom_vline(xintercept = single_dist$Competitor.Estimate, col = "black", lwd = 1.5, lty = 2) +
+  geom_vline(xintercept = -8.382466, col = "black", lwd = 1.5, lty = 3) +
   xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
 p = ggplot(noncompdist_pcombined, aes(x=value,fill=p_val)) +
-  geom_histogram(bins = 15, position = "identity", alpha = 0.7) +
-  xlab(expression('Proportion of non-competitors R'^2)) + ylab("Frequency") + theme_classic()  +
-  scale_fill_manual(values = c("#330066","#756bb1"), labels = c("Maximum Competitor", "Widespread Competitor")) + theme(legend.title=element_blank(), legend.text=element_text(size = 24)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"), legend.position = c(.5, .7))
+  geom_histogram(bins = 15, position = "identity", alpha = 0.9) +
+  xlab(expression('Proportion of non-competitors with higher R'^2)) + ylab("Frequency") + theme_classic()  +
+  scale_fill_manual(values = c("#330066","#756bb1"), labels = c("Maximum Non-competitors", "Widespread Non-competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 24)) + theme(axis.title.x=element_text(size=24, vjust = -1.5),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"), legend.position = c(.5, .7))
 
 
-q = ggplot(noncompsdiste) +
-  geom_histogram(bins = 10, aes(nulle, fill=factor(Null, levels = c("Null"))), alpha = 0.9) + ylim(c(0, 30))+ 
-  xlab(expression("Proportion of non-competitors outperforming main competitor Estimate")) + ylab("Frequency") + theme_classic() + 
-  scale_fill_manual(breaks = c("Null"), values=c("#330066"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
+q = ggplot(noncompdist_ecombined, aes(x=value,fill=e_val)) +
+  geom_histogram(bins = 15, position = "identity", alpha = 0.9) + 
+  xlab("Proportion of non-competitors \n with more negative slope") + ylab("Frequency") + theme_classic() + 
+  scale_fill_manual(values = c("#330066","#756bb1"), labels = c("Predictive", "Widespread")) + theme(legend.title=element_blank(), legend.text=element_text(size = 20)) + theme(axis.title.x=element_text(size=24, vjust = -5),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
+
+legend <- get_legend(q)
 theme_set(theme_cowplot(font_size=20,font_family = "URWHelvetica"))
 plot_grid(n + theme(legend.position="none"),
           o + theme(legend.position="none"),
-          p + theme(legend.position="none"),
-          q + theme(legend.position="none"),
+          p + theme(legend.position= "none"),
+          q + theme(legend.position=c(0.6, 0.7)),
           align = 'hv',
           labels = c("a","b", "c", "d"),
           label_size = 20,
@@ -713,4 +719,4 @@ plot_grid(n + theme(legend.position="none"),
 
 ggsave("Figures/Figure6_null_all.pdf", height = 8, width = 12)
 
-# NOTE: All Figures were created using this script, but final edits were made in powerpoint. See ppt file in repository for final figures. 
+# NOTE: All figures were created using this script, but final edits were made in powerpoint. See ppt file in repository for final figures. 

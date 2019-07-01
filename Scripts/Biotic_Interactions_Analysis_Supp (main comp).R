@@ -105,7 +105,7 @@ for (sp in 1:length(subfocalspecies)){
   
   envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
   
-  if(length(unique(temp$all_comp_scaled[!is.na(temp$all_comp_scaled)])) > 2){
+  if(length(unique(temp$comp_scaled[!is.na(temp$comp_scaled)])) > 2){
     # saving model output into separate data frames
     occ_comp_est = summary(competition)$coef[2,"Estimate"]
     occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
@@ -147,7 +147,7 @@ envoutput2 = merge(envoutput, subsetocc[,c("AOU", "migclass", "Trophic.Group")],
 
 envloc = merge(envoutput2, centroid[, c("FocalAOU", "Long", "Lat")], by = 'FocalAOU', all.x = TRUE)
 
-#write.csv(envoutputa, "data/envoutputa.csv", row.names = FALSE)
+#write.csv(envoutput2, "data/main_comp_envoutput.csv", row.names = FALSE)
 beta_occ = data.frame(beta_occ)
 names(beta_occ) = c("FocalAOU", "Competition_Est", "Competition_P", "Competition_R2", "EnvZ_R2", "BothZ_P", "BothZ_R2")
 beta_occ_comp = left_join(beta_occ, maincomp2[,c("focalAOU","Focal_Common_Name", "PRIMARY_COM_NAME")], by = c("FocalAOU" = "focalAOU"))
