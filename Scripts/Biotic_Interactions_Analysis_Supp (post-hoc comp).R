@@ -64,10 +64,10 @@ subfocalspecies = unique(occuenv$FocalAOU) #[-99] excluding sage sparrow bc no g
 beta_occ_main = read.csv("Z:/Snell/2019 BI MS/Tables/Table S8 beta occupancy widespread.csv", header = TRUE)
 comp_abun_data <- read.csv("Z:/Snell/2019 BI MS/data/comp_abun_data.csv", header = TRUE) 
   
-comp_abun_data <- left_join(occuenv[,c("stateroute","FocalAOU","zTemp", "zElev","zPrecip", "zNDVI")], comp_abun_data, by = c("FocalAOU" = "focalAOU", "stateroute" = "stateroute")) %>%
+comp_abun_data <- left_join(occuenv[,c("stateroute","FocalAOU","FocalOcc", "zTemp", "zElev","zPrecip", "zNDVI")], comp_abun_data[,c("focalAOU", "Competitor", "Focal", "CompAOU", "CompSciName", "FocalSciName", "Family", "stateroute", "focal_abun", "comp_abun", "n")], by = c("FocalAOU" = "focalAOU", "stateroute" = "stateroute")) %>%
   distinct()
 
-comp_abun_data$FocalOcc_scale = (comp_abun_data$occ * (1 - 2*edge_adjust)) + edge_adjust
+comp_abun_data$FocalOcc_scale = (comp_abun_data$FocalOcc * (1 - 2*edge_adjust)) + edge_adjust
 # create logit transformation function, did on rescaled vals
 comp_abun_data$occ_logit =  log(comp_abun_data$FocalOcc_scale/(1-comp_abun_data$FocalOcc_scale)) 
 comp_abun_data$comp_abun[is.na(comp_abun_data$comp_abun)] <- 0 
@@ -129,15 +129,17 @@ neg_est_comps <- left_join(allcomps_output, maincomp1[,c("focalAOU", "compAOU", 
 neg_est_comps$maxCompetitor <- 1
 neg_est_join <- left_join(neg_est_comps, tax_code, by = c("FocalAOU" = "AOU_OUT")) %>%
   left_join(tax_code, by = c("CompetitorAOU" = "AOU_OUT")) %>%
-  left_join(nsw[,c("focalAOU", "CompAOU", "Family", "FocalSciName", "CompSciName")], by = c("FocalAOU" = "focalAOU", "CompetitorAOU" ="CompAOU")) %>%
+  left_join(nsw[,c("focalAOU", "CompAOU", "Family", "FocalSciName", "CompSciName")], by = c("FocalAOU" = "focalAOU", "CompetitorAOU" ="CompAOU")) 
   select(FocalAOU, CompetitorAOU, maxCompetitor, PRIMARY_COM_NAME.x, PRIMARY_COM_NAME.y)
+neg_est_join<- data.frame(neg_est_join)
 Table_S1 <- read.csv("Z:/Snell/2019 BI MS/Tables/Table S1 Focal Competitors.csv", header = TRUE)
-TableS1 <- left_join(Table_S1, neg_est_join, by = c("Focal.Common.Name" = "PRIMARY_COM_NAME.x", "Competitor.Common.Name" = "PRIMARY_COM_NAME.y", "Focal.AOU" = "FocalAOU", "Competitor.AOU" = "CompetitorAOU"))
+TableS1 <- full_join(Table_S1, neg_est_join, by = c("Focal.Common.Name" = "PRIMARY_COM_NAME.x", "Competitor.Common.Name" = "PRIMARY_COM_NAME.y", "Focal.AOU" = "FocalAOU", "Competitor.AOU" = "CompetitorAOU", "Focal.Scientitic.Name" = "FocalSciName", "Competitor.Scientific.Name" = "CompSciName", "Focal.Family" = "Family"))
 # write.csv(TableS1, "data/TableS1.csv", row.names = FALSE)
 
 envoutput = c()
 envoutputa = c()
 beta_occ_abun = data.frame(FocalAOU = c(), Focal = c(), CompAOU = c(), Comp = c(), Estimate = c(), P = c(), R2 = c(), envr2 = c(), bothp = c(), bothr2 = c()) 
+beta_abun = data.frame(FocalAOU = c(), Focal = c(), CompAOU = c(), Comp = c(), Estimate = c(), P = c(), R2 = c(), envr2 = c(), bothp = c(), bothr2 = c())
 for(i in unique(highestR2$FocalAOU)){
   print(i)
   comp = subset(neg_est_comps, FocalAOU == i)$CompetitorAOU
@@ -171,39 +173,52 @@ for(i in unique(highestR2$FocalAOU)){
       SHAREDa = summary(comp_abun)$r.squared - COMPa
       NONEa = 1 - summary(both_abun)$r.squared
     
-      envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa))
+      envoutputa = rbind(envoutputa, c(sp1, ENVa, COMPa, SHAREDa, NONEa, n))
       
       
       occ_comp_est = summary(competition)$coef[2,"Estimate"]
       occ_comp_p = summary(competition)$coef[2,"Pr(>|t|)"]
       occ_comp_r = summary(competition)$r.squared
-      abun_comp_est = summary(comp_abun)$coef[2,"Estimate"]
-      abun_comp_p = summary(comp_abun)$coef[2,"Pr(>|t|)"]
-      abun_comp_r = summary(comp_abun)$r.squared
       occ_env_r = summary(env_z)$r.squared 
       occ_b_p = summary(both_z)$coef[2,"Pr(>|t|)"]
       occ_b_r = summary(both_z)$r.squared 
       
+      abun_comp_est = summary(comp_abun)$coef[2,"Estimate"]
+      abun_comp_p = summary(comp_abun)$coef[2,"Pr(>|t|)"]
+      abun_comp_r = summary(comp_abun)$r.squared #using multiple rsquared
+      abun_env_r = summary(env_abun)$r.squared 
+      abun_both_p = summary(both_abun)$coef[2,"Pr(>|t|)"]
+      abun_both_r = summary(both_abun)$r.squared
+      
       beta_occ_abun = rbind(beta_occ_abun, data.frame(FocalAOU = i, Focal = temp$Focal, CompAOU = comp, Comp = temp$Competitor, Estimate = occ_comp_est, P = occ_comp_p, R2 = occ_comp_r, envr2 = occ_env_r, bothp = occ_b_p, bothr2 = occ_b_r))
+      beta_abun = rbind(beta_abun, data.frame(FocalAOU = i, Focal = temp$Focal, CompAOU = comp, Comp = temp$Competitor, Estimate = abun_comp_est, P = abun_comp_p, R2 = abun_comp_r, envr2 = abun_env_r, bothp = abun_both_p, bothr2 = abun_both_r))
     } 
  }
 
 beta_occ_abun <- beta_occ_abun %>%
   distinct()
 # write.csv(beta_occ_abun, "data/beta_occ_abun_posthoc.csv", row.names = FALSE)
+beta_abun <- beta_abun %>%
+  distinct()
+# write.csv(beta_abun, "data/beta_abun_posthoc.csv", row.names = FALSE)
 
 
 envoutput = data.frame(envoutput)
 envoutputa = data.frame(envoutputa)
 
 names(envoutput) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE", "n")
-names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE")
+names(envoutputa) = c("FocalAOU", "ENV", "COMP", "SHARED", "NONE", "n")
 
 envoutput$COMPSC = envoutput$COMP/(envoutput$COMP+envoutput$ENV)
 
 suppl_table <- left_join(envoutput, beta_occ_abun[,c("FocalAOU", "Focal", "Comp")], by = "FocalAOU") %>%
   distinct()
 # write.csv(suppl_table, "data/post_hoc_comps.csv", row.names = FALSE)
+
+envoutputa$COMPSC = envoutputa$COMP/(envoutputa$COMP+envoutputa$ENV)
+suppl_tablea <- left_join(envoutputa, beta_occ_abun[,c("FocalAOU", "Focal", "Comp")], by = "FocalAOU") %>%
+  distinct()
+# write.csv(suppl_tablea, "data/post_hoc_compsa.csv", row.names = FALSE)
 
 ###### Figure 4 #####
 # R2 plot - lm in ggplot

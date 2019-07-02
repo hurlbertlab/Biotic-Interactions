@@ -524,7 +524,7 @@ noncomps = unique(noncomps)
 
 
 noncomps_output = c()
-for (sp in subfocspecies){
+# for (sp in subfocspecies){
   FocalAOU = sp
   temp = subset(noncompdf, FocalAOU == sp) 
   tempfam = unique(as.character(temp$Family))
@@ -683,14 +683,12 @@ single_dist = subset(noncomps_output_bocc, FocalAOU == 4020)
 n = ggplot(single_dist) +
   geom_histogram(bins = 15, aes(R2, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competitor.R2, col = "black", lwd = 1.5, lty = 2) +
-  geom_vline(xintercept = 0.5692096, col = "black", lwd = 1.5, lty = 3) + # copied from post hoc beta occ abun df
   xlab(expression("Variance Explained")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
 o = ggplot(single_dist) +
   geom_histogram(bins = 15, aes(Estimate, fill=factor(Null, levels = c("Null"))), alpha = 0.9) +
   geom_vline(xintercept = single_dist$Competitor.Estimate, col = "black", lwd = 1.5, lty = 2) +
-  geom_vline(xintercept = -8.382466, col = "black", lwd = 1.5, lty = 3) +
   xlab(expression("Competitor Estimate")) + ylab("Frequency") + theme_classic() + 
   scale_fill_manual(breaks = c("Null"), values=c("#c994c7"), labels=c("Non-Competitors")) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(legend.title=element_blank(), legend.text=element_text(size = 12)) + theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24), axis.text.x=element_text(size=24, color = "black"), axis.text.y=element_text(size=24, color = "black")) + theme(plot.margin=unit(c(1,1,1,1),"cm"))
 
@@ -711,7 +709,7 @@ theme_set(theme_cowplot(font_size=20,font_family = "URWHelvetica"))
 plot_grid(n + theme(legend.position="none"),
           o + theme(legend.position="none"),
           p + theme(legend.position= "none"),
-          q + theme(legend.position=c(0.6, 0.7)),
+          q + theme(legend.position=c(0.5, 0.7)),
           align = 'hv',
           labels = c("a","b", "c", "d"),
           label_size = 20,
