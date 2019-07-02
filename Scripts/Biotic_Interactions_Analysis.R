@@ -351,25 +351,6 @@ total = env_sum %>%
   dplyr::group_by(FocalAOU) %>%
   summarise(sum(value))
 
-table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("FocalAOU" = "focalAOU")) %>%
-  left_join(., unique(shapefile_overlap), by = c("FocalAOU" = "focalAOU")) %>%
-  left_join(., unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU") %>% left_join(., sppGT50rtes, by = "FocalAOU") 
-  
-
-table_s2_cont = occuenv %>%
-  group_by(FocalAOU, Focal) %>%
-    summarise(Median_Occ = median(FocalOcc),
-              Variance_Occ = var(FocalOcc),
-              Min_Occ = min(FocalOcc),
-              Max_Occ = max(FocalOcc))
-# write.csv(table_s2_cont, "data/table_s2_cont.csv", row.names = FALSE)
-
-# write.csv(table_s2, "data/table_s2.csv", row.names = FALSE)
-TableS2 <- read.csv("Z:/Snell/2019 BI MS/Tables/Table S2 Traits.csv", header = TRUE) %>%
-  left_join(., sppGT50rtes, by = c("Focal.Common.Name" = "Focal")) 
-  
-# write.csv(TableS2, "data/TableS2.csv", row.names = FALSE) 
- 
 # creating env traits model to compare to comp and weighted traits mods
 env_cont = merge(env_lm, shapefile_overlap, by.x = "FocalAOU",by.y = "focalAOU")
 env_cont2 = merge(env_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by.x = "FocalAOU", by.y = "FocalAOU")
@@ -453,6 +434,28 @@ suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.
 # write.csv(suppl, "data/suppl_table.csv", row.names = FALSE)
 # anova of traits
 cor.test(envoutput$ENV, envoutputa$ENV)
+
+
+
+
+
+table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("FocalAOU" = "focalAOU")) %>%
+  left_join(., unique(shapefile_overlap), by = c("FocalAOU" = "focalAOU")) %>%
+  left_join(., unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU") %>% left_join(., sppGT50rtes, by = "FocalAOU") 
+
+
+table_s2_cont = occuenv %>%
+  group_by(FocalAOU, Focal) %>%
+  summarise(Median_Occ = median(FocalOcc),
+            Variance_Occ = var(FocalOcc),
+            Min_Occ = min(FocalOcc),
+            Max_Occ = max(FocalOcc))
+# write.csv(table_s2_cont, "data/table_s2_cont.csv", row.names = FALSE)
+
+# write.csv(table_s2, "data/table_s2.csv", row.names = FALSE)
+TableS2 <- read.csv("Z:/Snell/2019 BI MS/Tables/Table S2 Traits.csv", header = TRUE) %>%
+  left_join(., sppGT50rtes, by = c("Focal.Common.Name" = "Focal")) 
+# write.csv(TableS2, "data/TableS2.csv", row.names = FALSE) 
 
 ###### Figure 4 #####
 # R2 plot - lm in ggplot
