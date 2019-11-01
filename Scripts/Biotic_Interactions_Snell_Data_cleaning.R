@@ -17,6 +17,8 @@ focal_competitor_table = read.csv("data/focal spp.csv", header = TRUE)
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
 shapefile_areas = read.csv("data/shapefile_areas.csv", header = TRUE) # area shapefile if not running GIS code 
 subsetocc = read.csv("data/subsetocc.csv", header = TRUE)
+clements <- read.csv("data/Clements_Checklist_v2019_August_2019.csv", header =TRUE)
+ebird <- read.csv("data/Ebird_2019.csv", header =TRUE)
 # read in raw env data UPDATED from gimms script
 all_env = read.csv('data/occuenv.csv', header = T)
 # in 2016 Western Scrub jay split into CA and Island scrub jay, not reflected in most dataframes
@@ -27,6 +29,36 @@ AOU$AOU_OUT[AOU$AOU_OUT == 4810] = 4812
 shapefile_areas$compAOU[shapefile_areas$compAOU == 4810] = 4812
 subsetocc$AOU[subsetocc$AOU == 4810] = 4812
 all_env$species[all_env$species == 4810] = 4812
+
+df <- read.csv("data/envoutput.csv", header = TRUE) %>%
+  left_join(sppGT50rtes, by = "FocalAOU") %>%
+  left_join(ebird[,c("PRIMARY_COM_NAME", "SCI_NAME")], by = c("Focal" = "PRIMARY_COM_NAME")) %>%
+  distinct() 
+df$SCI_NAME <- as.character(df$SCI_NAME)
+df$SCI_NAME[df$Focal == "Common Ground-Dove"] <- "Columbina passerina"
+df$SCI_NAME[df$Focal == "Gray Jay"] <- "Perisoreus canadensis"
+df$SCI_NAME[df$Focal == "Western Scrub-Jay"] <- "Aphelocoma californica"
+df$SCI_NAME[df$Focal == "Le Conte's Sparrow"] <- "Ammospiza leconteii"
+df$SCI_NAME[df$SCI_NAME == "Dryobates villosus"] <- "Picoides villosus"
+df$SCI_NAME[df$SCI_NAME == "Dryobates scalaris"] <- "Picoides scalaris"
+df$SCI_NAME[df$SCI_NAME == "Dryobates pubescens"] <- "Picoides pubescens"
+df$SCI_NAME[df$SCI_NAME == "Leiothlypis ruficapilla"] <- "Oreothlypis ruficapilla"
+df$SCI_NAME[df$SCI_NAME == "Poecile atricapillus"] <- "Poecile atricapilla"
+
+# old
+sppGT50rtes <- read.csv("data/sppGT50rtes.csv", header = TRUE)
+TableS2 <- read.csv("Z:/Snell/2019 BI MS/Tables/Table S2 Traits.csv", header = TRUE) %>%
+  left_join(., sppGT50rtes, by = c("Focal.Common.Name" = "Focal")) 
+TableS2$Scientific.Name <- as.character(TableS2$Scientific.Name)
+TableS2$Scientific.Name[TableS2$Scientific.Name == "Leuconotopicus_villosus"] <- "Picoides_villosus"
+TableS2$Scientific.Name[TableS2$Scientific.Name == "Dryobates_pubescens"] <- "Picoides_pubescens"
+TableS2$Scientific.Name[TableS2$Scientific.Name == "Dryobates_scalaris"] <- "Picoides_scalaris"
+TableS2$Scientific.Name[TableS2$Scientific.Name == "Peucaea_cassinii"] <- "Aimophila_cassinii"
+TableS2$Scientific.Name[TableS2$Scientific.Name == "Vermivora_cyanoptera"] <- "Vermivora_pinus"
+TableS2$Scientific.Name[TableS2$Scientific.Name == "Parkesia_motacilla"] <- "Seiurus_motacilla"
+TableS2$Scientific.Name[TableS2$Scientific.Name == "Troglodytes_pacificus"] <- "Troglodytes_troglodytes"
+TableS2$Scientific.Name[TableS2$Scientific.Name == "Troglodytes_hiemalis"] <- "Troglodytes_troglodytes"
+write.csv(TableS2[,c("Scientific.Name")], "data/phylo.csv", row.names = FALSE)
 
 # subset temporal occupancy
 temp_occ = subset(bbs_occ, Aou %in% subsetocc$AOU)

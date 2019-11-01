@@ -361,6 +361,8 @@ edge_adjust = .005
 env_cont2$COMPSC_sc = env_cont2$COMPSC * (1 - 2*edge_adjust) + edge_adjust
 # create logit transformation function, did on rescaled vals
 env_cont2$COMPSC_logit =  log(env_cont2$COMPSC_sc/(1-env_cont2$COMPSC_sc)) 
+asinTransform <- function(p) { asin(sqrt(p)) }
+env_cont2$COMPSC_arcsin =  asinTransform(env_cont2$COMPSC_sc)
 combined_mod = filter(env_cont2, Trophic.Group != "nectarivore" & Trophic.Group != "herbivore")
 
 #### 5/7 CHANGED to be one big model incl trophic and mig
