@@ -6,6 +6,7 @@ library(cowplot)
 library(ggExtra)
 library(rstanarm)
 library(boot)
+library(e1071)
 
 # We can flip back and forth between comp_scaled and all_comp_scaled with the find and replace buttons. There should be 26 occurrences
 
@@ -382,30 +383,11 @@ combined_mod = filter(env_cont2, Trophic.Group != "nectarivore" & Trophic.Group 
   left_join(table_s2_cont, by = "FocalAOU")
 
 #### 5/7 CHANGED to be one big model incl trophic and mig
-econt = lm(COMPSC_arcsin ~ log10(FocalArea) + Median_Occ + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
-env_est = summary(econt)$coef[,"Estimate"]
-colname = c("Intercept","FocalArea", "Median_occ", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI", "Trophic.Groupinsct/om","Trophic.Groupinsectivore", "Trophic.Groupomnivore", "migclassresid", "migclassshort")
-env = data.frame(colname, env_est)
-# add the constant here
-env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - 1.96*as.vector(summary(econt)$coef[,"Std. Error"])
-env$env_upper = as.vector(summary(econt)$coefficients[,"Estimate"]) + 1.96*as.vector(summary(econt)$coef[,"Std. Error"])
+econt = lm(COMPSC_logit ~ log10(FocalArea) + Median_Occ + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
+econt_arc = lm(COMPSC_arcsin ~ log10(FocalArea) + Median_Occ + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
 
-env_trait_rank = env %>% 
-  dplyr::mutate(rank = row_number(-env_est)) 
-env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
-
-env_trait_rank = env %>% 
-  dplyr::mutate(rank = row_number(-env_est)) 
-env_trait_rank2 <- env_trait_rank[order(env_trait_rank$rank),]
-env_trait_rank2$colname = factor(env_trait_rank2$colname,
-     levels = c("Intercept","Mean.NDVI","Trophic.Groupinsct/om","Trophic.Groupinsectivore","migclassshort","area_overlap","Mean.Precip","Mean.Elev","Mean.Temp","Trophic.Groupomnivore","migclassresid", "FocalArea"),ordered = TRUE)
-
-ggplot(env_trait_rank2, aes(colname, env_est)) + geom_point(pch=15, size = 5, col = "dark blue") + 
-  geom_errorbar(data=env_trait_rank2, mapping=aes(ymin=env_lower, ymax=env_upper), width=0.2, size=1, color="black") + ylab(bquote("Competitor R"^"2")) + xlab("Env") + theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30))  + 
-  theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
-  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
-#column names to manipulate in plot
-colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Insct/Om","Insectivore","Nectarivore","Omnivore")
+skewness(summary(econt)$coef[,"Estimate"])
+skewness(summary(econt_arc)$coef[,"Estimate"])
 
 tukeys = aov(lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n))
 TukeyHSD(tukeys)
