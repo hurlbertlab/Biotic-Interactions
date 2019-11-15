@@ -48,3 +48,4 @@ newdf = rbind(newdf, n)
 }
 newdf = data.frame(newdf)
 mean(newdf$K)
+sd(newdf$K)

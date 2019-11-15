@@ -386,8 +386,8 @@ combined_mod = filter(env_cont2, Trophic.Group != "nectarivore" & Trophic.Group 
 econt = lm(COMPSC_logit ~ log10(FocalArea) + Median_Occ + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
 econt_arc = lm(COMPSC_arcsin ~ log10(FocalArea) + Median_Occ + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
 
-skewness(summary(econt)$coef[,"Estimate"])
-skewness(summary(econt_arc)$coef[,"Estimate"])
+skewness(econt$COMPSC_logit)
+skewness(COMPSC_logit$COMPSC_arcsin)
 
 tukeys = aov(lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n))
 TukeyHSD(tukeys)
