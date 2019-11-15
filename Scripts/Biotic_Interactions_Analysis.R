@@ -17,7 +17,8 @@ subsetocc <- read.csv('data/subsetocc.csv', header = T) # Hurlbert Lab
 tax_code <- read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 bbs_abun <- read.csv("data/bbs_abun.csv", header =TRUE)
 nsw <- read.csv("data/new_spec_weights.csv", header = TRUE)
-shapefile_areas <- read.csv("data/shapefile_areas.csv", header =TRUE)
+shapefile_areas <- read.csv("data/shapefile_areas.csv", header =TRUE) %>%
+  na.omit()
 sppGT50rtes <- read.csv("data/sppGT50rtes.csv", header = TRUE)
 
 #update tax_code Winter Wren
@@ -27,13 +28,12 @@ temp_occ$Aou[temp_occ$Aou == 4810] = 4812
 tax_code$AOU_OUT[tax_code$AOU_OUT == 4810] = 4812
 tax_code$AOU_OUT[tax_code$AOU_OUT == 4123] = 4120
 
-# have to omit focal/competitors with no overlap
-shapefile_areas = na.omit(shapefile_areas)
 # sum all comps for each focal, divide by focal range
 shapefile_overlap = shapefile_areas %>%
   group_by(focalAOU) %>%
   summarise(all_overlap = sum(area_overlap))
-shapefile_overlap = left_join(shapefile_overlap, shapefile_areas[,c("Focal", "focalAOU", "FocalArea")], by = "focalAOU")
+shapefile_overlap = left_join(shapefile_overlap, shapefile_areas[,c("Focal", "focalAOU", "FocalArea")], by = "focalAOU") %>%
+  distinct()
 shapefile_overlap$prop_overlap = shapefile_overlap$all_overlap/shapefile_overlap$FocalArea
 
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
@@ -351,9 +351,25 @@ total = env_sum %>%
   dplyr::group_by(FocalAOU) %>%
   summarise(sum(value))
 
+
+table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("FocalAOU" = "focalAOU")) %>%
+  left_join(., unique(shapefile_overlap), by = c("FocalAOU" = "focalAOU")) %>%
+  left_join(., unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU") %>% left_join(., sppGT50rtes, by = "FocalAOU") 
+
+table_s2_cont = occuenv %>%
+  group_by(FocalAOU, Focal) %>%
+  summarise(Median_Occ = median(FocalOcc),
+            Variance_Occ = var(FocalOcc),
+            Min_Occ = min(FocalOcc),
+            Max_Occ = max(FocalOcc))
+# write.csv(table_s2_cont, "data/table_s2_cont.csv", row.names = FALSE)
+TableS2 <- read.csv("Z:/Snell/2019 BI MS/Tables/Table S2 Traits.csv", header = TRUE) %>%
+  left_join(., sppGT50rtes, by = c("Focal.Common.Name" = "Focal")) 
+# write.csv(TableS2, "data/TableS2.csv", row.names = FALSE) 
+
 # creating env traits model to compare to comp and weighted traits mods
 env_cont = merge(env_lm, shapefile_overlap, by.x = "FocalAOU",by.y = "focalAOU")
-env_cont2 = merge(env_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by.x = "FocalAOU", by.y = "FocalAOU")
+env_cont2 = left_join(env_cont, unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU")
 
 # rescaling all occupancy values  - odds ratio
 # need to get rid of ones in order to not have infinity values 
@@ -363,12 +379,13 @@ env_cont2$COMPSC_sc = env_cont2$COMPSC * (1 - 2*edge_adjust) + edge_adjust
 env_cont2$COMPSC_logit =  log(env_cont2$COMPSC_sc/(1-env_cont2$COMPSC_sc)) 
 asinTransform <- function(p) { asin(sqrt(p)) }
 env_cont2$COMPSC_arcsin =  asinTransform(env_cont2$COMPSC_sc)
-combined_mod = filter(env_cont2, Trophic.Group != "nectarivore" & Trophic.Group != "herbivore")
+combined_mod = filter(env_cont2, Trophic.Group != "nectarivore" & Trophic.Group != "herbivore") %>%
+  left_join(table_s2_cont, by = "FocalAOU")
 
 #### 5/7 CHANGED to be one big model incl trophic and mig
-econt = lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
+econt = lm(COMPSC_arcsin ~ log10(FocalArea) + Median_Occ +prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
 env_est = summary(econt)$coef[,"Estimate"]
-colname = c("Intercept","FocalArea", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI", "Trophic.Groupinsct/om","Trophic.Groupinsectivore", "Trophic.Groupomnivore", "migclassresid", "migclassshort")
+colname = c("Intercept","FocalArea", "Median_occ", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI", "Trophic.Groupinsct/om","Trophic.Groupinsectivore", "Trophic.Groupomnivore", "migclassresid", "migclassshort")
 env = data.frame(colname, env_est)
 # add the constant here
 env$env_lower =  as.vector(summary(econt)$coefficients[,"Estimate"]) - 1.96*as.vector(summary(econt)$coef[,"Std. Error"])
@@ -390,74 +407,16 @@ ggplot(env_trait_rank2, aes(colname, env_est)) + geom_point(pch=15, size = 5, co
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 #column names to manipulate in plot
 colname = c("Intercept","Sum Overlap","Temp","Precip","Elev","NDVI","Resident","Short", "Insct/Om","Insectivore","Nectarivore","Omnivore")
-# this is the trait mod scaled by comp/env. there are > 183 rows bc of the competitors (FocalArea, area_overalp)
-# trait_mod_scale = lm(COMPSC ~ log10(sum_overlap) + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + migclass + Trophic.Group, data = comp_cont4)
-comp_cont4 = comp_lm
-comp_cont4 = filter(comp_cont4, Trophic.Group != "nectarivore" & Trophic.Group != "herbivore")
-colname = c("Granivore", "Insectivore/\nOmnivore","Insectivore","Omnivore")
-trait_mod_scale = lm(COMPSC ~ Trophic.Group, data = comp_cont4, weights = n)
-scaled_est1 = summary(trait_mod_scale)$coef[,"Estimate"]
-scaled_est2 = c(scaled_est1[1], scaled_est1[2:4] + scaled_est1[1])
-scaled_est = data.frame(colname, scaled_est2)
-scaled_est$scaled_lower =  as.vector(scaled_est$scaled_est) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
-
-scaled_est$scaled_upper = as.vector(scaled_est$scaled_est) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
-
-scaled_rank = scaled_est %>% 
-  dplyr::mutate(rank = row_number(-scaled_est2)) 
-scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
-scaled_rank2$colname = factor(scaled_rank2$colname,
-       levels = c("Insectivore","Insectivore/\nOmnivore","Granivore","Omnivore","Herbivore"),ordered = TRUE)
-
-#### mig mod ####
-#column names to manipulate in plot
-colname = c("Neotropical", "Resident" ,  "Short-distance")
-trait_mod_scale = lm(COMPSC ~ migclass, data = comp_cont4, weights = n)
-scaled_est1 = summary(trait_mod_scale)$coef[,"Estimate"]
-scaled_est2 = c(scaled_est1[1], scaled_est1[2:3] + scaled_est1[1])
-scaled_est = data.frame(colname, scaled_est2)
-scaled_est$scaled_lower =  as.vector(scaled_est$scaled_est) - as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
-scaled_est$scaled_upper = as.vector(scaled_est$scaled_est) + as.vector(summary(trait_mod_scale)$coef[,"Std. Error"])
-
-
-scaled_rank = scaled_est %>% 
-  dplyr::mutate(rank = row_number(-scaled_est2)) 
-scaled_rank2 <- scaled_rank[order(scaled_rank$rank),]
-scaled_rank2$colname = factor(scaled_rank2$colname,
-                              levels = c("Neotropical",  "Short-distance",  "Resident"),ordered = TRUE)
 
 tukeys = aov(lm(COMPSC_logit ~ log10(FocalArea)  + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n))
 TukeyHSD(tukeys)
 summary(tukeys)
-
-
 
 suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.x = "FocalAOU", by.y = "focalAOU")
 # write.csv(suppl, "data/suppl_table.csv", row.names = FALSE)
 # anova of traits
 cor.test(envoutput$ENV, envoutputa$ENV)
 
-
-
-
-
-table_s2 = left_join(envloc1, unique(nsw[,c("focalAOU", "FocalMass")]), by = c("FocalAOU" = "focalAOU")) %>%
-  left_join(., unique(shapefile_overlap), by = c("FocalAOU" = "focalAOU")) %>%
-  left_join(., unique(occuenv[,c("FocalAOU", "Mean.Temp","Mean.Precip","Mean.Elev","Mean.NDVI")]), by = "FocalAOU") %>% left_join(., sppGT50rtes, by = "FocalAOU") 
-
-
-table_s2_cont = occuenv %>%
-  group_by(FocalAOU, Focal) %>%
-  summarise(Median_Occ = median(FocalOcc),
-            Variance_Occ = var(FocalOcc),
-            Min_Occ = min(FocalOcc),
-            Max_Occ = max(FocalOcc))
-# write.csv(table_s2_cont, "data/table_s2_cont.csv", row.names = FALSE)
-
-# write.csv(table_s2, "data/table_s2.csv", row.names = FALSE)
-TableS2 <- read.csv("Z:/Snell/2019 BI MS/Tables/Table S2 Traits.csv", header = TRUE) %>%
-  left_join(., sppGT50rtes, by = c("Focal.Common.Name" = "Focal")) 
-# write.csv(TableS2, "data/TableS2.csv", row.names = FALSE) 
 
 ###### Figure 4 #####
 # R2 plot - lm in ggplot
