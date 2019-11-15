@@ -17,8 +17,7 @@ subsetocc <- read.csv('data/subsetocc.csv', header = T) # Hurlbert Lab
 tax_code <- read.csv("data/Tax_AOU_Alpha.csv", header = TRUE) # Hurlbert Lab
 bbs_abun <- read.csv("data/bbs_abun.csv", header =TRUE)
 nsw <- read.csv("data/new_spec_weights.csv", header = TRUE)
-shapefile_areas <- read.csv("data/shapefile_areas.csv", header =TRUE) %>%
-  na.omit()
+shapefile_areas <- read.csv("data/shapefile_areas.csv", header =TRUE) 
 sppGT50rtes <- read.csv("data/sppGT50rtes.csv", header = TRUE)
 
 #update tax_code Winter Wren
@@ -28,12 +27,12 @@ temp_occ$Aou[temp_occ$Aou == 4810] = 4812
 tax_code$AOU_OUT[tax_code$AOU_OUT == 4810] = 4812
 tax_code$AOU_OUT[tax_code$AOU_OUT == 4123] = 4120
 
+shapefile_areas = na.omit(shapefile_areas)
 # sum all comps for each focal, divide by focal range
 shapefile_overlap = shapefile_areas %>%
-  group_by(focalAOU) %>%
-  summarise(all_overlap = sum(area_overlap))
-shapefile_overlap = left_join(shapefile_overlap, shapefile_areas[,c("Focal", "focalAOU", "FocalArea")], by = "focalAOU") %>%
-  distinct()
+       group_by(focalAOU) %>%
+       summarise(all_overlap = sum(area_overlap))
+shapefile_overlap = left_join(shapefile_overlap, shapefile_areas[,c("Focal", "focalAOU", "FocalArea")], by = "focalAOU")
 shapefile_overlap$prop_overlap = shapefile_overlap$all_overlap/shapefile_overlap$FocalArea
 
 AOU = read.csv("data/Bird_Taxonomy.csv", header = TRUE) # taxonomy data
@@ -383,7 +382,7 @@ combined_mod = filter(env_cont2, Trophic.Group != "nectarivore" & Trophic.Group 
   left_join(table_s2_cont, by = "FocalAOU")
 
 #### 5/7 CHANGED to be one big model incl trophic and mig
-econt = lm(COMPSC_arcsin ~ log10(FocalArea) + Median_Occ +prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
+econt = lm(COMPSC_arcsin ~ log10(FocalArea) + Median_Occ + prop_overlap + Mean.Temp + Mean.Precip + Mean.Elev + Mean.NDVI + Trophic.Group + migclass, data = combined_mod, weights = n)
 env_est = summary(econt)$coef[,"Estimate"]
 colname = c("Intercept","FocalArea", "Median_occ", "area_overlap","Mean.Temp","Mean.Precip","Mean.Elev", "Mean.NDVI", "Trophic.Groupinsct/om","Trophic.Groupinsectivore", "Trophic.Groupomnivore", "migclassresid", "migclassshort")
 env = data.frame(colname, env_est)
