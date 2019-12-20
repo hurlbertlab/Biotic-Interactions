@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1556899110160.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1165318349",
+    "id" : "6331EE28",
+    "lastKnownWriteTime" : 1557250135,
+    "last_content_update" : 1557250135849,
+    "path" : "C:/Git/Biotic-Interactions/Scripts/Biotic_Interactions_Snell_Data_cleaning.R",
+    "project_path" : "Biotic_Interactions_Snell_Data_cleaning.R",
+    "properties" : {
+        "cursorPosition" : "239,67",
+        "scrollLine" : "232"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

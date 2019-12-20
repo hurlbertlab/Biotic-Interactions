@@ -241,86 +241,12 @@ occumatrix$temppred = inv.logit(occumatrix$abTemp * mm_fixed$mean[3] + mm_fixed$
 occumatrix$elevpred = inv.logit(occumatrix$abElev * mm_fixed$mean[4] + mm_fixed$mean[1])
 occumatrix$precippred = inv.logit(occumatrix$abPrecip * mm_fixed$mean[5] + mm_fixed$mean[1])
 occumatrix$ndvipred = inv.logit(occumatrix$abNDVI * mm_fixed$mean[6] + mm_fixed$mean[1])
-# temp_pred <- predict(stan_glmer(cbind(sp_success, sp_fail) ~ c_s + 
-#abTemp + abElev + abPrecip + abNDVI + (1|FocalAOU), family = binomial(link = logit), data = occumatrix, iter = 10000, prior_covariance = decov(regularization = 1, concentration = 1, shape = 1, scale = 1)), newdata = data.frame(range(occumatrix$abTemp)), type = "response")
-tempsub = occumatrix[occumatrix$abTemp < quantile(occumatrix$abTemp, 0.95), ]
-tempsub = tempsub[,c("FocalAOU", "FocalOcc", "abTemp", "abElev", "abPrecip", "abNDVI", "temppred")]
-temp = ggplot(data = tempsub, aes(x = abTemp, y = temppred)) + scale_x_continuous(limits = c(0,2))  +
-  geom_point(data = tempsub, aes(x = abTemp, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic() + xlab("Temperature") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
-#geom_smooth(stat = "smooth", formula = FocalOcc ~ inv.logit(mm_fixed$mean)[3]*abTemp + 1, ymin = inv.logit(mm_fixed$X2.5)[3], ymax = inv.logit(mm_fixed$X97.5)[3], data = tempsub)  
-ggsave("Figures/main/temp.pdf", height = 8, width = 12)
-
-elevsub = occumatrix[occumatrix$abElev < quantile(occumatrix$abElev, 0.95), ]
-elev = ggplot(data = elevsub, aes(x = abElev, y = elevpred)) + theme_classic()  +
-  geom_point(data = elevsub, aes(x = abElev, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + xlab("Elevation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
-ggsave("Figures/main/elev.pdf", height = 8, width = 12)
-
-precipsub = occumatrix[occumatrix$abPrecip < quantile(occumatrix$abPrecip, 0.95), ]
-precip = ggplot(data = precipsub, aes(x = abPrecip, y = precippred)) + scale_x_continuous(limits = c(0,2))  + geom_point(data = elevsub, aes(x = abPrecip, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) + theme_classic()+ xlab("Precipitation") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
-ggsave("Figures/main/precip.pdf", height = 8, width = 12)
-
-ndvisub = occumatrix[occumatrix$abNDVI < quantile(occumatrix$abNDVI, 0.95), ]
-NDVI = ggplot(data = ndvisub, aes(x = abNDVI, y = ndvipred)) +
-  geom_point(data = ndvisub, aes(x = abNDVI, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#2ca25f", lwd = 3) +theme_classic()+ xlab("NDVI") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
-
-ggsave("Figures/main/ndvi.pdf", height = 8, width = 12)
-
-cssub = occumatrix[abs(occumatrix$comp_scaled) < quantile(abs(occumatrix$comp_scaled), 0.95), ]
-comp = ggplot(data = cssub, aes(x = comp_scaled, y = cspred)) + xlim(0,1) +
-  geom_point(data = cssub, aes(x = comp_scaled, y = FocalOcc), shape=18, alpha = 0.05,position=position_jitter(width=0,height=.02)) + geom_line(color = "#dd1c77", lwd = 3) + theme_classic()+ xlab("Competitor Abundance") + ylab("Focal Occupancy") + theme(axis.title.x=element_text(size=36),axis.title.y=element_text(size=36, vjust = 2), axis.text.x=element_text(size=32), axis.text.y=element_text(size=32))
-ggsave("Figures/main/comp.pdf", height = 8, width = 12)
-#   geom_segment(aes(x = 0, y =  inv.logit(mm_fixed$mean)[1], xend = inv.logit(mm_fixed$mean[2]), yend = 0), col = "dark green", lwd=2) 
-
-
-z <- plot_grid(comp + theme(legend.position="none"),
-               temp + theme(legend.position="none"),
-               NDVI + theme(legend.position="none"),
-               elev + theme(legend.position="none"),
-               precip + theme(legend.position="none"),
-               align = 'hv',
-               # labels = c("A","B", "C", "D", "E"),
-               nrow = 2)
-ggsave("Figures/main/cowplotabiotic.pdf", height = 20, width = 30)
 
 mm_fixed2 = mm_fixed[2:6,]
 ggplot(mm_fixed2, aes(x = X, y = mean)) + geom_point(pch=15, size = 5, col = "dark blue") + theme_classic() + geom_hline(yintercept = 0, lty = 2, color = "red") + geom_errorbar(ymin = mm_fixed2$X2.5., ymax = mm_fixed2$X97.5., width=0.2, size=1, color="black") + scale_y_continuous(limits = c(-0.6, .1)) + xlab("Parameter Estimate") + ylab("Value") +
   scale_x_discrete("Parameter Estimate", labels = c("Elevation","NDVI","Precipitation", "Temperature", "Competitor Abundance"))+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
 ggsave("Figures/main/abiotic_estimates.pdf", height = 8, width = 11)
-
-#### new fig 1 ####
-occ1b = occuenv %>% filter(FocalAOU == 6860|FocalAOU  == 7222|FocalAOU  == 5840) %>%
-  filter(stateroute == 68015)
-
-fig1a = ggplot(data = occuenv, aes(x = log10(FocalAbundance), y = FocalOcc)) +geom_point()+ geom_jitter(width = 0, height = 0.02)  +xlab("log10(Focal Abundance)")+ylab("Focal Occupancy") + geom_hline(yintercept = 0.5, lwd = 1, col = "dark red", lty = 2)+ geom_vline(xintercept = median(log10(occuenv$FocalAbundance)), lwd = 1, col = "dark red", lty = 2) +theme_classic() +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90), axis.text=element_text(size=12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines")) + geom_point(data = occ1b, aes(x = log10(FocalAbundance), y = FocalOcc, color = as.factor(occ1b$Focal), size = 20)) +theme(legend.position = "none")+ scale_color_manual(breaks = c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"), values=c("#e7298a","#cb181d", "#fd8d3c"), labels=c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"))
-#+geom_point(data = bbs_sub4, color = "red")
-# +geom_text(label = occuenv$Species)
-ggExtra::ggMarginal(fig1a , type = "histogram", fill = "dark gray")
-ggsave("Figures/main/fig1.png", height = 8, width = 12)
-
-bbs_sub3.5 = bbs_abun %>% filter(aou == 6860|aou == 7222|aou == 5840) %>%
-  filter(stateroute == 68015)
-bbs_sub4 = read.csv("data/bbs_route68015.csv", header = TRUE)
-bbs_sub4$speciestotal[bbs_sub4$speciestotal == 0] <- NA
-fig1b = ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$SpeciesName)), lwd = 1.5) + geom_point(aes(color = as.factor(bbs_sub4$SpeciesName), size = 12))+theme_classic()+ xlim(c(0, 30)) +xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16), legend.text = element_text(size = 12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))+ scale_y_continuous(breaks = c(0, 5, 10, 20, 29))+ scale_color_manual(breaks = c("Swamp Sparrow",  "Canada Warbler", "Winter Wren"), values=c("#e7298a","#cb181d", "#fd8d3c"), labels=c("Swamp Sparrow",  "Canada Warbler", "Winter Wren")) 
-ggsave("Figures/main/1b.pdf", height = 7, width = 12)
-
-fig1 = plot_grid(fig1a + theme(legend.position="none"),
-                 fig1b + theme(legend.position="none"), 
-                 labels = c("A","B"),
-                 align = 'h', 
-                 rel_widths = c(1, 1.3))
-
-
-bbs_sub4 = bbs_abun %>%
-  filter(stateroute == 68015)  %>% left_join(tax_code, by = c("aou" = "AOU_OUT"))%>% filter(aou %in%  c(4980, 6280
-                                                                                                        , 6130, 6160, 5980))
-bbs_sub4$speciestotal[bbs_sub4$speciestotal == 0] <- NA
-ggplot(data = bbs_sub4, aes(x = year, y = speciestotal))+ geom_line(aes(color = as.factor(bbs_sub4$PRIMARY_COM_NAME)), lwd = 1.5) + theme_classic() +xlab("Year")+ylab("Abundance at Route") +theme(axis.title.x=element_text(size=24),axis.title.y=element_text(size=24, angle=90),legend.title=element_blank(), axis.text=element_text(size=16), legend.text = element_text(size = 12)) + theme(plot.margin = unit(c(.5,6,.5,.5),"lines"))  + scale_x_continuous(breaks = c(2001, 2003, 2005, 2007, 2009, 2011, 2013, 2015))+ scale_color_manual(breaks = c("Bank Swallow",  "Barn Swallow", "Indigo Bunting", "Red-winged Blackbird", "Yellow-throated Vireo"), values=c("#e41a1c","#377eb8", "#4daf4a", "#984ea3", '#ff7f00', "#fc8d62")) 
-ggsave("Figures/main/forLB.pdf", height = 7, width = 12)
-
-
-ggplot(envoutput1, aes(x = ENV, y = COMP)) + geom_point() + geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.2,0.9))
 
 ##### Variance Partitioning Plot #####
 envloc$EW <- 0
@@ -453,7 +379,7 @@ tt = t + annotate("text", x = 1:175, y = -.03, label = envrank$ALPHA.CODE, angle
 
 plot(tt)
 
-ggsave("Figures/main/barplotc.pdf", height = 35, width = 48)
+# ggsave("Figures/main/barplotc.pdf", height = 35, width = 48)
 
 #### top 10
 maincomp = read.csv("data/shapefile_areas_w_comp.csv", header = TRUE)
@@ -647,7 +573,7 @@ troph = ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=16, siz
   geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("R"["c"])) + xlab("Trophic Group") + theme_classic() + theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + ylim(-.05,0.5) + 
   theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
   guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
-ggsave("C:/Git/Biotic-Interactions/Figures/traitestimateplot.pdf", height = 8, width = 12)
+# ggsave("C:/Git/Biotic-Interactions/Figures/traitestimateplot.pdf", height = 8, width = 12)
 
 # ggplot(comp_cont4, aes(as.factor(Trophic.Group), COMPSC)) + geom_violin(linetype = "blank", aes(fill = factor(comp_cont4$Trophic.Group)))
 
@@ -673,21 +599,11 @@ tukeys = aov(lm(COMPSC ~ migclass, data = comp_cont4, weights = n))
 TukeyHSD(tukeys)
 summary(tukeys)
 
-mig = ggplot(scaled_rank2, aes(colname, scaled_est2)) + geom_point(pch=16, size = 10, col = "dark blue") + 
-  geom_errorbar(data=scaled_rank2, mapping=aes(ymin=scaled_lower, ymax=scaled_upper), width=0.2, size=1, color="black") + ylab(bquote("R"["c"])) + xlab("Migratory Group") + theme_classic()+ ylim(0,0.5)+ theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + 
-  theme(axis.line=element_blank(),axis.text.x=element_text(size=25),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) + 
-  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))
-ggsave("C:/Git/Biotic-Interactions/Figures/traitestimate_mig.pdf", height = 8, width = 12)
 
 suppl = merge(env_lm, nsw[,c("CompAOU", "focalAOU", "Competitor", "Focal")], by.x = "FocalAOU", by.y = "focalAOU")
 # write.csv(suppl, "data/suppl_table.csv", row.names = FALSE)
 # anova of traits
 cor.test(envoutput$ENV, envoutputa$ENV)
-
-plot_grid(troph + theme(legend.position="none"),
-          mig + theme(legend.position="none"),
-          align = 'hv')
-ggsave("C:/Git/Biotic-Interactions/Figures/est_mods_main.pdf", height = 8, width = 18)
 
 ###### Figure 4 #####
 # R2 plot - lm in ggplot
@@ -740,14 +656,8 @@ p2 = plot_grid(r1,
                align = 'hv')
 ggsave("Figures/Figure4A_B.pdf", height = 10, width = 20)
 
-
-ggplot(envoutput, aes(x = ENV, y = COMP)) +theme_classic()+ theme(axis.title.x=element_text(size=26),axis.title.y=element_text(size=26, angle=90)) + xlab(bquote("Environment R"^"2")) + ylab(bquote("Competitor R"^"2")) + geom_point(cex =4, shape=16)+geom_smooth(method='lm', se=FALSE, col="black",linetype="dotdash")+geom_abline(intercept = 0, slope = 1, col = "navy", lwd = 1.25)+ theme(axis.text.x=element_text(size = 20),axis.ticks=element_blank(), axis.text.y=element_text(size=20))+ scale_colour_manual("", values=c("#dd1c77","#2ca25f","dark gray"))+guides(colour = guide_legend(override.aes = list(shape = 15)))+theme(legend.title=element_blank(), legend.text=element_text(size=20, hjust = 1, vjust = 0.5), legend.position = c(0.2,0.9))
-
-
-
 #### Figure 1 violin plots ####
-# need to chance comp_scaled to all_comp scaled in envouputput loop for Fig 1B
-R2plot2$COMPSC = R2plot2$COMP.y/(R2plot2$COMP.y+R2plot2$ENV.y)
+R2plot2$COMPSC = R2plot2$COMP.x/(R2plot2$COMP.x+R2plot2$ENV.x)
 
 # create Table S2
 Table_S2 = left_join(R2plot2, maincomp1.5, by =c ("FocalAOU" = "focalAOU"))
@@ -756,15 +666,15 @@ Table_S2.1 = left_join(Table_S2, tax_code, by =c ("compAOU" = "AOU_OUT"))
 
 # R2violin.5 = left_join(R2plot2[,c("FocalAOU", "violin_env","violin_comp","violin_total")], envloc[,c("FocalAOU", "COMPSC")], by = c("FocalAOU" = "FocalAOU"))
 R2plot2$Total.y = R2plot2$ENV.y + R2plot2$COMP.y + R2plot2$SHARED.y
-R2violin.5 = R2plot2[,c("FocalAOU", "ENV.y","COMP.y","Total.y", "COMPSC")]
+R2violin.5 = R2plot2[,c("FocalAOU", "ENV.x","COMP.x","Total.x", "COMPSC")]
 R2violin = gather(R2violin.5, "type", "Rval", 2:5)
 
 R2violin$type = factor(R2violin$type,
-                       levels = c("ENV.y","COMP.y","Total.y","COMPSC"),ordered = TRUE)
+                       levels = c("ENV.x","COMP.x","Total.x","COMPSC"),ordered = TRUE)
 
-ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank",scale = "count", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey", "#636363"), labels=c("Environment","Competition", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30, vjust = 4))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) +  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=3, size=3, position = position_dodge(width = .9)) 
+ggplot(R2violin, aes(as.factor(type), Rval)) + geom_violin(linetype = "blank",scale = "count", aes(fill = factor(R2violin$type))) + xlab("") + ylab(bquote("Variance Explained"))+scale_fill_manual(values=c("#2ca25f","#dd1c77", "grey", "#636363"), labels=c("Environment","Competition", "Total Variance", "Scaled \nCompetition")) + theme_classic()+theme(axis.title.x=element_text(size=30, angle = 180),axis.title.y=element_text(size=30, vjust = 4))+scale_y_continuous(limits = c(0, 1)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks.x=element_blank(), axis.text.y=element_text(size=25, color = "black"),legend.title=element_blank(), legend.text=element_text(size=27), legend.position = "top",legend.key.width=unit(1, "lines")) +  guides(fill=guide_legend(fill = guide_legend(keywidth = 3, keyheight = 1),title=""))  + stat_summary(aes(group=factor(R2violin$type)), fun.y=median, geom="point",fill="black", shape=16, size=3, position = position_dodge(width = .9)) 
 # , sec.axis = sec_axis(~ . *1/1, name = "Variance Ratio")
-ggsave("Figures/violin_mains_abun.pdf", height = 8, width = 12)
+ggsave("Figures/Figure1b.pdf", height = 8, width = 12)
 
 # r2 plot for main vs all competitors
 # envall = read.csv("data/envoutput_all.csv", header = TRUE) NEEDS TO BE CHANGED
@@ -773,20 +683,13 @@ mainvall$total.x = mainvall$ENV.x + mainvall$COMP.x + mainvall$SHARED.x
 mainvall$total.y = mainvall$ENV.y + mainvall$COMP.y + mainvall$SHARED.y
 
 ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) +geom_text(aes(label = mainvall$FocalAOU))+theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") +geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
-ggsave("C:/Git/Biotic-Interactions/Figures/mainvallcomp.pdf")
+# ggsave("C:/Git/Biotic-Interactions/Figures/mainvallcomp.pdf")
 
 
 ggplot(mainvall, aes(x = COMP.y, y = COMP.x)) + geom_point(col = mainvall, shape=16)+theme_bw()+ theme(axis.title.x=element_text(size=16),axis.title.y=element_text(size=16, angle=90)) + xlab("main R2") + ylab("all R2") +geom_smooth(method='lm', se=FALSE, col="#dd1c77",linetype="dotdash") + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25)
 
 
-foo = merge(mainvall, focal_competitor_table, by = "FocalAOU")
-foo$difference = foo$COMP.y - foo$COMP.x ### y = all competitors, x = occupancy
-
-
-
-
-
-##### Figure 6 non-competitor comparison ######
+##### Figure 5 non-competitor comparison ######
 noncompdf = occuenv[,c("FocalAOU", "stateroute", "FocalOcc", "FocalAbundance", "Family", "FocalOcc_scale", "occ_logit")]
 subfocspecies = unique(noncompdf$FocalAOU)
 noncomps = nsw[,c("CompAOU", "Family")]
@@ -1003,7 +906,7 @@ plot_grid(n + theme(legend.position="none"),
           labels = c("A","B", "C", "D"),
           label_size = 20,
           nrow = 2) 
-ggsave("Figures/Figure6_null.pdf", height = 8, width = 12)
+ggsave("Figures/Figure5_main.pdf", height = 8, width = 12)
 
 #### 1:1 plots ####
 noncomps_points = noncomps_output_bocc %>% 
@@ -1025,136 +928,3 @@ noncomps_med = left_join(noncomps_points_med, noncomps_output_bocc[, c("FocalAOU
 
 ggplot(aes(Competition_R2, nonr2), data = noncomps_med) + geom_point() + geom_abline(intercept = 0, slope = 1, col = "black", lwd = 1.25) + ylab("Median Non-competitor R2") + xlab("Main Competitor R2")
 
-#### non comp plots ####
-# noncomps_output = merge(noncomps_output, nsw[,c("focalAOU", "Family")], by.x = "FocalAOU", by.y = "focalAOU")
-noncomps_output = noncomps_output %>% arrange(FocalAOU)
-pdf('Figures/noncomp_est.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-for (sp in unique(noncomps_output$FocalAOU)){
-  temp = subset(noncomps_output, FocalAOU == sp) 
-  comp_est = beta_occ$Competition_Est[beta_occ$FocalAOU == sp]
-  hist(temp$Estimate, xlab = 'Estimate', 
-       main = sp, xlim = c(min(temp$Estimate, comp_est), max(temp$Estimate, comp_est)))
-  abline(v = comp_est, col = "blue", lwd = 2)
-  
-}
-dev.off()
-
-pdf('Figures/noncomp_r2.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-for (sp in unique(noncomps_output$FocalAOU)){
-  temp = subset(noncomps_output, FocalAOU == sp) 
-  comp_r2 = beta_occ$Competition_R2[beta_occ$FocalAOU == sp]
-  hist(temp$R2, xlab = expression('R'^2), main = sp,
-       xlim = c(0, max(temp$R2, comp_r2)))
-  abline(v = comp_r2, col = "blue", lwd = 2)
-}
-dev.off()
-
-noncomps_output$type = "Species"
-ggplot(noncomps_output, aes(type, R2)) + geom_violin(linetype = "blank", aes(fill = factor(noncomps_output$type))) + xlab("Total Variance") + ylab("R2")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
-
-ggsave("C:/Git/Biotic-Interactions/Figures/violin_noncomps.png")
-
-noncompsdist$type = "Species"
-ggplot(noncompsdist, aes(type, nullp)) + geom_violin(linetype = "blank", aes(fill = factor(noncompsdist$type))) + xlab("Total Variance") + ylab("P-val")+ theme_bw()+theme(axis.title.x=element_text(size=30),axis.title.y=element_text(size=30)) + theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.ticks=element_blank(), axis.text.y=element_text(size=25),legend.title=element_blank(), legend.text=element_blank()) 
-
-
-
-
-#### ---- Plotting GLMs ---- ####
-# Making pdf of ranges for each focal spp
-pdf('precip_Reg.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-# Plotting basic lms to understand relationships
-for(sp in subfocalspecies){ 
-  print(sp)
-  psub = occuenv[occuenv$Species == sp,]
-  competition <- lm(psub$occ_logit ~  psub$comp_scaled) 
-  # z scores separated out for env effects (as opposed to multivariate variable)
-  env_z = lm(psub$occ_logit ~ abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = psub)
-  # z scores separated out for env effects
-  both_z = lm(psub$occ_logit ~  comp_scaled + abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI), data = psub)
-  
-  tes = ggplot(data = psub, aes(x =  psub$comp_scaled, y = psub$occ_logit)) +stat_smooth(data=env_z, lwd = 1.5,se = FALSE) +xlab(psub$Species)+theme_bw()
-  plot(tes)
-}
-dev.off()
-# Making pdf of ranges for each focal spp
-pdf('Figures/allspp_Reg.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-# Plotting basic lms to understand relationships
-for(sp in subfocalspecies){ 
-  temp = occumatrix[occumatrix$Species == sp,]
-  lm = lm(temp$occ_logit ~  abs(temp$zTemp)+abs(temp$zElev)+abs(temp$zPrecip)+abs(temp$zNDVI), data = temp)
-  
-  tes = ggplot(data = temp, aes(x = zTemp, y = FocalOcc)) +stat_smooth(method = "lm", lwd = 1.5,se = FALSE) +xlab(temp$Species) +ylim(0,1) +theme_bw()
-  plot(tes)
-}
-dev.off()
-# Making pdf of ranges for each focal spp
-pdf('rangmaps.pdf', height = 8, width = 10)
-par(mfrow = c(3, 4))
-# Plotting basic lms to understand relationships
-for(sp in subfocalspecies){ 
-  print(sp)
-  psub = occumatrix[occumatrix$Species == sp,]
-  glm_occ_rand_site = glmer(cbind(sp_success, sp_fail) ~ comp_scaled + 
-                              abs(zTemp)+abs(zElev)+abs(zPrecip)+abs(zNDVI) + (1|stateroute:Species), family = binomial(link = logit), data = psub)
-  
-  tes = ggplot(data = psub, aes(x = comp_scaled, y = FocalOcc)) +stat_smooth(data=glm_occ_rand_site, lwd = 1.5,se = FALSE) +theme_bw()
-  plot(tes)
-}
-dev.off()
-
-pTemp = predict(glm_occ_rand_site, newdata=with(occumatrix,data.frame(zTemp=0,comp_scaled,zPrecip,zElev,zNDVI,stateroute,Species, FocalOcc)), allow.new.levels = TRUE) #predict values assuming zTemp=0
-
-inverselogit <- function(p) {exp(p)/(1+exp(p))} 
-newintercept <- function(p) {mean(exp(p)/(1+exp(p)))} 
-
-# this relationship should be negative
-temp = ggplot(data = occumatrix, aes(x = abs(zTemp), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zTemp)), yend = 0), col = "dark green", lwd=2) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02)) + theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logittemp.png")
-
-ndvi = ggplot(data = occumatrix, aes(x = abs(zNDVI), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zNDVI)), yend = 0), col = "dark green", lwd=2) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logitndvi.png")
-
-elev = ggplot(data = occumatrix, aes(x = abs(zElev), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zElev)), yend = 0), col = "dark green", lwd=2)  + 
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logitelev.png")
-
-precip = ggplot(data = occumatrix, aes(x = abs(zPrecip), y = FocalOcc)) + 
-  geom_segment(aes(x = 0, y = 1, xend = abs(max(occumatrix$zPrecip)), yend = 0), col = "dark green", lwd=2) +
-  geom_point(colour="black", shape=18, alpha = 0.1,position=position_jitter(width=0,height=.02))+ theme_classic()
-ggsave("C:/Git/Biotic-Interactions/Figures/logitprecip.png")
-
-z <- plot_grid(precip+ theme(legend.position="none"),
-               ndvi + theme(legend.position="none"),
-               align = 'h',
-               labels = c("A","B"),
-               nrow = 1)
-p2 = plot_grid(elev + theme(legend.position="none"),
-               temp + theme(legend.position="none"), 
-               labels = c("C","D"),
-               align = 'h', 
-               rel_widths = c(1, 1.3))
-
-plot_grid(z, p2, ncol = 1, rel_heights = c(1, 1))
-ggsave("C:/Git/Biotic-Interactions/Figures/cowplotabiotic.pdf")
-
-ggplot(data = occumatrix, aes(x = comp_scaled, y = FocalOcc)) + 
-  stat_function(fun=inverselogit, color = "blue") + 
-  geom_point(colour="black", shape=18, alpha = 0.02,position=position_jitter(width=0,height=.02))+ theme_classic()
-
-tableS1 = read.csv("//bioark/HurlbertLab/Snell/2018 BI MS/Tables/Table S1.csv", header = TRUE)
-tableS1 = tableS1 %>%
-  group_by(focalAOU) %>%
-  arrange(desc(mainCompetitor), .by_group = TRUE) %>%
-  group_by(CompAOU)
-tableS1 = left_join(tableS1, subsetocc[,c("AOU", "migclass", "Foraging", "Trophic.Group")], by = c("focalAOU" ="AOU"))
-# write.csv(tableS1, "data/Table S1.csv", row.names = FALSE)

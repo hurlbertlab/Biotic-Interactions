@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1556895102807.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2204550250",
+    "id" : "99C25560",
+    "lastKnownWriteTime" : 1557252867,
+    "last_content_update" : 1557252867163,
+    "path" : "C:/Git/Biotic-Interactions/Scripts/Biotic_Interactions_Analysis.R",
+    "project_path" : "Biotic_Interactions_Analysis.R",
+    "properties" : {
+        "cursorPosition" : "587,42",
+        "scrollLine" : "642"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
