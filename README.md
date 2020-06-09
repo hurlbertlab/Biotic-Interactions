@@ -17,7 +17,7 @@ Throughout, "all" refers to scripts and data where the sum of all competitor abu
 - BI_RO_manip processes focal species based on their range occupancies.
 
 ## Analyses
-- rms_BI_mod_LL contains the R files and R output used for the Bayesian modelling component of this project. 
+- brms_BI_mod_LL contains the R files and R output used for the Bayesian modelling component of this project. 
 - Figures contains each figure used in the manuscript in pdf format, as well as a powerpoint file used to make some manual aesthetic edits for the manuscript.
 - Scripts includes all scripts used to complete this project. 
   - Data cleaning: 
