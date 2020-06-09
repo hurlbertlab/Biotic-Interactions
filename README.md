@@ -18,7 +18,7 @@ Throughout, "all" refers to scripts and data where the sum of all competitor abu
 
 ## Analyses
 - rms_BI_mod_LL contains the R files and R output used for the Bayesian modelling component of this project. 
-- Figures contains each figure used in the manuscript in pdf format, as well as a ppt used to make some manusla aesthetic edits for the manuscript.
+- Figures contains each figure used in the manuscript in pdf format, as well as a powerpoint file used to make some manual aesthetic edits for the manuscript.
 - Scripts includes all scripts used to complete this project. 
   - Data cleaning: 
     - BBS_occ_script downloads and processes the raw BBS data for the project
