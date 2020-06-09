@@ -25,8 +25,10 @@ Throughout, "all" refers to scripts and data where the sum of all competitor abu
     - BI abiotic script processes the raw environmental data for the project
     - BI GIS script calculates the amount of overlap between each focal species and its competitor, which is used to select relevant competitors as well as identify the main competitor. Additionally, we calculate range size in this script.
     - Biotic_Interactions_Snell_Data_cleaning cleans and processes the BBS data, matches up the focal species with relevant competitors, and combines the BBS data with corresponding environmnetal data based on latitude and longitude.
-  - Biotic_Interactions_Analysis (all comps) runs all analyses in the project other than the Bayesian models using the summed abundance of any competitor with range overlap with the focal species as the "competitor" variable.
-  - Biotic_Interactions_Analysis (main comp) runs all analyses in the project other than the Bayesian models using the summed abundance of a single, main competitor with the most range overlap with the focal species as the "competitor" variable.
-  - Biotic_Interactions_Analysis (post-hoc comps) runs all analyses in the project other than the Bayesian models using the summed abundance of any competitor identified as relevant in post-hoc anlayses with the focal species as the "competitor" variable.
-  - phylogeny code runs a phylogenetic query and generates a tree using the focal species in our analysis.
- 
+    
+  - Data analysis: 
+    - Biotic_Interactions_Analysis (all comps) runs all analyses in the project other than the Bayesian models using the summed abundance of any competitor with range overlap with the focal species as the "competitor" variable.
+    - Biotic_Interactions_Analysis (main comp) runs all analyses in the project other than the Bayesian models using the summed abundance of a single, main competitor with the most range overlap with the focal species as the "competitor" variable.
+    - Biotic_Interactions_Analysis (post-hoc comps) runs all analyses in the project other than the Bayesian models using the summed abundance of any competitor identified as relevant in post-hoc anlayses with the focal species as the "competitor" variable.
+    - phylogeny code runs a phylogenetic query and generates a tree using the focal species in our analysis.
+  
